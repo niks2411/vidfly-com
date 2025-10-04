@@ -1,6 +1,8 @@
 const crypto = require('crypto');
 const Joi = require('joi');
 const Order = require('../models/Order');
+const User = require('../models/User');
+const Payment = require('../models/Payment');
 const OtpToken = require('../models/OtpToken');
 
 const createOrderSchema = Joi.object({
@@ -36,17 +38,53 @@ exports.createOrder = async (req, res, next) => {
     }
 
     const orderId = 'VID' + crypto.randomBytes(6).toString('hex').toUpperCase();
+    
+    // Create or find user
+    let user = await User.findOne({ email: value.email.toLowerCase() });
+    if (!user) {
+      user = await User.create({
+        name: value.customerName,
+        email: value.email.toLowerCase(),
+        phone: value.phone,
+        emailVerified: true,
+      });
+    } else {
+      // Update user info if needed
+      user.name = value.customerName;
+      user.phone = value.phone || user.phone;
+      user.emailVerified = true;
+      await user.save();
+    }
+
+    // Create payment record
+    const payment = await Payment.create({
+      orderId,
+      userId: user._id,
+      amount: value.plan.price,
+      currency: value.plan.currency || 'INR',
+      gateway: 'razorpay', // Default gateway
+      status: 'pending',
+    });
+
+    // Create order
     const order = await Order.create({
       orderId,
-      ...value,
-      status: 'Payment Pending',
-      emailVerified: true
+      userId: user._id,
+      paymentId: payment._id,
+      youtubeLink: value.youtubeLink,
+      plan: value.plan,
+      status: 'payment_pending',
     });
     
     // Clean up the used OTP token
     await OtpToken.deleteOne({ _id: verifiedOtp._id });
     
-    return res.status(201).json(order);
+    // Populate the response with user and payment data
+    const populatedOrder = await Order.findById(order._id)
+      .populate('userId', 'name email phone emailVerified')
+      .populate('paymentId', 'amount currency status gateway');
+
+    return res.status(201).json(populatedOrder);
   } catch (err) {
     return next(err);
   }
@@ -55,7 +93,9 @@ exports.createOrder = async (req, res, next) => {
 exports.getOrderById = async (req, res, next) => {
   try {
     const { orderId } = req.params;
-    const order = await Order.findOne({ orderId });
+    const order = await Order.findOne({ orderId })
+      .populate('userId', 'name email phone emailVerified')
+      .populate('paymentId', 'amount currency status gateway paymentOrderId paymentId');
     if (!order) return res.status(404).json({ message: 'Order not found' });
     return res.json(order);
   } catch (err) {
@@ -70,7 +110,17 @@ exports.updateStatus = async (req, res, next) => {
     if (error) return res.status(400).json({ message: error.message });
 
     const { orderId } = req.params;
-    const order = await Order.findOneAndUpdate({ orderId }, { status: value.status }, { new: true });
+    const order = await Order.findOneAndUpdate(
+      { orderId }, 
+      { 
+        status: value.status,
+        completedAt: value.status === 'Completed' ? new Date() : undefined
+      }, 
+      { new: true }
+    )
+      .populate('userId', 'name email phone emailVerified')
+      .populate('paymentId', 'amount currency status gateway paymentOrderId paymentId');
+    
     if (!order) return res.status(404).json({ message: 'Order not found' });
     return res.json(order);
   } catch (err) {

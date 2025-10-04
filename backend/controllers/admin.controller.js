@@ -20,14 +20,19 @@ exports.login = async (req, res, next) => {
 
 exports.getOrders = async (req, res, next) => {
   try {
-    const orders = await Order.find().sort({ createdAt: -1 });
+    const orders = await Order.find()
+      .populate('userId', 'name email phone emailVerified')
+      .populate('paymentId', 'amount currency status gateway paymentOrderId paymentId')
+      .sort({ createdAt: -1 });
     return res.json(orders);
   } catch (err) { return next(err); }
 };
 
 exports.getOrder = async (req, res, next) => {
   try {
-    const order = await Order.findOne({ orderId: req.params.orderId });
+    const order = await Order.findOne({ orderId: req.params.orderId })
+      .populate('userId', 'name email phone emailVerified')
+      .populate('paymentId', 'amount currency status gateway paymentOrderId paymentId');
     if (!order) return res.status(404).json({ message: 'Order not found' });
     return res.json(order);
   } catch (err) { return next(err); }

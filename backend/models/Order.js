@@ -3,10 +3,8 @@ const mongoose = require('mongoose');
 const OrderSchema = new mongoose.Schema(
   {
     orderId: { type: String, required: true, unique: true, index: true },
-    customerName: { type: String, required: true },
-    email: { type: String, required: true },
-    emailVerified: { type: Boolean, default: false },
-    phone: { type: String },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    paymentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Payment' },
     youtubeLink: { type: String },
     plan: {
       type: new mongoose.Schema(
@@ -27,15 +25,8 @@ const OrderSchema = new mongoose.Schema(
       default: 'Pending',
       index: true,
     },
-    payment: {
-      gateway: { type: String, enum: ['razorpay', 'stripe'] },
-      paymentOrderId: { type: String },
-      paymentId: { type: String },
-      signature: { type: String },
-      amount: { type: Number },
-      currency: { type: String },
-      status: { type: String, enum: ['created', 'authorized', 'captured', 'failed'] },
-    },
+    notes: { type: String },
+    completedAt: { type: Date },
   },
   { timestamps: true }
 );

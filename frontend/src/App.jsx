@@ -9,12 +9,39 @@ export default function App() {
     email: '',
     phone: '',
     youtubeLink: '',
-    planName: 'Starter Views',
-    planType: 'views',
-    quantity: 1000,
-    price: 299,
-    currency: 'INR',
+    selectedPackage: 'starter', // Package selection
   })
+
+  // Predefined packages for YouTube views
+  const packages = {
+    starter: {
+      name: 'Starter Views',
+      type: 'views',
+      quantity: 1000,
+      price: 299,
+      currency: 'INR',
+      description: 'Perfect for new videos',
+      features: ['1000 YouTube Views', 'High Quality', 'Fast Delivery', '24/7 Support']
+    },
+    popular: {
+      name: 'Popular Views',
+      type: 'views', 
+      quantity: 5000,
+      price: 1299,
+      currency: 'INR',
+      description: 'Great for growing channels',
+      features: ['5000 YouTube Views', 'High Quality', 'Fast Delivery', '24/7 Support', 'Retention Guarantee']
+    },
+    viral: {
+      name: 'Viral Views',
+      type: 'views',
+      quantity: 10000,
+      price: 2299,
+      currency: 'INR', 
+      description: 'Maximum impact for your content',
+      features: ['10000 YouTube Views', 'High Quality', 'Fast Delivery', '24/7 Support', 'Retention Guarantee', 'Engagement Boost']
+    }
+  }
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -36,6 +63,10 @@ export default function App() {
       setOtpSent(false)
       setOtp('')
     }
+  }
+
+  const handlePackageSelect = (packageKey) => {
+    setForm((f) => ({ ...f, selectedPackage: packageKey }))
   }
 
   const sendOtp = async () => {
@@ -94,17 +125,18 @@ export default function App() {
     setLoading(true)
     setError('')
     try {
+      const selectedPkg = packages[form.selectedPackage]
       const payload = {
         customerName: form.customerName,
         email: form.email,
         phone: form.phone,
         youtubeLink: form.youtubeLink,
         plan: {
-          name: form.planName,
-          type: form.planType,
-          quantity: Number(form.quantity),
-          price: Number(form.price),
-          currency: form.currency,
+          name: selectedPkg.name,
+          type: selectedPkg.type,
+          quantity: selectedPkg.quantity,
+          price: selectedPkg.price,
+          currency: selectedPkg.currency,
         },
       }
       const { data } = await api.post('/api/orders', payload)
@@ -116,11 +148,7 @@ export default function App() {
         email: '',
         phone: '',
         youtubeLink: '',
-        planName: 'Starter Views',
-        planType: 'views',
-        quantity: 1000,
-        price: 299,
-        currency: 'INR',
+        selectedPackage: 'starter',
       })
       setEmailVerified(false)
       setOtpSent(false)
@@ -224,21 +252,41 @@ export default function App() {
               </div>
             )}
           </div>
-          <input className="w-full border p-2 rounded" name="phone" placeholder="Phone" value={form.phone} onChange={handleChange} />
-          <input className="w-full border p-2 rounded" name="youtubeLink" placeholder="YouTube Link (optional)" value={form.youtubeLink} onChange={handleChange} />
+           <input className="w-full border p-2 rounded" name="phone" placeholder="Phone" value={form.phone} onChange={handleChange} />
+           <input className="w-full border p-2 rounded" name="youtubeLink" placeholder="YouTube Link (optional)" value={form.youtubeLink} onChange={handleChange} />
 
-          <div className="grid grid-cols-2 gap-3">
-            <input className="border p-2 rounded" name="planName" placeholder="Plan Name" value={form.planName} onChange={handleChange} />
-            <select className="border p-2 rounded" name="planType" value={form.planType} onChange={handleChange}>
-              <option value="views">views</option>
-              <option value="subscribers">subscribers</option>
-              <option value="watch_time">watch_time</option>
-              <option value="likes">likes</option>
-            </select>
-            <input className="border p-2 rounded" name="quantity" type="number" value={form.quantity} onChange={handleChange} />
-            <input className="border p-2 rounded" name="price" type="number" step="0.01" value={form.price} onChange={handleChange} />
-            <input className="border p-2 rounded" name="currency" value={form.currency} onChange={handleChange} />
-          </div>
+           {/* Package Selection */}
+           <div className="space-y-4">
+             <h3 className="text-lg font-semibold text-gray-900">📦 Choose Your Package</h3>
+             <div className="grid md:grid-cols-3 gap-4">
+               {Object.entries(packages).map(([key, pkg]) => (
+                 <div
+                   key={key}
+                   onClick={() => handlePackageSelect(key)}
+                   className={`border-2 rounded-lg p-4 cursor-pointer transition-all duration-200 ${
+                     form.selectedPackage === key
+                       ? 'border-blue-500 bg-blue-50 shadow-lg'
+                       : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                   }`}
+                 >
+                   <div className="text-center">
+                     <h4 className="text-lg font-bold text-gray-900 mb-2">{pkg.name}</h4>
+                     <p className="text-sm text-gray-600 mb-3">{pkg.description}</p>
+                     <div className="text-2xl font-bold text-blue-600 mb-3">₹{pkg.price}</div>
+                     <div className="text-sm text-gray-500 mb-4">{pkg.quantity.toLocaleString()} Views</div>
+                     <ul className="text-xs text-gray-600 space-y-1">
+                       {pkg.features.map((feature, idx) => (
+                         <li key={idx} className="flex items-center">
+                           <span className="text-green-500 mr-2">✓</span>
+                           {feature}
+                         </li>
+                       ))}
+                     </ul>
+                   </div>
+                 </div>
+               ))}
+             </div>
+           </div>
 
           <button 
             type="submit"
@@ -257,18 +305,19 @@ export default function App() {
         {result && (
           <div className="mt-6 text-sm">
             <h2 className="font-semibold text-green-600 text-lg">✅ Order Created Successfully!</h2>
-            <div className="mt-3 p-4 bg-green-50 border border-green-200 rounded">
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div><strong>Order ID:</strong> {result.orderId}</div>
-                <div><strong>Status:</strong> {result.status}</div>
-                <div><strong>Customer:</strong> {result.customerName}</div>
-                <div><strong>Email:</strong> {result.email} ✅</div>
-                <div><strong>Plan:</strong> {result.plan.name}</div>
-                <div><strong>Amount:</strong> ₹{result.plan.price}</div>
-                <div><strong>Email Verified:</strong> {result.emailVerified ? '✅ Yes' : '❌ No'}</div>
-                <div><strong>Created:</strong> {new Date(result.createdAt).toLocaleString()}</div>
-              </div>
-            </div>
+             <div className="mt-3 p-4 bg-green-50 border border-green-200 rounded">
+               <div className="grid grid-cols-2 gap-2 text-sm">
+                 <div><strong>Order ID:</strong> {result.orderId}</div>
+                 <div><strong>Status:</strong> {result.status}</div>
+                 <div><strong>Customer:</strong> {result.userId?.name || result.customerName}</div>
+                 <div><strong>Email:</strong> {result.userId?.email || result.email} ✅</div>
+                 <div><strong>Plan:</strong> {result.plan.name}</div>
+                 <div><strong>Amount:</strong> ₹{result.plan.price}</div>
+                 <div><strong>Views:</strong> {result.plan.quantity.toLocaleString()}</div>
+                 <div><strong>Email Verified:</strong> {result.userId?.emailVerified ? '✅ Yes' : '❌ No'}</div>
+                 <div><strong>Created:</strong> {new Date(result.createdAt).toLocaleString()}</div>
+               </div>
+             </div>
             
             <details className="mt-3">
               <summary className="cursor-pointer text-gray-600 hover:text-gray-800">
