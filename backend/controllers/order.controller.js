@@ -105,7 +105,10 @@ exports.getOrderById = async (req, res, next) => {
 
 exports.updateStatus = async (req, res, next) => {
   try {
-    const schema = Joi.object({ status: Joi.string().valid('Pending','Payment Pending','Paid','Promotion Scheduled','In Progress','Completed','Failed').required() });
+    const schema = Joi.object({ 
+      status: Joi.string().valid('pending','payment_pending','paid','promotion_scheduled','in_progress','completed','failed').required(),
+      adminComments: Joi.string().allow('')
+    });
     const { error, value } = schema.validate(req.body);
     if (error) return res.status(400).json({ message: error.message });
 
@@ -114,7 +117,8 @@ exports.updateStatus = async (req, res, next) => {
       { orderId }, 
       { 
         status: value.status,
-        completedAt: value.status === 'Completed' ? new Date() : undefined
+        adminComments: value.adminComments || undefined,
+        completedAt: value.status === 'completed' ? new Date() : undefined
       }, 
       { new: true }
     )

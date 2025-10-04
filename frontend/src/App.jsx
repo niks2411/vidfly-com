@@ -1,9 +1,41 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
+import AdminPage from './components/AdminPage'
+import OrderTracking from './components/OrderTracking'
 
 const api = axios.create({ baseURL: import.meta.env.VITE_API_BASE || 'http://localhost:5000' })
 
 export default function App() {
+  const [currentPage, setCurrentPage] = useState('order') // 'order', 'track', 'admin'
+
+  // Handle URL-based routing
+  useEffect(() => {
+    const path = window.location.pathname
+    if (path === '/admin') {
+      setCurrentPage('admin')
+    } else if (path === '/track') {
+      setCurrentPage('track')
+    } else {
+      setCurrentPage('order')
+    }
+  }, [])
+
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname
+      if (path === '/admin') {
+        setCurrentPage('admin')
+      } else if (path === '/track') {
+        setCurrentPage('track')
+      } else {
+        setCurrentPage('order')
+      }
+    }
+
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
   const [form, setForm] = useState({
     customerName: '',
     email: '',
@@ -166,9 +198,69 @@ export default function App() {
     }
   }
 
+  // Navigation component
+  const Navigation = () => (
+    <nav className="bg-white shadow-sm border-b mb-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <div className="flex-shrink-0 flex items-center">
+              <span className="text-2xl mr-2">🎬</span>
+              <span className="text-xl font-bold text-gray-900">VidFly</span>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => {
+                setCurrentPage('order')
+                window.history.pushState({}, '', '/')
+              }}
+              className={`px-3 py-2 rounded-md text-sm font-medium ${
+                currentPage === 'order'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Create Order
+            </button>
+            <button
+              onClick={() => {
+                setCurrentPage('track')
+                window.history.pushState({}, '', '/track')
+              }}
+              className={`px-3 py-2 rounded-md text-sm font-medium ${
+                currentPage === 'track'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Track Order
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  )
+
+  // Render different pages
+  if (currentPage === 'admin') {
+    return <AdminPage />
+  }
+
+  if (currentPage === 'track') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <OrderTracking />
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-xl mx-auto bg-white shadow rounded p-6">
+    <div className="min-h-screen bg-gray-50">
+      <Navigation />
+      <div className="p-6">
+        <div className="max-w-xl mx-auto bg-white shadow rounded p-6">
         <h1 className="text-2xl font-semibold mb-4">📧 Vidflyy Order with Email Verification</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input className="w-full border p-2 rounded" name="customerName" placeholder="Full Name" value={form.customerName} onChange={handleChange} required />
@@ -343,6 +435,7 @@ export default function App() {
           <p className="text-xs text-blue-600 mt-2">
             💡 OTP expires in 10 minutes. Orders require verified email addresses.
           </p>
+        </div>
         </div>
       </div>
     </div>

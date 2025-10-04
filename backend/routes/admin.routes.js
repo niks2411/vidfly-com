@@ -11,6 +11,7 @@ const { updateStatus } = require('../controllers/order.controller');
  */
 router.post('/login', login);
 
+// Enable auth for production
 router.use(auth);
 
 /**

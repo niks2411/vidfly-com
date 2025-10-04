@@ -21,11 +21,12 @@ const OrderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['Pending', 'Payment Pending', 'Paid', 'Promotion Scheduled', 'In Progress', 'Completed', 'Failed'],
-      default: 'Pending',
+      enum: ['pending', 'payment_pending', 'paid', 'promotion_scheduled', 'in_progress', 'completed', 'failed'],
+      default: 'pending',
       index: true,
     },
     notes: { type: String },
+    adminComments: { type: String },
     completedAt: { type: Date },
   },
   { timestamps: true }
