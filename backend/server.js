@@ -7,24 +7,37 @@ const cors = require('cors');
 
 const app = express();
 
-// CORS setup: allow only vidflyy.com and localhost:3000
-const allowedOrigins = [
-  'https://vidflyy.com',
+// CORS setup: restrict to configured frontend origin(s)
+// Set FRONTEND_ORIGIN to your deployed frontend, e.g. https://myproject.vercel.app
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || '';
+const LOCAL_ORIGINS = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
   'http://localhost:5173',
-  'http://127.0.0.1:5173'
+  'http://127.0.0.1:5173',
 ];
-app.use(cors({
+const allowedOrigins = [
+  ...LOCAL_ORIGINS,
+  ...(FRONTEND_ORIGIN ? [FRONTEND_ORIGIN] : []),
+];
+
+const corsOptions = {
   origin: function(origin, callback) {
-    if (!origin) return callback(null, true); // allow non-browser (curl/postman)
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      return callback(null, true);
-    }
+    if (!origin) return callback(null, true); // allow non-browser clients (curl/postman)
+    if (allowedOrigins.includes(origin)) return callback(null, true);
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
-}));
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
+// When running behind a reverse proxy (nginx), trust the proxy for correct protocol/ip
+app.set('trust proxy', 1);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

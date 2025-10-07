@@ -3,7 +3,9 @@ import axios from 'axios'
 import AdminPage from './components/AdminPage'
 import OrderTracking from './components/OrderTracking'
 
-const api = axios.create({ baseURL: import.meta.env.VITE_API_BASE || 'http://localhost:5000' })
+// Read API base URL from env. Example in production: https://api.myproject.com
+const apiBaseUrl = import.meta.env.VITE_API_BASE?.replace(/\/$/, '') || 'http://localhost:5000'
+const api = axios.create({ baseURL: apiBaseUrl })
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('order') // 'order', 'track', 'admin'
