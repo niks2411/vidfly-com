@@ -34,7 +34,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
 
 // When running behind a reverse proxy (nginx), trust the proxy for correct protocol/ip
 app.set('trust proxy', 1);
