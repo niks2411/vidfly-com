@@ -15,6 +15,8 @@ const LOCAL_ORIGINS = [
   'http://127.0.0.1:3000',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
+  'http://localhost:5174',
+  'http://127.0.0.1:5174',
 ];
 const allowedOrigins = [
   ...LOCAL_ORIGINS,
@@ -23,8 +25,13 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function(origin, callback) {
+    console.log('CORS request from origin:', origin);
     if (!origin) return callback(null, true); // allow non-browser clients (curl/postman)
-    if (allowedOrigins.includes(origin)) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      console.log('Origin allowed:', origin);
+      return callback(null, true);
+    }
+    console.log('Origin blocked:', origin, 'Allowed origins:', allowedOrigins);
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
@@ -68,7 +75,8 @@ app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/orders', require('./routes/order.routes'));
 app.use('/api/payments', require('./routes/payment.routes'));
 app.use('/api/admin', require('./routes/admin.routes'));
-app.use('/api/leads', require('./routes/lead.routes'));
+app.use('/api/youtube', require('./routes/youtube.routes'));
+app.use('/api/pricing', require('./routes/pricing.routes'));
 
 // Global error handler placeholder (real handler will be in middleware)
 app.use((err, req, res, next) => {

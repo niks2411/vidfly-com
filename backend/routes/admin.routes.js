@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const auth = require('../middleware/authMiddleware');
 const { login, getOrders, getOrder } = require('../controllers/admin.controller');
-const { updateStatus } = require('../controllers/order.controller');
+const { updateStatus, deleteOrder } = require('../controllers/order.controller');
 
 /**
  * @openapi
@@ -37,5 +37,13 @@ router.get('/orders/:orderId', getOrder);
  *     summary: Update order status
  */
 router.put('/orders/:orderId/status', updateStatus);
+
+/**
+ * @openapi
+ * /api/admin/orders/{orderId}:
+ *   delete:
+ *     summary: Delete an order
+ */
+router.delete('/orders/:orderId', deleteOrder);
 
 module.exports = router;

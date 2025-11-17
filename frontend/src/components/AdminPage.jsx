@@ -62,3 +62,4 @@ export default function AdminPage() {
 
   return <AdminDashboard onLogout={handleLogout} />;
 }
+

@@ -132,4 +132,31 @@ exports.updateStatus = async (req, res, next) => {
   }
 };
 
+exports.deleteOrder = async (req, res, next) => {
+  try {
+    const { orderId } = req.params;
+    
+    // Find the order first
+    const order = await Order.findOne({ orderId });
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Delete associated payment if exists
+    if (order.paymentId) {
+      await Payment.findByIdAndDelete(order.paymentId);
+    }
+
+    // Delete the order
+    await Order.findByIdAndDelete(order._id);
+
+    return res.json({ 
+      message: 'Order deleted successfully',
+      orderId: orderId 
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 

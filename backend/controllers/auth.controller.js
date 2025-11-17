@@ -24,12 +24,18 @@ function createTransport() {
 
 exports.sendOtp = async (req, res, next) => {
   try {
+    console.log('Send OTP request received:', req.body);
     const { error, value } = emailSchema.validate(req.body);
-    if (error) return res.status(400).json({ message: error.message });
+    if (error) {
+      console.log('Validation error:', error.message);
+      return res.status(400).json({ message: error.message });
+    }
 
     const email = value.email.toLowerCase();
     const otp = (Math.floor(100000 + Math.random() * 900000)).toString();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    console.log('Generated OTP for', email, ':', otp);
 
     await OtpToken.deleteMany({ email });
     await OtpToken.create({ email, otp, expiresAt });
@@ -42,8 +48,10 @@ exports.sendOtp = async (req, res, next) => {
       text: `Your OTP is ${otp}. It expires in 10 minutes.`,
     });
 
+    console.log('Email sent successfully:', info.messageId);
     return res.json({ message: 'OTP sent', id: info.messageId || undefined });
   } catch (err) {
+    console.error('Send OTP error:', err);
     return next(err);
   }
 };

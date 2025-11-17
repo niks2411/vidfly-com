@@ -61,6 +61,26 @@ export default function AdminDashboard({ onLogout }) {
     }
   }
 
+  const handleDeleteOrder = async (orderId) => {
+    // Confirm deletion
+    if (!window.confirm(`Are you sure you want to delete order ${orderId}? This action cannot be undone.`)) {
+      return
+    }
+
+    try {
+      await api.delete(`/api/admin/orders/${orderId}`)
+      
+      // Remove order from state
+      setOrders(orders.filter(order => order.orderId !== orderId))
+      
+      // Show success message
+      alert('Order deleted successfully!')
+    } catch (err) {
+      setError(err?.response?.data?.message || 'Failed to delete order')
+      alert('Failed to delete order: ' + (err?.response?.data?.message || 'Unknown error'))
+    }
+  }
+
   const filteredOrders = orders.filter(order => {
     const matchesFilter = filter === 'all' || order.status === filter
     const matchesSearch = order.orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -265,12 +285,20 @@ export default function AdminDashboard({ onLogout }) {
                         {new Date(order.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button
-                          onClick={() => setSelectedOrder(order)}
-                          className="text-blue-600 hover:text-blue-900"
-                        >
-                          Update
-                        </button>
+                        <div className="flex items-center space-x-3">
+                          <button
+                            onClick={() => setSelectedOrder(order)}
+                            className="text-blue-600 hover:text-blue-900"
+                          >
+                            Update
+                          </button>
+                          <button
+                            onClick={() => handleDeleteOrder(order.orderId)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
