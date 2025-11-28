@@ -10,7 +10,7 @@ const OrderSchema = new mongoose.Schema(
       type: new mongoose.Schema(
         {
           name: String,
-          type: { type: String, enum: ['views', 'subscribers', 'watch_time', 'likes'], required: true },
+          type: { type: String, enum: ['views', 'subscribers', 'watch_time', 'likes', 'package'], required: true },
           quantity: Number,
           price: Number,
           currency: { type: String, default: 'INR' },
@@ -28,6 +28,59 @@ const OrderSchema = new mongoose.Schema(
     notes: { type: String },
     adminComments: { type: String },
     completedAt: { type: Date },
+    campaignType: {
+      type: String,
+      enum: ['promote_video', 'promote_channel', 'packages', 'bulk_views', 'free_views'],
+    },
+    source: { type: String },
+    budget: { type: Number },
+    channel: {
+      type: new mongoose.Schema(
+        {
+          name: String,
+          channelId: String,
+          link: String,
+          avatar: String,
+        },
+        { _id: false }
+      ),
+    },
+    videos: [
+      new mongoose.Schema(
+        {
+          videoId: String,
+          title: String,
+          link: String,
+          thumbnail: String,
+          viewsRequested: Number,
+        },
+        { _id: false }
+      ),
+    ],
+    packageInfo: {
+      type: new mongoose.Schema(
+        {
+          id: String,
+          name: String,
+          price: Number,
+          currency: String,
+          description: String,
+        },
+        { _id: false }
+      ),
+    },
+    targeting: {
+      type: new mongoose.Schema(
+        {
+          country: String,
+          goal: String,
+          duration: String,
+          autoTargeting: { type: Boolean, default: true },
+          notes: String,
+        },
+        { _id: false }
+      ),
+    },
   },
   { timestamps: true }
 );

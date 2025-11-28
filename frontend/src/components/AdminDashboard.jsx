@@ -115,6 +115,17 @@ export default function AdminDashboard({ onLogout }) {
     return displayNames[status] || status
   }
 
+  const formatCampaignType = (type) => {
+    const map = {
+      promote_video: 'Promote Video',
+      promote_channel: 'Promote Channel',
+      packages: 'Packages',
+      bulk_views: 'Bulk Views',
+      free_views: 'Free Views'
+    }
+    return map[type] || 'Standard Order'
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -223,7 +234,7 @@ export default function AdminDashboard({ onLogout }) {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plan</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campaign</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
@@ -257,13 +268,28 @@ export default function AdminDashboard({ onLogout }) {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <div>
-                          <div className="font-medium">{order.plan.name}</div>
-                          <div className="text-gray-500">{order.plan.quantity.toLocaleString()} views</div>
+                          <div className="font-medium">{order.plan?.name || 'Custom Plan'}</div>
+                          <div className="text-gray-500">
+                            {order.plan?.quantity?.toLocaleString()} {order.plan?.type === 'package' ? 'units' : 'views'}
+                          </div>
+                          {order.campaignType && (
+                            <div className="text-xs text-purple-600 font-semibold mt-1">
+                              {formatCampaignType(order.campaignType)}
+                            </div>
+                          )}
+                          {order.videos?.length > 0 && (
+                            <div className="text-xs text-gray-500">
+                              {order.videos.length} video{order.videos.length > 1 ? 's' : ''}
+                            </div>
+                          )}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <div>
-                          <div className="font-medium">₹{order.plan.price}</div>
+                          <div className="font-medium">
+                            {order.plan?.currency === 'USD' ? '$' : '₹'}
+                            {order.plan?.price}
+                          </div>
                           {order.paymentId && (
                             <div className="text-xs text-gray-500">
                               Payment: {order.paymentId.status}
@@ -290,7 +316,7 @@ export default function AdminDashboard({ onLogout }) {
                             onClick={() => setSelectedOrder(order)}
                             className="text-blue-600 hover:text-blue-900"
                           >
-                            Update
+                            Details
                           </button>
                           <button
                             onClick={() => handleDeleteOrder(order.orderId)}
@@ -308,14 +334,55 @@ export default function AdminDashboard({ onLogout }) {
           </div>
         </div>
 
-        {/* Update Order Modal */}
+        {/* Details & Update Modal */}
         {selectedOrder && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
             <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
               <div className="mt-3">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">
-                  Update Order: {selectedOrder.orderId}
+                  Order Details: {selectedOrder.orderId}
                 </h3>
+
+                {selectedOrder.campaignType && (
+                  <div className="mb-4 rounded-xl border border-purple-100 bg-purple-50 p-4 text-sm">
+                    <p className="font-semibold text-purple-700">
+                      {formatCampaignType(selectedOrder.campaignType)}
+                    </p>
+                    {selectedOrder.channel?.name && (
+                      <p className="text-gray-600 mt-1">{selectedOrder.channel.name}</p>
+                    )}
+                    {selectedOrder.budget && (
+                      <p className="text-gray-600">Budget: ₹{selectedOrder.budget}</p>
+                    )}
+                  </div>
+                )}
+
+                {selectedOrder.videos?.length > 0 && (
+                  <div className="mb-4">
+                    <p className="text-sm font-semibold text-gray-700 mb-2">
+                      Videos ({selectedOrder.videos.length})
+                    </p>
+                    <div className="space-y-2 max-h-32 overflow-y-auto">
+                      {selectedOrder.videos.map((video) => (
+                        <div key={video.videoId} className="text-xs text-gray-600">
+                          <p className="font-medium">{video.title}</p>
+                          {video.viewsRequested && (
+                            <p>{video.viewsRequested.toLocaleString()} views</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {selectedOrder.targeting && (
+                  <div className="mb-4 text-sm text-gray-700">
+                    <p className="font-semibold mb-1">Targeting</p>
+                    <p>Country: {selectedOrder.targeting.country || 'All'}</p>
+                    <p>Goal: {selectedOrder.targeting.goal || 'Views'}</p>
+                    <p>Duration: {selectedOrder.targeting.duration || 'Flexible'}</p>
+                  </div>
+                )}
                 
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>

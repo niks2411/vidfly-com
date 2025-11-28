@@ -2,6 +2,11 @@ const crypto = require('crypto');
 const Joi = require('joi');
 const nodemailer = require('nodemailer');
 const OtpToken = require('../models/OtpToken');
+const {
+  EMAIL_COOKIE_NAME,
+  EMAIL_COOKIE_MAX_AGE,
+  buildEmailCookieValue,
+} = require('../utils/emailVerification');
 
 const emailSchema = Joi.object({
   email: Joi.string().email().required(),
@@ -69,6 +74,16 @@ exports.verifyOtp = async (req, res, next) => {
 
     record.verified = true;
     await record.save();
+
+    const cookieValue = buildEmailCookieValue(email);
+    res.cookie(EMAIL_COOKIE_NAME, cookieValue, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: EMAIL_COOKIE_MAX_AGE,
+      path: '/',
+    });
+
     return res.json({ message: 'OTP verified' });
   } catch (err) {
     return next(err);

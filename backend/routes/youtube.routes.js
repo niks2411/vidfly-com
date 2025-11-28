@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getVideoInfo } = require('../controllers/youtube.controller');
+const { getVideoInfo, getChannelVideos, getChannelInfo } = require('../controllers/youtube.controller');
 
 /**
  * @openapi
@@ -20,5 +20,8 @@ const { getVideoInfo } = require('../controllers/youtube.controller');
  *         description: Video information retrieved
  */
 router.post('/info', getVideoInfo);
+router.get('/channel-videos', getChannelVideos);
+router.get('/channel-info', getChannelInfo);
 
 module.exports = router;
+

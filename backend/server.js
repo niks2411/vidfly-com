@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -17,6 +18,8 @@ const LOCAL_ORIGINS = [
   'http://127.0.0.1:5173',
   'http://localhost:5174',
   'http://127.0.0.1:5174',
+  'http://localhost:8080',
+  'http://127.0.0.1:8080',
 ];
 const allowedOrigins = [
   ...LOCAL_ORIGINS,
@@ -47,6 +50,7 @@ app.set('trust proxy', 1);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(helmet());
 

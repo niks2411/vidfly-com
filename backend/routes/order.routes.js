@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { createOrder, getOrderById, updateStatus } = require('../controllers/order.controller');
+const { createOrder, createCampaignOrder, getOrderById, updateStatus, getUserOrders } = require('../controllers/order.controller');
 const auth = require('../middleware/authMiddleware');
 
 /**
@@ -9,6 +9,22 @@ const auth = require('../middleware/authMiddleware');
  *     summary: Create new order
  */
 router.post('/', createOrder);
+
+/**
+ * @openapi
+ * /api/orders/campaign:
+ *   post:
+ *     summary: Create order from campaign builder
+ */
+router.post('/campaign', createCampaignOrder);
+
+/**
+ * @openapi
+ * /api/orders/user:
+ *   get:
+ *     summary: Get all orders for a user by email
+ */
+router.get('/user', getUserOrders);
 
 /**
  * @openapi
