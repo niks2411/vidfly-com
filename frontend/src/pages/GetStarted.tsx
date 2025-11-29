@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -15,8 +15,11 @@ const API_BASE_URL =
 
 const normalizeEmail = (value: string) => value.trim().toLowerCase();
 
+const REFERRAL_STORAGE_KEY = "vidfly_referral_code";
+
 const GetStarted = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -26,6 +29,36 @@ const GetStarted = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [checkingVerification, setCheckingVerification] = useState(true);
+  const [referralCode, setReferralCode] = useState<string | null>(null);
+
+  // Check for referral code in URL and store it
+  useEffect(() => {
+    const refCode = searchParams.get("ref");
+    if (refCode) {
+      const normalizedCode = refCode.trim().toUpperCase();
+      setReferralCode(normalizedCode);
+      // Store referral code in sessionStorage
+      if (typeof window !== "undefined") {
+        try {
+          sessionStorage.setItem(REFERRAL_STORAGE_KEY, normalizedCode);
+        } catch (err) {
+          console.warn("Unable to store referral code", err);
+        }
+      }
+    } else {
+      // Check if there's a stored referral code
+      if (typeof window !== "undefined") {
+        try {
+          const stored = sessionStorage.getItem(REFERRAL_STORAGE_KEY);
+          if (stored) {
+            setReferralCode(stored);
+          }
+        } catch (err) {
+          console.warn("Unable to read referral code", err);
+        }
+      }
+    }
+  }, [searchParams]);
 
   // Check if email is already verified on component mount
   useEffect(() => {
@@ -103,6 +136,29 @@ const GetStarted = () => {
       setEmail(normalizedEmail);
       setEmailVerified(true);
       saveVerifiedEmail(normalizedEmail);
+      
+      // Apply referral code if present
+      if (referralCode) {
+        try {
+          await fetch(`${API_BASE_URL}/api/free-views/apply-referral`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: normalizedEmail,
+              referralCode: referralCode,
+            }),
+            credentials: "include",
+          });
+          // Clear referral code after applying
+          if (typeof window !== "undefined") {
+            sessionStorage.removeItem(REFERRAL_STORAGE_KEY);
+          }
+        } catch (err) {
+          console.error("Failed to apply referral code", err);
+          // Don't block the user if referral fails
+        }
+      }
+      
       setMessage("Email verified successfully! You can proceed with your order.");
       setTimeout(() => {
         navigate("/campaign", { state: { email: normalizedEmail } });
@@ -175,15 +231,15 @@ const GetStarted = () => {
               <Button
                 onClick={sendOtp}
                 disabled={sendingOtp || emailVerified || !email}
-                className="flex-1 h-12 bg-red-600 hover:bg-red-700 text-white font-semibold transition-all duration-300 hover:scale-[1.01]"
+                className="flex-1"
               >
                 {emailVerified
-                  ? "Email Verified"
+                  ? "EMAIL VERIFIED"
                   : sendingOtp
-                  ? "Sending OTP..."
+                  ? "SENDING OTP..."
                   : otpSent
-                  ? "Resend OTP"
-                  : "Send OTP"}
+                  ? "RESEND OTP"
+                  : "SEND OTP"}
               </Button>
               {otpSent && !emailVerified && (
                 <Button
@@ -229,6 +285,14 @@ const GetStarted = () => {
             {error && (
               <div className="p-4 rounded-xl bg-red-50 text-red-700 text-sm font-medium border border-red-100">
                 {error}
+              </div>
+            )}
+
+            {referralCode && !emailVerified && (
+              <div className="p-4 rounded-xl bg-emerald-50 text-emerald-700 text-sm font-medium border border-emerald-200">
+                <p className="font-semibold mb-1">🎉 Referral Code Detected!</p>
+                <p>You'll receive <strong>500 free views</strong> when you verify your email and create your first campaign!</p>
+                <p className="text-xs mt-2 opacity-75">Referral Code: <span className="font-mono">{referralCode}</span></p>
               </div>
             )}
 

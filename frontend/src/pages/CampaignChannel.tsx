@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import CampaignSidebar from "@/components/CampaignSidebar";
 import CampaignHeader from "@/components/CampaignHeader";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Play, Search } from "lucide-react";
 import { getVerifiedEmail } from "@/lib/verifiedEmail";
+import CampaignLayout from "@/components/CampaignLayout";
+import CampaignCard from "@/components/CampaignCard";
 
 type StoredVideo = {
   title: string;
@@ -228,41 +227,35 @@ const CampaignChannel = () => {
 
   if (!videos.length) {
     return (
-      <div className="min-h-screen bg-slate-50 font-montserrat">
-        <Navbar />
-        <div className="max-w-5xl mx-auto px-4 py-16 text-center space-y-6">
+      <CampaignLayout activeSidebar="channel">
+        <CampaignCard className="text-center space-y-6">
           <h1 className="text-3xl font-bold text-slate-900">Add a Channel First</h1>
-          <p className="text-slate-500">
+          <p className="text-slate-500 max-w-2xl mx-auto text-base leading-relaxed">
             We couldn’t find any stored videos yet. Add a video link on the “Promote
             Video / Short” step to populate your channel library.
           </p>
           <Button
             onClick={() => navigate("/campaign", { replace: true })}
-            className="bg-purple-600 hover:bg-purple-700 rounded-2xl px-6"
+            className="bg-red-600 hover:bg-red-700 rounded-2xl px-6"
           >
             Go to Promote Video
           </Button>
-        </div>
-        <Footer />
-      </div>
+        </CampaignCard>
+      </CampaignLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-purple-50 font-montserrat">
-      <Navbar />
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10 flex flex-col gap-8 lg:flex-row">
-        <CampaignSidebar active="promote" />
-        <div className="flex-1 space-y-8">
-          <section className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 animate-fade-in hover:shadow-2xl transition-all duration-300">
+    <CampaignLayout activeSidebar="channel">
+      <CampaignCard>
             <CampaignHeader>
-              <div className="flex gap-2 text-xs font-semibold uppercase text-purple-500">
+              <div className="flex gap-2 text-xs font-semibold uppercase text-red-600">
                 {["Enter Link", "Select Videos", "Budget & Targeting", "Payment"].map(
                   (step, index) => (
                     <div key={step} className="flex flex-col items-center w-24">
                       <div
                         className={`h-1.5 w-full rounded-full ${
-                          index <= 1 ? "bg-purple-500" : "bg-slate-200"
+                          index <= 1 ? "bg-red-600" : "bg-slate-200"
                         }`}
                       />
                       <span className="mt-2 text-slate-500 text-[11px] text-center">
@@ -275,22 +268,24 @@ const CampaignChannel = () => {
             </CampaignHeader>
 
             <div className="animate-fade-in delay-100">
-              <p className="text-xs text-slate-500 uppercase font-semibold mb-2">Step 2</p>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent mb-3">
+              <p className="text-[11px] text-slate-500 uppercase font-semibold tracking-wide mb-1">
+                Step 2
+              </p>
+              <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r text-gray-800 bg-clip-text   mb-1.5 leading-tight">
                 Select videos to promote
               </h1>
-              <p className="text-slate-600 text-base leading-relaxed">
+              <p className="text-slate-600 text-sm leading-relaxed">
                 You can select up to five videos from your stored channel links.
               </p>
               {!channelId && (
-                <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2 mt-3 inline-block">
+                <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 mt-2 inline-block">
                   💡 Tip: paste a video link from the same channel on the previous step to unlock
                   channel-wide recommendations.
                 </p>
               )}
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 mt-8 animate-fade-in delay-200">
+            <div className="flex flex-wrap items-center gap-2 mt-4 animate-fade-in delay-200">
               {[
                 { label: "Recent videos", value: "recent" },
                 { label: "Relevant videos", value: "relevant" },
@@ -302,8 +297,8 @@ const CampaignChannel = () => {
                   onClick={() => setTab(option.value as typeof tab)}
                   className={`px-5 py-2.5 rounded-full text-sm font-semibold border-2 transition-all duration-300 hover:scale-105 ${
                     tab === option.value
-                      ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white border-purple-600 shadow-lg"
-                      : "border-slate-200 text-slate-600 hover:border-purple-300 hover:bg-purple-50"
+                      ? "bg-gradient-to-r from-red-600 to-red-700 text-white border-red-600 shadow-lg"
+                      : "border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50"
                   }`}
                 >
                   {option.label}
@@ -318,7 +313,7 @@ const CampaignChannel = () => {
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="text-xs rounded-full border-purple-300 text-purple-600 hover:bg-purple-50"
+                    className="text-xs rounded-full border-red-300 text-red-600 hover:bg-red-50"
                     onClick={() => {
                       const availableIds = filteredVideos
                         .slice(0, 5)
@@ -350,9 +345,9 @@ const CampaignChannel = () => {
               </div>
             )}
 
-            <div className="mt-6">
-              <div className="flex items-center gap-3 rounded-3xl border border-purple-200 px-4 py-3 bg-white shadow-inner">
-                <Search className="text-purple-500" />
+            <div className="mt-4">
+              <div className="flex items-center gap-2 rounded-2xl border border-red-200 px-3 py-2 bg-white shadow-inner">
+                <Search className="text-red-600" />
                 <Input
                   placeholder="Search using your YouTube video title"
                   value={search}
@@ -362,7 +357,7 @@ const CampaignChannel = () => {
                 <Button
                   type="button"
                   variant="ghost"
-                  className="text-purple-600"
+                  className="text-red-600"
                   onClick={() => setSearch("")}
                 >
                   Clear
@@ -375,9 +370,9 @@ const CampaignChannel = () => {
               )}
             </div>
 
-            <div className="mt-8 space-y-4">
+            <div className="mt-4 space-y-3">
               {loadingChannel && (
-                <div className="p-4 rounded-3xl bg-purple-50 border border-purple-100 text-purple-700 text-sm">
+                <div className="p-3 rounded-2xl bg-red-50 border border-red-100 text-red-700 text-sm">
                   Loading channel videos...
                 </div>
               )}
@@ -386,21 +381,21 @@ const CampaignChannel = () => {
                 return (
                   <div
                     key={video.videoId}
-                    className={`flex flex-col md:flex-row items-center gap-4 border rounded-3xl p-4 ${
-                      isSelected ? "bg-purple-50 border-purple-200" : "bg-white"
+                    className={`flex flex-col md:flex-row items-center gap-3 border rounded-2xl p-3 ${
+                      isSelected ? "bg-purple-50 border-red-200" : "bg-white"
                     }`}
                   >
-                    <div className="flex items-center gap-4 flex-1">
+                    <div className="flex items-center gap-3 flex-1">
                       <img
                         src={video.thumbnail}
                         alt={video.title}
-                        className="w-32 h-20 rounded-2xl object-cover"
+                        className="w-28 h-18 rounded-xl object-cover"
                       />
                       <div>
                         <p className="text-sm font-semibold text-slate-900">
                           {video.title}
                         </p>
-                        <p className="text-xs text-slate-500 mt-1">{video.author}</p>
+                        <p className="text-xs text-slate-500 mt-0.5">{video.author}</p>
                       </div>
                     </div>
                     <button
@@ -408,7 +403,7 @@ const CampaignChannel = () => {
                       onClick={() => toggleVideo(video.videoId)}
                       className={`w-10 h-10 rounded-full flex items-center justify-center border ${
                         isSelected
-                          ? "bg-purple-600 text-white border-purple-600"
+                          ? "bg-red-600 text-white border-red-600"
                           : "border-slate-300 text-slate-400"
                       }`}
                     >
@@ -419,20 +414,20 @@ const CampaignChannel = () => {
               })}
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-8 gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4 gap-3">
               <div className="text-sm text-slate-500">
                 {selectedIds.length} / 5 videos selected
               </div>
               <div className="flex gap-3">
                 <Button
                   variant="outline"
-                  className="rounded-2xl border-purple-600 text-purple-600 px-6"
+                  className="rounded-2xl border-red-600 text-red-600 px-6"
                   onClick={() => navigate("/campaign", { state: { email: verifiedEmail } })}
                 >
                   Add Channel
                 </Button>
                 <Button
-                  className="rounded-2xl bg-purple-600 hover:bg-purple-700 px-6"
+                  className="rounded-2xl bg-red-600 hover:bg-red-700 px-6"
                   disabled={!selectedIds.length}
                   onClick={handleNext}
                 >
@@ -440,9 +435,9 @@ const CampaignChannel = () => {
                 </Button>
               </div>
             </div>
-          </section>
+      </CampaignCard>
 
-          <section className="grid md:grid-cols-3 gap-6">
+      <section className="grid md:grid-cols-3 gap-4">
             {[
               {
                 icon: Play,
@@ -460,24 +455,22 @@ const CampaignChannel = () => {
                 desc: "Tune campaign budgets, target audience, and goals.",
               },
             ].map((card) => (
-              <div
+              <CampaignCard
                 key={card.title}
-                className="bg-white rounded-3xl shadow-md p-6 flex flex-col gap-3"
+                className="flex flex-col gap-2"
+                accent="subtle"
               >
-                <span className="h-12 w-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center">
-                  <card.icon className="h-5 w-5" />
+                <span className="h-10 w-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center">
+                  <card.icon className="h-4 w-4" />
                 </span>
-                <h3 className="text-lg font-semibold text-slate-900">
+                <h3 className="text-base font-semibold text-slate-900">
                   {card.title}
                 </h3>
-                <p className="text-sm text-slate-500">{card.desc}</p>
-              </div>
+                <p className="text-xs text-slate-500">{card.desc}</p>
+              </CampaignCard>
             ))}
-          </section>
-        </div>
-      </div>
-      <Footer />
-    </div>
+      </section>
+    </CampaignLayout>
   );
 };
 

@@ -189,7 +189,7 @@ const PricingPage = () => {
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4 animate-text-slide-up">
-            Pricing <span className="text-red-600 bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">Plans</span>
+            Pricing <span className="text-red-600 bg-gradient-to-r from-red-500 to-red-700 bg-clip-text  ">Plans</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in-delay">
             Choose the perfect plan to grow your YouTube channel and maximize your reach.

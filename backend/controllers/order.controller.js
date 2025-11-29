@@ -60,6 +60,9 @@ const createCampaignOrderSchema = Joi.object({
     duration: Joi.string().allow('', null),
     autoTargeting: Joi.boolean(),
     notes: Joi.string().allow('', null),
+    gender: Joi.string().allow('', null).optional(),
+    ages: Joi.array().items(Joi.string()).allow(null).optional(),
+    interests: Joi.array().items(Joi.string()).allow(null).optional(),
   }).default({}),
   budget: Joi.number().required(),
   source: Joi.string()
@@ -114,7 +117,7 @@ const createPaymentRecord = async ({ orderId, userId, amount, currency }) =>
     userId,
     amount,
     currency,
-    gateway: 'razorpay',
+    gateway: process.env.DEFAULT_PAYMENT_GATEWAY || 'cashfree',
     status: 'pending',
   });
 
@@ -125,7 +128,11 @@ exports.createOrder = async (req, res, next) => {
 
     const verifiedOtp = await ensureVerifiedEmail(req, value.email);
 
-    const orderId = 'VID' + crypto.randomBytes(6).toString('hex').toUpperCase();
+    // Generate secure, unique order ID: VID + timestamp + random bytes
+    // Format: VID + timestamp (base36) + random (8 bytes hex) = ~20 chars
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const randomBytes = crypto.randomBytes(8).toString('hex').toUpperCase();
+    const orderId = `VID${timestamp}${randomBytes}`;
     const user = await findOrCreateUser(value);
     const payment = await createPaymentRecord({
       orderId,
@@ -167,7 +174,11 @@ exports.createCampaignOrder = async (req, res, next) => {
 
     const verifiedOtp = await ensureVerifiedEmail(req, value.email);
 
-    const orderId = 'VID' + crypto.randomBytes(6).toString('hex').toUpperCase();
+    // Generate secure, unique order ID: VID + timestamp + random bytes
+    // Format: VID + timestamp (base36) + random (8 bytes hex) = ~20 chars
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const randomBytes = crypto.randomBytes(8).toString('hex').toUpperCase();
+    const orderId = `VID${timestamp}${randomBytes}`;
     const user = await findOrCreateUser(value);
     const payment = await createPaymentRecord({
       orderId,
@@ -176,10 +187,29 @@ exports.createCampaignOrder = async (req, res, next) => {
       currency: value.package.currency || 'USD',
     });
 
-    const totalViews =
+    let totalViews =
       value.package.quantity ||
       value.videos.reduce((sum, video) => sum + (video.viewsRequested || 0), 0) ||
       value.budget;
+
+    // Redeem available free views and add to total views
+    let redeemedFreeViews = 0;
+    try {
+      const FreeViews = require('../models/FreeViews');
+      const { redeemFreeViews } = require('./freeViews.controller');
+      const freeViewsRecord = await FreeViews.findOne({ userId: user._id });
+      
+      if (freeViewsRecord && freeViewsRecord.balance > 0) {
+        // Redeem all available free views
+        const availableFreeViews = freeViewsRecord.balance;
+        await redeemFreeViews(user._id, availableFreeViews);
+        redeemedFreeViews = availableFreeViews;
+        totalViews += redeemedFreeViews;
+      }
+    } catch (err) {
+      // If free views redemption fails, log but don't block order creation
+      console.error('Error redeeming free views:', err);
+    }
 
     const plan = {
       name: value.package.name,
@@ -210,6 +240,7 @@ exports.createCampaignOrder = async (req, res, next) => {
       },
       targeting: value.targeting,
       notes: value.targeting?.notes,
+      freeViewsRedeemed: redeemedFreeViews, // Track redeemed free views
     });
 
     if (verifiedOtp) {
@@ -219,6 +250,13 @@ exports.createCampaignOrder = async (req, res, next) => {
     const populatedOrder = await Order.findById(order._id)
       .populate('userId', 'name email phone emailVerified')
       .populate('paymentId', 'amount currency status gateway');
+
+    // Award referrer if this is the user's first paid campaign
+    // This runs asynchronously so it doesn't block the response
+    const { awardReferrerOnFirstCampaign } = require('./freeViews.controller');
+    awardReferrerOnFirstCampaign(user._id, order._id).catch(err => {
+      console.error('Failed to award referrer:', err);
+    });
 
     const checkoutBase =
       process.env.CHECKOUT_URL || process.env.FRONTEND_PAYMENT_URL || null;

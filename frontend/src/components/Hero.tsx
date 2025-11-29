@@ -2,16 +2,20 @@ import { Play, Youtube, Star, Eye, Heart, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
   const [channelInput, setChannelInput] = useState("");
+  const navigate = useNavigate();
 
   const handlePromoteNow = () => {
+    // Store channel input in sessionStorage if provided, so it can be used later
     if (channelInput.trim()) {
-      window.open(`https://wa.me/917355518761?text=I want to promote: ${encodeURIComponent(channelInput)}`, '_blank');
-    } else {
-      window.open('https://wa.me/917355518761', '_blank');
+      sessionStorage.setItem("vidfly_hero_channel_input", channelInput.trim());
     }
+    // Navigate to get-started page, same as Get Started button
+    navigate("/get-started");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -59,9 +63,9 @@ const Hero = () => {
                 </div>
                 <Button 
                   onClick={handlePromoteNow}
-                  className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-5 sm:py-4 rounded-full text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg w-full sm:w-auto"
+                  className="w-full sm:w-auto"
                 >
-                  Promote Now
+                  PROMOTE NOW
                 </Button>
               </div>
             </div>

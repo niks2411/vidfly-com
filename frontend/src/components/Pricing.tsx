@@ -18,55 +18,118 @@ const Pricing = () => {
 
   const plans = [
     {
-      name: "Trial Package",
+      name: "Starter",
       subtitle: "Perfect for Beginners",
-      price: "₹799",
-      originalPrice: "₹999",
-      views: "5,000 Targeted Views",
+      price: "₹999",
+      originalPrice: null,
+      views: "5,000+ Real Viewers",
       features: [
-        "Real audience engagement",
-        "Organic likes & comments", 
-        "Quality subscribers",
-        "24/7 support",
-        "Money-back guarantee"
+        "1 Video Promotion with professional ad setup",
+        "Natural Likes, Subscribers & Engagement",
+        "Niche-Based Basic Targeting",
+        "Multi-Format Promotion (TrueView, In-Feed & Shorts)",
+        "Safe, Google-Ads compliant delivery"
       ],
+      aiTargeting: false,
       popular: false,
       gradient: "from-red-400 to-red-500",
       badge: "STARTER"
     },
     {
-      name: "Trust Package", 
-      subtitle: "Most Popular Choice",
-      price: "₹1,499",
-      originalPrice: "₹1,999",
-      views: "10,000 Targeted Views",
+      name: "Boost",
+      subtitle: "Great Value",
+      price: "₹1,999",
+      originalPrice: null,
+      views: "10,000+ Real Viewers",
       features: [
-        "Premium targeting options",
-        "Enhanced engagement",
-        "Priority customer support",
-        "Detailed analytics report",
-        "Growth strategy consultation"
+        "1 Video Promotion with professional ad setup",
+        "Natural Likes, Subscribers & Engagement",
+        "Niche-Based Basic Targeting",
+        "Multi-Format Promotion (TrueView, In-Feed & Shorts)",
+        "Safe, Google-Ads compliant delivery"
       ],
-      popular: true,
-      gradient: "from-red-500 to-red-600",
-      badge: "BESTSELLER"
-    },
-    {
-      name: "Expert Package",
-      subtitle: "For Serious Creators", 
-      price: "₹5,999",
-      originalPrice: "₹7,999",
-      views: "50,000 Targeted Views",
-      features: [
-        "Advanced demographic targeting",
-        "Multi-platform promotion",
-        "Dedicated account manager",
-        "Custom campaign strategy",
-        "Monthly performance reviews"
-      ],
+      aiTargeting: false,
       popular: false,
       gradient: "from-red-400 to-red-500",
-      badge: "PROFESSIONAL"
+      badge: "VALUE"
+    },
+    {
+      name: "Growth",
+      subtitle: "Most Popular",
+      price: "₹3,499",
+      originalPrice: null,
+      views: "20,000+ Real Viewers",
+      features: [
+        "1 Video Promotion with professional ad setup",
+        "Natural Likes, Subscribers & Engagement",
+        "Niche-Based Basic Targeting",
+        "Multi-Format Promotion (TrueView, In-Feed & Shorts)",
+        "Safe, Google-Ads compliant delivery"
+      ],
+      aiTargeting: false,
+      popular: true,
+      gradient: "from-red-500 to-red-600",
+      badge: "POPULAR"
+    },
+    {
+      name: "Premium AI",
+      subtitle: "AI-Powered Growth",
+      price: "₹5,499",
+      originalPrice: null,
+      views: "37,000+ Real Viewers",
+      bonusViews: "+2,000 FREE",
+      discount: "5% OFF",
+      features: [
+        "1 Video Promotion with professional ad setup",
+        "35,000+ Base Viewers + 2,000 Bonus",
+        "AI Smart Targeting for precise audience reach",
+        "Multi-Format Promotion (TrueView, In-Feed & Shorts)",
+        "Higher watch time & stronger engagement"
+      ],
+      aiTargeting: true,
+      popular: false,
+      gradient: "from-purple-500 to-purple-600",
+      badge: "AI POWERED"
+    },
+    {
+      name: "Viral AI",
+      subtitle: "Advanced AI Targeting",
+      price: "₹8,999",
+      originalPrice: null,
+      views: "59,000+ Real Viewers",
+      bonusViews: "+4,000 FREE",
+      discount: "8% OFF",
+      features: [
+        "1 Video Promotion with professional ad setup",
+        "55,000+ Base Viewers + 4,000 Bonus",
+        "Advanced AI Interest Targeting",
+        "Optimized placements for rapid growth",
+        "Maximum engagement & viral potential"
+      ],
+      aiTargeting: true,
+      popular: false,
+      gradient: "from-purple-600 to-indigo-600",
+      badge: "VIRAL AI"
+    },
+    {
+      name: "Ultra Viral AI",
+      subtitle: "Ultimate Growth Package",
+      price: "₹12,999",
+      originalPrice: null,
+      views: "86,500+ Real Viewers",
+      bonusViews: "+6,500 FREE",
+      discount: "10% OFF",
+      features: [
+        "1 Video Promotion with professional ad setup",
+        "80,000+ Base Viewers + 6,500 Bonus",
+        "AI Behaviour + Interest + Demographic Targeting",
+        "Maximum reach & best viral potential",
+        "Premium support & optimization"
+      ],
+      aiTargeting: true,
+      popular: false,
+      gradient: "from-indigo-600 to-purple-700",
+      badge: "ULTRA AI"
     }
   ];
 
@@ -90,14 +153,14 @@ const Pricing = () => {
             <div className="absolute bottom-5 left-32 w-10 h-10 bg-red-300 rounded-full animate-scale-pulse"></div>
           </div>
           <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 relative z-10 animate-fade-in">
-            Choose Your <span className="text-red-500 animate-gradient bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">Growth Plan</span>
+            Choose Your <span className="text-red-500 animate-gradient bg-gradient-to-r from-red-400 to-red-600 bg-clip-text  ">Growth Plan</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto relative z-10 animate-fade-in-delay">
             Professional YouTube advertising solutions designed to deliver real results and sustainable growth for your channel
           </p>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-12">
           {plans.map((plan, index) => (
             <div key={index} className="relative group">
               {plan.popular && (

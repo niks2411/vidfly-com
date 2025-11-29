@@ -27,6 +27,7 @@ import CampaignChannel from "./pages/CampaignChannel";
 import CampaignPackages from "./pages/CampaignPackages";
 import CampaignPackageDetail from "./pages/CampaignPackageDetail";
 import CampaignBulkViews from "./pages/CampaignBulkViews";
+import CampaignBulkViewsSelect from "./pages/CampaignBulkViewsSelect";
 import CampaignFreeViews from "./pages/CampaignFreeViews";
 import MyCampaigns from "./pages/MyCampaigns";
 import AdminPanel from "./pages/AdminPanel";
@@ -58,6 +59,7 @@ const App = () => (
           <Route path="/campaign/packages" element={<CampaignPackages />} />
           <Route path="/campaign/packages/:id" element={<CampaignPackageDetail />} />
           <Route path="/campaign/bulk-views" element={<CampaignBulkViews />} />
+          <Route path="/campaign/bulk-views/select" element={<CampaignBulkViewsSelect />} />
           <Route path="/campaign/free-views" element={<CampaignFreeViews />} />
           <Route path="/campaign/my-campaigns" element={<MyCampaigns />} />
           <Route path="/admin" element={<AdminPanel />} />

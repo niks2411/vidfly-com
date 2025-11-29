@@ -77,10 +77,14 @@ const OrderSchema = new mongoose.Schema(
           duration: String,
           autoTargeting: { type: Boolean, default: true },
           notes: String,
+          gender: String,
+          ages: [String],
+          interests: [String],
         },
         { _id: false }
       ),
     },
+    freeViewsRedeemed: { type: Number, default: 0 }, // Track how many free views were redeemed for this order
   },
   { timestamps: true }
 );

@@ -117,8 +117,8 @@ const VideoShowcase = () => {
                     High Conversion
                   </div>
                 </div>
-                <Button className="w-full mt-3 bg-red-600 hover:bg-red-700 text-white text-xs py-2">
-                  Launch Campaign
+                <Button className="w-full mt-3" size="sm">
+                  LAUNCH CAMPAIGN
                 </Button>
               </div>
             </div>
@@ -130,9 +130,8 @@ const VideoShowcase = () => {
           <Button 
             onClick={handleWhatsAppClick}
             size="lg"
-            className="bg-red-600 hover:bg-red-700 text-white px-10 py-5 text-base font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg"
           >
-            Start Growing Today →
+            START GROWING TODAY →
           </Button>
           <p className="text-gray-600 text-sm mt-4">
             Join 58,000+ creators who trust Vidflyy

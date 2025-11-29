@@ -1,11 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import CampaignLayout from "@/components/CampaignLayout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Play, Layers, Settings, CreditCard } from "lucide-react";
-import CampaignSidebar from "@/components/CampaignSidebar";
 import CampaignHeader from "@/components/CampaignHeader";
 import { getVerifiedEmail } from "@/lib/verifiedEmail";
 
@@ -165,30 +163,12 @@ const CampaignDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-purple-50 font-montserrat">
-      <Navbar />
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10 flex flex-col gap-8 lg:flex-row">
-        <CampaignSidebar active="promote" />
-
-        <main className="flex-1 space-y-8">
+    <CampaignLayout activeSidebar="promote">
           <section className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 animate-fade-in hover:shadow-2xl transition-all duration-300">
-            <CampaignHeader />
-            <div className="flex items-center gap-3 mb-6 animate-slide-in-left">
-              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-lg hover:scale-110 transition-transform duration-300">
-                <Play className="h-6 w-6" />
-              </span>
-              <div>
-                <p className="text-xs uppercase tracking-wide text-slate-500 font-semibold">
-                  Verified email
-                </p>
-            <p className="font-semibold text-lg text-slate-900 truncate max-w-[220px]">
-                  {displayEmail}
-                </p>
-              </div>
-            </div>
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+            <CampaignHeader verifiedEmail={displayEmail} />
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 mt-6">
           <div className="animate-fade-in delay-100">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent mb-3">
+            <h1 className="text-4xl font-bold bg-gradient-to-r text-red-600 bg-clip-text mb-3">
               Promote videos with just <span className="text-red-600">₹999</span>
             </h1>
             <p className="text-slate-600 mb-6 max-w-2xl text-lg leading-relaxed">
@@ -199,7 +179,7 @@ const CampaignDashboard = () => {
           </div>
           <Button
             variant="outline"
-            className="rounded-2xl border-2 border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300 hover:scale-105 shadow-lg animate-fade-in delay-200"
+            className="rounded-2xl border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition-all duration-300 hover:scale-105 shadow-lg animate-fade-in delay-200"
             onClick={() =>
               navigate("/campaign/channel", { state: { email: verifiedEmail } })
             }
@@ -209,15 +189,15 @@ const CampaignDashboard = () => {
         </div>
 
             <form onSubmit={handleLaunchCampaign} className="space-y-4 animate-fade-in delay-300">
-              <div className="rounded-3xl border-2 border-purple-200/50 bg-gradient-to-r from-white to-purple-50/30 flex flex-col gap-3 sm:flex-row sm:items-center p-4 shadow-xl hover:shadow-2xl transition-all duration-300">
+              <div className="rounded-3xl border-2 border-red-200/50 bg-gradient-to-r from-white to-red-50/30 flex flex-col gap-3 sm:flex-row sm:items-center p-4 shadow-xl hover:shadow-2xl transition-all duration-300">
                 <div className="flex items-center gap-3 flex-1">
                   <div className="h-12 w-12 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center text-white shadow-lg">
                     <Play className="h-6 w-6" />
                   </div>
                   <Input
                     type="text"
-                    placeholder="Enter your YouTube channel name, video URL, or Shorts link"
-                    className="border-0 shadow-none focus-visible:ring-2 focus-visible:ring-purple-500/20 text-base bg-transparent"
+                    placeholder="Enter your YouTube video URL, or Shorts link"
+                    className="border-0 shadow-none focus-visible:ring-2 focus-visible:ring-red-500/20 text-base bg-transparent"
                     value={youtubeLink}
                     onChange={(e) => setYoutubeLink(e.target.value)}
                     required
@@ -225,7 +205,7 @@ const CampaignDashboard = () => {
                 </div>
                 <Button
                   type="submit"
-                  className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-2xl text-base px-8 py-6 font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+                  className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-2xl text-base px-8 py-6 font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
                 >
                   Launch Campaign
                 </Button>
@@ -233,7 +213,7 @@ const CampaignDashboard = () => {
 
               <div className="space-y-3">
                 {loadingVideo && (
-                  <div className="border border-purple-100 rounded-2xl p-4 bg-purple-50 text-purple-700 text-sm">
+                  <div className="border border-red-100 rounded-2xl p-4 bg-red-50 text-red-700 text-sm">
                     Fetching video details...
                   </div>
                 )}
@@ -243,7 +223,7 @@ const CampaignDashboard = () => {
                   </div>
                 )}
                 {videoInfo && (
-                  <div className="border-2 border-purple-200/50 rounded-2xl p-5 flex gap-4 bg-gradient-to-r from-white to-purple-50/30 shadow-lg hover:shadow-xl transition-all duration-300 animate-scale-in">
+                  <div className="border-2 border-red-200/50 rounded-2xl p-5 flex gap-4 bg-gradient-to-r from-white to-red-50/30 shadow-lg hover:shadow-xl transition-all duration-300 animate-scale-in">
                     <img
                       src={videoInfo.thumbnail}
                       alt={videoInfo.title}
@@ -262,7 +242,7 @@ const CampaignDashboard = () => {
                         href={`https://www.youtube.com/watch?v=${videoInfo.videoId}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-purple-600 hover:text-purple-700 text-sm font-semibold inline-flex items-center gap-2 mt-3 transition-colors duration-200"
+                        className="text-red-600 hover:text-red-700 text-sm font-semibold inline-flex items-center gap-2 mt-3 transition-colors duration-200"
                       >
                         View on YouTube <span>→</span>
                       </a>
@@ -285,7 +265,7 @@ const CampaignDashboard = () => {
                 icon: Settings,
                 title: "Set Up Campaign",
                 desc: "Choose your target audience, budget, and timeline.",
-                gradient: "from-purple-500 to-purple-600",
+                gradient: "from-red-600 to-red-700",
               },
               {
                 icon: CreditCard,
@@ -309,10 +289,7 @@ const CampaignDashboard = () => {
               </div>
             ))}
           </section>
-        </main>
-      </div>
-      <Footer />
-    </div>
+    </CampaignLayout>
   );
 };
 

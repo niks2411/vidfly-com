@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import CampaignSidebar from "@/components/CampaignSidebar";
+import CampaignLayout from "@/components/CampaignLayout";
 import CampaignHeader from "@/components/CampaignHeader";
 import { Button } from "@/components/ui/button";
 import { getVerifiedEmail } from "@/lib/verifiedEmail";
@@ -49,8 +47,8 @@ const statusConfig: Record<string, { label: string; color: string; icon: any }> 
   pending: { label: "Pending", color: "bg-yellow-100 text-yellow-800", icon: Clock },
   payment_pending: { label: "Payment Pending", color: "bg-orange-100 text-orange-800", icon: Clock },
   paid: { label: "Paid", color: "bg-blue-100 text-blue-800", icon: CheckCircle },
-  promotion_scheduled: { label: "Scheduled", color: "bg-purple-100 text-purple-800", icon: Calendar },
-  in_progress: { label: "In Progress", color: "bg-indigo-100 text-indigo-800", icon: TrendingUp },
+  promotion_scheduled: { label: "Scheduled", color: "bg-red-100 text-red-800", icon: Calendar },
+  in_progress: { label: "In Progress", color: "bg-red-100 text-red-800", icon: TrendingUp },
   completed: { label: "Completed", color: "bg-green-100 text-green-800", icon: CheckCircle },
   failed: { label: "Failed", color: "bg-red-100 text-red-800", icon: XCircle },
 };
@@ -120,15 +118,11 @@ const MyCampaigns = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-purple-50 font-montserrat">
-      <Navbar />
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10 flex flex-col gap-8 lg:flex-row">
-        <CampaignSidebar active="promote" />
-        <div className="flex-1 space-y-8">
+    <CampaignLayout activeSidebar="promote">
           <section className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 animate-fade-in hover:shadow-2xl transition-all duration-300">
             <CampaignHeader>
               <div className="animate-fade-in">
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent mb-3">My Campaigns</h1>
+                <h1 className="text-4xl font-bold bg-gradient-to-r text-red-600 bg-clip-text   mb-3">My Campaigns</h1>
                 <p className="text-slate-600 text-lg">
                   Track the progress of all your video promotion campaigns
                 </p>
@@ -137,7 +131,7 @@ const MyCampaigns = () => {
             <div className="flex justify-end mb-6 animate-fade-in delay-200">
               <Button
                 onClick={() => navigate("/campaign")}
-                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 rounded-2xl px-8 py-6 font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+                className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded-2xl px-8 py-6 font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
               >
                 Create New Campaign
               </Button>
@@ -160,7 +154,7 @@ const MyCampaigns = () => {
                 </p>
                 <Button
                   onClick={() => navigate("/campaign")}
-                  className="bg-purple-600 hover:bg-purple-700 rounded-2xl px-6"
+                  className="bg-red-600 hover:bg-red-700 rounded-2xl px-6"
                 >
                   Create Your First Campaign
                 </Button>
@@ -233,7 +227,7 @@ const MyCampaigns = () => {
                         </div>
                         <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-purple-500 transition-all duration-300"
+                            className="h-full bg-red-600 transition-all duration-300"
                             style={{ width: `${progress}%` }}
                           />
                         </div>
@@ -292,7 +286,7 @@ const MyCampaigns = () => {
                             href={order.channel.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-purple-600 hover:underline"
+                            className="text-red-600 hover:underline"
                           >
                             View Channel →
                           </a>
@@ -304,10 +298,7 @@ const MyCampaigns = () => {
               </div>
             )}
           </section>
-        </div>
-      </div>
-      <Footer />
-    </div>
+    </CampaignLayout>
   );
 };
 

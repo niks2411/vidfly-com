@@ -1,12 +1,48 @@
 
-import { useState } from "react";
+import { useState, createContext, useContext } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+
+// Context for campaign sidebar toggle
+type CampaignSidebarContextType = {
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: (open: boolean) => void;
+};
+
+export const CampaignSidebarContext = createContext<CampaignSidebarContextType | null>(null);
+
+export const useCampaignSidebar = () => {
+  const context = useContext(CampaignSidebarContext);
+  return context;
+};
+
+// Campaign Hamburger Button Component - Must be defined before Navbar
+function CampaignHamburgerButton() {
+  const sidebarContext = useCampaignSidebar();
+  
+  if (!sidebarContext) return null;
+  
+  const { isSidebarOpen, setIsSidebarOpen } = sidebarContext;
+  
+  return (
+    <button
+      onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      className="text-gray-700 hover:text-red-600 transition-colors duration-300 p-2"
+      aria-label="Toggle campaign menu"
+    >
+      {isSidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+    </button>
+  );
+}
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Check if we're on a campaign page
+  const isCampaignPage = location.pathname.startsWith('/campaign');
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -57,12 +93,16 @@ const Navbar = () => {
           </div>
           
           <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-red-600 transition-colors duration-300"
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+            {!isCampaignPage ? (
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="text-gray-700 hover:text-red-600 transition-colors duration-300 p-2"
+              >
+                {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            ) : (
+              <CampaignHamburgerButton />
+            )}
           </div>
         </div>
         

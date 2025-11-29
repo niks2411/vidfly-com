@@ -2,11 +2,21 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ChannelSelector from "./ChannelSelector";
 
+export type CampaignSidebarKey =
+  | "promote"
+  | "channel"
+  | "packages"
+  | "bulk"
+  | "free"
+  | "budget";
+
 type SidebarProps = {
-  active?: "promote" | "budget";
+  active?: CampaignSidebarKey;
+  onNavigate?: () => void;
+  isMobile?: boolean;
 };
 
-const CampaignSidebar = ({ active = "promote" }: SidebarProps) => {
+const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, isMobile = false }: SidebarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -15,12 +25,12 @@ const CampaignSidebar = ({ active = "promote" }: SidebarProps) => {
       title: "Promotion",
         items: [
           { label: "Promote Video / Short", path: "/campaign", key: "promote" },
-          { label: "Promote Channel", path: "/campaign/channel" },
+          { label: "Promote Channel", path: "/campaign/channel", key: "channel" },
           { label: "My Campaigns", path: "/campaign/my-campaigns" },
-          // { label: "Manage Channels", path: "/campaign/manage" },
-          { label: "Buy Packages", path: "/campaign/packages" },
-          { label: "Buy Bulk Views", path: "/campaign/bulk-views" },
-          { label: "Free Views", path: "/campaign/free-views" },
+          // { label: "Manage Channels", path: "/campaign/manage", key: "manage" },
+          { label: "Buy Packages", path: "/campaign/packages", key: "packages" },
+          { label: "Buy Bulk Views", path: "/campaign/bulk-views", key: "bulk" },
+          { label: "Free Views", path: "/campaign/free-views", key: "free" },
         ],
     },
     {
@@ -38,12 +48,25 @@ const CampaignSidebar = ({ active = "promote" }: SidebarProps) => {
   const handleNavigate = (path?: string) => {
     if (!path) return;
     navigate(path);
+    // Call the callback to close mobile menu if provided
+    if (onNavigateCallback) {
+      onNavigateCallback();
+    }
   };
 
   return (
-    <aside className="lg:w-64 bg-white rounded-3xl shadow-md p-6 h-fit lg:sticky lg:top-6 self-start">
+    <aside className={cn(
+      "lg:w-64 bg-white h-fit lg:sticky lg:top-6 self-start",
+      isMobile ? "w-full" : "rounded-3xl shadow-md p-6"
+    )}>
       {sections.map((section) => (
-        <div key={section.title} className="mb-8 last:mb-0">
+        <div 
+          key={section.title} 
+          className={cn(
+            "mb-8 last:mb-0",
+            section.title === "Strategy Path" && "hidden lg:block"
+          )}
+        >
           <div>
             <p className="text-xs text-slate-500 uppercase tracking-wide">
               {section.title}
@@ -66,7 +89,7 @@ const CampaignSidebar = ({ active = "promote" }: SidebarProps) => {
                       : "text-slate-300 cursor-not-allowed",
                     (item.key && item.key === active) ||
                       (!item.key && item.path === location.pathname)
-                      ? "bg-purple-100 text-purple-700"
+                      ? "bg-red-100 text-red-700"
                       : null
                   )}
                 >

@@ -246,7 +246,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
             setShowDropdown(!showDropdown);
           }
         }}
-        className="flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-slate-200 rounded-xl hover:border-purple-400 hover:shadow-md transition-all duration-200 shadow-sm"
+        className="flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-slate-200 rounded-xl hover:border-red-400 hover:shadow-md transition-all duration-200 shadow-sm"
       >
         {selectedChannel ? (
           <>
@@ -257,7 +257,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
                 className="w-8 h-8 rounded-full object-cover"
               />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-xs">
+              <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-xs">
                 {selectedChannel.name.charAt(0).toUpperCase()}
               </div>
             )}
@@ -283,7 +283,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
           </>
         ) : (
           <>
-            <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-xs">
+            <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-xs">
               {availableChannels.length === 0 ? <Plus className="h-4 w-4" /> : "?"}
             </div>
             <span className="text-sm text-slate-500">
@@ -297,7 +297,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
       </button>
 
       {showDropdown && (
-        <div className="absolute z-20 left-0 mt-2 bg-white border-2 border-purple-200 rounded-2xl shadow-2xl max-h-80 overflow-y-auto min-w-[380px] w-max animate-fade-in backdrop-blur-sm">
+        <div className="absolute z-20 left-0 mt-2 bg-white border-2 border-red-200 rounded-2xl shadow-2xl max-h-80 overflow-y-auto min-w-[380px] w-max animate-fade-in backdrop-blur-sm">
           <div className="p-3">
             {availableChannels.map((channel) => {
               const channelVideos = storedVideos.filter((v) => v.channelId === channel.channelId);
@@ -308,18 +308,18 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
                   key={channel.channelId}
                   type="button"
                   onClick={() => handleChannelClick(channel.channelId, channel.name)}
-                  className={`w-full flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-purple-50 hover:to-purple-100 transition-all duration-200 text-left mb-1 ${
-                    selectedChannelId === channel.channelId ? 'bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200' : ''
+                  className={`w-full flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 transition-all duration-200 text-left mb-1 ${
+                    selectedChannelId === channel.channelId ? 'bg-gradient-to-r from-red-50 to-red-100 border border-red-200' : ''
                   }`}
                 >
                   {channel.avatar ? (
                     <img
                       src={channel.avatar}
                       alt={channel.name}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-purple-200 shadow-sm"
+                      className="w-12 h-12 rounded-full object-cover border-2 border-red-200 shadow-sm"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold text-base flex-shrink-0 shadow-md">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white font-bold text-base flex-shrink-0 shadow-md">
                       {isLoading ? (
                         <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       ) : (
@@ -331,7 +331,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
                     <p className="text-sm font-bold text-slate-900 truncate">{channel.name}</p>
                   </div>
                   {selectedChannelId === channel.channelId && (
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-600 to-purple-700 flex items-center justify-center shadow-md flex-shrink-0">
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center shadow-md flex-shrink-0">
                       <span className="text-white text-xs font-bold">✓</span>
                     </div>
                   )}
@@ -344,13 +344,13 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
                 setShowDropdown(false);
                 setShowAddModal(true);
               }}
-              className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-purple-50 hover:to-purple-100 transition-all duration-200 text-left border-2 border-dashed border-purple-200 bg-purple-50/30 mt-2"
+              className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 transition-all duration-200 text-left border-2 border-dashed border-red-200 bg-red-50/30 mt-2"
             >
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white flex-shrink-0 shadow-lg">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center text-white flex-shrink-0 shadow-lg">
                 <Plus className="h-6 w-6" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-bold text-purple-600">Add another channel</p>
+                <p className="text-sm font-bold text-red-600">Add another channel</p>
                 <p className="text-xs text-slate-500">Add a new YouTube channel</p>
               </div>
             </button>

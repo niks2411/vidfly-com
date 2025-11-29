@@ -81,6 +81,7 @@ app.use('/api/payments', require('./routes/payment.routes'));
 app.use('/api/admin', require('./routes/admin.routes'));
 app.use('/api/youtube', require('./routes/youtube.routes'));
 app.use('/api/pricing', require('./routes/pricing.routes'));
+app.use('/api/free-views', require('./routes/freeViews.routes'));
 
 // Global error handler placeholder (real handler will be in middleware)
 app.use((err, req, res, next) => {

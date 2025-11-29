@@ -102,7 +102,7 @@ const YoutubeMusicPromotion: React.FC = () => {
           <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
             <div className="text-white mb-2">YouTube Music Video</div>
             <div className="flex items-center gap-3">
-              <span className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent font-extrabold">
+              <span className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text   font-extrabold">
                 Promotion
               </span>
               <span className="text-white">Service</span>

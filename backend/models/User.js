@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema(
     phone: { type: String },
     emailVerified: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
+    referralCode: { type: String, unique: true, sparse: true, index: true },
   },
   { timestamps: true }
 );
