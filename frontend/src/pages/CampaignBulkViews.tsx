@@ -2,66 +2,70 @@ import CampaignLayout from "@/components/CampaignLayout";
 import CampaignHeader from "@/components/CampaignHeader";
 import CampaignCard from "@/components/CampaignCard";
 import { Button } from "@/components/ui/button";
-import { Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getVerifiedEmail } from "@/lib/verifiedEmail";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const bulkPackages = [
   {
-    id: "25k",
-    label: "25000 views",
+    id: "views-25k",
+    views: 25000,
     price: "$249",
-    oldPrice: "$450",
-    discount: "45% off",
-    iconGradient: "from-amber-700 to-amber-800",
+    originalPrice: "$450",
+    discountLabel: "45% off",
+    badgeColor: "bg-orange-100",
+    iconBg: "bg-gradient-to-tr from-orange-500 to-amber-400",
   },
   {
-    id: "50k",
-    label: "50000 views",
+    id: "views-50k",
+    views: 50000,
     price: "$399",
-    oldPrice: "$900",
-    discount: "56% off",
-    iconGradient: "from-slate-400 to-slate-600",
+    originalPrice: "$900",
+    discountLabel: "56% off",
+    badgeColor: "bg-slate-200",
+    iconBg: "bg-gradient-to-tr from-slate-500 to-slate-400",
   },
   {
-    id: "100k",
-    label: "100000 views",
+    id: "views-100k",
+    views: 100000,
     price: "$699",
-    oldPrice: "$1800",
-    discount: "61% off",
-    iconGradient: "from-orange-500 to-orange-600",
+    originalPrice: "$1800",
+    discountLabel: "61% off",
+    badgeColor: "bg-orange-100",
+    iconBg: "bg-gradient-to-tr from-rose-500 to-pink-400",
   },
   {
-    id: "250k",
-    label: "250000 views",
+    id: "views-250k",
+    views: 250000,
     price: "$1499",
-    oldPrice: "$4500",
-    discount: "67% off",
-    iconGradient: "from-red-500 to-red-600",
+    originalPrice: "$4500",
+    discountLabel: "67% off",
+    badgeColor: "bg-red-100",
+    iconBg: "bg-gradient-to-tr from-red-500 to-red-400",
   },
   {
-    id: "500k",
-    label: "500000 views",
+    id: "views-500k",
+    views: 500000,
     price: "$2899",
-    oldPrice: "$9000",
-    discount: "68% off",
-    iconGradient: "from-blue-500 to-blue-600",
+    originalPrice: "$9000",
+    discountLabel: "68% off",
+    badgeColor: "bg-blue-100",
+    iconBg: "bg-gradient-to-tr from-sky-500 to-blue-500",
   },
   {
-    id: "1m",
-    label: "1000000 views",
+    id: "views-1m",
+    views: 1000000,
     price: "$5499",
-    oldPrice: "$18000",
-    discount: "69% off",
-    iconGradient: "from-green-500 to-green-600",
+    originalPrice: "$18000",
+    discountLabel: "69% off",
+    badgeColor: "bg-green-100",
+    iconBg: "bg-gradient-to-tr from-emerald-500 to-lime-500",
   },
 ];
 
 const CampaignBulkViews = () => {
   const navigate = useNavigate();
   const verifiedEmail = getVerifiedEmail();
-  const [channelError, setChannelError] = useState("");
 
   useEffect(() => {
     if (!verifiedEmail) {
@@ -69,21 +73,17 @@ const CampaignBulkViews = () => {
     }
   }, [verifiedEmail, navigate]);
 
-  const handleBuyNow = (pkg: typeof bulkPackages[0]) => {
-    if (!verifiedEmail) {
-      setChannelError("Please verify your email first");
-      return;
-    }
+  const handleSelectPackage = (pkg: (typeof bulkPackages)[number]) => {
+    if (!verifiedEmail) return;
 
-    // Navigate to video selection page with bulk views package info
     navigate("/campaign/bulk-views/select", {
       state: {
         email: verifiedEmail,
         bulkViewsPackage: {
           id: pkg.id,
-          label: pkg.label,
+          label: `${pkg.views.toLocaleString()} views`,
           price: pkg.price,
-          views: parseInt(pkg.label.replace(/\D/g, "")), // Extract number from label
+          views: pkg.views,
         },
       },
     });
@@ -92,57 +92,75 @@ const CampaignBulkViews = () => {
   return (
     <CampaignLayout activeSidebar="bulk">
       <CampaignCard>
-            <CampaignHeader>
-              <div className="animate-fade-in">
-                <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r text-gray-800 bg-clip-text   leading-tight">
-                  Select from Packages below
-                </h1>
-              </div>
-            </CampaignHeader>
+        <CampaignHeader>
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 mb-1">
+              Select from Packages below
+            </h1>
+            <p className="text-slate-600 text-sm">
+              Pick a bulk views package that fits your goals. You’ll select the exact video on the next step.
+            </p>
+          </div>
+        </CampaignHeader>
 
-            <div className="grid md:grid-cols-2 gap-4">
-              {bulkPackages.map((pkg, index) => (
+        <div className="mt-6 space-y-4">
+          {bulkPackages.reduce<typeof bulkPackages[][]>((rows, _pkg, index) => {
+            if (index % 2 === 0) {
+              rows.push(bulkPackages.slice(index, index + 2));
+            }
+            return rows;
+          }, []).map((row, rowIndex) => (
+            <div
+              key={rowIndex}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+              {row.map((pkg) => (
                 <div
                   key={pkg.id}
-                  className="flex flex-col gap-3 rounded-2xl border-2 border-white/50 p-4 bg-white/80 backdrop-blur-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 animate-fade-in"
-                  style={{ animationDelay: `${index * 0.1}s` }}
+                  className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-8 py-6 shadow-sm hover:shadow-md transition-shadow"
                 >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`h-12 w-12 rounded-xl bg-gradient-to-br ${pkg.iconGradient} flex items-center justify-center shadow-lg flex-shrink-0`}
-                    >
-                      <Play className="h-6 w-6 text-white fill-white" />
+                  {/* Left: icon + views */}
+                  <div className="flex items-center gap-5">
+                    <div className="h-16 w-16 flex items-center justify-center">
+                      <div className={`h-9 w-14 rounded-xl ${pkg.iconBg} flex items-center justify-center shadow-sm`}>
+                        <span className="text-white text-base font-semibold">▶</span>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="text-xs text-slate-500 font-medium">Package</p>
-                      <p className="text-lg font-bold text-slate-900">
-                        {pkg.label}
+                    <div>
+                      <p className="text-xl font-bold text-slate-900">
+                        {pkg.views.toLocaleString()}
                       </p>
+                      <p className="text-xs text-slate-500">views</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-xl font-bold text-red-600">
-                    <span>{pkg.price}</span>
-                    <span className="text-slate-400 line-through text-sm font-normal">
-                      {pkg.oldPrice}
-                    </span>
-                    <span className="text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full font-semibold">
-                      {pkg.discount}
-                    </span>
-                  </div>
-                  <div>
-                    <Button 
-                      className="w-full"
-                      onClick={() => handleBuyNow(pkg)}
+
+                  {/* Right: price + CTA */}
+                  <div className="flex items-center gap-6">
+                    <div className="text-right">
+                      <p className="text-xl font-bold text-slate-900">
+                        {pkg.price}
+                      </p>
+                      <div className="flex items-center justify-end gap-2 text-[11px]">
+                        <span className="text-slate-400 line-through">
+                          {pkg.originalPrice}
+                        </span>
+                        <span className="text-purple-500 font-semibold">
+                          {pkg.discountLabel}
+                        </span>
+                      </div>
+                    </div>
+                    <Button
+                      className="rounded-xl bg-red-500 hover:bg-red-600 px-6 py-2 text-xs font-semibold"
+                      onClick={() => handleSelectPackage(pkg)}
                     >
-                      BUY NOW
+                      Buy Now
                     </Button>
-                    {channelError && (
-                      <p className="mt-1.5 text-xs text-red-600 font-medium text-center">{channelError}</p>
-                    )}
                   </div>
                 </div>
               ))}
             </div>
+          ))}
+        </div>
       </CampaignCard>
     </CampaignLayout>
   );

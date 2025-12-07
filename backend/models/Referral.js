@@ -27,3 +27,6 @@ ReferralSchema.index({ referredId: 1 });
 module.exports = mongoose.model('Referral', ReferralSchema);
 
 
+
+
+

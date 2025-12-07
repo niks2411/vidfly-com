@@ -31,6 +31,9 @@ import CampaignBulkViewsSelect from "./pages/CampaignBulkViewsSelect";
 import CampaignFreeViews from "./pages/CampaignFreeViews";
 import MyCampaigns from "./pages/MyCampaigns";
 import AdminPanel from "./pages/AdminPanel";
+import PaymentCheckout from "./pages/PaymentCheckout";
+import PaymentCallback from "./pages/PaymentCallback";
+import ScrollToTop from "./components/ScrollToTop";
 const queryClient = new QueryClient();
 
 
@@ -40,6 +43,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/youtube-vlogging-promotion" element={<YoutubeVloggingPromotion />} />
@@ -62,6 +66,8 @@ const App = () => (
           <Route path="/campaign/bulk-views/select" element={<CampaignBulkViewsSelect />} />
           <Route path="/campaign/free-views" element={<CampaignFreeViews />} />
           <Route path="/campaign/my-campaigns" element={<MyCampaigns />} />
+          <Route path="/payment/checkout" element={<PaymentCheckout />} />
+          <Route path="/payment/callback" element={<PaymentCallback />} />
           <Route path="/admin" element={<AdminPanel />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />

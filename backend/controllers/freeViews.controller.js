@@ -276,14 +276,24 @@ exports.redeemFreeViews = async (userId, views) => {
   try {
     const freeViews = await FreeViews.findOne({ userId });
     
-    if (!freeViews || freeViews.balance < views) {
-      throw new Error('Insufficient free views balance');
+    if (!freeViews) {
+      throw new Error('Free views record not found');
+    }
+    
+    if (freeViews.balance < views) {
+      throw new Error(`Insufficient free views balance. Available: ${freeViews.balance}, Requested: ${views}`);
+    }
+    
+    // Ensure totalRedeemed is initialized
+    if (typeof freeViews.totalRedeemed !== 'number') {
+      freeViews.totalRedeemed = 0;
     }
     
     freeViews.balance -= views;
     freeViews.totalRedeemed += views;
     await freeViews.save();
     
+    console.log(`Successfully redeemed ${views} free views for user ${userId}. Remaining balance: ${freeViews.balance}`);
     return freeViews;
   } catch (err) {
     console.error('Error redeeming free views:', err);

@@ -16,7 +16,7 @@ const createOrderSchema = Joi.object({
   youtubeLink: Joi.string().uri().allow('', null),
   plan: Joi.object({
     name: Joi.string().required(),
-    type: Joi.string().valid('views', 'subscribers', 'watch_time', 'likes', 'package').required(),
+    type: Joi.string().valid('views', 'subscribers', 'watch_time', 'likes', 'package', 'bulk-views').required(),
     quantity: Joi.number().required(),
     price: Joi.number().required(),
     currency: Joi.string().default('INR'),
@@ -202,13 +202,22 @@ exports.createCampaignOrder = async (req, res, next) => {
       if (freeViewsRecord && freeViewsRecord.balance > 0) {
         // Redeem all available free views
         const availableFreeViews = freeViewsRecord.balance;
-        await redeemFreeViews(user._id, availableFreeViews);
-        redeemedFreeViews = availableFreeViews;
-        totalViews += redeemedFreeViews;
+        try {
+          await redeemFreeViews(user._id, availableFreeViews);
+          redeemedFreeViews = availableFreeViews;
+          totalViews += redeemedFreeViews;
+          console.log(`Successfully redeemed ${redeemedFreeViews} free views for user ${user._id}. New total views: ${totalViews}`);
+        } catch (redeemErr) {
+          // If redemption fails, log but continue without free views
+          console.error('Failed to redeem free views:', redeemErr.message);
+          // Don't add to totalViews if redemption failed
+        }
+      } else {
+        console.log(`No free views to redeem for user ${user._id}. Balance: ${freeViewsRecord?.balance || 0}`);
       }
     } catch (err) {
-      // If free views redemption fails, log but don't block order creation
-      console.error('Error redeeming free views:', err);
+      // If free views lookup fails, log but don't block order creation
+      console.error('Error checking free views balance:', err.message);
     }
 
     const plan = {
@@ -258,11 +267,9 @@ exports.createCampaignOrder = async (req, res, next) => {
       console.error('Failed to award referrer:', err);
     });
 
-    const checkoutBase =
-      process.env.CHECKOUT_URL || process.env.FRONTEND_PAYMENT_URL || null;
-    const paymentCheckoutUrl = checkoutBase
-      ? `${checkoutBase}?orderId=${orderId}`
-      : null;
+    // Generate payment checkout URL pointing to frontend payment page
+    const frontendUrl = process.env.FRONTEND_URL || process.env.CHECKOUT_URL || process.env.FRONTEND_PAYMENT_URL || 'http://localhost:5173';
+    const paymentCheckoutUrl = `${frontendUrl}/payment/checkout?orderId=${orderId}`;
 
     return res.status(201).json({
       order: populatedOrder,

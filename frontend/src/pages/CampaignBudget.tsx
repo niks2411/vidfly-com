@@ -8,6 +8,7 @@ import AdPreviewModal from "@/components/AdPreviewModal";
 import { getVerifiedEmail } from "@/lib/verifiedEmail";
 import CampaignLayout from "@/components/CampaignLayout";
 import CampaignCard from "@/components/CampaignCard";
+import ChannelSelector from "@/components/ChannelSelector";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") || "http://localhost:5000";
@@ -78,6 +79,7 @@ const CampaignBudget = () => {
   const [loadingPricing, setLoadingPricing] = useState(false);
   const [targetCountry, setTargetCountry] = useState("");
   const [campaignDuration, setCampaignDuration] = useState("3-7 Days");
+  const [customDurationDays, setCustomDurationDays] = useState<number>(7);
   const [autoTargeting, setAutoTargeting] = useState(true);
   const [showTargetingModal, setShowTargetingModal] = useState(false);
   const [goalType, setGoalType] = useState("Subscribers");
@@ -252,7 +254,10 @@ const CampaignBudget = () => {
         targeting: {
           country: targetCountry,
           goal: goalType,
-          duration: campaignDuration,
+          duration: campaignDuration === "Custom" 
+            ? `Custom (${customDurationDays} ${customDurationDays === 1 ? 'day' : 'days'})`
+            : campaignDuration,
+          customDurationDays: campaignDuration === "Custom" ? customDurationDays : undefined,
           autoTargeting,
           ...(!autoTargeting && {
             gender: selectedGender,
@@ -296,258 +301,148 @@ const CampaignBudget = () => {
 
   return (
     <CampaignLayout activeSidebar="budget">
-      <CampaignCard className="space-y-4">
-          <CampaignHeader 
-            verifiedEmail={email}
-            videoTitle={primaryVideo.title}
-            stepNumber={3}
-            stepLabel="Budget & Targeting"
-          />
-          <div className="flex gap-2 text-xs font-semibold uppercase text-red-600 mt-2">
-            {["Enter Link", "Select Videos", "Budget & Targeting", "Payment"].map(
+      <div className="w-full space-y-6">
+        {/* Progress Bar */}
+        <div className="bg-white rounded-xl border border-slate-200 p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-semibold text-slate-600 uppercase">STEP 3 - BUDGET & TARGETING</span>
+          </div>
+          <div className="flex items-center gap-2">
+            {["ENTER LINK", "SELECT VIDEOS", "BUDGET & TARGETING", "PAYMENT"].map(
               (step, index) => (
-                <div key={step} className="flex flex-col items-center w-24">
-                  <div
-                    className={`h-1.5 w-full rounded-full ${
+                <div key={step} className="flex-1 flex items-center">
+                  <div className="flex-1 flex items-center gap-2">
+                    <div className={`h-2 flex-1 rounded-full ${
                       index <= 2 ? "bg-red-600" : "bg-slate-200"
-                    }`}
-                  />
-                  <span className="mt-2 text-slate-500 text-[11px] text-center">
-                    {step}
-                  </span>
+                    }`} />
+                    {index < 3 && (
+                      <div className={`h-2 w-2 rounded-full ${
+                        index <= 2 ? "bg-red-600" : "bg-slate-200"
+                      }`} />
+                    )}
+                  </div>
                 </div>
               )
             )}
           </div>
+        </div>
 
-          {isBulkViews && bulkViewsPackage ? (
-            <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl p-4 border-2 border-red-200">
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <p className="text-xs font-semibold text-slate-600 uppercase mb-0.5">
-                    Bulk Views Package
-                  </p>
-                  <h2 className="text-xl font-bold text-gray-900">{bulkViewsPackage.label}</h2>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-slate-500 uppercase">Package Price</p>
-                  <p className="text-2xl font-bold text-red-600">{bulkViewsPackage.price}</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3 mt-3">
-                <div className="bg-white rounded-xl p-3 text-center">
-                  <p className="text-xs text-slate-500 uppercase">Total Views</p>
-                  <p className="text-xl font-bold text-red-600 mt-0.5">
-                    {(bulkViewsPackage.views + freeViewsBalance).toLocaleString()}
-                  </p>
-                  {freeViewsBalance > 0 && (
-                    <p className="text-[10px] text-emerald-600 mt-0.5">
-                      +{freeViewsBalance.toLocaleString()} free
-                    </p>
-                  )}
-                </div>
-                <div className="bg-white rounded-xl p-3 text-center">
-                  <p className="text-xs text-slate-500 uppercase">Videos Selected</p>
-                  <p className="text-xl font-bold text-slate-900">{selectedCount}</p>
-                </div>
-              </div>
+        {/* Verified Email and Channel Selector */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-white rounded-xl border border-slate-200 p-3 flex items-center gap-3">
+            <div className="h-8 w-8 rounded-full bg-red-600 flex items-center justify-center text-white text-xs font-bold">
+              ✓
             </div>
-          ) : (
-            <div className="flex flex-col gap-2 lg:flex-row">
-              <div className="flex-1 bg-red-50 rounded-xl p-2.5">
-                <p className="text-[10px] font-semibold text-slate-600 uppercase mb-1">
-                  Enter Budget
-                </p>
-                <input
-                  type="range"
-                  min={10}
-                  max={1000}
-                  step={10}
-                  value={budget}
-                  onChange={(e) => setBudget(Number(e.target.value))}
-                  className="w-full accent-red-600"
-                />
-                <div className="flex justify-between text-[10px] text-slate-500 mt-0.5">
-                  {[10, 100, 500, 800, 1000].map((mark) => (
-                    <span key={mark}>{mark}</span>
-                  ))}
-                </div>
-                <div className="mt-1.5 flex items-center gap-3">
-                  <div>
-                    <p className="text-[10px] text-slate-500 uppercase">Videos</p>
-                    <p className="text-sm font-semibold text-slate-900">{selectedCount}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-slate-500 uppercase">Per Video</p>
-                    <p className="text-sm font-semibold text-slate-900">₹ {perVideoBudget}</p>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-white border rounded-xl p-2.5 text-center shadow-sm">
-                <p className="text-[10px] text-slate-500 uppercase">Total Budget</p>
-                <p className="text-2xl font-bold text-red-600">₹ {budget}</p>
-                <p className="text-[10px] text-slate-500 mt-1 truncate">
-                  {email || "Verified user"}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {!isBulkViews && (
-            <div className="grid gap-4 lg:grid-cols-3">
-              <div className="lg:col-span-2 border rounded-2xl p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-semibold text-slate-900 text-sm">
-                    Estimated Views
-                  </h3>
-                  <span className="text-xs text-red-600 font-semibold">
-                    Bonus (30%)
-                  </span>
-                </div>
-                {loadingPricing ? (
-                  <p className="text-sm text-slate-500">Calculating…</p>
-                ) : pricingData ? (
-                <>
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 h-3 bg-slate-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-red-600"
-                        style={{
-                          width: `${
-                            (pricingData.baseViews.exact /
-                              pricingData.totalViews.exact) *
-                            100
-                          }%`,
-                        }}
-                      />
-                    </div>
-                    <div className="flex-1 h-3 bg-green-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-green-500"
-                        style={{
-                          width: `${
-                            (pricingData.bonusViews.exact /
-                              pricingData.totalViews.exact) *
-                            100
-                          }%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-3 text-sm text-slate-600 space-y-0.5">
-                    <p>
-                      Base:{" "}
-                      <strong>
-                        {pricingData.baseViews.min.toLocaleString()} -{" "}
-                        {pricingData.baseViews.max.toLocaleString()}
-                      </strong>
-                    </p>
-                    <p>
-                      Bonus:{" "}
-                      <strong>
-                        {pricingData.bonusViews.min.toLocaleString()} -{" "}
-                        {pricingData.bonusViews.max.toLocaleString()}
-                      </strong>
-                    </p>
-                    {freeViewsBalance > 0 && (
-                      <p>
-                        Free Views:{" "}
-                        <strong className="text-emerald-600">
-                          {freeViewsBalance.toLocaleString()}
-                        </strong>
-                      </p>
-                    )}
-                    <p className="text-lg font-semibold text-slate-900 pt-2">
-                      Total Views: {(pricingData.totalViews.min + freeViewsBalance).toLocaleString()} -{" "}
-                      {(pricingData.totalViews.max + freeViewsBalance).toLocaleString()}
-                    </p>
-                    {pricingData.totalSubscribers && (
-                      <p className="text-xs text-slate-500">
-                        Total Subscribers:{" "}
-                        {pricingData.totalSubscribers.min.toLocaleString()} -{" "}
-                        {pricingData.totalSubscribers.max.toLocaleString()}
-                      </p>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <p className="text-sm text-slate-500">
-                  Drag the slider to view estimates.
-                </p>
-              )}
-            </div>
-            <div className="space-y-3">
-              <div>
-                <div className="flex items-start gap-2 mb-1.5">
-                  <Globe className="mt-1.5 text-red-600 h-4 w-4" />
-                  <p className="text-sm font-semibold text-slate-800">
-                    Target by Country
-                  </p>
-                </div>
-                <select
-                  className="w-full border rounded-2xl p-2.5 text-sm"
-                  value={targetCountry}
-                  onChange={(e) => setTargetCountry(e.target.value)}
-                >
-                  <option value="">All Countries (Recommended)</option>
-                  <option value="IN">India</option>
-                  <option value="US">United States</option>
-                  <option value="GB">United Kingdom</option>
-                  <option value="AE">UAE</option>
-                </select>
-                <p className="text-xs text-slate-500 mt-1">
-                  Targeting is optional. Narrow targeting can reduce views.
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-slate-800 mb-2">
-                  What do you want besides views?
-                </p>
-                <select
-                  className="w-full border rounded-2xl p-2.5 text-sm"
-                  value={goalType}
-                  onChange={(e) => setGoalType(e.target.value)}
-                >
-                  <option value="Subscribers">Subscribers</option>
-                  <option value="Likes">Likes</option>
-                  <option value="Comments">Comments</option>
-                  <option value="Watch Time">Watch Time</option>
-                </select>
-              </div>
+            <div>
+              <p className="text-xs font-semibold text-slate-500 uppercase">Verified Email</p>
+              <p className="text-sm font-semibold text-slate-900 truncate">{email}</p>
             </div>
           </div>
-          )}
+          <div className="flex items-center justify-end">
+            <ChannelSelector />
+          </div>
+        </div>
+
+        <CampaignCard className="space-y-6">
 
           {!isBulkViews && (
-            <>
-              <div className="grid gap-4 lg:grid-cols-2">
-                <div>
-                  <p className="text-sm font-semibold text-slate-800 mb-2">
-                    Campaign Duration
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {["1-2 Days", "3-7 Days", "7-10 Days", "Custom"].map((option) => (
-                      <button
-                        key={option}
-                        type="button"
-                        onClick={() => setCampaignDuration(option)}
-                        className={`px-3 py-1.5 rounded-full border text-sm ${
-                          campaignDuration === option
-                            ? "bg-red-600 text-white border-red-600"
-                            : "border-slate-200 text-slate-600"
-                        }`}
-                      >
-                        {option}
-                      </button>
-                    ))}
+            <div className="grid lg:grid-cols-3 gap-6">
+              {/* Left Column - Main Content */}
+              <div className="lg:col-span-2 space-y-6 w-full">
+                {/* Enter Budget Section */}
+                <div className="bg-white rounded-xl border border-slate-200 p-4">
+                  <h3 className="text-sm font-semibold text-slate-800 mb-4">ENTER BUDGET</h3>
+                  <div className="space-y-3">
+                    <input
+                      type="range"
+                      min={10}
+                      max={1000}
+                      step={10}
+                      value={budget}
+                      onChange={(e) => setBudget(Number(e.target.value))}
+                      className="w-full accent-red-600 h-2"
+                    />
+                    <div className="flex justify-between text-xs text-slate-500">
+                      {[10, 100, 500, 800, 1000].map((mark) => (
+                        <span key={mark}>{mark}</span>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase">Videos</p>
+                        <p className="text-sm font-semibold text-slate-900">{selectedCount}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase">Per Video</p>
+                        <p className="text-sm font-semibold text-slate-900">₹ {perVideoBudget}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div>
-                  <p className="text-sm font-semibold text-slate-800 mb-2">
-                    Automatic Targeting
-                  </p>
-                  <label className="flex items-center gap-2 text-sm text-slate-600">
+                {/* Estimated Views Section */}
+                <div className="bg-white rounded-xl border border-slate-200 p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-semibold text-slate-900">Estimated Views</h3>
+                    <span className="text-xs text-red-600 font-semibold">Bonus (30%)</span>
+                  </div>
+                  {loadingPricing ? (
+                    <p className="text-sm text-slate-500">Calculating…</p>
+                  ) : pricingData ? (
+                    <>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="flex-1 h-3 bg-slate-200 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-red-600"
+                            style={{
+                              width: `${
+                                (pricingData.baseViews.exact /
+                                  pricingData.totalViews.exact) *
+                                100
+                              }%`,
+                            }}
+                          />
+                        </div>
+                        <div className="flex-1 h-3 bg-green-100 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-green-500"
+                            style={{
+                              width: `${
+                                (pricingData.bonusViews.exact /
+                                  pricingData.totalViews.exact) *
+                                100
+                              }%`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="text-sm text-slate-600 space-y-1">
+                        <p>
+                          Base: <strong>{pricingData.baseViews.min.toLocaleString()} - {pricingData.baseViews.max.toLocaleString()}</strong>
+                        </p>
+                        <p>
+                          Bonus: <strong>{pricingData.bonusViews.min.toLocaleString()} - {pricingData.bonusViews.max.toLocaleString()}</strong>
+                        </p>
+                        {freeViewsBalance > 0 && (
+                          <p>
+                            Free Views: <strong className="text-emerald-600">{freeViewsBalance.toLocaleString()}</strong>
+                          </p>
+                        )}
+                        <p className="text-base font-semibold text-slate-900 pt-2">
+                          Total Views: <strong>{(pricingData.totalViews.min + freeViewsBalance).toLocaleString()} - {(pricingData.totalViews.max + freeViewsBalance).toLocaleString()}</strong>
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-sm text-slate-500">Drag the slider to view estimates.</p>
+                  )}
+                </div>
+
+              
+
+                {/* Automatic Targeting */}
+                <div className="bg-white rounded-xl border border-slate-200 p-4">
+                  <label className="flex items-start gap-3 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={autoTargeting}
@@ -558,165 +453,262 @@ const CampaignBudget = () => {
                           setShowTargetingModal(true);
                         }
                       }}
-                      className="h-4 w-4"
+                      className="mt-1 h-4 w-4 text-red-600 rounded border-slate-300 focus:ring-red-500"
                     />
-                    Automatically add the most relevant targeting for your channel.
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-slate-800 mb-1">Automatic Targeting</p>
+                      <p className="text-xs text-slate-600">
+                        Automatically add the most relevant targeting for your channel.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setShowTargetingModal(true)}
+                        className="text-xs text-red-600 hover:text-red-700 mt-1"
+                      >
+                        Deselect to unlock advanced targeting options.
+                      </button>
+                    </div>
                   </label>
-                  <p className="text-xs text-slate-500 mt-1.5">
-                    Deselect to unlock advanced targeting options.
-                  </p>
                 </div>
+
+                {/* Manual Targeting Options */}
+                {!autoTargeting && (
+                  <div className="space-y-4 border rounded-2xl p-4 bg-slate-50">
+                    <h3 className="text-base font-semibold text-slate-900">
+                      Select your audience type:
+                    </h3>
+                    
+                    {/* Gender Selection */}
+                    <div>
+                      <p className="text-sm font-semibold text-slate-800 mb-2">Gender:</p>
+                      <div className="flex gap-4">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="gender"
+                            value="all"
+                            checked={selectedGender === "all"}
+                            onChange={(e) => setSelectedGender(e.target.value)}
+                            className="h-4 w-4"
+                          />
+                          <span className="text-sm text-slate-700">All genders</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="gender"
+                            value="male"
+                            checked={selectedGender === "male"}
+                            onChange={(e) => setSelectedGender(e.target.value)}
+                            className="h-4 w-4"
+                          />
+                          <span className="text-sm text-slate-700">Male</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="gender"
+                            value="female"
+                            checked={selectedGender === "female"}
+                            onChange={(e) => setSelectedGender(e.target.value)}
+                            className="h-4 w-4"
+                          />
+                          <span className="text-sm text-slate-700">Female</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Age Selection */}
+                    <div>
+                      <p className="text-sm font-semibold text-slate-800 mb-2">Age:</p>
+                      <div className="flex flex-wrap gap-3">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={selectedAges.includes("all")}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedAges(["all"]);
+                              } else {
+                                setSelectedAges([]);
+                              }
+                            }}
+                            className="h-4 w-4"
+                          />
+                          <span className="text-sm text-slate-700">All Ages</span>
+                        </label>
+                        {["18-24", "25-34", "35-44", "45-54", "55-64", "65+"].map((age) => (
+                          <label key={age} className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={selectedAges.includes(age)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedAges((prev) => {
+                                    const filtered = prev.filter((a) => a !== "all");
+                                    return [...filtered, age];
+                                  });
+                                } else {
+                                  setSelectedAges((prev) => prev.filter((a) => a !== age));
+                                }
+                              }}
+                              className="h-4 w-4"
+                            />
+                            <span className="text-sm text-slate-700">{age}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Interests Selection */}
+                    <div>
+                      <p className="text-sm font-semibold text-slate-800 mb-2">
+                        Select your interest related to this video:
+                      </p>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={selectedInterests.includes("all")}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedInterests(["all"]);
+                              } else {
+                                setSelectedInterests([]);
+                              }
+                            }}
+                            className="h-4 w-4"
+                          />
+                          <span className="text-sm text-slate-700">All interest</span>
+                        </label>
+                        {[
+                          "Children and education",
+                          "Cookery",
+                          "Music and music videos",
+                          "Cars and transportation",
+                          "Traveling",
+                          "Banking and Finance",
+                          "Construction and repair",
+                          "Beauty and health",
+                          "Video games",
+                          "Business and career",
+                          "Hobbies and interests",
+                          "Sports and fitness",
+                          "Science and technology",
+                        ].map((interest) => (
+                          <label key={interest} className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={selectedInterests.includes(interest)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedInterests((prev) => {
+                                    const filtered = prev.filter((i) => i !== "all");
+                                    return [...filtered, interest];
+                                  });
+                                } else {
+                                  setSelectedInterests((prev) => prev.filter((i) => i !== interest));
+                                }
+                              }}
+                              className="h-4 w-4"
+                            />
+                            <span className="text-sm text-slate-700">{interest}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* Manual Targeting Options */}
-              {!autoTargeting && (
-                <div className="space-y-4 border rounded-2xl p-4 bg-slate-50">
-                  <h3 className="text-base font-semibold text-slate-900">
-                    Select your audience type:
-                  </h3>
-                  
-                  {/* Gender Selection */}
-                  <div>
-                    <p className="text-sm font-semibold text-slate-800 mb-2">Gender:</p>
-                    <div className="flex gap-4">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="gender"
-                          value="all"
-                          checked={selectedGender === "all"}
-                          onChange={(e) => setSelectedGender(e.target.value)}
-                          className="h-4 w-4"
-                        />
-                        <span className="text-sm text-slate-700">All genders</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="gender"
-                          value="male"
-                          checked={selectedGender === "male"}
-                          onChange={(e) => setSelectedGender(e.target.value)}
-                          className="h-4 w-4"
-                        />
-                        <span className="text-sm text-slate-700">Male</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="gender"
-                          value="female"
-                          checked={selectedGender === "female"}
-                          onChange={(e) => setSelectedGender(e.target.value)}
-                          className="h-4 w-4"
-                        />
-                        <span className="text-sm text-slate-700">Female</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Age Selection */}
-                  <div>
-                    <p className="text-sm font-semibold text-slate-800 mb-2">Age:</p>
-                    <div className="flex flex-wrap gap-3">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={selectedAges.includes("all")}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedAges(["all"]);
-                            } else {
-                              setSelectedAges([]);
-                            }
-                          }}
-                          className="h-4 w-4"
-                        />
-                        <span className="text-sm text-slate-700">All Ages</span>
-                      </label>
-                      {["18-24", "25-34", "35-44", "45-54", "55-64", "65+"].map((age) => (
-                        <label key={age} className="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={selectedAges.includes(age)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedAges((prev) => {
-                                  const filtered = prev.filter((a) => a !== "all");
-                                  return [...filtered, age];
-                                });
-                              } else {
-                                setSelectedAges((prev) => prev.filter((a) => a !== age));
-                              }
-                            }}
-                            className="h-4 w-4"
-                          />
-                          <span className="text-sm text-slate-700">{age}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Interests Selection */}
-                  <div>
-                    <p className="text-sm font-semibold text-slate-800 mb-2">
-                      Select your interest related to this video:
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={selectedInterests.includes("all")}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedInterests(["all"]);
-                            } else {
-                              setSelectedInterests([]);
-                            }
-                          }}
-                          className="h-4 w-4"
-                        />
-                        <span className="text-sm text-slate-700">All interest</span>
-                      </label>
-                      {[
-                        "Children and education",
-                        "Cookery",
-                        "Music and music videos",
-                        "Cars and transportation",
-                        "Traveling",
-                        "Banking and Finance",
-                        "Construction and repair",
-                        "Beauty and health",
-                        "Video games",
-                        "Business and career",
-                        "Hobbies and interests",
-                        "Sports and fitness",
-                        "Science and technology",
-                      ].map((interest) => (
-                        <label key={interest} className="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={selectedInterests.includes(interest)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedInterests((prev) => {
-                                  const filtered = prev.filter((i) => i !== "all");
-                                  return [...filtered, interest];
-                                });
-                              } else {
-                                setSelectedInterests((prev) => prev.filter((i) => i !== interest));
-                              }
-                            }}
-                            className="h-4 w-4"
-                          />
-                          <span className="text-sm text-slate-700">{interest}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
+              {/* Right Sidebar */}
+              <div className="space-y-4">
+                <div className="bg-white rounded-xl border border-slate-200 p-4 text-center">
+                  <p className="text-xs text-slate-500 uppercase mb-1">Total Budget</p>
+                  <p className="text-2xl font-bold text-red-600">₹ {budget}</p>
+                  <p className="text-xs text-slate-500 mt-2 truncate">{email}</p>
                 </div>
-              )}
-            </>
+
+                <div className="bg-white rounded-xl border border-slate-200 p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Globe className="h-4 w-4 text-red-600" />
+                    <p className="text-sm font-semibold text-slate-800">Target by Country</p>
+                  </div>
+                  <select
+                    className="w-full border rounded-xl p-2.5 text-sm mb-2"
+                    value={targetCountry}
+                    onChange={(e) => setTargetCountry(e.target.value)}
+                  >
+                    <option value="">All Countries (Recommended)</option>
+                    <option value="IN">India</option>
+                    <option value="US">United States</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="AE">UAE</option>
+                  </select>
+                  <p className="text-xs text-slate-500">
+                    Targeting is optional. Narrow targeting can reduce views.
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-xl border border-slate-200 p-4">
+                  <p className="text-sm font-semibold text-slate-800 mb-2">What do you want besides views?</p>
+                  <select
+                    className="w-full border rounded-xl p-2.5 text-sm"
+                    value={goalType}
+                    onChange={(e) => setGoalType(e.target.value)}
+                  >
+                    <option value="Subscribers">Subscribers</option>
+                    <option value="Likes">Likes</option>
+                    <option value="Comments">Comments</option>
+                    <option value="Watch Time">Watch Time</option>
+                  </select>
+                </div>
+                  {/* Campaign Duration */}
+                <div className="bg-white rounded-xl border border-slate-200 p-4">
+                  <p className="text-sm font-semibold text-slate-800 mb-3">Campaign Duration</p>
+                  <div className="flex flex-wrap gap-3 mb-3">
+                    {["1-2 Days", "3-7 Days", "7-10 Days", "Custom"].map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => setCampaignDuration(option)}
+                        className={`px-3 py-1.5 rounded-full border text-sm transition-colors ${
+                          campaignDuration === option
+                            ? "bg-red-600 text-white border-red-600"
+                            : "border-slate-200 text-slate-600 hover:border-red-200"
+                        }`}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                  {campaignDuration === "Custom" && (
+                    <div className="mt-3 pt-3 border-t border-slate-200">
+                      <label className="block text-xs font-semibold text-slate-700 mb-2">
+                        Enter number of days:
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <Input
+                          type="number"
+                          min={1}
+                          max={365}
+                          value={customDurationDays}
+                          onChange={(e) => {
+                            const value = parseInt(e.target.value) || 1;
+                            setCustomDurationDays(Math.max(1, Math.min(365, value)));
+                          }}
+                          className="w-32 border-slate-300 rounded-lg"
+                        />
+                        <span className="text-sm text-slate-600">days</span>
+                      </div>
+                      <p className="text-xs text-slate-500 mt-2">
+                        Campaign will run for {customDurationDays} {customDurationDays === 1 ? 'day' : 'days'}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           )}
 
           {!isBulkViews && (
@@ -760,12 +752,12 @@ const CampaignBudget = () => {
             </div>
           )}
 
-          {/* Video Preview Section for Bulk Views */}
-          {isBulkViews && bulkViewsPackage && primaryVideo && (
-            <div className="mt-8 space-y-6">
-              <h3 className="text-xl font-bold text-slate-900">How your video will be seen</h3>
-              
-              <div className="relative bg-white rounded-2xl border-2 border-red-200 p-6 shadow-lg">
+            {/* Video Preview Section for Bulk Views */}
+            {isBulkViews && bulkViewsPackage && primaryVideo && (
+             <div className="mt-4 space-y-3">
+             <h3 className="text-sm font-semibold text-slate-900 text-center">How your video will be seen</h3>
+             
+             <div className="relative bg-white rounded-xl border border-red-200 px-4 py-3 shadow-sm w-full max-w-2xl mx-auto">
                 {/* Navigation Arrows */}
                 <button
                   type="button"
@@ -785,7 +777,7 @@ const CampaignBudget = () => {
                 </button>
 
                 {/* Video Preview Mock-up - Mobile YouTube Style with Carousel */}
-                <div className="max-w-md mx-auto overflow-hidden">
+                 <div className="max-w-md mx-auto overflow-hidden scale-[0.8] md:scale-[0.9] lg:scale-100 transition-transform origin-center">
                   <div className="relative" style={{ transform: `translateX(-${currentSlide * 100}%)`, transition: 'transform 0.3s ease-in-out' }}>
                     <div className="flex">
                       {/* Slide 1: Video in Feed/List Format */}
@@ -847,24 +839,6 @@ const CampaignBudget = () => {
                             </div>
                           </div>
 
-                          {/* Placeholder Videos Below */}
-                          <div className="px-3 pb-3 space-y-3">
-                            {[1, 2, 3].map((i) => (
-                              <div key={i} className="flex gap-3">
-                                <div className="w-32 h-20 bg-slate-200 rounded-lg flex-shrink-0"></div>
-                                <div className="flex-1 space-y-2">
-                                  <div className="h-3 bg-slate-200 rounded w-full"></div>
-                                  <div className="h-2 bg-slate-200 rounded w-3/4"></div>
-                                  <div className="h-2 bg-slate-100 rounded w-1/2"></div>
-                                </div>
-                                <div className="w-6 h-6 flex flex-col gap-0.5 justify-center">
-                                  <div className="w-1 h-1 bg-slate-400 rounded-full"></div>
-                                  <div className="w-1 h-1 bg-slate-400 rounded-full"></div>
-                                  <div className="w-1 h-1 bg-slate-400 rounded-full"></div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
                         </div>
                       </div>
 
@@ -930,24 +904,6 @@ const CampaignBudget = () => {
                             </div>
                           </div>
 
-                          {/* Suggested Videos */}
-                          <div className="px-3 pb-3 space-y-2">
-                            {[1, 2, 3].map((i) => (
-                              <div key={i} className="flex gap-2">
-                                <div className="w-24 h-16 bg-slate-200 rounded-lg flex-shrink-0"></div>
-                                <div className="flex-1 space-y-1">
-                                  <div className="h-2 bg-slate-200 rounded w-full"></div>
-                                  <div className="h-2 bg-slate-200 rounded w-2/3"></div>
-                                  <div className="h-1.5 bg-slate-100 rounded w-1/2"></div>
-                                </div>
-                                <div className="w-4 h-4 flex flex-col gap-0.5 justify-center">
-                                  <div className="w-0.5 h-0.5 bg-slate-400 rounded-full"></div>
-                                  <div className="w-0.5 h-0.5 bg-slate-400 rounded-full"></div>
-                                  <div className="w-0.5 h-0.5 bg-slate-400 rounded-full"></div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
                         </div>
                       </div>
 
@@ -1049,7 +1005,7 @@ const CampaignBudget = () => {
 
           {/* Bottom Section for Bulk Views */}
           {isBulkViews && bulkViewsPackage && primaryVideo && (
-            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-200">
               <div className="flex items-center gap-3">
                 <img
                   src={primaryVideo.thumbnail}
@@ -1065,6 +1021,10 @@ const CampaignBudget = () => {
                   </p>
                 </div>
               </div>
+              <div className="flex items-center gap-3 md:gap-4">
+                <div className="px-3 py-1 rounded-full bg-purple-50 border border-purple-100 text-xs font-semibold text-purple-700">
+                  {bulkViewsPackage.label} · {bulkViewsPackage.price}
+                </div>
               <Button
                 size="lg"
                 onClick={handleCreateCampaign}
@@ -1072,59 +1032,33 @@ const CampaignBudget = () => {
               >
                 {creating ? "PROCESSING..." : "BUY PACKAGE"}
               </Button>
+              </div>
             </div>
           )}
 
           {!isBulkViews && (
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+            <div className="flex gap-3 justify-end pt-4 border-t border-slate-200">
               <Button
                 variant="outline"
                 onClick={() => setShowPreview(true)}
+                className="rounded-xl"
               >
-                PREVIEW AD
+                Preview Ad
               </Button>
               <Button
                 onClick={handleCreateCampaign}
                 disabled={creating}
+                className="rounded-xl"
               >
-                {creating ? "PROCESSING..." : "CREATE CAMPAIGN"}
+                {creating ? "PROCESSING..." : "Continue"}
               </Button>
             </div>
           )}
           {createError && (
-            <p className="text-sm text-red-600 text-right">{createError}</p>
+            <p className="text-sm text-red-600 text-right mt-2">{createError}</p>
           )}
-      </CampaignCard>
-
-      <section className="grid md:grid-cols-3 gap-6">
-          {[
-            {
-              icon: Layers,
-              title: "Enter Channel / Video Link",
-              desc: "Share the exact video or channel you want to promote.",
-            },
-            {
-              icon: Settings,
-              title: "Set Up Campaign",
-              desc: "Choose your target audience, budget, and timeline.",
-            },
-            {
-              icon: CreditCard,
-              title: "Make Payment",
-              desc: "Approve and pay after finalizing campaign details.",
-            },
-          ].map((card) => (
-            <CampaignCard key={card.title} className="flex flex-col gap-3" accent="subtle">
-              <span className="h-12 w-12 rounded-2xl bg-purple-100 text-red-600 flex items-center justify-center">
-                <card.icon className="h-5 w-5" />
-              </span>
-              <h3 className="text-lg font-semibold text-slate-900">
-                {card.title}
-              </h3>
-              <p className="text-sm text-slate-500">{card.desc}</p>
-            </CampaignCard>
-          ))}
-      </section>
+        </CampaignCard>
+      </div>
 
       {/* Ad Preview Modal */}
       <AdPreviewModal

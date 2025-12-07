@@ -1,9 +1,10 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import CampaignLayout from "@/components/CampaignLayout";
 import CampaignCard from "@/components/CampaignCard";
 import { Button } from "@/components/ui/button";
 import { Check, Sparkles, X, Shield } from "lucide-react";
+import ChannelSelector from "@/components/ChannelSelector";
 
 const packages = [
   {
@@ -145,9 +146,25 @@ const CampaignPackageDetail = () => {
   const location = useLocation();
   const verifiedEmail =
     (location.state as { email?: string } | null)?.email || undefined;
+  
+  const [selectedChannelInfo, setSelectedChannelInfo] = useState<{
+    channelId: string;
+    name: string;
+    avatar: string | null;
+  } | null>(null);
 
   const channelInfo = useMemo(() => {
-    // First, try to get channelInfo from navigation state (passed from Buy Now)
+    // First, use selected channel from ChannelSelector
+    if (selectedChannelInfo) {
+      return {
+        author: selectedChannelInfo.name,
+        avatarUrl: selectedChannelInfo.avatar || `https://ui-avatars.com/api/?name=${
+          selectedChannelInfo.name || "VC"
+        }&background=dc2626&color=fff`,
+      };
+    }
+
+    // Then, try to get channelInfo from navigation state (passed from Buy Now)
     const stateChannelInfo = (location.state as { channelInfo?: { channelId: string; name: string; avatar: string | null; subscriberCount?: number; videoCount?: number } } | null)?.channelInfo;
     
     if (stateChannelInfo) {
@@ -177,7 +194,76 @@ const CampaignPackageDetail = () => {
     } catch {
       return null;
     }
-  }, [location.state]);
+  }, [location.state, selectedChannelInfo]);
+
+  // Load channel info from sessionStorage on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const SELECTED_CHANNEL_KEY = "vidfly_selected_channel";
+      const CHANNEL_INFO_STORAGE_KEY = "vidfly_channel_info";
+      const selectedChannelId = sessionStorage.getItem(SELECTED_CHANNEL_KEY);
+      
+      if (selectedChannelId) {
+        const cachedChannelInfo = sessionStorage.getItem(CHANNEL_INFO_STORAGE_KEY);
+        if (cachedChannelInfo) {
+          try {
+            const parsedInfo: Array<{ channelId: string; name: string; avatar: string }> = JSON.parse(cachedChannelInfo);
+            const channelInfo = parsedInfo.find(info => info.channelId === selectedChannelId);
+            if (channelInfo) {
+              setSelectedChannelInfo({
+                channelId: channelInfo.channelId,
+                name: channelInfo.name,
+                avatar: channelInfo.avatar,
+              });
+            }
+          } catch (err) {
+            console.error("Failed to parse cached channel info", err);
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load channel info", err);
+    }
+  }, []);
+
+  const handleChannelSelect = (channelId: string, channelName: string) => {
+    // Fetch channel info and update state
+    const CHANNEL_INFO_STORAGE_KEY = "vidfly_channel_info";
+    const cachedChannelInfo = sessionStorage.getItem(CHANNEL_INFO_STORAGE_KEY);
+    if (cachedChannelInfo) {
+      try {
+        const parsedInfo: Array<{ channelId: string; name: string; avatar: string }> = JSON.parse(cachedChannelInfo);
+        const channelInfo = parsedInfo.find(info => info.channelId === channelId);
+        if (channelInfo) {
+          setSelectedChannelInfo({
+            channelId: channelInfo.channelId,
+            name: channelInfo.name,
+            avatar: channelInfo.avatar,
+          });
+        } else {
+          setSelectedChannelInfo({
+            channelId,
+            name: channelName,
+            avatar: null,
+          });
+        }
+      } catch (err) {
+        console.error("Failed to parse cached channel info", err);
+        setSelectedChannelInfo({
+          channelId,
+          name: channelName,
+          avatar: null,
+        });
+      }
+    } else {
+      setSelectedChannelInfo({
+        channelId,
+        name: channelName,
+        avatar: null,
+      });
+    }
+  };
 
   if (!pkg) {
     return (
@@ -213,9 +299,7 @@ const CampaignPackageDetail = () => {
                   {channelInfo?.author || "Your Channel"}
                 </h2>
               </div>
-              <Button variant="outline" className="rounded-2xl">
-                Add New Channel
-              </Button>
+              <ChannelSelector onChannelSelect={handleChannelSelect} />
             </div>
 
             <div className={`mt-6 rounded-2xl border-2 border-slate-200 p-6 ${pkg.accent}`}>
@@ -272,14 +356,14 @@ const CampaignPackageDetail = () => {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4 mt-8">
-              <Button
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4 mt-8 rounded-xl">
+              <Button className="rounded-xl"
                 variant="outline"
                 onClick={() => navigate("/campaign/packages")}
               >
                 BACK TO PACKAGES
               </Button>
-              <Button>
+              <Button className="rounded-xl">
                 CONTINUE TO PAYMENT
               </Button>
             </div>

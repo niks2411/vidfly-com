@@ -277,6 +277,21 @@ const CampaignBulkViewsSelect = () => {
               </div>
             </CampaignHeader>
 
+            {bulkViewsPackage && (
+              <div className="mt-3 mb-4 inline-flex items-center gap-3 rounded-2xl border border-purple-100 bg-gradient-to-r from-purple-50 to-pink-50 px-4 py-2 text-xs md:text-sm">
+                <span className="font-semibold text-slate-800">
+                  {bulkViewsPackage.label}
+                </span>
+                <span className="h-1 w-1 rounded-full bg-slate-300" />
+                <span className="font-bold text-purple-600">
+                  {bulkViewsPackage.price}
+                </span>
+                <span className="text-slate-500 hidden sm:inline">
+                  selected bulk views package
+                </span>
+              </div>
+            )}
+
             <div className="animate-fade-in delay-100">
               <p className="text-[11px] text-slate-500 uppercase font-semibold tracking-wide mb-1">
                 Step 2

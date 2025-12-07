@@ -24,3 +24,6 @@ FreeViewsSchema.statics.generateReferralCode = function(email) {
 module.exports = mongoose.model('FreeViews', FreeViewsSchema);
 
 
+
+
+

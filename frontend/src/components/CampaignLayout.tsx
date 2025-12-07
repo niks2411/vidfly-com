@@ -61,13 +61,13 @@ const CampaignLayout = ({
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10 flex flex-col gap-8 lg:flex-row">
-          {/* Desktop Sidebar - Only visible on desktop */}
-          <div className="hidden lg:block">
+        <div className="flex flex-col lg:flex-row min-h-[calc(100vh-64px)]">
+          {/* Desktop Sidebar - Only visible on desktop, touching left edge */}
+          <div className="hidden lg:block border-r border-slate-200 flex-shrink-0">
             <CampaignSidebar active={activeSidebar} />
           </div>
-          {/* Main content - Full width on mobile, constrained on desktop */}
-          <main className={cn("flex-1 space-y-6 w-full lg:max-w-4xl", className)}>{children}</main>
+          {/* Main content - Full width on mobile and desktop */}
+          <main className={cn("flex-1 space-y-6 w-full max-w-7xl mx-auto px-4 lg:px-8 py-10", className)}>{children}</main>
         </div>
         <Footer />
       </div>

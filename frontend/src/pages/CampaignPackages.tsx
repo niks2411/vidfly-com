@@ -1,11 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
+import CampaignLayout from "@/components/CampaignLayout";
+import CampaignCard from "@/components/CampaignCard";
 import CampaignHeader from "@/components/CampaignHeader";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getVerifiedEmail } from "@/lib/verifiedEmail";
-import CampaignLayout from "@/components/CampaignLayout";
-import CampaignCard from "@/components/CampaignCard";
-import { Check, Sparkles, X, Shield } from "lucide-react";
 
 const STORAGE_KEY = "vidfly_channel_videos";
 
@@ -13,125 +12,70 @@ const packages = [
   {
     id: "starter",
     name: "Starter",
-    price: "₹999",
-    oldPrice: null,
-    discount: null,
-    description: "Perfect for Beginners - 5,000+ Real, High-Intent Viewers",
-    views: "5,000+ Real Viewers",
-    features: [
-      "1 Video Promotion with professional ad setup",
-      "5,000+ Real, High-Intent Viewers",
-      "Natural Likes, Subscribers & Engagement Increase",
-      "Niche-Based Basic Targeting",
-      "Multi-Format Promotion (TrueView, In-Feed & Shorts Ads)",
-      "Safe, Google-Ads compliant delivery"
-    ],
-    aiTargeting: false,
-    accent: "bg-red-50",
+    price: 999,
+    views: 5000,
+    hasAI: false,
+    accent: "bg-blue-50",
+    borderColor: "border-blue-200",
   },
   {
     id: "boost",
     name: "Boost",
-    price: "₹1,999",
-    oldPrice: null,
-    discount: null,
-    description: "Great Value - 10,000+ Real, High-Intent Viewers",
-    views: "10,000+ Real Viewers",
-    features: [
-      "1 Video Promotion with professional ad setup",
-      "10,000+ Real, High-Intent Viewers",
-      "Natural Likes, Subscribers & Engagement Increase",
-      "Niche-Based Basic Targeting",
-      "Multi-Format Promotion (TrueView, In-Feed & Shorts Ads)",
-      "Safe, Google-Ads compliant delivery"
-    ],
-    aiTargeting: false,
-    accent: "bg-orange-50",
+    price: 1999,
+    views: 10000,
+    hasAI: false,
+    accent: "bg-green-50",
+    borderColor: "border-green-200",
   },
   {
     id: "growth",
     name: "Growth",
-    price: "₹3,499",
-    oldPrice: null,
-    discount: null,
-    description: "Most Popular - 20,000+ Real, High-Intent Viewers",
-    views: "20,000+ Real Viewers",
-    features: [
-      "1 Video Promotion with professional ad setup",
-      "20,000+ Real, High-Intent Viewers",
-      "Natural Likes, Subscribers & Engagement Increase",
-      "Niche-Based Basic Targeting",
-      "Multi-Format Promotion (TrueView, In-Feed & Shorts Ads)",
-      "Safe, Google-Ads compliant delivery"
-    ],
-    aiTargeting: false,
-    accent: "bg-yellow-50",
+    price: 3499,
+    views: 20000,
+    hasAI: false,
+    accent: "bg-purple-50",
+    borderColor: "border-purple-200",
   },
   {
     id: "premium-ai",
     name: "Premium AI",
-    price: "₹5,499",
-    oldPrice: null,
-    discount: "5% Instant Discount",
-    description: "AI-Powered Growth - 37,000+ Real Viewers (35,000 + 2,000 FREE)",
-    views: "37,000+ Real Viewers",
-    bonusViews: "+2,000 FREE Viewers Added",
-    features: [
-      "1 Video Promotion with professional ad setup",
-      "35,000+ Real, High-Intent Viewers",
-      "Natural Likes, Subscribers & Engagement Increase",
-      "Niche-Based Basic Targeting",
-      "Multi-Format Promotion (TrueView, In-Feed & Shorts Ads)",
-      "Safe, Google-Ads compliant delivery",
-      "AI Smart Targeting for precise audience reach",
-      "Higher watch time & stronger engagement"
-    ],
-    aiTargeting: true,
-    accent: "bg-red-50",
+    price: 5499,
+    views: 35000,
+    bonusViews: 2000,
+    totalViews: 37000,
+    hasAI: true,
+    discount: 5,
+    aiFeatures: ["AI Smart Targeting for precise audience reach", "Higher watch time & stronger engagement"],
+    accent: "bg-orange-50",
+    borderColor: "border-orange-300",
+    isPopular: true,
   },
   {
     id: "viral-ai",
     name: "Viral AI",
-    price: "₹8,999",
-    oldPrice: null,
-    discount: "8% Instant Discount",
-    description: "Advanced AI Targeting - 59,000+ Real Viewers (55,000 + 4,000 FREE)",
-    views: "59,000+ Real Viewers",
-    bonusViews: "+4,000 FREE Viewers Added",
-    features: [
-      "1 Video Promotion with professional ad setup",
-      "55,000+ Real, High-Intent Viewers",
-      "Natural Likes, Subscribers & Engagement Increase",
-      "Niche-Based Basic Targeting",
-      "Multi-Format Promotion (TrueView, In-Feed & Shorts Ads)",
-      "Safe, Google-Ads compliant delivery",
-      "Advanced AI Interest Targeting",
-      "Optimized placements for rapid growth"
-    ],
-    aiTargeting: true,
+    price: 8999,
+    views: 55000,
+    bonusViews: 4000,
+    totalViews: 59000,
+    hasAI: true,
+    discount: 8,
+    aiFeatures: ["Advanced AI Interest Targeting", "Optimized placements for rapid growth"],
     accent: "bg-red-50",
+    borderColor: "border-red-300",
   },
   {
     id: "ultra-viral-ai",
     name: "Ultra Viral AI",
-    price: "₹12,999",
-    oldPrice: null,
-    discount: "10% Instant Discount",
-    description: "Ultimate Growth Package - 86,500+ Real Viewers (80,000 + 6,500 FREE)",
-    views: "86,500+ Real Viewers",
-    bonusViews: "+6,500 FREE Viewers Added",
-    features: [
-      "1 Video Promotion with professional ad setup",
-      "80,000+ Real, High-Intent Viewers",
-      "Natural Likes, Subscribers & Engagement Increase",
-      "Niche-Based Basic Targeting",
-      "Multi-Format Promotion (TrueView, In-Feed & Shorts Ads)",
-      "Safe, Google-Ads compliant delivery",
-      "AI Behaviour + Interest + Demographic Targeting",
-      "Maximum reach & best viral potential"
-    ],
-    aiTargeting: true,
-    accent: "bg-pink-50",
+    price: 12999,
+    views: 80000,
+    bonusViews: 6500,
+    totalViews: 86500,
+    hasAI: true,
+    discount: 10,
+    aiFeatures: ["AI Behaviour + Interest + Demographic Targeting", "Maximum reach & best viral potential"],
+    accent: "bg-gradient-to-br from-purple-50 to-pink-50",
+    borderColor: "border-purple-400",
+    isPremium: true,
   },
 ];
 
@@ -226,7 +170,7 @@ const CampaignPackages = () => {
     }
   }, [verifiedEmail, navigate]);
 
-  const fetchChannelInfoById = async (channelId: string, channelName: string): Promise<ChannelInfo> => {
+  const fetchChannelInfoById = async (channelId: string, channelName: string) => {
     setLoadingChannel(true);
     setChannelError("");
 
@@ -237,31 +181,27 @@ const CampaignPackages = () => {
 
       if (!response.ok) {
         // If API fails, use basic info from stored video
-        const fallbackInfo: ChannelInfo = {
+        setChannelInfo({
           channelId,
           name: channelName,
           avatar: null,
           subscriberCount: 0,
           videoCount: 0,
-        };
-        setChannelInfo(fallbackInfo);
-        return fallbackInfo;
+        });
+        return;
       }
 
       const data = await response.json();
       setChannelInfo(data);
-      return data;
     } catch (err) {
       // Fallback to basic info
-      const fallbackInfo: ChannelInfo = {
+      setChannelInfo({
         channelId,
         name: channelName,
         avatar: null,
         subscriberCount: 0,
         videoCount: 0,
-      };
-      setChannelInfo(fallbackInfo);
-      return fallbackInfo;
+      });
     } finally {
       setLoadingChannel(false);
     }
@@ -291,7 +231,16 @@ const CampaignPackages = () => {
     // Fetch channel info if not already loaded or if it's a different channel
     let finalChannelInfo = channelInfo;
     if (!finalChannelInfo || finalChannelInfo.channelId !== selectedChannelId) {
-      finalChannelInfo = await fetchChannelInfoById(selectedChannelId, channelName);
+      await fetchChannelInfoById(selectedChannelId, channelName);
+      // Wait a bit for state to update, then use the updated channelInfo
+      // Since fetchChannelInfoById updates state, we'll use a fallback
+      finalChannelInfo = {
+        channelId: selectedChannelId,
+        name: channelName,
+        avatar: null,
+        subscriberCount: 0,
+        videoCount: 0,
+      };
     }
 
     navigate(`/campaign/packages/${pkgId}`, {
@@ -306,99 +255,159 @@ const CampaignPackages = () => {
   return (
     <CampaignLayout activeSidebar="packages">
       <CampaignCard>
-        <CampaignHeader>
-          <div className="animate-fade-in">
-            <h1 className="text-2xl md:text-3xl font-bold text-red-600 mb-2 leading-tight">
-              Buy Packages
-            </h1>
-            <p className="text-slate-600 text-sm md:text-base">
-              Choose a package to boost your YouTube growth
-            </p>
-          </div>
-        </CampaignHeader>
+            <CampaignHeader>
+              <div className="animate-fade-in">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent mb-3">Buy Packages</h1>
+                <p className="text-slate-600 text-lg">
+                  Choose a package to boost your YouTube growth
+                </p>
+              </div>
+            </CampaignHeader>
 
-        {/* Packages */}
-        <div className="space-y-6">
-          {packages.map((pkg) => (
-            <div
-              key={pkg.id}
-              className={`rounded-2xl border-2 border-slate-200 p-6 ${pkg.accent} hover:shadow-lg transition-all duration-300`}
-            >
-              <div className="flex flex-col lg:flex-row lg:items-start gap-6">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <h2 className="text-2xl font-bold text-slate-900">{pkg.name}</h2>
-                    {pkg.aiTargeting && (
-                      <span className="flex items-center gap-1.5 text-xs font-semibold bg-gradient-to-r from-red-600 to-red-700 text-white px-3 py-1.5 rounded-full">
-                        <Sparkles className="w-3 h-3" />
-                        AI POWERED
-                      </span>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-3xl font-bold text-red-600">{pkg.price}</span>
-                    {pkg.oldPrice && (
-                      <span className="text-slate-400 line-through text-lg">{pkg.oldPrice}</span>
-                    )}
-                    {pkg.discount && (
-                      <span className="text-sm text-emerald-700 bg-emerald-100 px-3 py-1.5 rounded-full font-semibold">
-                        {pkg.discount}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="mb-4">
-                    <p className="text-lg font-semibold text-slate-700 mb-2">{pkg.views}</p>
-                    {pkg.bonusViews && (
-                      <p className="flex items-center gap-1.5 text-sm text-emerald-700 font-medium mb-2">
-                        <span className="text-emerald-600">+</span>
-                        {pkg.bonusViews}
-                      </p>
-                    )}
-                    <p className="text-slate-600 text-sm">{pkg.description}</p>
-                  </div>
-
-                  {/* Features List */}
-                  <div className="mt-4 space-y-2">
-                    <p className="text-sm font-semibold text-slate-700 mb-2">Every Plan Comes With Our Full Promotion Suite:</p>
-                    <ul className="space-y-1.5">
-                      {pkg.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
-                          <Check className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    {!pkg.aiTargeting && (
-                      <p className="flex items-center gap-1.5 text-sm text-slate-500 mt-2">
-                        <X className="w-4 h-4" />
-                        <span>AI Targeting: Not Included</span>
-                      </p>
-                    )}
-                  </div>
+            {/* Common Features Info */}
+            <div className="mb-8 p-6 bg-gradient-to-r from-slate-50 to-slate-100 rounded-2xl border border-slate-200">
+              <h3 className="text-lg font-bold text-slate-900 mb-4">Every Plan Comes With Our Full Promotion Suite:</h3>
+              <div className="grid md:grid-cols-2 gap-3 text-sm text-slate-700">
+                <div className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold mt-0.5">✔</span>
+                  <span>1 Video Promotion with professional ad setup</span>
                 </div>
-                
-                <div className="lg:w-48 flex-shrink-0">
-                  <Button
-                    className="w-full"
-                    onClick={() => handleBuyNow(pkg.id)}
-                    disabled={storedVideos.length === 0 || loadingChannel}
-                  >
-                    {loadingChannel ? "LOADING..." : "BUY NOW"}
-                  </Button>
-                  {channelError && (
-                    <p className="mt-2 text-xs text-red-600 font-medium text-center">{channelError}</p>
-                  )}
-                  <p className="flex items-center justify-center gap-1.5 text-xs text-slate-500 text-center mt-3">
-                    <Shield className="w-3.5 h-3.5" />
-                    <span>30-day money-back guarantee</span>
-                  </p>
+                <div className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold mt-0.5">✔</span>
+                  <span>Real, High-Intent Viewers</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold mt-0.5">✔</span>
+                  <span>Natural Likes, Subscribers & Engagement Increase</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold mt-0.5">✔</span>
+                  <span>Niche-Based Basic Targeting</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold mt-0.5">✔</span>
+                  <span>Multi-Format Promotion (TrueView, In-Feed & Shorts Ads)</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold mt-0.5">✔</span>
+                  <span>Safe, Google-Ads compliant delivery</span>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+
+            {/* Packages Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {packages.map((pkg) => (
+                <div
+                  key={pkg.id}
+                  className={`relative rounded-2xl border-2 ${pkg.borderColor} bg-white p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 ${
+                    pkg.isPremium ? "lg:col-span-2 lg:max-w-2xl lg:mx-auto" : ""
+                  }`}
+                >
+                  {pkg.isPopular && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-4 py-1 rounded-full">
+                      MOST POPULAR
+                    </div>
+                  )}
+                  {pkg.isPremium && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-4 py-1 rounded-full">
+                      PREMIUM
+                    </div>
+                  )}
+
+                  {/* Header */}
+                  <div className="text-center mb-6">
+                    <h2 className="text-2xl font-bold text-slate-900 mb-2">{pkg.name}</h2>
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="text-3xl font-bold text-red-600">₹{pkg.price.toLocaleString()}</span>
+                    </div>
+                  </div>
+
+                  {/* Views */}
+                  <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-slate-900">
+                        {pkg.totalViews ? pkg.totalViews.toLocaleString() : pkg.views.toLocaleString()}+
+                      </p>
+                      <p className="text-sm text-slate-600 mt-1">Real, High-Intent Viewers</p>
+                      {pkg.totalViews && (
+                        <p className="text-xs text-slate-500 mt-1">
+                          Base: {pkg.views.toLocaleString()} + Bonus: {pkg.bonusViews?.toLocaleString()}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* AI Targeting Status */}
+                  <div className="mb-6 p-3 bg-slate-100 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-semibold text-slate-700">AI Targeting:</span>
+                      {pkg.hasAI ? (
+                        <span className="text-green-600 font-bold text-sm">✓ Included</span>
+                      ) : (
+                        <span className="text-red-500 font-bold text-sm">✗ Not Included</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Premium Features */}
+                  {pkg.hasAI && pkg.aiFeatures && (
+                    <div className="mb-6">
+                      <p className="text-sm font-semibold text-slate-800 mb-2">Plus Premium Features:</p>
+                      <ul className="space-y-2">
+                        {pkg.aiFeatures.map((feature, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                            <span className="text-purple-500 mt-0.5">✨</span>
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Bonus Section */}
+                  {pkg.discount && (
+                    <div className="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-200">
+                      <p className="text-sm font-semibold text-slate-800 mb-2">Bonus Included:</p>
+                      <div className="space-y-1 text-sm text-slate-700">
+                        <div className="flex items-center gap-2">
+                          <span className="text-yellow-600">🎁</span>
+                          <span>{pkg.discount}% Instant Discount</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-yellow-600">🎁</span>
+                          <span>+{pkg.bonusViews?.toLocaleString()} FREE Viewers Added</span>
+                        </div>
+                        <div className="pt-2 mt-2 border-t border-yellow-200">
+                          <p className="text-xs font-semibold text-slate-800">
+                            Total Value Delivered: {pkg.totalViews?.toLocaleString()}+ Viewers
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* CTA Button */}
+                  <Button
+                    className={`w-full rounded-xl py-6 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ${
+                      pkg.isPremium
+                        ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                        : pkg.hasAI
+                        ? "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+                        : "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white"
+                    }`}
+                    onClick={() => handleBuyNow(pkg.id)}
+                    disabled={storedVideos.length === 0 || loadingChannel}
+                  >
+                    {loadingChannel ? "Loading..." : `Buy ${pkg.name}`}
+                  </Button>
+                  {channelError && pkg.id === packages[0].id && (
+                    <p className="mt-2 text-xs text-red-600 text-center">{channelError}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+
       </CampaignCard>
     </CampaignLayout>
   );

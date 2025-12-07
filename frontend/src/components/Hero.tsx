@@ -51,7 +51,7 @@ const Hero = () => {
             {/* Input Field with Promote Button */}
             <div className="w-full">
               <div className="bg-white rounded-full shadow-xl p-1.5 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 hover:shadow-2xl transition-shadow duration-300">
-                <div className="flex items-center gap-2 flex-1 px-3">
+                <div className="flex items-center gap-1 flex-1 px-3">
                   <Youtube className="h-5 w-5 text-red-600 flex-shrink-0" />
                   <Input
                     type="text"
@@ -63,7 +63,7 @@ const Hero = () => {
                 </div>
                 <Button 
                   onClick={handlePromoteNow}
-                  className="w-full sm:w-auto"
+                  className="w-full sm:w-auto rounded-xl"
                 >
                   PROMOTE NOW
                 </Button>

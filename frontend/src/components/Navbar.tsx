@@ -87,7 +87,7 @@ const Navbar = () => {
           </div>
           
           <div className="hidden md:block">
-            <Button onClick={handleGetStartedClick} className="bg-red-600 hover:bg-red-700 text-white transition-all duration-300 hover:scale-105 active:scale-95">
+            <Button onClick={handleGetStartedClick} className="bg-red-600 hover:bg-red-700 text-white transition-all duration-300 hover:scale-105 active:scale-95 rounded-xl">
               Get Started
             </Button>
           </div>

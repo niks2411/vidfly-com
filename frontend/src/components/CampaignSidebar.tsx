@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import ChannelSelector from "./ChannelSelector";
+import { Play, Users, Grid3x3, Package, ShoppingCart, Gift, ChevronRight } from "lucide-react";
 
 export type CampaignSidebarKey =
   | "promote"
@@ -8,7 +8,8 @@ export type CampaignSidebarKey =
   | "packages"
   | "bulk"
   | "free"
-  | "budget";
+  | "budget"
+  | "campaigns";
 
 type SidebarProps = {
   active?: CampaignSidebarKey;
@@ -22,25 +23,24 @@ const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, i
 
   const sections = [
     {
-      title: "Promotion",
-        items: [
-          { label: "Promote Video / Short", path: "/campaign", key: "promote" },
-          { label: "Promote Channel", path: "/campaign/channel", key: "channel" },
-          { label: "My Campaigns", path: "/campaign/my-campaigns" },
-          // { label: "Manage Channels", path: "/campaign/manage", key: "manage" },
-          { label: "Buy Packages", path: "/campaign/packages", key: "packages" },
-          { label: "Buy Bulk Views", path: "/campaign/bulk-views", key: "bulk" },
-          { label: "Free Views", path: "/campaign/free-views", key: "free" },
-        ],
+      title: "PROMOTION",
+      items: [
+        { label: "Promote Video / Short", path: "/campaign", key: "promote", icon: Play },
+        { label: "Promote Channel", path: "/campaign/channel", key: "channel", icon: Users },
+        { label: "My Campaigns", path: "/campaign/my-campaigns", key: "campaigns", icon: Grid3x3 },
+        { label: "Buy Packages", path: "/campaign/packages", key: "packages", icon: Package },
+        { label: "Buy Bulk Views", path: "/campaign/bulk-views", key: "bulk", icon: ShoppingCart },
+        { label: "Free Views", path: "/campaign/free-views", key: "free", icon: Gift },
+      ],
     },
     {
-      title: "Strategy Path",
+      title: "STRATEGY PATH",
       description: "Jump between critical campaign steps.",
       items: [
-        { label: "Enter Link", path: "/campaign" },
-        { label: "Select Videos", path: "/campaign" },
-        { label: "Budget & Targeting", path: "/campaign/budget", key: "budget" },
-        { label: "Payment", path: "/campaign/payment" },
+        { label: "Enter Link", path: "/campaign", icon: ChevronRight },
+        { label: "Select Videos", path: "/campaign", icon: ChevronRight },
+        { label: "Budget & Targeting", path: "/campaign/budget", key: "budget", icon: ChevronRight },
+        { label: "Payment", path: "/campaign/payment", icon: ChevronRight },
       ],
     },
   ];
@@ -54,50 +54,65 @@ const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, i
     }
   };
 
+  const isActive = (item: typeof sections[0]["items"][0]) => {
+    if (item.key && item.key === active) return true;
+    if (!item.key && item.path === location.pathname) return true;
+    return false;
+  };
+
   return (
     <aside className={cn(
-      "lg:w-64 bg-white h-fit lg:sticky lg:top-6 self-start",
-      isMobile ? "w-full" : "rounded-3xl shadow-md p-6"
+      "lg:w-64 bg-white h-full lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto",
+      isMobile ? "w-full" : "p-6"
     )}>
-      {sections.map((section) => (
+      {sections.map((section, sectionIndex) => (
         <div 
           key={section.title} 
           className={cn(
-            "mb-8 last:mb-0",
-            section.title === "Strategy Path" && "hidden lg:block"
+            sectionIndex === 0 ? "mb-6" : "mb-8",
+            section.title === "STRATEGY PATH" && "hidden lg:block"
           )}
         >
-          <div>
-            <p className="text-xs text-slate-500 uppercase tracking-wide">
+          <div className="mb-4">
+            <p className="text-xs text-slate-500 uppercase tracking-wide font-semibold">
               {section.title}
             </p>
             {section.description && (
               <p className="text-xs text-slate-400 mt-1">{section.description}</p>
             )}
           </div>
-          <ul className="mt-4 space-y-2">
-            {section.items.map((item) => (
-              <li key={item.label}>
-                <button
-                  type="button"
-                  onClick={() => handleNavigate(item.path)}
-                  disabled={!item.path}
-                  className={cn(
-                    "w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold transition-colors",
-                    item.path
-                      ? "hover:bg-slate-100 text-slate-500"
-                      : "text-slate-300 cursor-not-allowed",
-                    (item.key && item.key === active) ||
-                      (!item.key && item.path === location.pathname)
-                      ? "bg-red-100 text-red-700"
-                      : null
-                  )}
-                >
-                  {item.label}
-                </button>
-              </li>
-            ))}
+          <ul className="space-y-1">
+            {section.items.map((item) => {
+              const active = isActive(item);
+              const Icon = item.icon;
+              return (
+                <li key={item.label}>
+                  <button
+                    type="button"
+                    onClick={() => handleNavigate(item.path)}
+                    disabled={!item.path}
+                    className={cn(
+                      "w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors flex items-center gap-3",
+                      item.path
+                        ? active
+                          ? "bg-red-100 text-red-700 border border-red-200"
+                          : "hover:bg-slate-50 text-slate-600"
+                        : "text-slate-300 cursor-not-allowed",
+                    )}
+                  >
+                    <Icon className={cn(
+                      "h-5 w-5 flex-shrink-0",
+                      active ? "text-red-700" : "text-slate-500"
+                    )} />
+                    <span className="flex-1">{item.label}</span>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
+          {sectionIndex === 0 && (
+            <div className="border-t border-slate-200 mt-6 pt-6"></div>
+          )}
         </div>
       ))}
     </aside>

@@ -164,11 +164,31 @@ const AdminPanel = () => {
   };
 
   const groupedOrders = useMemo(() => {
-    return orders.reduce<Record<string, Order[]>>((acc, order) => {
+    const grouped = orders.reduce<Record<string, Order[]>>((acc, order) => {
       const type = order.campaignType || "standard";
       acc[type] = acc[type] ? [...acc[type], order] : [order];
       return acc;
     }, {});
+    
+    // Define the desired sort order
+    const sortOrder = ['promote_channel', 'promote_video', 'packages', 'bulk_views', 'free_views'];
+    
+    // Create a new object with sorted keys
+    const sorted: Record<string, Order[]> = {};
+    sortOrder.forEach(type => {
+      if (grouped[type]) {
+        sorted[type] = grouped[type];
+      }
+    });
+    
+    // Add any remaining types that weren't in the sort order
+    Object.keys(grouped).forEach(type => {
+      if (!sortOrder.includes(type)) {
+        sorted[type] = grouped[type];
+      }
+    });
+    
+    return sorted;
   }, [orders]);
 
   if (!token) {

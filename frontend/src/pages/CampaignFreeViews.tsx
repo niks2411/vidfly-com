@@ -133,101 +133,90 @@ const CampaignFreeViews = () => {
 
   return (
     <CampaignLayout activeSidebar="free">
-      <CampaignCard className="space-y-4">
-            <CampaignHeader>
-              <div className="animate-fade-in">
-                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r text-red-800 bg-clip-text leading-tight">
-                  Free Views Balance
-                </h1>
-              </div>
-            </CampaignHeader>
+      <CampaignCard>
+        <CampaignHeader>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 mb-2">Free Views</h1>
+          </div>
+        </CampaignHeader>
 
-            <div className="rounded-2xl border border-slate-100 bg-gradient-to-r from-red-50 to-white p-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <p className="text-xs uppercase text-slate-500">Current balance</p>
-                <p className="text-4xl font-bold text-red-600">
-                  {loading ? "Loading..." : `${freeViewsBalance.toLocaleString()} Views`}
-                </p>
-              </div>
-              <Button 
-                className="rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 px-8 font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
-                onClick={() => navigate("/campaign", { state: { email: verifiedEmail } })}
-              >
-                Redeem Now
-              </Button>
+        {/* Free Views Balance */}
+        <div className="bg-white rounded-xl border border-slate-200 p-4 mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs uppercase text-slate-500 mb-1">Current Balance</p>
+              <p className="text-4xl font-bold text-red-600">
+                {loading ? "Loading..." : `${freeViewsBalance.toLocaleString()} Views`}
+              </p>
             </div>
+            <Button 
+              className="bg-red-600 hover:bg-red-700 rounded-xl"
+              onClick={() => navigate("/campaign", { state: { email: verifiedEmail } })}
+            >
+              REDEEM NOW
+            </Button>
+          </div>
+        </div>
 
-            {/* Referral Program Section */}
+            {/* Referral Program */}
             <div className="space-y-4">
-              <h2 className="text-xl font-bold text-slate-900">
-                Referral Program
-              </h2>
+              <h2 className="text-lg font-bold text-slate-900">Referral Program</h2>
 
               {/* Referral Stats */}
-              <div className="grid md:grid-cols-3 gap-3">
-                <div className="rounded-2xl border border-slate-100 bg-white p-4 text-center">
-                  <Users className="h-6 w-6 text-red-600 mx-auto mb-1.5" />
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-white rounded-xl border border-slate-200 p-4 text-center">
+                  <Users className="h-5 w-5 text-red-600 mx-auto mb-1" />
                   <p className="text-xs uppercase text-slate-500 mb-0.5">Total Referrals</p>
-                  <p className="text-xl font-bold text-slate-900">{referralStats.totalReferrals}</p>
+                  <p className="text-lg font-bold text-slate-900">{referralStats.totalReferrals}</p>
                 </div>
-                <div className="rounded-2xl border border-slate-100 bg-white p-4 text-center">
-                  <Gift className="h-6 w-6 text-emerald-600 mx-auto mb-1.5" />
+                <div className="bg-white rounded-xl border border-slate-200 p-4 text-center">
+                  <Gift className="h-5 w-5 text-red-600 mx-auto mb-1" />
                   <p className="text-xs uppercase text-slate-500 mb-0.5">Views Earned</p>
-                  <p className="text-xl font-bold text-emerald-600">{referralStats.totalViewsEarned.toLocaleString()}</p>
+                  <p className="text-lg font-bold text-slate-900">{referralStats.totalViewsEarned.toLocaleString()}</p>
                 </div>
-                <div className="rounded-2xl border border-slate-100 bg-white p-4 text-center">
-                  <Share2 className="h-6 w-6 text-blue-600 mx-auto mb-1.5" />
+                <div className="bg-white rounded-xl border border-slate-200 p-4 text-center">
+                  <Share2 className="h-5 w-5 text-red-600 mx-auto mb-1" />
                   <p className="text-xs uppercase text-slate-500 mb-0.5">Your Code</p>
-                  <p className="text-base font-bold text-blue-600 font-mono">{referralCode}</p>
+                  <p className="text-base font-bold text-red-600 font-mono">{referralCode}</p>
                 </div>
               </div>
 
               {/* Share Your Referral Link */}
-              <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-4 space-y-3">
+              <div className="bg-emerald-50 rounded-xl border border-emerald-200 p-4 space-y-3">
                 <div>
-                  <h3 className="text-lg font-bold text-emerald-700 mb-1.5">
+                  <h3 className="text-base font-bold text-emerald-700 mb-1">
                     Share Your Referral Link
                   </h3>
                   <p className="text-sm text-emerald-900">
                     Get <span className="font-bold">500 free views</span> for each friend who signs up using your link and creates their first campaign!
                   </p>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <div className="flex-1 flex items-center gap-2 bg-white rounded-2xl px-4 py-3 border border-emerald-200">
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="flex-1 flex items-center gap-2 bg-white rounded-xl px-3 py-2 border border-emerald-200">
                     <Input
                       value={referralLink}
                       readOnly
-                      className="border-0 bg-transparent text-sm"
+                      className="border-0 bg-transparent text-sm p-0"
                     />
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={handleCopyLink}
-                      className="text-emerald-600 hover:text-emerald-700"
+                      className="text-emerald-600 hover:text-emerald-700 h-auto p-1"
                     >
-                      {copied ? (
-                        <>
-                          <Check className="h-4 w-4 mr-1" />
-                          Copied!
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="h-4 w-4 mr-1" />
-                          Copy
-                        </>
-                      )}
+                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     </Button>
                   </div>
                   <Button
-                    className="rounded-2xl bg-emerald-600 hover:bg-emerald-700 px-6"
+                    className="bg-emerald-600 hover:bg-emerald-700 rounded-xl px-4"
                     onClick={handleCopyLink}
                   >
-                    Share Link
+                    SHARE LINK
                   </Button>
                 </div>
-                <div className="bg-white/50 rounded-xl p-3 text-xs text-emerald-800">
+                <div className="bg-white/50 rounded-lg p-2 text-xs text-emerald-800">
                   <p className="font-semibold mb-1">How it works:</p>
-                  <ul className="list-disc list-inside space-y-1">
+                  <ul className="list-disc list-inside space-y-0.5">
                     <li>Share your referral link with friends</li>
                     <li>When they sign up and create their first campaign, you both get 500 free views</li>
                     <li>No limit on how many friends you can refer!</li>
@@ -236,16 +225,16 @@ const CampaignFreeViews = () => {
               </div>
 
               {/* Enter Referral Code */}
-              <div className="rounded-2xl border border-red-100 bg-red-50 p-4 space-y-3">
+              <div className="bg-red-50 rounded-xl border border-red-200 p-4 space-y-3">
                 <div>
-                  <h3 className="text-lg font-bold text-red-700 mb-1.5">
+                  <h3 className="text-base font-bold text-red-700 mb-1">
                     Have a Referral Code?
                   </h3>
-                  <p className="text-sm text-gray-900">
+                  <p className="text-sm text-slate-900">
                     Enter a friend's referral code to get <span className="font-bold">500 free views</span> when you create your first campaign!
                   </p>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <Input
                     placeholder="Enter referral code (e.g., VID123456)"
                     value={enteredReferralCode}
@@ -254,30 +243,30 @@ const CampaignFreeViews = () => {
                       setError("");
                       setSuccess("");
                     }}
-                    className="flex-1 rounded-2xl border-red-200"
+                    className="flex-1 rounded-xl border-red-200"
                     maxLength={12}
                   />
                   <Button
-                    className="rounded-2xl bg-red-600 hover:bg-red-700 px-6"
+                    className="bg-red-600 hover:bg-red-700 rounded-xl px-4"
                     onClick={handleApplyReferralCode}
                     disabled={loading || !enteredReferralCode.trim()}
                   >
-                    {loading ? "Applying..." : "Apply Code"}
+                    {loading ? "APPLYING..." : "APPLY CODE"}
                   </Button>
                 </div>
                 {error && (
-                  <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-600">
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-2 text-sm text-red-600">
                     {error}
                   </div>
                 )}
                 {success && (
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-sm text-emerald-600">
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-sm text-emerald-600">
                     {success}
                   </div>
                 )}
               </div>
             </div>
-      </CampaignCard>
+        </CampaignCard>
     </CampaignLayout>
   );
 };

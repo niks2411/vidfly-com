@@ -246,7 +246,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
             setShowDropdown(!showDropdown);
           }
         }}
-        className="flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-slate-200 rounded-xl hover:border-red-400 hover:shadow-md transition-all duration-200 shadow-sm"
+        className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl hover:border-red-300 hover:bg-red-50 transition-all duration-200"
       >
         {selectedChannel ? (
           <>

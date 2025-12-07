@@ -10,7 +10,7 @@ const OrderSchema = new mongoose.Schema(
       type: new mongoose.Schema(
         {
           name: String,
-          type: { type: String, enum: ['views', 'subscribers', 'watch_time', 'likes', 'package'], required: true },
+          type: { type: String, enum: ['views', 'subscribers', 'watch_time', 'likes', 'package', 'bulk-views'], required: true },
           quantity: Number,
           price: Number,
           currency: { type: String, default: 'INR' },

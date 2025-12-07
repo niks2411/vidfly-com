@@ -4,34 +4,33 @@ const Payment = require('../models/Payment');
 const axios = require('axios');
 const crypto = require('crypto');
 
-// Cashfree Configuration
-const CASHFREE_APP_ID = process.env.CASHFREE_APP_ID;
-const CASHFREE_SECRET_KEY = process.env.CASHFREE_SECRET_KEY;
-const CASHFREE_ENVIRONMENT = process.env.CASHFREE_ENVIRONMENT || 'TEST';
-const CASHFREE_BASE_URL = CASHFREE_ENVIRONMENT === 'PRODUCTION' 
-  ? 'https://api.cashfree.com' 
-  : 'https://sandbox.cashfree.com';
+// Cashfree Payment Gateway Configuration
+const CASHFREE_CLIENT_ID = process.env.CASHFREE_CLIENT_ID || process.env.CASHFREE_APP_ID;
+const CASHFREE_CLIENT_SECRET = process.env.CASHFREE_CLIENT_SECRET || process.env.CASHFREE_SECRET_KEY;
+// Default to TEST for safety - only use PRODUCTION when you have production credentials
+let CASHFREE_ENVIRONMENT = (process.env.CASHFREE_ENVIRONMENT || 'TEST').toUpperCase();
 
-// Get Cashfree Auth Token
-const getCashfreeToken = async () => {
-  try {
-    const response = await axios.post(
-      `${CASHFREE_BASE_URL}/pg/v1/authorize`,
-      {},
-      {
-        headers: {
-          'x-client-id': CASHFREE_APP_ID,
-          'x-client-secret': CASHFREE_SECRET_KEY,
-          'x-api-version': '2023-08-01',
-        },
-      }
-    );
-    return response.data.data.token;
-  } catch (error) {
-    console.error('Cashfree auth error:', error.response?.data || error.message);
-    throw new Error('Failed to authenticate with Cashfree');
+// Safety check: If using test credentials, force TEST environment
+// Test credentials typically start with specific patterns or are shorter
+if (CASHFREE_ENVIRONMENT === 'PRODUCTION') {
+  const clientIdLength = CASHFREE_CLIENT_ID?.length || 0;
+  const clientSecretLength = CASHFREE_CLIENT_SECRET?.length || 0;
+  
+  // Test credentials are usually shorter or have specific patterns
+  // If credentials look like test credentials, warn and use TEST
+  if (clientIdLength < 20 || clientSecretLength < 30) {
+    console.warn('⚠️ WARNING: CASHFREE_ENVIRONMENT is set to PRODUCTION but credentials look like TEST credentials.');
+    console.warn('⚠️ Switching to TEST environment. Set CASHFREE_ENVIRONMENT=TEST in .env file.');
+    CASHFREE_ENVIRONMENT = 'TEST';
   }
-};
+}
+
+const CASHFREE_BASE_URL = CASHFREE_ENVIRONMENT === 'PRODUCTION' 
+  ? 'https://api.cashfree.com/pg' 
+  : 'https://sandbox.cashfree.com/pg';
+
+// Note: Cashfree Payment Gateway uses direct header authentication
+// No separate token endpoint needed for PG API
 
 exports.createPayment = async (req, res, next) => {
   try {
@@ -39,7 +38,9 @@ exports.createPayment = async (req, res, next) => {
     const { error, value } = schema.validate(req.body);
     if (error) return res.status(400).json({ message: error.message });
 
-    const order = await Order.findOne({ orderId: value.orderId }).populate('paymentId');
+    const order = await Order.findOne({ orderId: value.orderId })
+      .populate('paymentId')
+      .populate('userId', 'name email phone');
     if (!order) return res.status(404).json({ message: 'Order not found' });
 
     // If Cashfree, create payment session
@@ -63,9 +64,26 @@ exports.createPayment = async (req, res, next) => {
 // Create Cashfree Payment Session
 const createCashfreePayment = async (req, res, next, order) => {
   try {
-    if (!CASHFREE_APP_ID || !CASHFREE_SECRET_KEY) {
-      return res.status(500).json({ message: 'Cashfree credentials not configured' });
+    // Check credentials
+    if (!CASHFREE_CLIENT_ID || !CASHFREE_CLIENT_SECRET) {
+      console.error('Cashfree credentials missing:', {
+        hasClientId: !!CASHFREE_CLIENT_ID,
+        hasClientSecret: !!CASHFREE_CLIENT_SECRET,
+        clientIdLength: CASHFREE_CLIENT_ID?.length || 0,
+        clientSecretLength: CASHFREE_CLIENT_SECRET?.length || 0
+      });
+      return res.status(500).json({ 
+        message: 'Cashfree Payment Gateway credentials not configured',
+        hint: 'Please set CASHFREE_CLIENT_ID and CASHFREE_CLIENT_SECRET in .env file (PG credentials from Payment Gateway section, not Payout credentials)'
+      });
     }
+
+    console.log('Cashfree credentials loaded:', {
+      hasClientId: !!CASHFREE_CLIENT_ID,
+      hasClientSecret: !!CASHFREE_CLIENT_SECRET,
+      environment: CASHFREE_ENVIRONMENT,
+      baseUrl: CASHFREE_BASE_URL
+    });
 
     const payment = order.paymentId || await Payment.findOne({ orderId: order.orderId });
     if (!payment) {
@@ -106,61 +124,252 @@ const createCashfreePayment = async (req, res, next, order) => {
       });
     }
 
-    const token = await getCashfreeToken();
+    // Verify credentials are set
+    if (!CASHFREE_CLIENT_ID || !CASHFREE_CLIENT_SECRET) {
+      return res.status(500).json({ 
+        message: 'Cashfree Payment Gateway credentials not configured',
+        hint: 'Please set CASHFREE_CLIENT_ID and CASHFREE_CLIENT_SECRET in .env file (PG credentials from Cashfree Dashboard → Payment Gateway → Credentials)'
+      });
+    }
+
+    // Verify environment matches
+    if (CASHFREE_ENVIRONMENT !== 'TEST' && CASHFREE_ENVIRONMENT !== 'PRODUCTION') {
+      console.warn(`Invalid CASHFREE_ENVIRONMENT: ${CASHFREE_ENVIRONMENT}, defaulting to TEST`);
+    }
+
     const orderAmount = payment.amount;
     const currency = payment.currency || 'INR';
     
     // Generate unique payment gateway order ID: CF + orderId + timestamp + random
     const timestamp = Date.now();
     const randomSuffix = crypto.randomBytes(4).toString('hex').toUpperCase();
-    const orderId = `CF_${order.orderId}_${timestamp}_${randomSuffix}`;
+    const cashfreeOrderId = `CF_${order.orderId}_${timestamp}_${randomSuffix}`;
 
-    // Create payment session
+    // Validate order amount
+    if (!orderAmount || orderAmount <= 0) {
+      return res.status(400).json({ 
+        message: 'Invalid order amount',
+        amount: orderAmount
+      });
+    }
+
+    // Create payment session data for Cashfree Payment Gateway
     const sessionData = {
-      order_id: orderId,
+      order_id: cashfreeOrderId,
       order_amount: orderAmount,
       order_currency: currency,
       customer_details: {
-        customer_id: order.userId.toString(),
+        customer_id: order.userId._id?.toString() || order.userId.toString(),
         customer_email: order.userId.email || 'customer@example.com',
         customer_phone: order.userId.phone || '9999999999',
       },
       order_meta: {
-        return_url: `${process.env.FRONTEND_URL || 'http://localhost:8080'}/payment/callback?orderId=${order.orderId}`,
+        return_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/callback?orderId=${order.orderId}`,
         notify_url: `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/payments/cashfree-webhook`,
       },
     };
 
-    const response = await axios.post(
-      `${CASHFREE_BASE_URL}/pg/v1/orders`,
-      sessionData,
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'x-api-version': '2023-08-01',
-          'Content-Type': 'application/json',
-        },
+    console.log('Creating Cashfree Payment Gateway order:', {
+      environment: CASHFREE_ENVIRONMENT,
+      baseUrl: CASHFREE_BASE_URL,
+      orderId: cashfreeOrderId,
+      amount: orderAmount,
+      currency: currency,
+      endpoint: `${CASHFREE_BASE_URL}/orders`
+    });
+
+    // Cashfree Payment Gateway uses direct header authentication with API version
+    // Cashfree requires x-api-version header
+    let response;
+    let lastError = null;
+    
+    // Try different API versions and endpoints
+    const apiVersions = ['2023-08-01', '2022-09-01', '2022-01-01', '2021-05-21'];
+    const endpoints = [
+      `${CASHFREE_BASE_URL}/orders`,
+      `https://${CASHFREE_ENVIRONMENT === 'PRODUCTION' ? 'api' : 'sandbox'}.cashfree.com/pg/orders`,
+    ];
+
+    // Try each endpoint with each API version
+    for (const endpoint of endpoints) {
+      for (const apiVersion of apiVersions) {
+        try {
+          console.log(`Trying endpoint: ${endpoint} with API version: ${apiVersion}`);
+          response = await axios.post(
+            endpoint,
+            sessionData,
+            {
+              headers: {
+                'x-client-id': CASHFREE_CLIENT_ID,
+                'x-client-secret': CASHFREE_CLIENT_SECRET,
+                'x-api-version': apiVersion,
+                'Content-Type': 'application/json',
+              },
+              timeout: 15000,
+            }
+          );
+          console.log(`✅ Cashfree PG API call successful with endpoint: ${endpoint} and API version: ${apiVersion}`);
+          break; // Success, exit both loops
+        } catch (apiError) {
+          lastError = apiError;
+          const errorMsg = apiError.response?.data?.message || apiError.message;
+          console.log(`❌ Failed with API version ${apiVersion}:`, {
+            status: apiError.response?.status,
+            message: errorMsg
+          });
+          
+          // If we got a successful response structure but wrong version, continue trying
+          // If we got 404, this endpoint is wrong, try next endpoint
+          if (apiError.response?.status === 404) {
+            break; // Try next endpoint
+          }
+        }
       }
-    );
+      if (response) break; // If we got a response, exit endpoint loop
+    }
+
+    // If all endpoints failed
+    if (!response) {
+      console.error('All Cashfree API endpoints failed. Last error:', {
+        status: lastError?.response?.status,
+        statusText: lastError?.response?.statusText,
+        data: lastError?.response?.data,
+        message: lastError?.message,
+      });
+      
+      return res.status(500).json({ 
+        message: 'Failed to create Cashfree payment session',
+        error: lastError?.response?.data?.message || lastError?.message || 'All API endpoints failed',
+        details: lastError?.response?.data,
+        status: lastError?.response?.status,
+        hint: 'Please verify your CASHFREE_CLIENT_ID and CASHFREE_CLIENT_SECRET are correct (PG credentials from Payment Gateway section, not Payout credentials)'
+      });
+    }
+
+    // Check if response has required data
+    if (!response || !response.data) {
+      console.error('Cashfree response is empty or invalid:', {
+        hasResponse: !!response,
+        hasData: response?.data ? true : false,
+        status: response?.status,
+        statusText: response?.statusText
+      });
+      return res.status(500).json({ 
+        message: 'Invalid response from Cashfree API',
+        details: 'No data received from Cashfree',
+        hint: 'Check backend logs for more details'
+      });
+    }
+
+    // Log full response for debugging
+    console.log('Cashfree PG API response received:', JSON.stringify(response.data, null, 2));
+    console.log('Response status:', response.status);
+    console.log('Response headers:', response.headers);
+
+    // Check for payment_session_id and payment_url in various possible structures
+    // Cashfree PG API may return data in different formats
+    const paymentSessionId = response.data.payment_session_id 
+      || response.data.data?.payment_session_id
+      || response.data.paymentSessionId
+      || response.data.data?.paymentSessionId
+      || response.data.session_id
+      || response.data.data?.session_id;
+      
+    // Cashfree PG API returns payment_session_id but not payment_url
+    // We need to construct the payment URL from the session ID
+    let paymentUrl = response.data.payment_url
+      || response.data.data?.payment_url
+      || response.data.paymentUrl
+      || response.data.data?.paymentUrl
+      || response.data.url
+      || response.data.data?.url;
+
+    // If no payment_url in response, construct it from payment_session_id
+    if (!paymentUrl && paymentSessionId) {
+      // Cashfree Payment Gateway payment URL format
+      paymentUrl = `https://payments.cashfree.com/forms/webforms/pay/${paymentSessionId}`;
+      console.log('Constructed payment URL from payment_session_id');
+    }
+
+    if (!paymentSessionId) {
+      console.error('Cashfree response missing payment_session_id:', {
+        fullResponse: JSON.stringify(response.data, null, 2),
+        responseKeys: Object.keys(response.data || {}),
+        status: response.status
+      });
+      
+      return res.status(500).json({ 
+        message: 'Invalid response from Cashfree API',
+        details: 'Payment session ID not received',
+        responseStructure: response.data,
+        hint: 'Check backend terminal for full response'
+      });
+    }
+
+    if (!paymentUrl) {
+      console.error('Could not construct payment URL:', {
+        hasPaymentSessionId: !!paymentSessionId,
+        paymentSessionId: paymentSessionId?.substring(0, 20) + '...'
+      });
+      return res.status(500).json({ 
+        message: 'Failed to construct payment URL',
+        details: 'Payment session ID received but could not create payment URL'
+      });
+    }
+    
+    console.log('Successfully extracted payment data:', {
+      paymentSessionId: paymentSessionId.substring(0, 20) + '...',
+      hasPaymentUrl: !!paymentUrl,
+      paymentUrlLength: paymentUrl.length
+    });
 
     // Update payment record
     payment.gateway = 'cashfree';
-    payment.paymentOrderId = orderId;
+    payment.paymentOrderId = cashfreeOrderId;
     payment.status = 'created';
     payment.gatewayResponse = response.data;
     await payment.save();
 
+    console.log('Cashfree payment session created successfully:', {
+      orderId: order.orderId,
+      cashfreeOrderId: cashfreeOrderId,
+      paymentSessionId: paymentSessionId
+    });
+
     return res.json({
       message: 'Cashfree payment session created',
-      paymentSessionId: response.data.payment_session_id,
-      paymentUrl: response.data.payment_url,
+      paymentSessionId: paymentSessionId,
+      paymentUrl: paymentUrl,
       orderId: order.orderId,
     });
   } catch (error) {
-    console.error('Cashfree payment creation error:', error.response?.data || error.message);
+    console.error('Cashfree payment creation error:', {
+      message: error.message,
+      status: error.response?.status,
+      data: error.response?.data,
+      config: {
+        url: error.config?.url,
+        method: error.config?.method,
+      }
+    });
+    
+    // Provide more detailed error message
+    let errorMessage = 'Failed to create Cashfree payment session';
+    let errorDetails = error.message;
+    
+    if (error.response) {
+      errorDetails = error.response.data?.message || error.response.data?.error || error.response.statusText;
+      if (error.response.status === 401) {
+        errorMessage = 'Cashfree authentication failed. Please check your credentials.';
+      } else if (error.response.status === 400) {
+        errorMessage = 'Invalid payment request to Cashfree';
+      }
+    }
+    
     return res.status(500).json({ 
-      message: 'Failed to create Cashfree payment session',
-      error: error.response?.data?.message || error.message 
+      message: errorMessage,
+      error: errorDetails,
+      hint: 'Check backend logs for more details'
     });
   }
 };
@@ -202,24 +411,23 @@ exports.verifyPayment = async (req, res, next) => {
 // Verify Cashfree Payment
 const verifyCashfreePayment = async (req, res, next, order, paymentId) => {
   try {
-    if (!CASHFREE_APP_ID || !CASHFREE_SECRET_KEY) {
-      return res.status(500).json({ message: 'Cashfree credentials not configured' });
+    if (!CASHFREE_CLIENT_ID || !CASHFREE_CLIENT_SECRET) {
+      return res.status(500).json({ message: 'Cashfree Payment Gateway credentials not configured' });
     }
-
-    const token = await getCashfreeToken();
     const payment = order.paymentId;
     
     if (!payment || !payment.paymentOrderId) {
       return res.status(404).json({ message: 'Payment order not found' });
     }
 
-    // Get payment status from Cashfree
+    // Get payment status from Cashfree Payment Gateway
     const response = await axios.get(
-      `${CASHFREE_BASE_URL}/pg/v1/orders/${payment.paymentOrderId}/payments`,
+      `${CASHFREE_BASE_URL}/orders/${payment.paymentOrderId}/payments`,
       {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'x-api-version': '2023-08-01',
+          'x-client-id': CASHFREE_CLIENT_ID,
+          'x-client-secret': CASHFREE_CLIENT_SECRET,
+          'Content-Type': 'application/json',
         },
       }
     );

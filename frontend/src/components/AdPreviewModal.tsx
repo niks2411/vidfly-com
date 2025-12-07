@@ -161,11 +161,11 @@ const AdPreviewModal = ({
 
               {adType === "commercial" && (
                 <div className="w-full flex flex-col gap-4 h-full">
-                  <div className="relative w-full rounded-3xl overflow-hidden bg-black shadow-xl flex-1 min-h-[260px]">
+                  <div className="relative w-full rounded-3xl overflow-hidden bg-black shadow-xl flex-1 min-h-[260px] max-h-[280px]">
                     <img
                       src={video.thumbnail}
                       alt={adTitle}
-                      className="w-full h-full object-cover opacity-90"
+                      className="w-full h-full object-contain opacity-90"
                     />
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="w-20 h-20 bg-white/30 border-2 border-white/50 rounded-full flex items-center justify-center backdrop-blur">
