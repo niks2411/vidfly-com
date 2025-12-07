@@ -275,8 +275,19 @@ const AdminPanel = () => {
                 >
                   <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div>
-                      <p className="text-xs uppercase text-slate-500">Order ID</p>
-                      <p className="text-lg font-semibold text-slate-900">{order.orderId}</p>
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="text-lg font-semibold text-slate-900">{order.orderId}</p>
+                        <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${statusColors[order.status] || statusColors.pending}`}>
+                          {order.status === 'paid' ? 'PAID' : 
+                           order.status === 'payment_pending' ? 'PAYMENT PENDING' :
+                           order.status === 'in_progress' ? 'IN PROGRESS' :
+                           order.status === 'completed' ? 'COMPLETED' :
+                           order.status === 'failed' ? 'FAILED' :
+                           order.status === 'promotion_scheduled' ? 'SCHEDULED' :
+                           'PENDING'}
+                        </span>
+                      </div>
+                      <p className="text-xs uppercase text-slate-500 mb-1">Order ID</p>
                       {order.userId && (
                         <p className="text-sm text-slate-500">
                           {order.userId.name} · {order.userId.email}
@@ -289,6 +300,11 @@ const AdminPanel = () => {
                         {order.plan?.currency === "USD" ? "$" : "₹"}
                         {order.plan?.price}
                       </p>
+                      {order.paymentId && (
+                        <p className={`text-xs mt-1 ${order.paymentId.status === 'captured' ? 'text-green-600' : order.paymentId.status === 'failed' ? 'text-red-600' : 'text-orange-600'}`}>
+                          Payment: {order.paymentId.status === 'captured' ? '✓ Paid' : order.paymentId.status || 'Pending'}
+                        </p>
+                      )}
                     </div>
                   </div>
 

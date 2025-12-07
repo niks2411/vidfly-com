@@ -310,7 +310,7 @@ const PaymentCheckout = () => {
             <Button
               variant="outline"
               onClick={() => navigate("/campaign/my-campaigns")}
-              className="flex-1"
+              className="flex-1 rounded-xl"
               disabled={processing}
             >
               Cancel
@@ -318,7 +318,7 @@ const PaymentCheckout = () => {
             <Button
               onClick={handlePayment}
               disabled={processing}
-              className="flex-1"
+              className="flex-1 rounded-xl"
               size="lg"
             >
               {processing ? (

@@ -45,24 +45,91 @@ type LocationState = {
   campaignType?: string;
 };
 
+const STORAGE_KEY = "vidfly_channel_videos";
+const BUDGET_STATE_KEY = "vidfly_budget_state";
+
 const CampaignBudget = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const state = location.state as LocationState | undefined;
+  const locationState = location.state as LocationState | undefined;
+  
+  // Load state from sessionStorage if location.state is missing (when coming back)
+  const [restoredState, setRestoredState] = useState<LocationState | null>(() => {
+    if (locationState) return null; // Use location state if available
+    try {
+      const stored = sessionStorage.getItem(BUDGET_STATE_KEY);
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (err) {
+      console.error("Failed to restore budget state", err);
+    }
+    return null;
+  });
+
+  const state = locationState || restoredState;
   const email = state?.email?.trim().toLowerCase() || getVerifiedEmail();
 
   const [selectedVideos, setSelectedVideos] = useState<SelectedVideo[]>(() => {
     if (state?.videos?.length) return state.videos;
-    return state?.videoInfo ? [state.videoInfo] : [];
+    if (state?.videoInfo) return [state.videoInfo];
+    // Try to load from sessionStorage
+    try {
+      const stored = sessionStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const videos = JSON.parse(stored);
+        if (videos.length > 0) {
+          return videos.slice(0, 5).map((v: any) => ({
+            title: v.title,
+            author: v.author,
+            videoId: v.videoId,
+            thumbnail: v.thumbnail,
+            link: v.link,
+            channelId: v.channelId,
+            avatarUrl: v.avatarUrl,
+            viewsRequested: v.viewsRequested,
+          }));
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load videos from storage", err);
+    }
+    return [];
   });
+
+  // Save state to sessionStorage when it changes
   useEffect(() => {
-    if (!state?.videoInfo) {
+    if (locationState) {
+      try {
+        sessionStorage.setItem(BUDGET_STATE_KEY, JSON.stringify(locationState));
+      } catch (err) {
+        console.error("Failed to save budget state", err);
+      }
+    }
+  }, [locationState]);
+
+  useEffect(() => {
+    // Only redirect if we have no state at all (neither location nor restored)
+    if (!state?.videoInfo && !selectedVideos.length) {
+      // Try to load from sessionStorage one more time
+      try {
+        const stored = sessionStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const videos = JSON.parse(stored);
+          if (videos.length > 0) {
+            // We have videos, so we can continue
+            return;
+          }
+        }
+      } catch (err) {
+        // Ignore
+      }
       navigate("/campaign", { replace: true });
     }
-  }, [state, navigate]);
+  }, [state, selectedVideos.length, navigate]);
 
-  const isBulkViews = state?.campaignType === "bulk-views" && state?.bulkViewsPackage;
-  const bulkViewsPackage = state?.bulkViewsPackage;
+  const isBulkViews = (state?.campaignType === "bulk-views" && state?.bulkViewsPackage) || false;
+  const bulkViewsPackage = state?.bulkViewsPackage || null;
   
   // Extract price from bulk views package (remove $ and convert to number)
   const bulkViewsPrice = bulkViewsPackage 
@@ -161,15 +228,26 @@ const CampaignBudget = () => {
     }
   };
 
-  if (!state?.videoInfo) {
-    return null;
-  }
-
-  const videoList = selectedVideos;
+  // Use selectedVideos if state is missing (when coming back)
+  const videoList = selectedVideos.length > 0 ? selectedVideos : (state?.videos || (state?.videoInfo ? [state.videoInfo] : []));
   const primaryVideo = videoList[0];
   const selectedCount = videoList.length;
-  const { youtubeLink } = state;
+  const youtubeLink = state?.youtubeLink || primaryVideo?.link || "";
+
   if (!primaryVideo) {
+    // Try to load from sessionStorage
+    try {
+      const stored = sessionStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const videos = JSON.parse(stored);
+        if (videos.length > 0) {
+          // Will re-render with videos
+          return null;
+        }
+      }
+    } catch (err) {
+      // Ignore
+    }
     return null;
   }
   const channelName = primaryVideo.author || "Your Channel";

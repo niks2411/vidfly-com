@@ -3,8 +3,11 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import CampaignLayout from "@/components/CampaignLayout";
 import CampaignCard from "@/components/CampaignCard";
 import { Button } from "@/components/ui/button";
-import { Check, Sparkles, X, Shield } from "lucide-react";
+import { Check, Sparkles, X, Shield, Loader2 } from "lucide-react";
 import ChannelSelector from "@/components/ChannelSelector";
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") || "http://localhost:5000";
 
 const packages = [
   {
@@ -135,6 +138,10 @@ const packages = [
 type StoredVideo = {
   title: string;
   author?: string;
+  videoId: string;
+  thumbnail: string;
+  link: string;
+  channelId?: string | null;
 };
 
 const STORAGE_KEY = "vidfly_channel_videos";
@@ -152,6 +159,8 @@ const CampaignPackageDetail = () => {
     name: string;
     avatar: string | null;
   } | null>(null);
+  const [processing, setProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const channelInfo = useMemo(() => {
     // First, use selected channel from ChannelSelector
@@ -265,6 +274,138 @@ const CampaignPackageDetail = () => {
     }
   };
 
+  const handleContinueToPayment = async () => {
+    if (!pkg) return;
+
+    try {
+      setProcessing(true);
+      setError(null);
+
+      // Get email from verifiedEmail or try to get from cookies/sessionStorage
+      let email = verifiedEmail;
+      if (!email) {
+        // Try to get email from cookies
+        const cookies = document.cookie.split(';');
+        const emailCookie = cookies.find(c => c.trim().startsWith('vidfly_email='));
+        if (emailCookie) {
+          email = emailCookie.split('=')[1];
+        }
+      }
+
+      if (!email) {
+        setError("Email is required. Please verify your email first.");
+        setProcessing(false);
+        return;
+      }
+
+      // Get channel info
+      const finalChannelInfo = selectedChannelInfo || (location.state as { channelInfo?: { channelId: string; name: string; avatar: string | null } } | null)?.channelInfo;
+      
+      if (!finalChannelInfo || !finalChannelInfo.channelId) {
+        setError("Please select a channel first");
+        setProcessing(false);
+        return;
+      }
+
+      // Get videos from sessionStorage
+      const storedVideos: StoredVideo[] = (() => {
+        try {
+          const stored = sessionStorage.getItem(STORAGE_KEY);
+          return stored ? JSON.parse(stored) : [];
+        } catch {
+          return [];
+        }
+      })();
+
+      if (storedVideos.length === 0) {
+        setError("Please add videos first on the 'Promote Video / Short' page");
+        setProcessing(false);
+        return;
+      }
+
+      // Extract price (remove ₹ and convert to number)
+      const priceStr = pkg.price.replace(/[₹,]/g, '').trim();
+      const price = parseFloat(priceStr);
+      
+      if (isNaN(price) || price <= 0) {
+        setError("Invalid package price");
+        setProcessing(false);
+        return;
+      }
+
+      // Extract views from package name/description
+      const viewsMatch = pkg.views.match(/(\d+(?:,\d+)*)/);
+      const quantity = viewsMatch ? parseInt(viewsMatch[1].replace(/,/g, '')) : 0;
+
+      // Create order payload
+      const payload = {
+        email,
+        channel: {
+          name: finalChannelInfo.name,
+          channelId: finalChannelInfo.channelId,
+          link: null,
+          avatar: finalChannelInfo.avatar,
+        },
+        videos: storedVideos.slice(0, 1).map((video) => ({
+          videoId: video.videoId || `video_${Date.now()}`,
+          title: video.title,
+          link: video.link || null,
+          thumbnail: video.thumbnail || null,
+          viewsRequested: quantity,
+        })),
+        package: {
+          id: pkg.id,
+          name: pkg.name,
+          price: price,
+          currency: "INR",
+          quantity: quantity,
+          type: "package",
+          description: pkg.description,
+        },
+        targeting: {
+          country: null,
+          goal: null,
+          duration: null,
+          autoTargeting: pkg.aiTargeting || false,
+        },
+        budget: price,
+        source: "packages",
+      };
+
+      console.log('Creating package order:', payload);
+
+      const response = await fetch(`${API_BASE_URL}/api/orders/campaign`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data?.message || "Failed to create order");
+      }
+
+      const data = await response.json();
+      
+      if (data.paymentCheckoutUrl) {
+        window.location.href = data.paymentCheckoutUrl;
+        return;
+      }
+
+      if (data.order?.orderId) {
+        navigate(`/payment/checkout?orderId=${data.order.orderId}`);
+        return;
+      }
+
+      throw new Error("Order created but payment URL not received");
+    } catch (err) {
+      console.error('Payment error:', err);
+      setError(err instanceof Error ? err.message : "Failed to proceed to payment");
+      setProcessing(false);
+    }
+  };
+
   if (!pkg) {
     return (
       <CampaignLayout>
@@ -356,15 +497,33 @@ const CampaignPackageDetail = () => {
               </div>
             </div>
 
+            {error && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
+
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4 mt-8 rounded-xl">
               <Button className="rounded-xl"
                 variant="outline"
                 onClick={() => navigate("/campaign/packages")}
+                disabled={processing}
               >
                 BACK TO PACKAGES
               </Button>
-              <Button className="rounded-xl">
-                CONTINUE TO PAYMENT
+              <Button 
+                className="rounded-xl"
+                onClick={handleContinueToPayment}
+                disabled={processing || !channelInfo}
+              >
+                {processing ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    PROCESSING...
+                  </>
+                ) : (
+                  "CONTINUE TO PAYMENT"
+                )}
               </Button>
             </div>
       </CampaignCard>

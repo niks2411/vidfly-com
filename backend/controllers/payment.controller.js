@@ -378,7 +378,7 @@ exports.verifyPayment = async (req, res, next) => {
   try {
     const schema = Joi.object({ 
       orderId: Joi.string().required(), 
-      paymentId: Joi.string().required(), 
+      paymentId: Joi.string().allow('', null).optional(), 
       signature: Joi.string().allow(''),
       gateway: Joi.string().valid('razorpay', 'stripe', 'cashfree').optional()
     });
@@ -388,9 +388,14 @@ exports.verifyPayment = async (req, res, next) => {
     const order = await Order.findOne({ orderId: value.orderId }).populate('paymentId');
     if (!order) return res.status(404).json({ message: 'Order not found' });
 
-    // If Cashfree, verify using Cashfree API
+    // If Cashfree, verify using Cashfree API (paymentId optional for test mode)
     if (value.gateway === 'cashfree' || order.paymentId?.gateway === 'cashfree') {
-      return await verifyCashfreePayment(req, res, next, order, value.paymentId);
+      return await verifyCashfreePayment(req, res, next, order, value.paymentId || null);
+    }
+
+    // For other gateways, paymentId is required
+    if (!value.paymentId) {
+      return res.status(400).json({ message: 'Payment ID is required for this gateway' });
     }
 
     // Placeholder verification for other gateways
@@ -427,14 +432,31 @@ const verifyCashfreePayment = async (req, res, next, order, paymentId) => {
         headers: {
           'x-client-id': CASHFREE_CLIENT_ID,
           'x-client-secret': CASHFREE_CLIENT_SECRET,
+          'x-api-version': '2023-08-01',
           'Content-Type': 'application/json',
         },
       }
     );
 
-    const paymentData = response.data.find(p => p.cf_payment_id === paymentId);
-    if (!paymentData) {
-      return res.status(404).json({ message: 'Payment not found in Cashfree' });
+    // If paymentId provided, find specific payment, otherwise get latest successful payment
+    let paymentData;
+    if (paymentId) {
+      paymentData = response.data.find(p => p.cf_payment_id === paymentId);
+      if (!paymentData) {
+        return res.status(404).json({ message: 'Payment not found in Cashfree' });
+      }
+    } else {
+      // No paymentId - get the latest successful payment
+      paymentData = response.data.find(p => p.payment_status === 'SUCCESS');
+      if (!paymentData) {
+        // Check if there are any payments at all
+        if (response.data && response.data.length > 0) {
+          // Get the latest payment
+          paymentData = response.data[response.data.length - 1];
+        } else {
+          return res.status(404).json({ message: 'No payments found for this order' });
+        }
+      }
     }
 
     // Update payment record
@@ -465,6 +487,30 @@ const verifyCashfreePayment = async (req, res, next, order, paymentId) => {
       message: 'Failed to verify Cashfree payment',
       error: error.response?.data?.message || error.message 
     });
+  }
+};
+
+// Verify payment using only orderId (for test mode when paymentId not in URL)
+exports.verifyOrderPayment = async (req, res, next) => {
+  try {
+    const schema = Joi.object({ 
+      orderId: Joi.string().required(), 
+      gateway: Joi.string().valid('razorpay', 'stripe', 'cashfree').optional()
+    });
+    const { error, value } = schema.validate(req.body);
+    if (error) return res.status(400).json({ message: error.message });
+
+    const order = await Order.findOne({ orderId: value.orderId }).populate('paymentId');
+    if (!order) return res.status(404).json({ message: 'Order not found' });
+
+    // If Cashfree, verify using Cashfree API without paymentId
+    if (value.gateway === 'cashfree' || order.paymentId?.gateway === 'cashfree') {
+      return await verifyCashfreePayment(req, res, next, order, null);
+    }
+
+    return res.status(400).json({ message: 'Payment gateway not supported for order verification' });
+  } catch (err) { 
+    return next(err); 
   }
 };
 

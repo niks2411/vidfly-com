@@ -231,7 +231,7 @@ const GetStarted = () => {
               <Button
                 onClick={sendOtp}
                 disabled={sendingOtp || emailVerified || !email}
-                className="flex-1"
+                className="flex-1 rounded-xl"
               >
                 {emailVerified
                   ? "EMAIL VERIFIED"
@@ -245,7 +245,7 @@ const GetStarted = () => {
                 <Button
                   variant="outline"
                   onClick={resetState}
-                  className="h-12 font-semibold"
+                  className="h-12 font-semibold rounded-xl"
                 >
                   Change Email
                 </Button>
@@ -269,7 +269,7 @@ const GetStarted = () => {
                 <Button
                   onClick={verifyOtp}
                   disabled={verifyingOtp || otp.length !== 6}
-                  className="w-full h-12 bg-green-600 hover:bg-green-700 text-white font-semibold transition-all duration-300 hover:scale-[1.01]"
+                  className="rounded-xl w-full h-12 bg-green-600 hover:bg-green-700 text-white font-semibold transition-all duration-300 hover:scale-[1.01]"
                 >
                   {verifyingOtp ? "Verifying..." : "Verify OTP"}
                 </Button>

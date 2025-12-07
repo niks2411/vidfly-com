@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { createPayment, verifyPayment, cashfreeWebhook } = require('../controllers/payment.controller');
+const { createPayment, verifyPayment, verifyOrderPayment, cashfreeWebhook } = require('../controllers/payment.controller');
 
 /**
  * @openapi
@@ -16,6 +16,14 @@ router.post('/create', createPayment);
  *     summary: Verify payment and update order
  */
 router.post('/verify', verifyPayment);
+
+/**
+ * @openapi
+ * /api/payments/verify-order:
+ *   post:
+ *     summary: Verify payment using only orderId (for test mode)
+ */
+router.post('/verify-order', verifyOrderPayment);
 
 /**
  * @openapi

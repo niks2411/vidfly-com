@@ -1,22 +1,13 @@
 const Joi = require('joi');
 
 // Pricing calculation logic
-// Base rate: ₹299 for 1000 views = ₹0.299 per view
-// We'll use a tiered pricing system
+// Base rate: ₹0.2 per view (fixed rate)
 function calculateViewsFromPrice(price) {
-  // Base calculation: ₹0.299 per view (from starter package: ₹299 for 1000 views)
-  const baseRatePerView = 0.299;
+  // Base calculation: ₹0.2 per view
+  const baseRatePerView = 0.2;
   
-  // Tiered pricing (better rates for higher budgets)
+  // Use fixed rate of 0.2rs per view
   let ratePerView = baseRatePerView;
-  
-  if (price >= 1000) {
-    ratePerView = 0.22; // Better rate for ₹1000+
-  } else if (price >= 500) {
-    ratePerView = 0.25; // Better rate for ₹500+
-  } else if (price >= 200) {
-    ratePerView = 0.27; // Better rate for ₹200+
-  }
   
   // Calculate base views
   const baseViews = Math.floor(price / ratePerView);
@@ -96,10 +87,7 @@ exports.calculateViews = async (req, res, next) => {
 exports.getPricingTiers = async (req, res, next) => {
   try {
     const tiers = [
-      { min: 10, max: 199, rate: 0.299, name: 'Starter' },
-      { min: 200, max: 499, rate: 0.27, name: 'Popular' },
-      { min: 500, max: 999, rate: 0.25, name: 'Viral' },
-      { min: 1000, max: 10000, rate: 0.22, name: 'Premium' }
+      { min: 10, max: 10000, rate: 0.2, name: 'Standard' }
     ];
     
     return res.json({ tiers });

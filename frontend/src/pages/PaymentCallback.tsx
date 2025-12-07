@@ -20,6 +20,8 @@ const PaymentCallback = () => {
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("verifying");
   const [error, setError] = useState<string | null>(null);
   const [orderDetails, setOrderDetails] = useState<any>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const MAX_RETRIES = 10; // Maximum 10 retries (20 seconds total)
 
   useEffect(() => {
     if (!orderId) {
@@ -41,6 +43,13 @@ const PaymentCallback = () => {
 
   const verifyPayment = async () => {
     if (!orderId) return;
+
+    // Check retry limit
+    if (retryCount >= MAX_RETRIES) {
+      setPaymentStatus("error");
+      setError("Payment verification is taking too long. Please check your order status in My Campaigns.");
+      return;
+    }
 
     try {
       setPaymentStatus("verifying");
@@ -76,7 +85,7 @@ const PaymentCallback = () => {
           setError(data.message || "Payment verification failed");
         }
       } else {
-        // If no paymentId, check order status
+        // If no paymentId, check order status and try to verify from backend
         const response = await fetch(`${API_BASE_URL}/api/orders/${orderId}`, {
           credentials: "include",
         });
@@ -88,20 +97,62 @@ const PaymentCallback = () => {
         const data = await response.json();
         setOrderDetails(data);
 
+        // Check if order is already paid
         if (data.status === "paid") {
           setPaymentStatus("success");
-        } else if (data.status === "failed") {
-          setPaymentStatus("failed");
-        } else {
-          // Payment might still be processing
-          setPaymentStatus("verifying");
-          // Retry after 2 seconds
-          setTimeout(verifyPayment, 2000);
+          return;
         }
+        
+        // Check if order failed
+        if (data.status === "failed") {
+          setPaymentStatus("failed");
+          return;
+        }
+
+        // If payment has paymentOrderId, try to verify payment status from Cashfree
+        if (data.paymentId?.paymentOrderId) {
+          try {
+            // Try to verify payment using order's paymentOrderId
+            const verifyResponse = await fetch(`${API_BASE_URL}/api/payments/verify-order`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+              body: JSON.stringify({
+                orderId,
+                gateway: "cashfree",
+              }),
+            });
+
+            if (verifyResponse.ok) {
+              const verifyData = await verifyResponse.json();
+              if (verifyData.order?.status === "paid") {
+                setPaymentStatus("success");
+                return;
+              }
+            }
+          } catch (verifyErr) {
+            console.log("Direct verification failed, will retry:", verifyErr);
+          }
+        }
+
+        // Payment might still be processing - retry with limit
+        setRetryCount(prev => prev + 1);
+        setPaymentStatus("verifying");
+        // Retry after 2 seconds
+        setTimeout(verifyPayment, 2000);
       }
     } catch (err) {
-      setPaymentStatus("error");
-      setError(err instanceof Error ? err.message : "Failed to verify payment");
+      // If we've retried too many times, show error
+      if (retryCount >= MAX_RETRIES - 1) {
+        setPaymentStatus("error");
+        setError(err instanceof Error ? err.message : "Failed to verify payment. Please check your order status in My Campaigns.");
+      } else {
+        // Retry on error
+        setRetryCount(prev => prev + 1);
+        setTimeout(verifyPayment, 2000);
+      }
     }
   };
 
