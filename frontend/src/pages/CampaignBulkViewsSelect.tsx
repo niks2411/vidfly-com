@@ -4,7 +4,7 @@ import CampaignHeader from "@/components/CampaignHeader";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Play, Search } from "lucide-react";
-import { getVerifiedEmail } from "@/lib/verifiedEmail";
+import { getVerifiedEmail, getSelectedChannelKey } from "@/lib/verifiedEmail";
 import CampaignLayout from "@/components/CampaignLayout";
 import CampaignCard from "@/components/CampaignCard";
 
@@ -62,16 +62,16 @@ const CampaignBulkViewsSelect = () => {
         setSelectedIds([parsed[0].videoId]);
       }
       
-      // Load selected channel from sessionStorage
-      const SELECTED_CHANNEL_KEY = "vidfly_selected_channel";
-      const savedChannelId = sessionStorage.getItem(SELECTED_CHANNEL_KEY);
+      // Load selected channel from localStorage (per email) for cross-tab sync
+      const channelKey = getSelectedChannelKey();
+      const savedChannelId = localStorage.getItem(channelKey);
       if (savedChannelId) {
         setChannelId(savedChannelId);
       } else {
         const withChannel = parsed.find((video) => !!video.channelId);
         if (withChannel?.channelId) {
           setChannelId(withChannel.channelId);
-          sessionStorage.setItem(SELECTED_CHANNEL_KEY, withChannel.channelId);
+          localStorage.setItem(channelKey, withChannel.channelId);
         }
       }
     } catch (err) {
@@ -85,7 +85,8 @@ const CampaignBulkViewsSelect = () => {
       const { channelId: newChannelId } = event.detail;
       if (newChannelId) {
         setChannelId(newChannelId);
-        sessionStorage.setItem("vidfly_selected_channel", newChannelId);
+        const channelKey = getSelectedChannelKey();
+        localStorage.setItem(channelKey, newChannelId);
       }
     };
 

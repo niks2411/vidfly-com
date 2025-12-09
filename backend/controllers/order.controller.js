@@ -260,13 +260,6 @@ exports.createCampaignOrder = async (req, res, next) => {
       .populate('userId', 'name email phone emailVerified')
       .populate('paymentId', 'amount currency status gateway');
 
-    // Award referrer if this is the user's first paid campaign
-    // This runs asynchronously so it doesn't block the response
-    const { awardReferrerOnFirstCampaign } = require('./freeViews.controller');
-    awardReferrerOnFirstCampaign(user._id, order._id).catch(err => {
-      console.error('Failed to award referrer:', err);
-    });
-
     // Generate payment checkout URL pointing to frontend payment page
     const frontendUrl = process.env.FRONTEND_URL || process.env.CHECKOUT_URL || process.env.FRONTEND_PAYMENT_URL || 'http://localhost:5173';
     const paymentCheckoutUrl = `${frontendUrl}/payment/checkout?orderId=${orderId}`;

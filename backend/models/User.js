@@ -8,6 +8,10 @@ const UserSchema = new mongoose.Schema(
     emailVerified: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
     referralCode: { type: String, unique: true, sparse: true, index: true },
+    preferences: {
+      selectedChannelId: { type: String },
+      selectedChannelName: { type: String },
+    },
   },
   { timestamps: true }
 );

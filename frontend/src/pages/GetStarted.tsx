@@ -211,7 +211,7 @@ const GetStarted = () => {
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-2 rounded-xl">
                 Email Address
               </label>
               <Input
@@ -223,7 +223,7 @@ const GetStarted = () => {
                   resetState();
                 }}
                 required
-                className="h-12 text-base"
+                className="h-12 text-base rounded-xl"
               />
             </div>
 

@@ -31,6 +31,7 @@ import CampaignBulkViewsSelect from "./pages/CampaignBulkViewsSelect";
 import CampaignFreeViews from "./pages/CampaignFreeViews";
 import MyCampaigns from "./pages/MyCampaigns";
 import AdminPanel from "./pages/AdminPanel";
+import AdminCompleted from "./pages/AdminCompleted";
 import PaymentCheckout from "./pages/PaymentCheckout";
 import PaymentCallback from "./pages/PaymentCallback";
 import ScrollToTop from "./components/ScrollToTop";
@@ -69,6 +70,7 @@ const App = () => (
           <Route path="/payment/checkout" element={<PaymentCheckout />} />
           <Route path="/payment/callback" element={<PaymentCallback />} />
           <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/admin/completed" element={<AdminCompleted />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/disclaimer" element={<Disclaimer />} />

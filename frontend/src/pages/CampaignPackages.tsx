@@ -4,7 +4,7 @@ import CampaignCard from "@/components/CampaignCard";
 import CampaignHeader from "@/components/CampaignHeader";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getVerifiedEmail } from "@/lib/verifiedEmail";
+import { getVerifiedEmail, getSelectedChannelKey } from "@/lib/verifiedEmail";
 
 const STORAGE_KEY = "vidfly_channel_videos";
 
@@ -121,9 +121,9 @@ const CampaignPackages = () => {
       );
       setStoredVideos(parsed);
       
-      // Get selected channel from sessionStorage
-      const SELECTED_CHANNEL_KEY = "vidfly_selected_channel";
-      const savedChannelId = sessionStorage.getItem(SELECTED_CHANNEL_KEY);
+      // Get selected channel from localStorage (per email) for cross-tab sync
+      const channelKey = getSelectedChannelKey();
+      const savedChannelId = localStorage.getItem(channelKey);
       
       if (savedChannelId && parsed.length > 0 && !channelInfo) {
         // Filter videos by selected channel
@@ -208,9 +208,9 @@ const CampaignPackages = () => {
   };
 
   const handleBuyNow = async (pkgId: string) => {
-    // Get selected channel from sessionStorage
-    const SELECTED_CHANNEL_KEY = "vidfly_selected_channel";
-    let selectedChannelId: string | null = sessionStorage.getItem(SELECTED_CHANNEL_KEY);
+    // Get selected channel from localStorage (per email) for cross-tab sync
+    const channelKey = getSelectedChannelKey();
+    let selectedChannelId: string | null = localStorage.getItem(channelKey);
     let channelName = channelInfo?.name || "";
     
     // If no saved channel, use first video with channelId
@@ -219,7 +219,7 @@ const CampaignPackages = () => {
       if (videoWithChannel?.channelId) {
         selectedChannelId = videoWithChannel.channelId;
         channelName = videoWithChannel.author || "";
-        sessionStorage.setItem(SELECTED_CHANNEL_KEY, selectedChannelId);
+          localStorage.setItem(channelKey, selectedChannelId);
       }
     }
 
@@ -295,14 +295,15 @@ const CampaignPackages = () => {
               </div>
             </div>
 
-            {/* Packages Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {packages.map((pkg) => (
-                <div
-                  key={pkg.id}
-                  className={`relative rounded-2xl border-2 ${pkg.borderColor} bg-white p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 ${
-                    pkg.isPremium ? "lg:col-span-2 lg:max-w-2xl lg:mx-auto" : ""
-                  }`}
+            {/* Packages Grid - Inverted Triangle Layout (3, 2, 1) */}
+            <div className="flex flex-col items-center gap-6">
+              {/* Row 1: 3 packages (top row) */}
+              {packages.length > 2 && (
+                <div className="flex justify-center gap-6 w-full">
+                  {packages.slice(0, 3).map((pkg) => (
+                    <div key={pkg.id} className="w-full max-w-sm">
+                      <div
+                        className={`relative rounded-2xl border-2 ${pkg.borderColor} bg-white p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105`}
                 >
                   {pkg.isPopular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-4 py-1 rounded-full">
@@ -315,7 +316,6 @@ const CampaignPackages = () => {
                     </div>
                   )}
 
-                  {/* Header */}
                   <div className="text-center mb-6">
                     <h2 className="text-2xl font-bold text-slate-900 mb-2">{pkg.name}</h2>
                     <div className="flex items-center justify-center gap-2">
@@ -323,7 +323,6 @@ const CampaignPackages = () => {
                     </div>
                   </div>
 
-                  {/* Views */}
                   <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
                     <div className="text-center">
                       <p className="text-2xl font-bold text-slate-900">
@@ -338,7 +337,6 @@ const CampaignPackages = () => {
                     </div>
                   </div>
 
-                  {/* AI Targeting Status */}
                   <div className="mb-6 p-3 bg-slate-100 rounded-lg">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-semibold text-slate-700">AI Targeting:</span>
@@ -350,14 +348,13 @@ const CampaignPackages = () => {
                     </div>
                   </div>
 
-                  {/* Premium Features */}
                   {pkg.hasAI && pkg.aiFeatures && (
                     <div className="mb-6">
                       <p className="text-sm font-semibold text-slate-800 mb-2">Plus Premium Features:</p>
                       <ul className="space-y-2">
                         {pkg.aiFeatures.map((feature, idx) => (
                           <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
-                            <span className="text-purple-500 mt-0.5">✨</span>
+                                  <span className="text-purple-600 font-bold mt-0.5">•</span>
                             <span>{feature}</span>
                           </li>
                         ))}
@@ -365,17 +362,16 @@ const CampaignPackages = () => {
                     </div>
                   )}
 
-                  {/* Bonus Section */}
                   {pkg.discount && (
                     <div className="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-200">
                       <p className="text-sm font-semibold text-slate-800 mb-2">Bonus Included:</p>
                       <div className="space-y-1 text-sm text-slate-700">
                         <div className="flex items-center gap-2">
-                          <span className="text-yellow-600">🎁</span>
+                                <span className="text-yellow-600 font-semibold">✓</span>
                           <span>{pkg.discount}% Instant Discount</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-yellow-600">🎁</span>
+                                <span className="text-yellow-600 font-semibold">✓</span>
                           <span>+{pkg.bonusViews?.toLocaleString()} FREE Viewers Added</span>
                         </div>
                         <div className="pt-2 mt-2 border-t border-yellow-200">
@@ -387,7 +383,222 @@ const CampaignPackages = () => {
                     </div>
                   )}
 
-                  {/* CTA Button */}
+                        <Button
+                          className={`w-full rounded-xl py-6 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ${
+                            pkg.isPremium
+                              ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                              : pkg.hasAI
+                              ? "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+                              : "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white"
+                          }`}
+                          onClick={() => handleBuyNow(pkg.id)}
+                          disabled={storedVideos.length === 0 || loadingChannel}
+                        >
+                          {loadingChannel ? "Loading..." : `Buy ${pkg.name}`}
+                        </Button>
+                        {channelError && pkg.id === packages[0].id && (
+                          <p className="mt-2 text-xs text-red-600 text-center">{channelError}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Row 2: 2 packages (middle row) */}
+              {packages.length > 4 && (
+                <div className="flex justify-center gap-6 w-full">
+                  {packages.slice(3, 5).map((pkg) => (
+                    <div key={pkg.id} className="w-full max-w-sm">
+                      <div
+                        className={`relative rounded-2xl border-2 ${pkg.borderColor} bg-white p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105`}
+                      >
+                        {pkg.isPopular && (
+                          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-4 py-1 rounded-full">
+                            MOST POPULAR
+                          </div>
+                        )}
+                        {pkg.isPremium && (
+                          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-4 py-1 rounded-full">
+                            PREMIUM
+                          </div>
+                        )}
+
+                        <div className="text-center mb-6">
+                          <h2 className="text-2xl font-bold text-slate-900 mb-2">{pkg.name}</h2>
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="text-3xl font-bold text-red-600">₹{pkg.price.toLocaleString()}</span>
+                          </div>
+                        </div>
+
+                        <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                          <div className="text-center">
+                            <p className="text-2xl font-bold text-slate-900">
+                              {pkg.totalViews ? pkg.totalViews.toLocaleString() : pkg.views.toLocaleString()}+
+                            </p>
+                            <p className="text-sm text-slate-600 mt-1">Real, High-Intent Viewers</p>
+                            {pkg.totalViews && (
+                              <p className="text-xs text-slate-500 mt-1">
+                                Base: {pkg.views.toLocaleString()} + Bonus: {pkg.bonusViews?.toLocaleString()}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="mb-6 p-3 bg-slate-100 rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-semibold text-slate-700">AI Targeting:</span>
+                            {pkg.hasAI ? (
+                              <span className="text-green-600 font-bold text-sm">✓ Included</span>
+                            ) : (
+                              <span className="text-red-500 font-bold text-sm">✗ Not Included</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {pkg.hasAI && pkg.aiFeatures && (
+                          <div className="mb-6">
+                            <p className="text-sm font-semibold text-slate-800 mb-2">Plus Premium Features:</p>
+                            <ul className="space-y-2">
+                              {pkg.aiFeatures.map((feature, idx) => (
+                                <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                                  <span className="text-purple-600 font-bold mt-0.5">•</span>
+                                  <span>{feature}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {pkg.discount && (
+                          <div className="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-200">
+                            <p className="text-sm font-semibold text-slate-800 mb-2">Bonus Included:</p>
+                            <div className="space-y-1 text-sm text-slate-700">
+                              <div className="flex items-center gap-2">
+                                <span className="text-yellow-600 font-semibold">✓</span>
+                                <span>{pkg.discount}% Instant Discount</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-yellow-600 font-semibold">✓</span>
+                                <span>+{pkg.bonusViews?.toLocaleString()} FREE Viewers Added</span>
+                              </div>
+                              <div className="pt-2 mt-2 border-t border-yellow-200">
+                                <p className="text-xs font-semibold text-slate-800">
+                                  Total Value Delivered: {pkg.totalViews?.toLocaleString()}+ Viewers
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        <Button
+                          className={`w-full rounded-xl py-6 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ${
+                            pkg.isPremium
+                              ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                              : pkg.hasAI
+                              ? "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+                              : "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white"
+                          }`}
+                          onClick={() => handleBuyNow(pkg.id)}
+                          disabled={storedVideos.length === 0 || loadingChannel}
+                        >
+                          {loadingChannel ? "Loading..." : `Buy ${pkg.name}`}
+                        </Button>
+                        {channelError && pkg.id === packages[0].id && (
+                          <p className="mt-2 text-xs text-red-600 text-center">{channelError}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Row 3: 1 package (bottom row, centered) */}
+              {packages.length > 5 && (
+                <div className="flex justify-center w-full">
+                  {packages.slice(5, 6).map((pkg) => (
+                    <div key={pkg.id} className="w-full max-w-sm">
+                      <div
+                        className={`relative rounded-2xl border-2 ${pkg.borderColor} bg-white p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105`}
+                      >
+                        {pkg.isPopular && (
+                          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-4 py-1 rounded-full">
+                            MOST POPULAR
+                          </div>
+                        )}
+                        {pkg.isPremium && (
+                          <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-4 py-1 rounded-full">
+                            PREMIUM
+                          </div>
+                        )}
+
+                        <div className="text-center mb-6">
+                          <h2 className="text-2xl font-bold text-slate-900 mb-2">{pkg.name}</h2>
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="text-3xl font-bold text-red-600">₹{pkg.price.toLocaleString()}</span>
+                          </div>
+                        </div>
+
+                        <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                          <div className="text-center">
+                            <p className="text-2xl font-bold text-slate-900">
+                              {pkg.totalViews ? pkg.totalViews.toLocaleString() : pkg.views.toLocaleString()}+
+                            </p>
+                            <p className="text-sm text-slate-600 mt-1">Real, High-Intent Viewers</p>
+                            {pkg.totalViews && (
+                              <p className="text-xs text-slate-500 mt-1">
+                                Base: {pkg.views.toLocaleString()} + Bonus: {pkg.bonusViews?.toLocaleString()}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="mb-6 p-3 bg-slate-100 rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-semibold text-slate-700">AI Targeting:</span>
+                            {pkg.hasAI ? (
+                              <span className="text-green-600 font-bold text-sm">✓ Included</span>
+                            ) : (
+                              <span className="text-red-500 font-bold text-sm">✗ Not Included</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {pkg.hasAI && pkg.aiFeatures && (
+                          <div className="mb-6">
+                            <p className="text-sm font-semibold text-slate-800 mb-2">Plus Premium Features:</p>
+                            <ul className="space-y-2">
+                              {pkg.aiFeatures.map((feature, idx) => (
+                                <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                                  <span className="text-purple-600 font-bold mt-0.5">•</span>
+                                  <span>{feature}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {pkg.discount && (
+                          <div className="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-200">
+                            <p className="text-sm font-semibold text-slate-800 mb-2">Bonus Included:</p>
+                            <div className="space-y-1 text-sm text-slate-700">
+                              <div className="flex items-center gap-2">
+                                <span className="text-yellow-600 font-semibold">✓</span>
+                                <span>{pkg.discount}% Instant Discount</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-yellow-600 font-semibold">✓</span>
+                                <span>+{pkg.bonusViews?.toLocaleString()} FREE Viewers Added</span>
+                              </div>
+                              <div className="pt-2 mt-2 border-t border-yellow-200">
+                                <p className="text-xs font-semibold text-slate-800">
+                                  Total Value Delivered: {pkg.totalViews?.toLocaleString()}+ Viewers
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
                   <Button
                     className={`w-full rounded-xl py-6 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ${
                       pkg.isPremium
@@ -404,8 +615,11 @@ const CampaignPackages = () => {
                   {channelError && pkg.id === packages[0].id && (
                     <p className="mt-2 text-xs text-red-600 text-center">{channelError}</p>
                   )}
+                      </div>
                 </div>
               ))}
+                </div>
+              )}
             </div>
 
       </CampaignCard>

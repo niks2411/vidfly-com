@@ -79,6 +79,7 @@ app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/orders', require('./routes/order.routes'));
 app.use('/api/payments', require('./routes/payment.routes'));
 app.use('/api/admin', require('./routes/admin.routes'));
+app.use('/api/user-preferences', require('./routes/userPreferences.routes'));
 app.use('/api/youtube', require('./routes/youtube.routes'));
 app.use('/api/pricing', require('./routes/pricing.routes'));
 app.use('/api/free-views', require('./routes/freeViews.routes'));

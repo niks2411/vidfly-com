@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -44,6 +45,7 @@ const campaignLabels: Record<string, string> = {
 };
 
 const AdminPanel = () => {
+  const navigate = useNavigate();
   const [token, setToken] = useState<string | null>(() =>
     typeof window !== "undefined" ? localStorage.getItem("adminToken") : null
   );
@@ -55,6 +57,11 @@ const AdminPanel = () => {
   const [loginError, setLoginError] = useState<string | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState<Record<string, boolean>>({});
   const [deletingOrder, setDeletingOrder] = useState<Record<string, boolean>>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [showVerification, setShowVerification] = useState<Record<string, boolean>>({});
+  const [pendingStatus, setPendingStatus] = useState<Record<string, string>>({});
+  const itemsPerPage = 10;
 
   useEffect(() => {
     if (!token) return;
@@ -114,8 +121,31 @@ const AdminPanel = () => {
     setOrders([]);
   };
 
-  const handleStatusUpdate = async (orderId: string, newStatus: string) => {
+  const handleStatusChange = (orderId: string, newStatus: string) => {
+    // Store the new status and show verification prompt
+    setPendingStatus((prev) => ({ ...prev, [orderId]: newStatus }));
+    setShowVerification((prev) => ({ ...prev, [orderId]: true }));
+  };
+
+  const handleStatusUpdate = async (orderId: string) => {
     if (!token) return;
+    
+    const newStatus = pendingStatus[orderId];
+    if (!newStatus) return;
+    
+    // Verify code
+    if (verificationCode !== "admin123") {
+      setError("Invalid verification code. Please enter 'admin123' to proceed.");
+      setVerificationCode("");
+      setShowVerification((prev) => ({ ...prev, [orderId]: false }));
+      setPendingStatus((prev) => {
+        const updated = { ...prev };
+        delete updated[orderId];
+        return updated;
+      });
+      return;
+    }
+    
     setUpdatingStatus((prev) => ({ ...prev, [orderId]: true }));
     try {
       const response = await fetch(`${API_BASE_URL}/api/admin/orders/${orderId}/status`, {
@@ -130,6 +160,13 @@ const AdminPanel = () => {
         const data = await response.json().catch(() => ({}));
         throw new Error(data?.message || "Failed to update status");
       }
+      setVerificationCode("");
+      setShowVerification((prev) => ({ ...prev, [orderId]: false }));
+      setPendingStatus((prev) => {
+        const updated = { ...prev };
+        delete updated[orderId];
+        return updated;
+      });
       await fetchOrders();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to update order status");
@@ -163,33 +200,18 @@ const AdminPanel = () => {
     }
   };
 
-  const groupedOrders = useMemo(() => {
-    const grouped = orders.reduce<Record<string, Order[]>>((acc, order) => {
-      const type = order.campaignType || "standard";
-      acc[type] = acc[type] ? [...acc[type], order] : [order];
-      return acc;
-    }, {});
-    
-    // Define the desired sort order
-    const sortOrder = ['promote_channel', 'promote_video', 'packages', 'bulk_views', 'free_views'];
-    
-    // Create a new object with sorted keys
-    const sorted: Record<string, Order[]> = {};
-    sortOrder.forEach(type => {
-      if (grouped[type]) {
-        sorted[type] = grouped[type];
-      }
-    });
-    
-    // Add any remaining types that weren't in the sort order
-    Object.keys(grouped).forEach(type => {
-      if (!sortOrder.includes(type)) {
-        sorted[type] = grouped[type];
-      }
-    });
-    
-    return sorted;
+  // Filter out completed orders (they'll be shown in separate page)
+  const activeOrders = useMemo(() => {
+    return orders.filter(order => order.status !== 'completed');
   }, [orders]);
+
+  // Pagination
+  const totalPages = Math.ceil(activeOrders.length / itemsPerPage);
+  const paginatedOrders = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return activeOrders.slice(startIndex, endIndex);
+  }, [activeOrders, currentPage]);
 
   if (!token) {
     return (
@@ -250,25 +272,27 @@ const AdminPanel = () => {
           </div>
         )}
 
-        {Object.keys(groupedOrders).length === 0 && !loading && (
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-xl font-semibold text-slate-900">All Orders</h2>
+            <p className="text-sm text-slate-500">{activeOrders.length} active orders (excluding completed)</p>
+          </div>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/admin/completed")}
+          >
+            View Completed Orders
+          </Button>
+        </div>
+
+        {paginatedOrders.length === 0 && !loading && (
           <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center text-slate-500">
             No orders yet.
           </div>
         )}
 
-        {Object.entries(groupedOrders).map(([type, list]) => (
-          <section key={type} className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="text-xs uppercase text-slate-500">Campaign Type</p>
-                <h2 className="text-xl font-semibold text-slate-900">
-                  {campaignLabels[type] || "Standard Orders"}
-                </h2>
-              </div>
-              <span className="text-sm text-slate-500">{list.length} orders</span>
-            </div>
-            <div className="grid gap-4">
-              {list.map((order) => (
+        <div className="grid gap-4">
+          {paginatedOrders.map((order) => (
                 <article
                   key={order._id}
                   className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"
@@ -277,14 +301,15 @@ const AdminPanel = () => {
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <p className="text-lg font-semibold text-slate-900">{order.orderId}</p>
-                        <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${statusColors[order.status] || statusColors.pending}`}>
+                        <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${statusColors[order.status] || statusColors.payment_pending}`}>
                           {order.status === 'paid' ? 'PAID' : 
                            order.status === 'payment_pending' ? 'PAYMENT PENDING' :
                            order.status === 'in_progress' ? 'IN PROGRESS' :
                            order.status === 'completed' ? 'COMPLETED' :
                            order.status === 'failed' ? 'FAILED' :
                            order.status === 'promotion_scheduled' ? 'SCHEDULED' :
-                           'PENDING'}
+                           order.status === 'pending' ? 'PAYMENT PENDING' :
+                           'PAYMENT PENDING'}
                         </span>
                       </div>
                       <p className="text-xs uppercase text-slate-500 mb-1">Order ID</p>
@@ -371,11 +396,10 @@ const AdminPanel = () => {
                       <label className="text-xs text-slate-600 font-semibold">Status:</label>
                       <select
                         value={order.status}
-                        onChange={(e) => handleStatusUpdate(order.orderId, e.target.value)}
-                        disabled={updatingStatus[order.orderId]}
+                        onChange={(e) => handleStatusChange(order.orderId, e.target.value)}
+                        disabled={updatingStatus[order.orderId] || showVerification[order.orderId]}
                         className="px-3 py-1 text-xs font-semibold rounded-full border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <option value="pending">Pending</option>
                         <option value="payment_pending">Payment Pending</option>
                         <option value="paid">Paid</option>
                         <option value="promotion_scheduled">Promotion Scheduled</option>
@@ -383,6 +407,50 @@ const AdminPanel = () => {
                         <option value="completed">Completed</option>
                         <option value="failed">Failed</option>
                       </select>
+                      {showVerification[order.orderId] && (
+                        <div className="flex flex-col gap-2 mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                          <p className="text-xs font-semibold text-yellow-800">
+                            Changing status to: <span className="uppercase">{pendingStatus[order.orderId] || order.status}</span>
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="password"
+                              placeholder="Enter admin123"
+                              value={verificationCode}
+                              onChange={(e) => setVerificationCode(e.target.value)}
+                              className="w-32 h-8 text-xs"
+                              onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                  handleStatusUpdate(order.orderId);
+                                }
+                              }}
+                            />
+                            <Button
+                              size="sm"
+                              onClick={() => handleStatusUpdate(order.orderId)}
+                              className="h-8 text-xs"
+                            >
+                              Verify
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setShowVerification((prev) => ({ ...prev, [order.orderId]: false }));
+                                setVerificationCode("");
+                                setPendingStatus((prev) => {
+                                  const updated = { ...prev };
+                                  delete updated[order.orderId];
+                                  return updated;
+                                });
+                              }}
+                              className="h-8 text-xs"
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                       {updatingStatus[order.orderId] && (
                         <span className="text-xs text-slate-500">Updating...</span>
                       )}
@@ -402,9 +470,30 @@ const AdminPanel = () => {
                   </div>
                 </article>
               ))}
-            </div>
-          </section>
-        ))}
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-6">
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </Button>
+            <span className="text-sm text-slate-600">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </Button>
+          </div>
+        )}
       </div>
       <Footer />
     </div>

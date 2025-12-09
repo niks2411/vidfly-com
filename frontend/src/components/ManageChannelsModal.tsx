@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 
 const STORAGE_KEY = "vidfly_channel_videos";
 const CHANNEL_INFO_STORAGE_KEY = "vidfly_channel_info";
-const SELECTED_CHANNEL_KEY = "vidfly_selected_channel";
 
 type ChannelInfo = {
   channelId: string;
@@ -58,10 +57,11 @@ const ManageChannelsModal = ({ isOpen, onClose, onChannelRemoved }: ManageChanne
       const filteredChannels = cachedInfo.filter((c: ChannelInfo) => c.channelId !== channelId);
       sessionStorage.setItem(CHANNEL_INFO_STORAGE_KEY, JSON.stringify(filteredChannels));
 
-      // If this was the selected channel, clear selection
-      const selectedChannelId = sessionStorage.getItem(SELECTED_CHANNEL_KEY);
+      // If this was the selected channel, clear selection (per email)
+      const channelKey = getSelectedChannelKey();
+      const selectedChannelId = localStorage.getItem(channelKey);
       if (selectedChannelId === channelId) {
-        sessionStorage.removeItem(SELECTED_CHANNEL_KEY);
+        localStorage.removeItem(channelKey);
       }
 
       // Update state

@@ -83,8 +83,8 @@ const Footer = () => {
             <div className="lg:col-span-2">
               <div className="flex items-center mb-6 group cursor-pointer">
                 <div className="text-white text-3xl font-bold">
-                  <span className="text-red-500 group-hover:text-red-400 transition-colors duration-300">Vid</span>
-                  <span className="group-hover:text-gray-300 transition-colors duration-300">flyy</span>
+                  <span className="text-red-500 group-hover:text-red-400 transition-colors duration-300">Vidflyy</span>
+                  <span className="group-hover:text-gray-300 transition-colors duration-300"> LLP</span>
                 </div>
               </div>
               <p className="text-gray-400 mb-8 leading-relaxed text-base">

@@ -3,10 +3,10 @@ import { ChevronDown, Plus, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import AddChannelModal from "./AddChannelModal";
 import ManageChannelsModal from "./ManageChannelsModal";
+import { getVerifiedEmail, getSelectedChannelKey } from "@/lib/verifiedEmail";
 
 const STORAGE_KEY = "vidfly_channel_videos";
 const CHANNEL_INFO_STORAGE_KEY = "vidfly_channel_info";
-const SELECTED_CHANNEL_KEY = "vidfly_selected_channel";
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") || "http://localhost:5000";
 
@@ -39,6 +39,26 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showManageModal, setShowManageModal] = useState(false);
 
+  // Load selected channel from localStorage (GPT suggestion - simple localStorage approach)
+  const loadSelectedChannel = useCallback(() => {
+    if (typeof window === "undefined") return;
+    
+    try {
+      // Get email from localStorage (stored after login)
+      const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
+      if (!userEmail) return;
+
+      // Load saved channel for this email
+      const channelKey = `channel_${userEmail}`;
+      const savedChannelId = localStorage.getItem(channelKey);
+      if (savedChannelId) {
+        setSelectedChannelId(savedChannelId);
+      }
+    } catch (err) {
+      console.error("Failed to load selected channel", err);
+    }
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
@@ -61,22 +81,35 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
           console.error("Failed to parse cached channel info", err);
         }
       }
-      
-      // Load selected channel from sessionStorage
-      const savedChannelId = sessionStorage.getItem(SELECTED_CHANNEL_KEY);
-      if (savedChannelId) {
-        setSelectedChannelId(savedChannelId);
-      } else if (parsed.length > 0 && !selectedChannelId) {
-        // Auto-select first channel with channelId if no saved selection
-        const videoWithChannel = parsed.find((v) => v.channelId);
-        if (videoWithChannel?.channelId) {
-          setSelectedChannelId(videoWithChannel.channelId);
-          sessionStorage.setItem(SELECTED_CHANNEL_KEY, videoWithChannel.channelId);
-        }
-      }
     } catch (err) {
       console.error("Failed to load stored videos", err);
     }
+  }, []);
+
+  // Load selected channel from localStorage on mount and when email changes
+  useEffect(() => {
+    loadSelectedChannel();
+  }, [loadSelectedChannel]);
+
+  // Listen for channelChanged events (when channel is updated from other components)
+  useEffect(() => {
+    const handleChannelChanged = (event: CustomEvent) => {
+      const { channelId } = event.detail;
+      if (channelId) {
+        setSelectedChannelId(channelId);
+        // Save to localStorage
+        const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
+        if (userEmail) {
+          const channelKey = `channel_${userEmail}`;
+          localStorage.setItem(channelKey, channelId);
+        }
+      }
+    };
+
+    window.addEventListener('channelChanged', handleChannelChanged as EventListener);
+    return () => {
+      window.removeEventListener('channelChanged', handleChannelChanged as EventListener);
+    };
   }, []);
 
   const fetchChannelInfo = useCallback(async (channelId: string, channelName: string) => {
@@ -173,6 +206,34 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
     return availableChannels.find((ch) => ch.channelId === selectedChannelId);
   }, [availableChannels, selectedChannelId]);
 
+  // Listen for storage changes (when channel is changed in another tab) - GPT suggestion
+  // This must be after availableChannels is defined
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
+    if (!userEmail) return;
+
+    const channelKey = `channel_${userEmail}`;
+    
+    const handleStorageChange = (e: StorageEvent) => {
+      // Check if the changed key is for the current email's selected channel
+      if (e.key === channelKey && e.newValue) {
+        setSelectedChannelId(e.newValue);
+        // Trigger channel change event for other components
+        const channel = availableChannels.find(ch => ch.channelId === e.newValue);
+        if (channel) {
+          window.dispatchEvent(new CustomEvent('channelChanged', { 
+            detail: { channelId: channel.channelId, channelName: channel.name } 
+          }));
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [availableChannels]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -189,7 +250,15 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
 
   const handleChannelClick = (channelId: string, channelName: string) => {
     setSelectedChannelId(channelId);
-    sessionStorage.setItem(SELECTED_CHANNEL_KEY, channelId);
+    
+    // Get email from localStorage (stored after login)
+    const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
+    if (userEmail) {
+      // Save to localStorage with email in key (GPT suggestion format)
+      const channelKey = `channel_${userEmail}`;
+      localStorage.setItem(channelKey, channelId);
+    }
+    
     setShowDropdown(false);
     if (onChannelSelect) {
       onChannelSelect(channelId, channelName);
@@ -224,7 +293,14 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
       
       // Auto-select the newly added channel
       setSelectedChannelId(channelInfo.channelId);
-      sessionStorage.setItem(SELECTED_CHANNEL_KEY, channelInfo.channelId);
+      
+      // Save to localStorage with email in key (GPT suggestion format)
+      const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
+      if (userEmail) {
+        const channelKey = `channel_${userEmail}`;
+        localStorage.setItem(channelKey, channelInfo.channelId);
+      }
+      
       if (onChannelSelect) {
         onChannelSelect(channelInfo.channelId, channelInfo.name);
       }
@@ -405,17 +481,18 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
             }
 
             // Check if selected channel still exists
-            const currentSelected = sessionStorage.getItem(SELECTED_CHANNEL_KEY);
+            const channelKey = getSelectedChannelKey();
+            const currentSelected = localStorage.getItem(channelKey);
             if (currentSelected) {
               const stillExists = parsed.some((v) => v.channelId === currentSelected);
               if (!stillExists) {
-                sessionStorage.removeItem(SELECTED_CHANNEL_KEY);
+                localStorage.removeItem(channelKey);
                 setSelectedChannelId(null);
                 // Select first available channel
                 const firstChannel = parsed.find((v) => v.channelId);
                 if (firstChannel?.channelId) {
                   setSelectedChannelId(firstChannel.channelId);
-                  sessionStorage.setItem(SELECTED_CHANNEL_KEY, firstChannel.channelId);
+                  localStorage.setItem(channelKey, firstChannel.channelId);
                 }
               }
             }
@@ -429,4 +506,5 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
 };
 
 export default ChannelSelector;
+
 

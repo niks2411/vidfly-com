@@ -130,6 +130,7 @@ const VideoShowcase = () => {
           <Button 
             onClick={handleWhatsAppClick}
             size="lg"
+            className="rounded-xl"
           >
             START GROWING TODAY →
           </Button>

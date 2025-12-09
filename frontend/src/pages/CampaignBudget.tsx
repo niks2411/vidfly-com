@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Globe, Layers, Settings, CreditCard, X, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import CampaignHeader from "@/components/CampaignHeader";
 import AdPreviewModal from "@/components/AdPreviewModal";
-import { getVerifiedEmail } from "@/lib/verifiedEmail";
+import { getVerifiedEmail, getSelectedChannelKey } from "@/lib/verifiedEmail";
 import CampaignLayout from "@/components/CampaignLayout";
 import CampaignCard from "@/components/CampaignCard";
 import ChannelSelector from "@/components/ChannelSelector";
@@ -96,6 +96,30 @@ const CampaignBudget = () => {
     }
     return [];
   });
+
+  // Ensure channel selector matches the primary video's channel
+  useEffect(() => {
+    const primaryVideo = state?.videoInfo || state?.videos?.[0] || selectedVideos[0];
+    if (primaryVideo?.channelId) {
+      const channelKey = getSelectedChannelKey();
+      localStorage.setItem(channelKey, primaryVideo.channelId);
+      // Notify ChannelSelector to update UI immediately
+      window.dispatchEvent(
+        new CustomEvent("channelChanged", {
+          detail: { channelId: primaryVideo.channelId, channelName: primaryVideo.author || "Channel" },
+        })
+      );
+      // Also trigger a small delay to ensure ChannelSelector has mounted
+      const timeoutId = setTimeout(() => {
+        window.dispatchEvent(
+          new CustomEvent("channelChanged", {
+            detail: { channelId: primaryVideo.channelId, channelName: primaryVideo.author || "Channel" },
+          })
+        );
+      }, 100);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [state, selectedVideos]);
 
   // Save state to sessionStorage when it changes
   useEffect(() => {

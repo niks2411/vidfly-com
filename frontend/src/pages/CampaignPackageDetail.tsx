@@ -5,6 +5,7 @@ import CampaignCard from "@/components/CampaignCard";
 import { Button } from "@/components/ui/button";
 import { Check, Sparkles, X, Shield, Loader2 } from "lucide-react";
 import ChannelSelector from "@/components/ChannelSelector";
+import { getSelectedChannelKey, getVerifiedEmail } from "@/lib/verifiedEmail";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") || "http://localhost:5000";
@@ -152,7 +153,14 @@ const CampaignPackageDetail = () => {
   const pkg = id && packages.find(p => p.id === id);
   const location = useLocation();
   const verifiedEmail =
-    (location.state as { email?: string } | null)?.email || undefined;
+    (location.state as { email?: string } | null)?.email || getVerifiedEmail() || undefined;
+  
+  // Redirect if email not verified
+  useEffect(() => {
+    if (!verifiedEmail) {
+      navigate("/get-started", { replace: true });
+    }
+  }, [verifiedEmail, navigate]);
   
   const [selectedChannelInfo, setSelectedChannelInfo] = useState<{
     channelId: string;
@@ -209,9 +217,10 @@ const CampaignPackageDetail = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
-      const SELECTED_CHANNEL_KEY = "vidfly_selected_channel";
       const CHANNEL_INFO_STORAGE_KEY = "vidfly_channel_info";
-      const selectedChannelId = sessionStorage.getItem(SELECTED_CHANNEL_KEY);
+      // Use email-based channel key for cross-tab sync
+      const channelKey = getSelectedChannelKey();
+      const selectedChannelId = localStorage.getItem(channelKey);
       
       if (selectedChannelId) {
         const cachedChannelInfo = sessionStorage.getItem(CHANNEL_INFO_STORAGE_KEY);
@@ -281,20 +290,10 @@ const CampaignPackageDetail = () => {
       setProcessing(true);
       setError(null);
 
-      // Get email from verifiedEmail or try to get from cookies/sessionStorage
-      let email = verifiedEmail;
+      // Get email - should always be available since we redirect if not verified
+      const email = verifiedEmail;
       if (!email) {
-        // Try to get email from cookies
-        const cookies = document.cookie.split(';');
-        const emailCookie = cookies.find(c => c.trim().startsWith('vidfly_email='));
-        if (emailCookie) {
-          email = emailCookie.split('=')[1];
-        }
-      }
-
-      if (!email) {
-        setError("Email is required. Please verify your email first.");
-        setProcessing(false);
+        navigate("/get-started", { replace: true });
         return;
       }
 
