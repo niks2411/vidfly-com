@@ -11,6 +11,11 @@ const UserSchema = new mongoose.Schema(
     preferences: {
       selectedChannelId: { type: String },
       selectedChannelName: { type: String },
+      channels: [{
+        channelId: { type: String, required: true },
+        channelName: { type: String },
+        addedAt: { type: Date, default: Date.now },
+      }],
     },
   },
   { timestamps: true }

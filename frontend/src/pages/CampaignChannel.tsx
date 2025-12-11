@@ -44,6 +44,49 @@ const CampaignChannel = () => {
   const [searchResults, setSearchResults] = useState<StoredVideo[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState("");
+  const [hasSavedChannels, setHasSavedChannels] = useState(false);
+  const [loadingSavedChannels, setLoadingSavedChannels] = useState(true);
+
+  // Load saved channels from backend
+  useEffect(() => {
+    const loadSavedChannels = async () => {
+      if (!verifiedEmail) {
+        setLoadingSavedChannels(false);
+        return;
+      }
+      
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/api/user-preferences/channels?email=${encodeURIComponent(verifiedEmail)}`,
+          { credentials: "include" }
+        );
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.channels && data.channels.length > 0) {
+            setHasSavedChannels(true);
+            // Set the selected channel if available
+            if (data.selectedChannelId) {
+              setChannelId(data.selectedChannelId);
+              const channelKey = getSelectedChannelKey();
+              localStorage.setItem(channelKey, data.selectedChannelId);
+            } else if (data.channels.length > 0) {
+              // Use first channel if no selected channel
+              setChannelId(data.channels[0].channelId);
+              const channelKey = getSelectedChannelKey();
+              localStorage.setItem(channelKey, data.channels[0].channelId);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to load saved channels:", err);
+      } finally {
+        setLoadingSavedChannels(false);
+      }
+    };
+    
+    loadSavedChannels();
+  }, [verifiedEmail]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -250,9 +293,22 @@ const CampaignChannel = () => {
     });
   };
 
-  if (!videos.length) {
+  // Show loading state while checking for saved channels
+  if (loadingSavedChannels) {
     return (
-      <CampaignLayout activeSidebar="promote">
+      <CampaignLayout activeSidebar="channel">
+        <CampaignCard className="text-center space-y-6 py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto"></div>
+          <p className="text-slate-500">Loading your channels...</p>
+        </CampaignCard>
+      </CampaignLayout>
+    );
+  }
+
+  // Only show "Add a Channel First" if there are no videos AND no saved channels AND no channelId
+  if (!videos.length && !hasSavedChannels && !channelId) {
+    return (
+      <CampaignLayout activeSidebar="channel">
         <CampaignCard className="text-center space-y-6">
           <h1 className="text-3xl font-bold text-slate-900">Add a Channel First</h1>
           <p className="text-slate-500">

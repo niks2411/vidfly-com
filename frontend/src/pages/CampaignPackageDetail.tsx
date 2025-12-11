@@ -306,7 +306,8 @@ const CampaignPackageDetail = () => {
         return;
       }
 
-      // Get videos from sessionStorage
+      // Packages are for channels, not specific videos
+      // Get videos from sessionStorage as fallback (optional - will create placeholder if none exist)
       const storedVideos: StoredVideo[] = (() => {
         try {
           const stored = sessionStorage.getItem(STORAGE_KEY);
@@ -315,12 +316,6 @@ const CampaignPackageDetail = () => {
           return [];
         }
       })();
-
-      if (storedVideos.length === 0) {
-        setError("Please add videos first on the 'Promote Video / Short' page");
-        setProcessing(false);
-        return;
-      }
 
       // Extract price (remove ₹ and convert to number)
       const priceStr = pkg.price.replace(/[₹,]/g, '').trim();
@@ -345,13 +340,22 @@ const CampaignPackageDetail = () => {
           link: null,
           avatar: finalChannelInfo.avatar,
         },
-        videos: storedVideos.slice(0, 1).map((video) => ({
-          videoId: video.videoId || `video_${Date.now()}`,
-          title: video.title,
-          link: video.link || null,
-          thumbnail: video.thumbnail || null,
-          viewsRequested: quantity,
-        })),
+        videos: storedVideos.length > 0 
+          ? storedVideos.slice(0, 1).map((video) => ({
+              videoId: video.videoId || `video_${Date.now()}`,
+              title: video.title,
+              link: video.link || null,
+              thumbnail: video.thumbnail || null,
+              viewsRequested: quantity,
+            }))
+          : [{
+              // Create a placeholder video entry for channel-based packages
+              videoId: `channel_${finalChannelInfo.channelId}_${Date.now()}`,
+              title: `${finalChannelInfo.name} - Channel Promotion`,
+              link: `https://www.youtube.com/channel/${finalChannelInfo.channelId}`,
+              thumbnail: finalChannelInfo.avatar || null,
+              viewsRequested: quantity,
+            }],
         package: {
           id: pkg.id,
           name: pkg.name,

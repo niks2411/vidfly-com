@@ -49,7 +49,51 @@ const CampaignBulkViewsSelect = () => {
   const [searchResults, setSearchResults] = useState<StoredVideo[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState("");
+  const [hasSavedChannels, setHasSavedChannels] = useState(false);
+  const [loadingSavedChannels, setLoadingSavedChannels] = useState(true);
 
+  // Load saved channels from backend first
+  useEffect(() => {
+    const loadSavedChannels = async () => {
+      if (!verifiedEmail) {
+        setLoadingSavedChannels(false);
+        return;
+      }
+      
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/api/user-preferences/channels?email=${encodeURIComponent(verifiedEmail)}`,
+          { credentials: "include" }
+        );
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.channels && data.channels.length > 0) {
+            setHasSavedChannels(true);
+            // Set the selected channel if available
+            if (data.selectedChannelId) {
+              setChannelId(data.selectedChannelId);
+              const channelKey = getSelectedChannelKey();
+              localStorage.setItem(channelKey, data.selectedChannelId);
+            } else if (data.channels.length > 0) {
+              // Use first channel if no selected channel
+              setChannelId(data.channels[0].channelId);
+              const channelKey = getSelectedChannelKey();
+              localStorage.setItem(channelKey, data.channels[0].channelId);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to load saved channels:", err);
+      } finally {
+        setLoadingSavedChannels(false);
+      }
+    };
+    
+    loadSavedChannels();
+  }, [verifiedEmail]);
+
+  // Load stored videos from sessionStorage (fallback)
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
@@ -62,22 +106,25 @@ const CampaignBulkViewsSelect = () => {
         setSelectedIds([parsed[0].videoId]);
       }
       
-      // Load selected channel from localStorage (per email) for cross-tab sync
-      const channelKey = getSelectedChannelKey();
-      const savedChannelId = localStorage.getItem(channelKey);
-      if (savedChannelId) {
-        setChannelId(savedChannelId);
-      } else {
-        const withChannel = parsed.find((video) => !!video.channelId);
-        if (withChannel?.channelId) {
-          setChannelId(withChannel.channelId);
-          localStorage.setItem(channelKey, withChannel.channelId);
+      // Only use sessionStorage channels if backend channels are not available
+      if (!hasSavedChannels && !channelId) {
+        // Load selected channel from localStorage (per email) for cross-tab sync
+        const channelKey = getSelectedChannelKey();
+        const savedChannelId = localStorage.getItem(channelKey);
+        if (savedChannelId) {
+          setChannelId(savedChannelId);
+        } else {
+          const withChannel = parsed.find((video) => !!video.channelId);
+          if (withChannel?.channelId) {
+            setChannelId(withChannel.channelId);
+            localStorage.setItem(channelKey, withChannel.channelId);
+          }
         }
       }
     } catch (err) {
       console.error("Failed to load stored videos", err);
     }
-  }, []);
+  }, [hasSavedChannels, channelId]);
 
   // Listen for channel changes from ChannelSelector
   useEffect(() => {
@@ -236,7 +283,20 @@ const CampaignBulkViewsSelect = () => {
     });
   };
 
-  if (!videos.length) {
+  // Show loading state while checking for saved channels
+  if (loadingSavedChannels) {
+    return (
+      <CampaignLayout activeSidebar="bulk">
+        <CampaignCard className="text-center space-y-6 py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto"></div>
+          <p className="text-slate-500">Loading your channels...</p>
+        </CampaignCard>
+      </CampaignLayout>
+    );
+  }
+
+  // Only show "Add a Channel First" if there are no videos AND no saved channels AND no channelId
+  if (!videos.length && !hasSavedChannels && !channelId) {
     return (
       <CampaignLayout activeSidebar="bulk">
         <CampaignCard className="text-center space-y-6">

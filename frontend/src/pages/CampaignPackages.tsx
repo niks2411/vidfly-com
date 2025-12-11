@@ -111,64 +111,8 @@ const CampaignPackages = () => {
   );
   const [loadingChannel, setLoadingChannel] = useState(false);
   const [channelError, setChannelError] = useState("");
-
-  // Load stored videos from sessionStorage
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    try {
-      const parsed: StoredVideo[] = JSON.parse(
-        sessionStorage.getItem(STORAGE_KEY) || "[]"
-      );
-      setStoredVideos(parsed);
-      
-      // Get selected channel from localStorage (per email) for cross-tab sync
-      const channelKey = getSelectedChannelKey();
-      const savedChannelId = localStorage.getItem(channelKey);
-      
-      if (savedChannelId && parsed.length > 0 && !channelInfo) {
-        // Filter videos by selected channel
-        const channelVideos = parsed.filter((v) => v.channelId === savedChannelId);
-        if (channelVideos.length > 0) {
-          const videoWithChannel = channelVideos[0];
-          fetchChannelInfoById(savedChannelId, videoWithChannel.author || "");
-        }
-      } else if (parsed.length > 0 && !channelInfo) {
-        // Fallback: use first video with channelId
-        const videoWithChannel = parsed.find((v) => v.channelId);
-        if (videoWithChannel?.channelId) {
-          fetchChannelInfoById(videoWithChannel.channelId, videoWithChannel.author || "");
-        }
-      }
-    } catch (err) {
-      console.error("Failed to load stored videos", err);
-    }
-  }, []);
-
-  // Listen for channel changes from ChannelSelector
-  useEffect(() => {
-    const handleChannelChange = (event: CustomEvent) => {
-      const { channelId: newChannelId } = event.detail;
-      if (newChannelId && storedVideos.length > 0) {
-        const channelVideos = storedVideos.filter((v) => v.channelId === newChannelId);
-        if (channelVideos.length > 0) {
-          const videoWithChannel = channelVideos[0];
-          fetchChannelInfoById(newChannelId, videoWithChannel.author || "");
-        }
-      }
-    };
-
-    window.addEventListener('channelChanged', handleChannelChange as EventListener);
-    return () => {
-      window.removeEventListener('channelChanged', handleChannelChange as EventListener);
-    };
-  }, [storedVideos]);
-
-
-  useEffect(() => {
-    if (!verifiedEmail) {
-      navigate("/get-started", { replace: true });
-    }
-  }, [verifiedEmail, navigate]);
+  const [hasSavedChannels, setHasSavedChannels] = useState(false);
+  const [loadingSavedChannels, setLoadingSavedChannels] = useState(true);
 
   const fetchChannelInfoById = async (channelId: string, channelName: string) => {
     setLoadingChannel(true);
@@ -207,24 +151,160 @@ const CampaignPackages = () => {
     }
   };
 
+  // Load saved channels from backend first
+  useEffect(() => {
+    const loadSavedChannels = async () => {
+      if (!verifiedEmail) {
+        setLoadingSavedChannels(false);
+        return;
+      }
+      
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/api/user-preferences/channels?email=${encodeURIComponent(verifiedEmail)}`,
+          { credentials: "include" }
+        );
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.channels && data.channels.length > 0) {
+            setHasSavedChannels(true);
+            // Set the selected channel if available
+            if (data.selectedChannelId) {
+              const selectedChannel = data.channels.find((ch: any) => ch.channelId === data.selectedChannelId);
+              if (selectedChannel && !channelInfo) {
+                // Fetch channel info for the selected channel
+                await fetchChannelInfoById(data.selectedChannelId, selectedChannel.channelName || "");
+                const channelKey = getSelectedChannelKey();
+                localStorage.setItem(channelKey, data.selectedChannelId);
+              }
+            } else if (data.channels.length > 0 && !channelInfo) {
+              // Use first channel if no selected channel
+              const firstChannel = data.channels[0];
+              await fetchChannelInfoById(firstChannel.channelId, firstChannel.channelName || "");
+              const channelKey = getSelectedChannelKey();
+              localStorage.setItem(channelKey, firstChannel.channelId);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to load saved channels:", err);
+      } finally {
+        setLoadingSavedChannels(false);
+      }
+    };
+    
+    loadSavedChannels();
+  }, [verifiedEmail]);
+
+  // Load stored videos from sessionStorage (fallback)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const parsed: StoredVideo[] = JSON.parse(
+        sessionStorage.getItem(STORAGE_KEY) || "[]"
+      );
+      setStoredVideos(parsed);
+      
+      // Only use sessionStorage channels if backend channels are not available
+      if (!hasSavedChannels && !channelInfo && parsed.length > 0) {
+        // Get selected channel from localStorage (per email) for cross-tab sync
+        const channelKey = getSelectedChannelKey();
+        const savedChannelId = localStorage.getItem(channelKey);
+        
+        if (savedChannelId && parsed.length > 0) {
+          // Filter videos by selected channel
+          const channelVideos = parsed.filter((v) => v.channelId === savedChannelId);
+          if (channelVideos.length > 0) {
+            const videoWithChannel = channelVideos[0];
+            fetchChannelInfoById(savedChannelId, videoWithChannel.author || "");
+          }
+        } else {
+          // Fallback: use first video with channelId
+          const videoWithChannel = parsed.find((v) => v.channelId);
+          if (videoWithChannel?.channelId) {
+            fetchChannelInfoById(videoWithChannel.channelId, videoWithChannel.author || "");
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load stored videos", err);
+    }
+  }, [hasSavedChannels, channelInfo]);
+
+  // Listen for channel changes from ChannelSelector
+  useEffect(() => {
+    const handleChannelChange = (event: CustomEvent) => {
+      const { channelId: newChannelId } = event.detail;
+      if (newChannelId && storedVideos.length > 0) {
+        const channelVideos = storedVideos.filter((v) => v.channelId === newChannelId);
+        if (channelVideos.length > 0) {
+          const videoWithChannel = channelVideos[0];
+          fetchChannelInfoById(newChannelId, videoWithChannel.author || "");
+        }
+      }
+    };
+
+    window.addEventListener('channelChanged', handleChannelChange as EventListener);
+    return () => {
+      window.removeEventListener('channelChanged', handleChannelChange as EventListener);
+    };
+  }, [storedVideos]);
+
+
+  useEffect(() => {
+    if (!verifiedEmail) {
+      navigate("/get-started", { replace: true });
+    }
+  }, [verifiedEmail, navigate]);
+
   const handleBuyNow = async (pkgId: string) => {
     // Get selected channel from localStorage (per email) for cross-tab sync
     const channelKey = getSelectedChannelKey();
     let selectedChannelId: string | null = localStorage.getItem(channelKey);
     let channelName = channelInfo?.name || "";
     
-    // If no saved channel, use first video with channelId
+    // If no channel from localStorage, try to load from backend
+    if (!selectedChannelId && verifiedEmail) {
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/api/user-preferences/channels?email=${encodeURIComponent(verifiedEmail)}`,
+          { credentials: "include" }
+        );
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.selectedChannelId) {
+            selectedChannelId = data.selectedChannelId;
+            const selectedChannel = data.channels?.find((ch: any) => ch.channelId === data.selectedChannelId);
+            if (selectedChannel) {
+              channelName = selectedChannel.channelName || "";
+            }
+            localStorage.setItem(channelKey, selectedChannelId);
+          } else if (data.channels && data.channels.length > 0) {
+            // Use first channel if no selected channel
+            selectedChannelId = data.channels[0].channelId;
+            channelName = data.channels[0].channelName || "";
+            localStorage.setItem(channelKey, selectedChannelId);
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to load channels from backend:", err);
+      }
+    }
+    
+    // Fallback: use first video with channelId from sessionStorage
     if (!selectedChannelId && storedVideos.length > 0) {
       const videoWithChannel = storedVideos.find((v) => v.channelId);
       if (videoWithChannel?.channelId) {
         selectedChannelId = videoWithChannel.channelId;
         channelName = videoWithChannel.author || "";
-          localStorage.setItem(channelKey, selectedChannelId);
+        localStorage.setItem(channelKey, selectedChannelId);
       }
     }
 
     if (!selectedChannelId) {
-      setChannelError("Please add videos from a channel first on the 'Promote Video / Short' page");
+      setChannelError("Please add a channel first. You can add a channel on the 'Promote Video / Short' or 'Promote Channel' page.");
       return;
     }
 
@@ -392,9 +472,9 @@ const CampaignPackages = () => {
                               : "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white"
                           }`}
                           onClick={() => handleBuyNow(pkg.id)}
-                          disabled={storedVideos.length === 0 || loadingChannel}
+                          disabled={(!hasSavedChannels && storedVideos.length === 0) || loadingChannel || loadingSavedChannels}
                         >
-                          {loadingChannel ? "Loading..." : `Buy ${pkg.name}`}
+                          {loadingChannel || loadingSavedChannels ? "Loading..." : `Buy ${pkg.name}`}
                         </Button>
                         {channelError && pkg.id === packages[0].id && (
                           <p className="mt-2 text-xs text-red-600 text-center">{channelError}</p>
@@ -500,9 +580,9 @@ const CampaignPackages = () => {
                               : "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white"
                           }`}
                           onClick={() => handleBuyNow(pkg.id)}
-                          disabled={storedVideos.length === 0 || loadingChannel}
+                          disabled={(!hasSavedChannels && storedVideos.length === 0) || loadingChannel || loadingSavedChannels}
                         >
-                          {loadingChannel ? "Loading..." : `Buy ${pkg.name}`}
+                          {loadingChannel || loadingSavedChannels ? "Loading..." : `Buy ${pkg.name}`}
                         </Button>
                         {channelError && pkg.id === packages[0].id && (
                           <p className="mt-2 text-xs text-red-600 text-center">{channelError}</p>
