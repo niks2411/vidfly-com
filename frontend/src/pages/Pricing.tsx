@@ -8,9 +8,44 @@ import ScrollProgress from "@/components/ScrollProgress";
 import { Check, Users, Eye, Heart, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { promotionPackages } from "./CampaignPackages";
 
 const PricingPage = () => {
   const navigate = useNavigate();
+
+  // View-based promotion packages (kept in sync with /campaign/packages)
+  const viewPlans = promotionPackages.map((pkg) => {
+    const totalViews = (pkg as any).totalViews || pkg.views;
+    const hasAI = pkg.hasAI;
+    const discount = (pkg as any).discount as number | undefined;
+    const bonusViews = (pkg as any).bonusViews as number | undefined;
+    const isPopular = (pkg as any).isPopular;
+    const isPremium = (pkg as any).isPremium;
+
+    return {
+      name: pkg.name,
+      price: `₹${pkg.price.toLocaleString()}`,
+      originalPrice: undefined as string | undefined,
+      description: "YouTube Video Promotion",
+      subscribers: undefined as string | undefined,
+      watchHours: `${totalViews.toLocaleString()}+ Views`,
+      popular: isPopular || isPremium,
+      badge: isPremium ? "PREMIUM" : isPopular ? "MOST POPULAR" : undefined,
+      features: [
+        `${totalViews.toLocaleString()}+ real, high-intent viewers`,
+        hasAI ? "AI targeting included" : "Standard niche-based targeting",
+        "Multi-format promotion (TrueView, In-Feed & Shorts)",
+        "Safe, Google Ads–compliant delivery",
+        ...(discount && bonusViews
+          ? [
+              `${discount}% instant discount`,
+              `+${bonusViews.toLocaleString()} bonus views included`,
+            ]
+          : []),
+      ],
+    };
+  });
+
   const subscriptionPlans = [
     {
       name: "Trial Package",
@@ -99,12 +134,22 @@ const PricingPage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const PlanGrid = ({ plans, title }: { plans: any[], title: string }) => (
+  const PlanGrid = ({ plans, title }: { plans: any[]; title: string }) => (
     <div className="mb-16">
       <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">{title}</h3>
-      <div className={`grid ${plans.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-3'} gap-8`}>
+      <div
+        className={`grid ${
+          plans.length === 2 ? "md:grid-cols-2 max-w-4xl mx-auto" : "md:grid-cols-3"
+        } gap-8`}
+      >
         {plans.map((plan, index) => (
-          <div key={index} className={`bg-gradient-to-br from-red-50 via-white to-red-50 rounded-2xl p-8 shadow-lg relative animate-card-float border-2 border-red-100 hover:border-red-300 transition-all duration-500 hover:scale-105 ${plan.popular ? 'ring-2 ring-red-500 scale-105' : ''}`} style={{ animationDelay: `${index * 0.2}s` }}>
+            <div
+              key={index}
+              className={`bg-gradient-to-br from-red-50 via-white to-red-50 rounded-2xl p-8 shadow-lg relative animate-card-float border-2 border-red-100 hover:border-red-300 transition-all duration-500 hover:scale-105 ${
+                plan.popular ? "ring-2 ring-red-500 scale-105" : ""
+              }`}
+              style={{ animationDelay: `${index * 0.2}s` }}
+            >
             {plan.badge && (
               <div className="absolute -top-4 right-4">
                 <span className="bg-black text-white px-4 py-2 rounded-full text-sm font-bold rotate-12 animate-pulse">

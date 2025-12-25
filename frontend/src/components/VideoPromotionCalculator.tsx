@@ -56,6 +56,20 @@ const VideoPromotionCalculator = () => {
     return null;
   };
 
+  const presetOptions = [
+    { label: "1K", value: 1000 },
+    { label: "10K", value: 10000 },
+    { label: "20K", value: 20000 },
+    { label: "30K", value: 30000 },
+    { label: "40K", value: 40000 },
+    { label: "50K", value: 50000 },
+    { label: "60K", value: 60000 },
+    { label: "70K", value: 70000 },
+    { label: "80K", value: 80000 },
+    { label: "90K", value: 90000 },
+    { label: "100K", value: 100000 },
+  ];
+
   const handleStartPromotion = () => {
     if (videoUrl.trim()) {
       window.open(`https://wa.me/917355518761?text=I want to promote: ${encodeURIComponent(videoUrl)} - ${views.toLocaleString()} views - ₹${price.toLocaleString('en-IN')}`, '_blank');
@@ -165,19 +179,22 @@ const VideoPromotionCalculator = () => {
                 />
               </div>
 
-              {/* Scale Labels */}
-              <div className="grid grid-cols-11 text-xs text-gray-500 font-medium">
-                <span className="text-center">1K</span>
-                <span className="text-center">10K</span>
-                <span className="text-center">20K</span>
-                <span className="text-center">30K</span>
-                <span className="text-center">40K</span>
-                <span className="text-center">50K</span>
-                <span className="text-center">60K</span>
-                <span className="text-center">70K</span>
-                <span className="text-center">80K</span>
-                <span className="text-center">90K</span>
-                <span className="text-center">100K</span>
+              {/* Scale Labels (clickable presets) */}
+              <div className="grid grid-cols-11 text-xs font-medium">
+                {presetOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => handleViewsChange(opt.value)}
+                    className={`text-center cursor-pointer focus:outline-none ${
+                      views === opt.value
+                        ? "text-red-600 font-semibold"
+                        : "text-gray-500 hover:text-red-500"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
               </div>
             </div>
 

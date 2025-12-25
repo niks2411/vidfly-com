@@ -168,12 +168,9 @@ const NewServices = () => {
               </p>
 
               {/* Button */}
-              <Button
-                onClick={handleGetStartedClick}
-                className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-8 py-5 text-base font-bold transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg hover:shadow-2xl rounded-xl"
-              >
-                Get Started Now →
-              </Button>
+              <Button onClick={handleGetStartedClick} className="bg-red-600 hover:bg-red-700 text-white transition-all duration-300 hover:scale-105 active:scale-95 rounded-xl">
+              Get Started Now 
+            </Button>
 
               {/* Social Proof */}
               <div className="mt-4 flex items-center justify-center gap-2 text-gray-600 text-sm">

@@ -85,6 +85,9 @@ const OrderSchema = new mongoose.Schema(
       ),
     },
     freeViewsRedeemed: { type: Number, default: 0 }, // Track how many free views were redeemed for this order
+    // Reminder email tracking for payment_pending orders
+    reminderCount: { type: Number, default: 0 }, // 0 = none, 1 = first (24h), 2 = second (72h)
+    lastReminderAt: { type: Date },
   },
   { timestamps: true }
 );

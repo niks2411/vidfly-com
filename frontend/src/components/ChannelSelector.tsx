@@ -556,9 +556,10 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
             })}
             <button
               type="button"
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 setShowDropdown(false);
-                setShowAddModal(true);
+                setTimeout(() => setShowAddModal(true), 100);
               }}
               className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 transition-all duration-200 text-left border-2 border-dashed border-red-200 bg-red-50/30 mt-2"
             >
@@ -574,9 +575,10 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
             {availableChannels.length > 0 && (
               <button
                 type="button"
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   setShowDropdown(false);
-                  setShowManageModal(true);
+                  setTimeout(() => setShowManageModal(true), 100);
                 }}
                 className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-slate-50 hover:to-slate-100 transition-all duration-200 text-left border-t-2 border-slate-200 mt-2"
               >

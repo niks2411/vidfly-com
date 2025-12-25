@@ -155,7 +155,7 @@ const CampaignBudget = () => {
   const isBulkViews = (state?.campaignType === "bulk-views" && state?.bulkViewsPackage) || false;
   const bulkViewsPackage = state?.bulkViewsPackage || null;
   
-  // Extract price from bulk views package (remove $ and convert to number)
+  // Extract price from bulk views package (remove ₹ and commas, convert to number)
   const bulkViewsPrice = bulkViewsPackage 
     ? parseFloat(bulkViewsPackage.price.replace(/[^0-9.]/g, "")) 
     : null;
@@ -335,7 +335,7 @@ const CampaignBudget = () => {
               id: bulkViewsPackage.id,
               name: bulkViewsPackage.label,
               price: budget,
-              currency: "USD",
+              currency: "INR",
               quantity: totalViewsExact,
               type: "bulk-views",
               description: `${bulkViewsPackage.label} - ${bulkViewsPackage.price}`,

@@ -7,6 +7,7 @@ const {
   EMAIL_COOKIE_MAX_AGE,
   buildEmailCookieValue,
 } = require('../utils/emailVerification');
+const { sendWelcomeEmail } = require('../utils/emailService');
 
 const emailSchema = Joi.object({
   email: Joi.string().email().required(),
@@ -83,6 +84,15 @@ exports.verifyOtp = async (req, res, next) => {
       maxAge: EMAIL_COOKIE_MAX_AGE,
       path: '/',
     });
+
+    // Send welcome email after successful verification
+    try {
+      await sendWelcomeEmail(email);
+      console.log(`Welcome email sent to ${email}`);
+    } catch (emailError) {
+      console.error('Failed to send welcome email:', emailError);
+      // Don't fail the verification if email fails
+    }
 
     return res.json({ message: 'OTP verified' });
   } catch (err) {

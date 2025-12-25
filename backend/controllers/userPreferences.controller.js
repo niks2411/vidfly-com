@@ -153,3 +153,67 @@ exports.getSelectedChannel = async (req, res, next) => {
   }
 };
 
+// Remove channel from user's channel list
+exports.removeChannel = async (req, res, next) => {
+  try {
+    const schema = Joi.object({
+      email: Joi.string().email().required(),
+      channelId: Joi.string().required(),
+    });
+    const { error, value } = schema.validate(req.body);
+    if (error) return res.status(400).json({ message: error.message });
+
+    const normalizedEmail = value.email.toLowerCase().trim();
+    
+    // Verify email cookie
+    const cookieValue = req.cookies[EMAIL_COOKIE_NAME];
+    if (!cookieValue || !verifyEmailCookieValue(cookieValue, normalizedEmail)) {
+      return res.status(401).json({ message: 'Email verification required' });
+    }
+
+    const user = await User.findOne({ email: normalizedEmail });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Initialize preferences if needed
+    if (!user.preferences) {
+      user.preferences = { channels: [] };
+    }
+    if (!user.preferences.channels) {
+      user.preferences.channels = [];
+    }
+
+    // Remove channel from list
+    const initialLength = user.preferences.channels.length;
+    user.preferences.channels = user.preferences.channels.filter(
+      (ch) => ch.channelId !== value.channelId
+    );
+
+    // If this was the selected channel, clear selection
+    if (user.preferences.selectedChannelId === value.channelId) {
+      user.preferences.selectedChannelId = null;
+      user.preferences.selectedChannelName = null;
+      
+      // Auto-select first remaining channel if any
+      if (user.preferences.channels.length > 0) {
+        const firstChannel = user.preferences.channels[0];
+        user.preferences.selectedChannelId = firstChannel.channelId;
+        user.preferences.selectedChannelName = firstChannel.channelName || null;
+      }
+    }
+
+    // Only save if something changed
+    if (user.preferences.channels.length !== initialLength) {
+      await user.save();
+    }
+
+    return res.json({ 
+      message: 'Channel removed successfully',
+      channelId: value.channelId
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
+

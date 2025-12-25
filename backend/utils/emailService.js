@@ -1,0 +1,316 @@
+const nodemailer = require('nodemailer');
+
+// --- Transport helper ---
+function createTransport() {
+  if (process.env.SMTP_HOST) {
+    return nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT) || 587,
+      secure: false,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+  }
+  // Fallback: log emails to console (no real sending)
+  return nodemailer.createTransport({ jsonTransport: true });
+}
+
+// --- Base HTML wrapper ---
+function getEmailTemplate(title, content, buttonText, buttonUrl) {
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background-color:#f5f5f5;">
+  <table role="presentation" style="width:100%;border-collapse:collapse;background-color:#f5f5f5;">
+    <tr>
+      <td style="padding:20px 0;">
+        <table role="presentation" style="width:600px;margin:0 auto;background-color:#ffffff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+          <tr>
+            <td style="padding:30px 40px;background:linear-gradient(135deg,#dc2626 0%,#ec4899 100%);border-radius:8px 8px 0 0;text-align:center;">
+              <h1 style="margin:0;color:#ffffff;font-size:28px;font-weight:bold;">VIDFLYY</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:40px;">
+              ${content}
+            </td>
+          </tr>
+          ${buttonText && buttonUrl ? `
+          <tr>
+            <td style="padding:0 40px 40px;text-align:center;">
+              <a href="${buttonUrl}" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#dc2626 0%,#ec4899 100%);color:#ffffff;text-decoration:none;border-radius:6px;font-weight:600;font-size:16px;">${buttonText}</a>
+            </td>
+          </tr>
+          ` : ''}
+          <tr>
+            <td style="padding:30px 40px;background-color:#f9fafb;border-radius:0 0 8px 8px;text-align:center;border-top:1px solid #e5e7eb;">
+              <p style="margin:0 0 10px;color:#6b7280;font-size:14px;">
+                © ${new Date().getFullYear()} Vidflyy. All rights reserved.
+              </p>
+              <p style="margin:0;color:#9ca3af;font-size:12px;">
+                This is an automated email. Please do not reply.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+`;
+}
+
+// --- Specific templates ---
+function getWelcomeEmailTemplate() {
+  const content = `
+    <h2 style="margin:0 0 20px;color:#111827;font-size:24px;font-weight:bold;">Welcome to Vidflyy! 🎉</h2>
+    <p style="margin:0 0 16px;color:#374151;font-size:16px;line-height:1.6;">
+      Hi there!
+    </p>
+    <p style="margin:0 0 16px;color:#374151;font-size:16px;line-height:1.6;">
+      Thank you for verifying your email address. Your Vidflyy account is now active and ready to use.
+    </p>
+    <p style="margin:0 0 16px;color:#374151;font-size:16px;line-height:1.6;">
+      With Vidflyy, you can:
+    </p>
+    <ul style="margin:0 0 24px;padding-left:20px;color:#374151;font-size:16px;line-height:1.8;">
+      <li>Promote your YouTube videos and channel</li>
+      <li>Get real views, subscribers, and engagement</li>
+      <li>Track your campaign performance</li>
+      <li>Earn free views through referrals</li>
+    </ul>
+    <p style="margin:0 0 24px;color:#374151;font-size:16px;line-height:1.6;">
+      Ready to grow your YouTube channel? Let's get started!
+    </p>
+  `;
+
+  const url = process.env.FRONTEND_URL || 'http://localhost:5173/campaign';
+
+  return {
+    subject: 'Welcome to Vidflyy! 🎉',
+    html: getEmailTemplate('Welcome to Vidflyy', content, 'Get Started', url),
+    text: `Welcome to Vidflyy!\n\nThank you for verifying your email address. Your Vidflyy account is now active and ready to use.\n\nVisit ${url} to get started.`,
+  };
+}
+
+function getPaymentSummaryEmailTemplate(order, payment) {
+  const currency = order.plan?.currency || 'INR';
+  const symbol = currency === 'USD' ? '$' : '₹';
+  const amount = payment.amount || order.plan?.price || 0;
+  const orderId = order.orderId;
+  const packageName = order.packageInfo?.name || order.plan?.name || 'Campaign Package';
+  const views = order.plan?.quantity || 0;
+
+  const content = `
+    <h2 style="margin:0 0 20px;color:#111827;font-size:24px;font-weight:bold;">Payment Successful! ✅</h2>
+    <p style="margin:0 0 16px;color:#374151;font-size:16px;line-height:1.6;">
+      Hi there!
+    </p>
+    <p style="margin:0 0 24px;color:#374151;font-size:16px;line-height:1.6;">
+      Thank you for your payment! Your order has been confirmed and your campaign is being processed.
+    </p>
+    <div style="background-color:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:24px;margin:24px 0;">
+      <h3 style="margin:0 0 16px;color:#111827;font-size:18px;font-weight:bold;">Order Details</h3>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr>
+          <td style="padding:8px 0;color:#6b7280;font-size:14px;">Order ID:</td>
+          <td style="padding:8px 0;color:#111827;font-size:14px;font-weight:600;text-align:right;">${orderId}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;color:#6b7280;font-size:14px;">Package:</td>
+          <td style="padding:8px 0;color:#111827;font-size:14px;font-weight:600;text-align:right;">${packageName}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;color:#6b7280;font-size:14px;">Views:</td>
+          <td style="padding:8px 0;color:#111827;font-size:14px;font-weight:600;text-align:right;">${views.toLocaleString()}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;color:#6b7280;font-size:14px;">Amount Paid:</td>
+          <td style="padding:8px 0;color:#10b981;font-size:16px;font-weight:bold;text-align:right;">
+            ${symbol}${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;color:#6b7280;font-size:14px;">Payment Status:</td>
+          <td style="padding:8px 0;color:#10b981;font-size:14px;font-weight:600;text-align:right;">Paid</td>
+        </tr>
+      </table>
+    </div>
+    <p style="margin:24px 0 16px;color:#374151;font-size:16px;line-height:1.6;">
+      Your campaign is now in our queue and will be processed shortly. You'll receive updates as your campaign progresses.
+    </p>
+  `;
+
+  const url = (process.env.FRONTEND_URL || 'http://localhost:5173') + '/campaign';
+
+  return {
+    subject: `Payment Successful - Order ${orderId}`,
+    html: getEmailTemplate('Payment Successful', content, 'View Order', url),
+    text: `Payment Successful!\n\nOrder ID: ${orderId}\nPackage: ${packageName}\nViews: ${views.toLocaleString()}\nAmount Paid: ${symbol}${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n\nYour campaign is being processed.`,
+  };
+}
+
+function getPaymentReminderEmailTemplate(order) {
+  const currency = order.plan?.currency || 'INR';
+  const symbol = currency === 'USD' ? '$' : '₹';
+  const amount = order.plan?.price || 0;
+  const orderId = order.orderId;
+  const packageName = order.packageInfo?.name || order.plan?.name || 'Campaign Package';
+
+  const content = `
+    <h2 style="margin:0 0 20px;color:#111827;font-size:24px;font-weight:bold;">Payment Reminder ⏰</h2>
+    <p style="margin:0 0 16px;color:#374151;font-size:16px;line-height:1.6;">
+      Hi there!
+    </p>
+    <p style="margin:0 0 24px;color:#374151;font-size:16px;line-height:1.6;">
+      We noticed that your order is still pending payment. Complete your payment to start your campaign.
+    </p>
+    <div style="background-color:#fef3c7;border:1px solid #fbbf24;border-radius:8px;padding:24px;margin:24px 0;">
+      <h3 style="margin:0 0 16px;color:#111827;font-size:18px;font-weight:bold;">Pending Order</h3>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr>
+          <td style="padding:8px 0;color:#6b7280;font-size:14px;">Order ID:</td>
+          <td style="padding:8px 0;color:#111827;font-size:14px;font-weight:600;text-align:right;">${orderId}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;color:#6b7280;font-size:14px;">Package:</td>
+          <td style="padding:8px 0;color:#111827;font-size:14px;font-weight:600;text-align:right;">${packageName}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;color:#6b7280;font-size:14px;">Amount:</td>
+          <td style="padding:8px 0;color:#dc2626;font-size:16px;font-weight:bold;text-align:right;">
+            ${symbol}${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <p style="margin:24px 0 16px;color:#374151;font-size:16px;line-height:1.6;">
+      Complete your payment now to activate your campaign and start growing your YouTube channel.
+    </p>
+  `;
+
+  const paymentUrl =
+    (process.env.FRONTEND_URL || 'http://localhost:5173') +
+    `/payment/checkout?orderId=${orderId}`;
+
+  return {
+    subject: `Complete Your Payment - Order ${orderId}`,
+    html: getEmailTemplate('Payment Reminder', content, 'Complete Payment', paymentUrl),
+    text: `Payment Reminder\n\nYour order ${orderId} is pending payment.\n\nPackage: ${packageName}\nAmount: ${symbol}${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n\nComplete your payment: ${paymentUrl}`,
+  };
+}
+
+function getStatusUpdateEmailTemplate(order, oldStatus, newStatus) {
+  const orderId = order.orderId;
+  const packageName = order.packageInfo?.name || order.plan?.name || 'Campaign Package';
+
+  const statusMessages = {
+    payment_pending: 'Payment Pending',
+    paid: 'Payment Received',
+    promotion_scheduled: 'Campaign Scheduled',
+    in_progress: 'Campaign In Progress',
+    completed: 'Campaign Completed',
+    failed: 'Campaign Failed',
+  };
+
+  const statusColors = {
+    payment_pending: '#f59e0b',
+    paid: '#10b981',
+    promotion_scheduled: '#3b82f6',
+    in_progress: '#8b5cf6',
+    completed: '#10b981',
+    failed: '#ef4444',
+  };
+
+  const statusMessage = statusMessages[newStatus] || newStatus;
+  const statusColor = statusColors[newStatus] || '#6b7280';
+
+  let extra;
+  if (newStatus === 'completed') {
+    extra =
+      '🎉 Congratulations! Your campaign has been completed successfully. Check your YouTube channel to see the results.';
+  } else if (newStatus === 'in_progress') {
+    extra =
+      "Your campaign is now live and generating views! You'll see results on your YouTube channel soon.";
+  } else if (newStatus === 'failed') {
+    extra =
+      'We encountered an issue with your campaign. Our support team will contact you shortly to resolve this.';
+  } else {
+    extra = "Your campaign is being processed. We'll keep you updated on the progress.";
+  }
+
+  const content = `
+    <h2 style="margin:0 0 20px;color:#111827;font-size:24px;font-weight:bold;">Campaign Status Updated 📊</h2>
+    <p style="margin:0 0 16px;color:#374151;font-size:16px;line-height:1.6;">
+      Hi there!
+    </p>
+    <p style="margin:0 0 24px;color:#374151;font-size:16px;line-height:1.6;">
+      Your campaign status has been updated. Here are the details:
+    </p>
+    <div style="background-color:#f9fafb;border:2px solid ${statusColor};border-radius:8px;padding:24px;margin:24px 0;text-align:center;">
+      <div style="display:inline-block;padding:8px 16px;background-color:${statusColor};color:#ffffff;border-radius:6px;font-weight:600;font-size:16px;margin-bottom:16px;">
+        ${statusMessage}
+      </div>
+      <p style="margin:16px 0 0;color:#6b7280;font-size:14px;">
+        Order ID: <strong style="color:#111827;">${orderId}</strong>
+      </p>
+      <p style="margin:8px 0 0;color:#6b7280;font-size:14px;">
+        Package: <strong style="color:#111827;">${packageName}</strong>
+      </p>
+    </div>
+    <p style="margin:24px 0 16px;color:#374151;font-size:16px;line-height:1.6;">
+      ${extra}
+    </p>
+  `;
+
+  const url = (process.env.FRONTEND_URL || 'http://localhost:5173') + '/campaign';
+
+  return {
+    subject: `Campaign Status Updated - ${statusMessage}`,
+    html: getEmailTemplate('Campaign Status Updated', content, 'View Campaign', url),
+    text: `Campaign Status Updated\n\nOrder ID: ${orderId}\nStatus: ${statusMessage}\nPackage: ${packageName}\n\nVisit ${url} to view your campaign.`,
+  };
+}
+
+// --- send wrapper ---
+async function sendEmail(to, subject, html, text) {
+  const transporter = createTransport();
+  const info = await transporter.sendMail({
+    from: process.env.EMAIL_FROM || 'no-reply@vidflyy.com',
+    to,
+    subject,
+    html,
+    text,
+  });
+  console.log(`Email sent to ${to}`, info.messageId);
+  return info;
+}
+
+// --- exported helpers ---
+exports.sendWelcomeEmail = async (email) => {
+  const tpl = getWelcomeEmailTemplate();
+  return sendEmail(email, tpl.subject, tpl.html, tpl.text);
+};
+
+exports.sendPaymentSummaryEmail = async (email, order, payment) => {
+  const tpl = getPaymentSummaryEmailTemplate(order, payment);
+  return sendEmail(email, tpl.subject, tpl.html, tpl.text);
+};
+
+exports.sendPaymentReminderEmail = async (email, order) => {
+  const tpl = getPaymentReminderEmailTemplate(order);
+  return sendEmail(email, tpl.subject, tpl.html, tpl.text);
+};
+
+exports.sendStatusUpdateEmail = async (email, order, oldStatus, newStatus) => {
+  const tpl = getStatusUpdateEmailTemplate(order, oldStatus, newStatus);
+  return sendEmail(email, tpl.subject, tpl.html, tpl.text);
+};
+

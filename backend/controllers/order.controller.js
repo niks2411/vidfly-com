@@ -8,6 +8,7 @@ const {
   EMAIL_COOKIE_NAME,
   verifyEmailCookieValue,
 } = require('../utils/emailVerification');
+const { sendStatusUpdateEmail } = require('../utils/emailService');
 
 const createOrderSchema = Joi.object({
   customerName: Joi.string().min(2).required(),
@@ -225,7 +226,7 @@ exports.createCampaignOrder = async (req, res, next) => {
       type: value.package.type || 'package',
       quantity: totalViews,
       price: value.package.price,
-      currency: value.package.currency || 'USD',
+      currency: value.package.currency || 'INR',
     };
 
     const order = await Order.create({
@@ -330,6 +331,12 @@ exports.updateStatus = async (req, res, next) => {
     if (error) return res.status(400).json({ message: error.message });
 
     const { orderId } = req.params;
+    
+    // Get old status before update
+    const oldOrder = await Order.findOne({ orderId });
+    if (!oldOrder) return res.status(404).json({ message: 'Order not found' });
+    const oldStatus = oldOrder.status;
+    
     const order = await Order.findOneAndUpdate(
       { orderId }, 
       { 
@@ -343,6 +350,18 @@ exports.updateStatus = async (req, res, next) => {
       .populate('paymentId', 'amount currency status gateway paymentOrderId paymentId');
     
     if (!order) return res.status(404).json({ message: 'Order not found' });
+    
+    // Send status update email if status changed and user has email
+    if (oldStatus !== value.status && order.userId?.email) {
+      try {
+        await sendStatusUpdateEmail(order.userId.email, order, oldStatus, value.status);
+        console.log(`Status update email sent to ${order.userId.email} for order ${orderId}`);
+      } catch (emailError) {
+        console.error('Failed to send status update email:', emailError);
+        // Don't fail the status update if email fails
+      }
+    }
+    
     return res.json(order);
   } catch (err) {
     return next(err);

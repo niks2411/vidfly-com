@@ -3,6 +3,7 @@ const Order = require('../models/Order');
 const Payment = require('../models/Payment');
 const axios = require('axios');
 const crypto = require('crypto');
+const { sendPaymentSummaryEmail } = require('../utils/emailService');
 
 // Cashfree Payment Gateway Configuration
 const CASHFREE_CLIENT_ID = process.env.CASHFREE_CLIENT_ID || process.env.CASHFREE_APP_ID;
@@ -472,6 +473,20 @@ const verifyCashfreePayment = async (req, res, next, order, paymentId) => {
     if (paymentData.payment_status === 'SUCCESS') {
       order.status = 'paid';
       await order.save();
+      
+      // Send payment summary email
+      try {
+        const populatedOrder = await Order.findById(order._id)
+          .populate('userId', 'email name');
+        if (populatedOrder?.userId?.email) {
+          await sendPaymentSummaryEmail(populatedOrder.userId.email, populatedOrder, payment);
+          console.log(`Payment summary email sent to ${populatedOrder.userId.email}`);
+        }
+      } catch (emailError) {
+        console.error('Failed to send payment summary email:', emailError);
+        // Don't fail the payment verification if email fails
+      }
+      
       return res.json({ message: 'Payment verified successfully', order });
     } else {
       order.status = 'failed';
@@ -582,6 +597,19 @@ exports.cashfreeWebhook = async (req, res, next) => {
     if (paymentStatus === 'SUCCESS') {
       order.status = 'paid';
       await order.save();
+      
+      // Send payment summary email
+      try {
+        const populatedOrder = await Order.findById(order._id)
+          .populate('userId', 'email name');
+        if (populatedOrder?.userId?.email) {
+          await sendPaymentSummaryEmail(populatedOrder.userId.email, populatedOrder, payment);
+          console.log(`Payment summary email sent to ${populatedOrder.userId.email} via webhook`);
+        }
+      } catch (emailError) {
+        console.error('Failed to send payment summary email via webhook:', emailError);
+        // Don't fail the webhook if email fails
+      }
     } else if (paymentStatus === 'FAILED') {
       order.status = 'failed';
       await order.save();

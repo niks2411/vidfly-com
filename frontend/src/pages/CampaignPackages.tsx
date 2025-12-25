@@ -8,7 +8,7 @@ import { getVerifiedEmail, getSelectedChannelKey } from "@/lib/verifiedEmail";
 
 const STORAGE_KEY = "vidfly_channel_videos";
 
-const packages = [
+export const promotionPackages = [
   {
     id: "starter",
     name: "Starter",
@@ -78,6 +78,9 @@ const packages = [
     isPremium: true,
   },
 ];
+
+// Local alias used within this component for easier refactoring
+const packages = promotionPackages;
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") || "http://localhost:5000";

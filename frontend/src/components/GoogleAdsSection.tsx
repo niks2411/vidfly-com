@@ -9,7 +9,8 @@ const GoogleAdsSection = () => {
   };
 
   const handleStartPromotion = () => {
-    window.open('https://wa.me/917355518761', '_blank');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigate('/get-started');
   };
 
   return (

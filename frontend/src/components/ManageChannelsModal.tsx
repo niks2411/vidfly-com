@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { X, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getSelectedChannelKey, getVerifiedEmail } from "@/lib/verifiedEmail";
 
 const STORAGE_KEY = "vidfly_channel_videos";
 const CHANNEL_INFO_STORAGE_KEY = "vidfly_channel_info";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") || "http://localhost:5000";
 
 type ChannelInfo = {
   channelId: string;
@@ -27,8 +30,50 @@ const ManageChannelsModal = ({ isOpen, onClose, onChannelRemoved }: ManageChanne
     }
   }, [isOpen]);
 
-  const loadChannels = () => {
+  const loadChannels = async () => {
     try {
+      // First try to load from backend
+      const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
+      if (userEmail) {
+        try {
+          const response = await fetch(
+            `${API_BASE_URL}/api/user-preferences/channels?email=${encodeURIComponent(userEmail)}`,
+            { credentials: "include" }
+          );
+          if (response.ok) {
+            const data = await response.json();
+            if (data.channels && data.channels.length > 0) {
+              // Convert backend format to ChannelInfo format
+              const channelInfos: ChannelInfo[] = data.channels.map((ch: any) => ({
+                channelId: ch.channelId,
+                name: ch.channelName || "Channel",
+                avatar: "", // Backend doesn't store avatar, will be loaded from cache or API
+              }));
+              
+              // Try to get avatars from cached info
+              const cachedInfo = sessionStorage.getItem(CHANNEL_INFO_STORAGE_KEY);
+              if (cachedInfo) {
+                const parsed: ChannelInfo[] = JSON.parse(cachedInfo);
+                const cachedMap = new Map(parsed.map(c => [c.channelId, c]));
+                channelInfos.forEach(ch => {
+                  const cached = cachedMap.get(ch.channelId);
+                  if (cached) {
+                    ch.avatar = cached.avatar;
+                    ch.name = cached.name || ch.name; // Prefer cached name if available
+                  }
+                });
+              }
+              
+              setChannels(channelInfos);
+              return;
+            }
+          }
+        } catch (err) {
+          console.warn("Failed to load channels from backend:", err);
+        }
+      }
+      
+      // Fallback to sessionStorage
       const cachedInfo = sessionStorage.getItem(CHANNEL_INFO_STORAGE_KEY);
       if (cachedInfo) {
         const parsed: ChannelInfo[] = JSON.parse(cachedInfo);
@@ -39,7 +84,7 @@ const ManageChannelsModal = ({ isOpen, onClose, onChannelRemoved }: ManageChanne
     }
   };
 
-  const handleRemoveChannel = (channelId: string) => {
+  const handleRemoveChannel = async (channelId: string) => {
     if (!confirm(`Are you sure you want to remove this channel? This will also remove all videos from this channel.`)) {
       return;
     }
@@ -47,6 +92,34 @@ const ManageChannelsModal = ({ isOpen, onClose, onChannelRemoved }: ManageChanne
     setDeleting(channelId);
 
     try {
+      // Get user email
+      const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
+      if (!userEmail) {
+        throw new Error("User email not found");
+      }
+
+      // Remove from backend first
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/user-preferences/channels`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: userEmail,
+            channelId: channelId,
+          }),
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.warn("Failed to remove channel from backend:", errorData.message || "Unknown error");
+          // Continue with local removal even if backend fails
+        }
+      } catch (err) {
+        console.warn("Error removing channel from backend:", err);
+        // Continue with local removal even if backend fails
+      }
+
       // Remove from stored videos
       const storedVideos = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "[]");
       const filteredVideos = storedVideos.filter((v: any) => v.channelId !== channelId);
@@ -62,6 +135,11 @@ const ManageChannelsModal = ({ isOpen, onClose, onChannelRemoved }: ManageChanne
       const selectedChannelId = localStorage.getItem(channelKey);
       if (selectedChannelId === channelId) {
         localStorage.removeItem(channelKey);
+        // Select first remaining channel if any
+        if (filteredChannels.length > 0) {
+          const firstChannel = filteredChannels[0];
+          localStorage.setItem(channelKey, firstChannel.channelId);
+        }
       }
 
       // Update state
@@ -69,6 +147,7 @@ const ManageChannelsModal = ({ isOpen, onClose, onChannelRemoved }: ManageChanne
       onChannelRemoved();
     } catch (err) {
       console.error("Failed to remove channel", err);
+      alert("Failed to remove channel. Please try again.");
     } finally {
       setDeleting(null);
     }

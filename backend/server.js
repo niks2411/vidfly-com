@@ -91,6 +91,15 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message: err.message || 'Internal Server Error' });
 });
 
+// Start payment reminder cron job
+try {
+  const { startPaymentReminderJob } = require('./jobs/paymentReminderJob');
+  startPaymentReminderJob();
+} catch (error) {
+  console.warn('Failed to start payment reminder job:', error.message);
+  console.warn('Install node-cron package: npm install node-cron');
+}
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
