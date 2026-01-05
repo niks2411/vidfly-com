@@ -1,32 +1,16 @@
 const crypto = require('crypto');
 const Joi = require('joi');
-const nodemailer = require('nodemailer');
 const OtpToken = require('../models/OtpToken');
 const {
   EMAIL_COOKIE_NAME,
   EMAIL_COOKIE_MAX_AGE,
   buildEmailCookieValue,
 } = require('../utils/emailVerification');
-const { sendWelcomeEmail } = require('../utils/emailService');
+const { sendWelcomeEmail, sendOtpEmail } = require('../utils/emailService');
 
 const emailSchema = Joi.object({
   email: Joi.string().email().required(),
 });
-
-function createTransport() {
-  if (process.env.SMTP_HOST) {
-    return nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
-  }
-  return nodemailer.createTransport({ jsonTransport: true });
-}
 
 exports.sendOtp = async (req, res, next) => {
   try {
@@ -46,16 +30,10 @@ exports.sendOtp = async (req, res, next) => {
     await OtpToken.deleteMany({ email });
     await OtpToken.create({ email, otp, expiresAt });
 
-    const transporter = createTransport();
-    const info = await transporter.sendMail({
-      from: process.env.EMAIL_FROM || 'no-reply@vidflyy.com',
-      to: email,
-      subject: 'Your Vidflyy OTP',
-      text: `Your OTP is ${otp}. It expires in 10 minutes.`,
-    });
+    const result = await sendOtpEmail(email, otp);
 
-    console.log('Email sent successfully:', info.messageId);
-    return res.json({ message: 'OTP sent', id: info.messageId || undefined });
+    console.log('OTP email sent successfully:', result.messageId);
+    return res.json({ message: 'OTP sent', id: result.messageId || undefined });
   } catch (err) {
     console.error('Send OTP error:', err);
     return next(err);

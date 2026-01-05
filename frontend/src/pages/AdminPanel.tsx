@@ -24,6 +24,16 @@ type Order = {
     viewsRequested?: number;
   }>;
   userId?: { name?: string; email?: string };
+  paymentId?: { status?: string };
+  targeting?: {
+    country?: string;
+    goal?: string;
+    duration?: string;
+    autoTargeting?: boolean;
+    gender?: string;
+    ages?: string[];
+    interests?: string[];
+  };
 };
 
 const statusColors: Record<string, string> = {
@@ -129,10 +139,10 @@ const AdminPanel = () => {
 
   const handleStatusUpdate = async (orderId: string) => {
     if (!token) return;
-    
+
     const newStatus = pendingStatus[orderId];
     if (!newStatus) return;
-    
+
     // Verify code
     if (verificationCode !== "admin123") {
       setError("Invalid verification code. Please enter 'admin123' to proceed.");
@@ -145,7 +155,7 @@ const AdminPanel = () => {
       });
       return;
     }
-    
+
     setUpdatingStatus((prev) => ({ ...prev, [orderId]: true }));
     try {
       const response = await fetch(`${API_BASE_URL}/api/admin/orders/${orderId}/status`, {
@@ -293,183 +303,262 @@ const AdminPanel = () => {
 
         <div className="grid gap-4">
           {paginatedOrders.map((order) => (
-                <article
-                  key={order._id}
-                  className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"
-                >
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <p className="text-lg font-semibold text-slate-900">{order.orderId}</p>
-                        <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${statusColors[order.status] || statusColors.payment_pending}`}>
-                          {order.status === 'paid' ? 'PAID' : 
-                           order.status === 'payment_pending' ? 'PAYMENT PENDING' :
-                           order.status === 'in_progress' ? 'IN PROGRESS' :
-                           order.status === 'completed' ? 'COMPLETED' :
-                           order.status === 'failed' ? 'FAILED' :
-                           order.status === 'promotion_scheduled' ? 'SCHEDULED' :
-                           order.status === 'pending' ? 'PAYMENT PENDING' :
-                           'PAYMENT PENDING'}
-                        </span>
-                      </div>
-                      <p className="text-xs uppercase text-slate-500 mb-1">Order ID</p>
-                      {order.userId && (
-                        <p className="text-sm text-slate-500">
-                          {order.userId.name} · {order.userId.email}
-                        </p>
-                      )}
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs uppercase text-slate-500">Amount</p>
-                      <p className="text-lg font-semibold text-slate-900">
-                        {order.plan?.currency === "USD" ? "$" : "₹"}
-                        {order.plan?.price}
-                      </p>
-                      {order.paymentId && (
-                        <p className={`text-xs mt-1 ${order.paymentId.status === 'captured' ? 'text-green-600' : order.paymentId.status === 'failed' ? 'text-red-600' : 'text-orange-600'}`}>
-                          Payment: {order.paymentId.status === 'captured' ? '✓ Paid' : order.paymentId.status || 'Pending'}
-                        </p>
-                      )}
-                    </div>
+            <article
+              key={order._id}
+              className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"
+            >
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="text-lg font-semibold text-slate-900">{order.orderId}</p>
+                    <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${statusColors[order.status] || statusColors.payment_pending}`}>
+                      {order.status === 'paid' ? 'PAID' :
+                        order.status === 'payment_pending' ? 'PAYMENT PENDING' :
+                          order.status === 'in_progress' ? 'IN PROGRESS' :
+                            order.status === 'completed' ? 'COMPLETED' :
+                              order.status === 'failed' ? 'FAILED' :
+                                order.status === 'promotion_scheduled' ? 'SCHEDULED' :
+                                  order.status === 'pending' ? 'PAYMENT PENDING' :
+                                    'PAYMENT PENDING'}
+                    </span>
                   </div>
+                  <p className="text-xs uppercase text-slate-500 mb-1">Order ID</p>
+                  {order.userId && (
+                    <p className="text-sm text-slate-500">
+                      {order.userId.name} · {order.userId.email}
+                    </p>
+                  )}
+                </div>
+                <div className="text-right">
+                  <p className="text-xs uppercase text-slate-500">Amount</p>
+                  <p className="text-lg font-semibold text-slate-900">
+                    {order.plan?.currency === "USD" ? "$" : "₹"}
+                    {order.plan?.price}
+                  </p>
+                  {order.paymentId && (
+                    <p className={`text-xs mt-1 ${order.paymentId.status === 'captured' ? 'text-green-600' : order.paymentId.status === 'failed' ? 'text-red-600' : 'text-orange-600'}`}>
+                      Payment: {order.paymentId.status === 'captured' ? '✓ Paid' : order.paymentId.status || 'Pending'}
+                    </p>
+                  )}
+                </div>
+              </div>
 
-                  <div className="mt-4 grid md:grid-cols-2 gap-4 text-sm text-slate-600">
-                    <div>
-                      <p className="font-semibold text-slate-800">Plan</p>
-                      <p>{order.plan?.name}</p>
-                      {order.plan?.quantity && (
-                        <p>
-                          Quantity: {order.plan.quantity.toLocaleString()}{" "}
-                          {order.plan.type === "package" ? "units" : "views"}
-                        </p>
-                      )}
-                      {order.budget && <p>Budget: ₹{order.budget}</p>}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-slate-800">Channel</p>
-                      <p>{order.channel?.name || "N/A"}</p>
-                      {order.channel?.link && (
-                        <a
-                          href={order.channel.link}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-purple-600 hover:underline"
-                        >
-                          View channel
-                        </a>
-                      )}
-                    </div>
-                  </div>
+              <div className="mt-4 grid md:grid-cols-2 gap-4 text-sm text-slate-600">
+                <div>
+                  <p className="font-semibold text-slate-800">Plan</p>
+                  <p>{order.plan?.name}</p>
+                  {order.plan?.quantity && (
+                    <p>
+                      Quantity: {order.plan.quantity.toLocaleString()}{" "}
+                      {order.plan.type === "package" ? "units" : "views"}
+                    </p>
+                  )}
+                  {order.budget && <p>Budget: ₹{order.budget}</p>}
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-800">Channel</p>
+                  <p>{order.channel?.name || "N/A"}</p>
+                  {order.channel?.link && (
+                    <a
+                      href={order.channel.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-purple-600 hover:underline"
+                    >
+                      View channel
+                    </a>
+                  )}
+                </div>
+              </div>
 
-                  {order.videos?.length ? (
-                    <div className="mt-4">
-                      <p className="text-sm font-semibold text-slate-800 mb-2">
-                        Videos ({order.videos.length})
-                      </p>
-                      <div className="space-y-2 text-sm text-slate-600">
-                        {order.videos.map((video, idx) => (
-                          <div key={`${order.orderId}-${video.videoId}-${idx}`}>
-                            <p className="font-medium">{video.title}</p>
-                            {video.link && (
-                              <a
-                                href={video.link}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-purple-600 hover:underline text-xs"
-                              >
-                                {video.link}
-                              </a>
-                            )}
-                            {video.viewsRequested && (
-                              <p className="text-xs text-slate-500">
-                                Requested: {video.viewsRequested.toLocaleString()} views
-                              </p>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : null}
-
-                  <div className="mt-4 flex flex-wrap items-center gap-3">
-                    <div className="flex items-center gap-2">
-                      <label className="text-xs text-slate-600 font-semibold">Status:</label>
-                      <select
-                        value={order.status}
-                        onChange={(e) => handleStatusChange(order.orderId, e.target.value)}
-                        disabled={updatingStatus[order.orderId] || showVerification[order.orderId]}
-                        className="px-3 py-1 text-xs font-semibold rounded-full border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <option value="payment_pending">Payment Pending</option>
-                        <option value="paid">Paid</option>
-                        <option value="promotion_scheduled">Promotion Scheduled</option>
-                        <option value="in_progress">In Progress</option>
-                        <option value="completed">Completed</option>
-                        <option value="failed">Failed</option>
-                      </select>
-                      {showVerification[order.orderId] && (
-                        <div className="flex flex-col gap-2 mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                          <p className="text-xs font-semibold text-yellow-800">
-                            Changing status to: <span className="uppercase">{pendingStatus[order.orderId] || order.status}</span>
+              {order.videos?.length ? (
+                <div className="mt-4">
+                  <p className="text-sm font-semibold text-slate-800 mb-2">
+                    Videos ({order.videos.length})
+                  </p>
+                  <div className="space-y-2 text-sm text-slate-600">
+                    {order.videos.map((video, idx) => (
+                      <div key={`${order.orderId}-${video.videoId}-${idx}`}>
+                        <p className="font-medium">{video.title}</p>
+                        {video.link && (
+                          <a
+                            href={video.link}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-purple-600 hover:underline text-xs"
+                          >
+                            {video.link}
+                          </a>
+                        )}
+                        {video.viewsRequested && (
+                          <p className="text-xs text-slate-500">
+                            Requested: {video.viewsRequested.toLocaleString()} views
                           </p>
-                          <div className="flex items-center gap-2">
-                            <Input
-                              type="password"
-                              placeholder="Enter admin123"
-                              value={verificationCode}
-                              onChange={(e) => setVerificationCode(e.target.value)}
-                              className="w-32 h-8 text-xs"
-                              onKeyPress={(e) => {
-                                if (e.key === 'Enter') {
-                                  handleStatusUpdate(order.orderId);
-                                }
-                              }}
-                            />
-                            <Button
-                              size="sm"
-                              onClick={() => handleStatusUpdate(order.orderId)}
-                              className="h-8 text-xs"
-                            >
-                              Verify
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => {
-                                setShowVerification((prev) => ({ ...prev, [order.orderId]: false }));
-                                setVerificationCode("");
-                                setPendingStatus((prev) => {
-                                  const updated = { ...prev };
-                                  delete updated[order.orderId];
-                                  return updated;
-                                });
-                              }}
-                              className="h-8 text-xs"
-                            >
-                              Cancel
-                            </Button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
+              {/* Targeting Section */}
+              {order.targeting && (
+                <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                  <p className="text-sm font-semibold text-slate-800 mb-3">🎯 Targeting</p>
+                  <div className="grid md:grid-cols-3 gap-4 text-sm">
+                    {/* Goal */}
+                    <div>
+                      <p className="text-xs text-slate-500 uppercase mb-1">Goal (Besides Views)</p>
+                      <p className="font-medium text-slate-700">{order.targeting.goal || "Not specified"}</p>
+                    </div>
+                    {/* Duration */}
+                    <div>
+                      <p className="text-xs text-slate-500 uppercase mb-1">Campaign Duration</p>
+                      <p className="font-medium text-slate-700">{order.targeting.duration || "Not specified"}</p>
+                    </div>
+                    {/* Country */}
+                    <div>
+                      <p className="text-xs text-slate-500 uppercase mb-1">Target Country</p>
+                      <p className="font-medium text-slate-700">{order.targeting.country || "All Countries"}</p>
+                    </div>
+                  </div>
+
+                  {/* Manual Targeting Options */}
+                  {order.targeting.autoTargeting === false && (
+                    <div className="mt-4 pt-4 border-t border-slate-200">
+                      <p className="text-xs font-semibold text-orange-600 uppercase mb-3">⚙️ Manual Targeting (Advanced)</p>
+                      <div className="grid md:grid-cols-3 gap-4 text-sm">
+                        {/* Gender */}
+                        <div>
+                          <p className="text-xs text-slate-500 uppercase mb-1">Gender</p>
+                          <p className="font-medium text-slate-700 capitalize">
+                            {order.targeting.gender === "all" ? "All Genders" : order.targeting.gender || "All Genders"}
+                          </p>
+                        </div>
+                        {/* Ages */}
+                        <div>
+                          <p className="text-xs text-slate-500 uppercase mb-1">Age Groups</p>
+                          <p className="font-medium text-slate-700">
+                            {order.targeting.ages?.length
+                              ? order.targeting.ages.includes("all")
+                                ? "All Ages"
+                                : order.targeting.ages.join(", ")
+                              : "All Ages"}
+                          </p>
+                        </div>
+                        {/* Interests */}
+                        <div className="md:col-span-3">
+                          <p className="text-xs text-slate-500 uppercase mb-1">Interests</p>
+                          <div className="flex flex-wrap gap-1">
+                            {order.targeting.interests?.length ? (
+                              order.targeting.interests.includes("all") ? (
+                                <span className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-full">All Interests</span>
+                              ) : (
+                                order.targeting.interests.map((interest, idx) => (
+                                  <span key={idx} className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-full">
+                                    {interest}
+                                  </span>
+                                ))
+                              )
+                            ) : (
+                              <span className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-full">All Interests</span>
+                            )}
                           </div>
                         </div>
-                      )}
-                      {updatingStatus[order.orderId] && (
-                        <span className="text-xs text-slate-500">Updating...</span>
-                      )}
+                      </div>
                     </div>
-                    <span className="text-xs text-slate-500">
-                      Created {new Date(order.createdAt).toLocaleString()}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDeleteOrder(order.orderId)}
-                      disabled={deletingOrder[order.orderId]}
-                      className="ml-auto text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 disabled:opacity-50"
-                    >
-                      {deletingOrder[order.orderId] ? "Deleting..." : "Delete"}
-                    </Button>
-                  </div>
-                </article>
-              ))}
+                  )}
+
+                  {/* Auto Targeting Badge */}
+                  {order.targeting.autoTargeting !== false && (
+                    <div className="mt-3 flex items-center gap-2">
+                      <span className="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">
+                        ✓ Automatic Targeting Enabled
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <label className="text-xs text-slate-600 font-semibold">Status:</label>
+                  <select
+                    value={order.status}
+                    onChange={(e) => handleStatusChange(order.orderId, e.target.value)}
+                    disabled={updatingStatus[order.orderId] || showVerification[order.orderId]}
+                    className="px-3 py-1 text-xs font-semibold rounded-full border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <option value="payment_pending">Payment Pending</option>
+                    <option value="paid">Paid</option>
+                    <option value="promotion_scheduled">Promotion Scheduled</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="failed">Failed</option>
+                  </select>
+                  {showVerification[order.orderId] && (
+                    <div className="flex flex-col gap-2 mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                      <p className="text-xs font-semibold text-yellow-800">
+                        Changing status to: <span className="uppercase">{pendingStatus[order.orderId] || order.status}</span>
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="password"
+                          placeholder="Enter admin123"
+                          value={verificationCode}
+                          onChange={(e) => setVerificationCode(e.target.value)}
+                          className="w-32 h-8 text-xs"
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              handleStatusUpdate(order.orderId);
+                            }
+                          }}
+                        />
+                        <Button
+                          size="sm"
+                          onClick={() => handleStatusUpdate(order.orderId)}
+                          className="h-8 text-xs"
+                        >
+                          Verify
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setShowVerification((prev) => ({ ...prev, [order.orderId]: false }));
+                            setVerificationCode("");
+                            setPendingStatus((prev) => {
+                              const updated = { ...prev };
+                              delete updated[order.orderId];
+                              return updated;
+                            });
+                          }}
+                          className="h-8 text-xs"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  {updatingStatus[order.orderId] && (
+                    <span className="text-xs text-slate-500">Updating...</span>
+                  )}
+                </div>
+                <span className="text-xs text-slate-500">
+                  Created {new Date(order.createdAt).toLocaleString()}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleDeleteOrder(order.orderId)}
+                  disabled={deletingOrder[order.orderId]}
+                  className="ml-auto text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400 disabled:opacity-50"
+                >
+                  {deletingOrder[order.orderId] ? "Deleting..." : "Delete"}
+                </Button>
+              </div>
+            </article>
+          ))}
         </div>
 
         {/* Pagination */}

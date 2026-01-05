@@ -1,20 +1,27 @@
-const nodemailer = require('nodemailer');
+const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
 
-// --- Transport helper ---
-function createTransport() {
-  if (process.env.SMTP_HOST) {
-    return nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+// --- SES Client helper ---
+function createSESClient() {
+  // Check if AWS SES is configured
+  if (process.env.AWS_REGION && process.env.AWS_SES_FROM_EMAIL) {
+    const config = {
+      region: process.env.AWS_REGION,
+    };
+
+    // Use explicit credentials if provided, otherwise use default credential chain
+    // (useful for EC2, ECS, Lambda with IAM roles)
+    if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
+      config.credentials = {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      };
+    }
+
+    return new SESClient(config);
   }
-  // Fallback: log emails to console (no real sending)
-  return nodemailer.createTransport({ jsonTransport: true });
+
+  // Return null if SES is not configured (will fall back to console logging)
+  return null;
 }
 
 // --- Base HTML wrapper ---
@@ -281,19 +288,93 @@ function getStatusUpdateEmailTemplate(order, oldStatus, newStatus) {
 
 // --- send wrapper ---
 async function sendEmail(to, subject, html, text) {
-  const transporter = createTransport();
-  const info = await transporter.sendMail({
-    from: process.env.EMAIL_FROM || 'no-reply@vidflyy.com',
-    to,
-    subject,
-    html,
-    text,
-  });
-  console.log(`Email sent to ${to}`, info.messageId);
-  return info;
+  const sesClient = createSESClient();
+  const fromEmail = process.env.AWS_SES_FROM_EMAIL || process.env.EMAIL_FROM || 'no-reply@vidflyy.com';
+
+  // If SES is configured, use it
+  if (sesClient) {
+    try {
+      const command = new SendEmailCommand({
+        Source: fromEmail,
+        Destination: {
+          ToAddresses: Array.isArray(to) ? to : [to],
+        },
+        Message: {
+          Subject: {
+            Data: subject,
+            Charset: 'UTF-8',
+          },
+          Body: {
+            Html: {
+              Data: html,
+              Charset: 'UTF-8',
+            },
+            Text: {
+              Data: text,
+              Charset: 'UTF-8',
+            },
+          },
+        },
+      });
+
+      const response = await sesClient.send(command);
+      console.log(`✅ Email sent via AWS SES to ${to}`, response.MessageId);
+      return { messageId: response.MessageId, provider: 'AWS SES' };
+    } catch (error) {
+      console.error('❌ Failed to send email via AWS SES:', error.message);
+      throw error;
+    }
+  }
+
+  // Fallback: log email to console (for local development without AWS)
+  console.log('\n📧 ===== EMAIL (Console Mode - No AWS SES Configured) =====');
+  console.log(`From: ${fromEmail}`);
+  console.log(`To: ${to}`);
+  console.log(`Subject: ${subject}`);
+  console.log(`Text: ${text.substring(0, 200)}...`);
+  console.log('==========================================================\n');
+
+  return { messageId: 'console-' + Date.now(), provider: 'Console (Dev Mode)' };
+}
+
+// --- OTP Email Template ---
+function getOtpEmailTemplate(otp) {
+  const content = `
+    <h2 style="margin:0 0 20px;color:#111827;font-size:24px;font-weight:bold;">Your Verification Code 🔐</h2>
+    <p style="margin:0 0 16px;color:#374151;font-size:16px;line-height:1.6;">
+      Hi there!
+    </p>
+    <p style="margin:0 0 24px;color:#374151;font-size:16px;line-height:1.6;">
+      Use the following code to verify your email address and continue with Vidflyy:
+    </p>
+    <div style="background:linear-gradient(135deg,#dc2626 0%,#ec4899 100%);border-radius:12px;padding:24px;margin:24px 0;text-align:center;">
+      <div style="background-color:#ffffff;border-radius:8px;padding:20px;display:inline-block;">
+        <p style="margin:0;color:#111827;font-size:36px;font-weight:bold;letter-spacing:8px;font-family:monospace;">
+          ${otp}
+        </p>
+      </div>
+    </div>
+    <p style="margin:24px 0 16px;color:#374151;font-size:16px;line-height:1.6;">
+      This code will expire in <strong>10 minutes</strong>.
+    </p>
+    <p style="margin:0;color:#6b7280;font-size:14px;line-height:1.6;">
+      If you didn't request this code, please ignore this email.
+    </p>
+  `;
+
+  return {
+    subject: 'Your Vidflyy Verification Code',
+    html: getEmailTemplate('Verification Code', content),
+    text: `Your Vidflyy verification code is: ${otp}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this code, please ignore this email.`,
+  };
 }
 
 // --- exported helpers ---
+exports.sendOtpEmail = async (email, otp) => {
+  const tpl = getOtpEmailTemplate(otp);
+  return sendEmail(email, tpl.subject, tpl.html, tpl.text);
+};
+
 exports.sendWelcomeEmail = async (email) => {
   const tpl = getWelcomeEmailTemplate();
   return sendEmail(email, tpl.subject, tpl.html, tpl.text);

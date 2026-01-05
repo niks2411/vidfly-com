@@ -52,7 +52,7 @@ const CampaignBudget = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location.state as LocationState | undefined;
-  
+
   // Load state from sessionStorage if location.state is missing (when coming back)
   const [restoredState, setRestoredState] = useState<LocationState | null>(() => {
     if (locationState) return null; // Use location state if available
@@ -154,17 +154,17 @@ const CampaignBudget = () => {
 
   const isBulkViews = (state?.campaignType === "bulk-views" && state?.bulkViewsPackage) || false;
   const bulkViewsPackage = state?.bulkViewsPackage || null;
-  
+
   // Extract price from bulk views package (remove ₹ and commas, convert to number)
-  const bulkViewsPrice = bulkViewsPackage 
-    ? parseFloat(bulkViewsPackage.price.replace(/[^0-9.]/g, "")) 
+  const bulkViewsPrice = bulkViewsPackage
+    ? parseFloat(bulkViewsPackage.price.replace(/[^0-9.]/g, ""))
     : null;
 
   const [budget, setBudget] = useState(() => {
     if (isBulkViews && bulkViewsPrice) {
       return bulkViewsPrice;
     }
-    return 10;
+    return 800;
   });
   const [pricingData, setPricingData] = useState<PricingBreakdown | null>(null);
   const [loadingPricing, setLoadingPricing] = useState(false);
@@ -173,12 +173,12 @@ const CampaignBudget = () => {
   const [customDurationDays, setCustomDurationDays] = useState<number>(7);
   const [autoTargeting, setAutoTargeting] = useState(true);
   const [showTargetingModal, setShowTargetingModal] = useState(false);
-  const [goalType, setGoalType] = useState("Subscribers");
+  const [goalType, setGoalType] = useState("Watch Time");
   const [createError, setCreateError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  
+
   // Manual targeting options
   const [selectedGender, setSelectedGender] = useState("all");
   const [selectedAges, setSelectedAges] = useState<string[]>(["all"]);
@@ -275,7 +275,7 @@ const CampaignBudget = () => {
     return null;
   }
   const channelName = primaryVideo.author || "Your Channel";
-  
+
   const effectiveTotalViews = (() => {
     let baseViews = 0;
     if (isBulkViews && bulkViewsPackage) {
@@ -288,7 +288,7 @@ const CampaignBudget = () => {
     // Add free views to total: base views + free views
     return baseViews + freeViewsBalance;
   })();
-  
+
   const perVideoViews = (() => {
     if (selectedCount > 0) {
       return Math.max(1, Math.round(effectiveTotalViews / selectedCount));
@@ -298,9 +298,9 @@ const CampaignBudget = () => {
     }
     return undefined;
   })();
-  
-  const perVideoBudget = selectedCount > 0 
-    ? Number((budget / selectedCount).toFixed(2)) 
+
+  const perVideoBudget = selectedCount > 0
+    ? Number((budget / selectedCount).toFixed(2))
     : budget;
 
   const handleCreateCampaign = async () => {
@@ -332,31 +332,30 @@ const CampaignBudget = () => {
         })),
         package: isBulkViews && bulkViewsPackage
           ? {
-              id: bulkViewsPackage.id,
-              name: bulkViewsPackage.label,
-              price: budget,
-              currency: "INR",
-              quantity: totalViewsExact,
-              type: "bulk-views",
-              description: `${bulkViewsPackage.label} - ${bulkViewsPackage.price}`,
-            }
+            id: bulkViewsPackage.id,
+            name: bulkViewsPackage.label,
+            price: budget,
+            currency: "INR",
+            quantity: totalViewsExact,
+            type: "bulk-views",
+            description: `${bulkViewsPackage.label} - ${bulkViewsPackage.price}`,
+          }
           : {
-              id: "custom-campaign",
-              name: "Custom Campaign",
-              price: budget,
-              currency: "INR",
-              quantity: totalViewsExact,
-              type: "views",
-              description: `Budget ${budget} with estimated ${
-                pricingData?.totalViews
-                  ? `${pricingData.totalViews.min}-${pricingData.totalViews.max} views`
-                  : "views"
+            id: "custom-campaign",
+            name: "Custom Campaign",
+            price: budget,
+            currency: "INR",
+            quantity: totalViewsExact,
+            type: "views",
+            description: `Budget ${budget} with estimated ${pricingData?.totalViews
+              ? `${pricingData.totalViews.min}-${pricingData.totalViews.max} views`
+              : "views"
               }`,
-            },
+          },
         targeting: {
           country: targetCountry,
           goal: goalType,
-          duration: campaignDuration === "Custom" 
+          duration: campaignDuration === "Custom"
             ? `Custom (${customDurationDays} ${customDurationDays === 1 ? 'day' : 'days'})`
             : campaignDuration,
           customDurationDays: campaignDuration === "Custom" ? customDurationDays : undefined,
@@ -414,13 +413,11 @@ const CampaignBudget = () => {
               (step, index) => (
                 <div key={step} className="flex-1 flex items-center">
                   <div className="flex-1 flex items-center gap-2">
-                    <div className={`h-2 flex-1 rounded-full ${
-                      index <= 2 ? "bg-red-600" : "bg-slate-200"
-                    }`} />
-                    {index < 3 && (
-                      <div className={`h-2 w-2 rounded-full ${
-                        index <= 2 ? "bg-red-600" : "bg-slate-200"
+                    <div className={`h-2 flex-1 rounded-full ${index <= 2 ? "bg-red-600" : "bg-slate-200"
                       }`} />
+                    {index < 3 && (
+                      <div className={`h-2 w-2 rounded-full ${index <= 2 ? "bg-red-600" : "bg-slate-200"
+                        }`} />
                     )}
                   </div>
                 </div>
@@ -457,16 +454,16 @@ const CampaignBudget = () => {
                   <div className="space-y-3">
                     <input
                       type="range"
-                      min={10}
-                      max={1000}
-                      step={10}
+                      min={800}
+                      max={10000}
+                      step={100}
                       value={budget}
                       onChange={(e) => setBudget(Number(e.target.value))}
                       className="w-full accent-red-600 h-2"
                     />
                     <div className="flex justify-between text-xs text-slate-500">
-                      {[10, 100, 500, 800, 1000].map((mark) => (
-                        <span key={mark}>{mark}</span>
+                      {[800, 2000, 4000, 6000, 8000, 10000].map((mark) => (
+                        <span key={mark}>{mark.toLocaleString()}</span>
                       ))}
                     </div>
                     <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
@@ -486,7 +483,7 @@ const CampaignBudget = () => {
                 <div className="bg-white rounded-xl border border-slate-200 p-4">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-sm font-semibold text-slate-900">Estimated Views</h3>
-                    <span className="text-xs text-red-600 font-semibold">Bonus (30%)</span>
+                    <span className="text-xs text-red-600 font-semibold">Bonus (6%)</span>
                   </div>
                   {loadingPricing ? (
                     <p className="text-sm text-slate-500">Calculating…</p>
@@ -497,11 +494,10 @@ const CampaignBudget = () => {
                           <div
                             className="h-full bg-red-600"
                             style={{
-                              width: `${
-                                (pricingData.baseViews.exact /
-                                  pricingData.totalViews.exact) *
+                              width: `${(pricingData.baseViews.exact /
+                                pricingData.totalViews.exact) *
                                 100
-                              }%`,
+                                }%`,
                             }}
                           />
                         </div>
@@ -509,11 +505,10 @@ const CampaignBudget = () => {
                           <div
                             className="h-full bg-green-500"
                             style={{
-                              width: `${
-                                (pricingData.bonusViews.exact /
-                                  pricingData.totalViews.exact) *
+                              width: `${(pricingData.bonusViews.exact /
+                                pricingData.totalViews.exact) *
                                 100
-                              }%`,
+                                }%`,
                             }}
                           />
                         </div>
@@ -540,7 +535,7 @@ const CampaignBudget = () => {
                   )}
                 </div>
 
-              
+
 
                 {/* Automatic Targeting */}
                 <div className="bg-white rounded-xl border border-slate-200 p-4">
@@ -579,7 +574,7 @@ const CampaignBudget = () => {
                     <h3 className="text-base font-semibold text-slate-900">
                       Select your audience type:
                     </h3>
-                    
+
                     {/* Gender Selection */}
                     <div>
                       <p className="text-sm font-semibold text-slate-800 mb-2">Gender:</p>
@@ -765,7 +760,7 @@ const CampaignBudget = () => {
                     <option value="Watch Time">Watch Time</option>
                   </select>
                 </div>
-                  {/* Campaign Duration */}
+                {/* Campaign Duration */}
                 <div className="bg-white rounded-xl border border-slate-200 p-4">
                   <p className="text-sm font-semibold text-slate-800 mb-3">Campaign Duration</p>
                   <div className="flex flex-wrap gap-3 mb-3">
@@ -774,11 +769,10 @@ const CampaignBudget = () => {
                         key={option}
                         type="button"
                         onClick={() => setCampaignDuration(option)}
-                        className={`px-3 py-1.5 rounded-full border text-sm transition-colors ${
-                          campaignDuration === option
-                            ? "bg-red-600 text-white border-red-600"
-                            : "border-slate-200 text-slate-600 hover:border-red-200"
-                        }`}
+                        className={`px-3 py-1.5 rounded-full border text-sm transition-colors ${campaignDuration === option
+                          ? "bg-red-600 text-white border-red-600"
+                          : "border-slate-200 text-slate-600 hover:border-red-200"
+                          }`}
                       >
                         {option}
                       </button>
@@ -854,12 +848,12 @@ const CampaignBudget = () => {
             </div>
           )}
 
-            {/* Video Preview Section for Bulk Views */}
-            {isBulkViews && bulkViewsPackage && primaryVideo && (
-             <div className="mt-4 space-y-3">
-             <h3 className="text-sm font-semibold text-slate-900 text-center">How your video will be seen</h3>
-             
-             <div className="relative bg-white rounded-xl border border-red-200 px-4 py-3 shadow-sm w-full max-w-2xl mx-auto">
+          {/* Video Preview Section for Bulk Views */}
+          {isBulkViews && bulkViewsPackage && primaryVideo && (
+            <div className="mt-4 space-y-3">
+              <h3 className="text-sm font-semibold text-slate-900 text-center">How your video will be seen</h3>
+
+              <div className="relative bg-white rounded-xl border border-red-200 px-4 py-3 shadow-sm w-full max-w-2xl mx-auto">
                 {/* Navigation Arrows */}
                 <button
                   type="button"
@@ -879,7 +873,7 @@ const CampaignBudget = () => {
                 </button>
 
                 {/* Video Preview Mock-up - Mobile YouTube Style with Carousel */}
-                 <div className="max-w-md mx-auto overflow-hidden scale-[0.8] md:scale-[0.9] lg:scale-100 transition-transform origin-center">
+                <div className="max-w-md mx-auto overflow-hidden scale-[0.8] md:scale-[0.9] lg:scale-100 transition-transform origin-center">
                   <div className="relative" style={{ transform: `translateX(-${currentSlide * 100}%)`, transition: 'transform 0.3s ease-in-out' }}>
                     <div className="flex">
                       {/* Slide 1: Video in Feed/List Format */}
@@ -1071,7 +1065,7 @@ const CampaignBudget = () => {
                                 <div className="w-1 h-1 bg-slate-400 rounded-full"></div>
                               </div>
                             </div>
-                            
+
                             <div className="flex gap-2 mt-3">
                               <Button className="flex-1 bg-red-600 hover:bg-red-700 text-white text-sm py-2 rounded-full">
                                 Watch...
@@ -1093,9 +1087,8 @@ const CampaignBudget = () => {
                         key={index}
                         type="button"
                         onClick={() => setCurrentSlide(index)}
-                        className={`h-2 rounded-full transition-all ${
-                          currentSlide === index ? "w-8 bg-red-600" : "w-2 bg-red-200"
-                        }`}
+                        className={`h-2 rounded-full transition-all ${currentSlide === index ? "w-8 bg-red-600" : "w-2 bg-red-200"
+                          }`}
                         aria-label={`Go to slide ${index + 1}`}
                       />
                     ))}
@@ -1127,13 +1120,13 @@ const CampaignBudget = () => {
                 <div className="px-3 py-1 rounded-full bg-purple-50 border border-purple-100 text-xs font-semibold text-purple-700">
                   {bulkViewsPackage.label} · {bulkViewsPackage.price}
                 </div>
-              <Button
-                size="lg"
-                onClick={handleCreateCampaign}
-                disabled={creating}
-              >
-                {creating ? "PROCESSING..." : "BUY PACKAGE"}
-              </Button>
+                <Button
+                  size="lg"
+                  onClick={handleCreateCampaign}
+                  disabled={creating}
+                >
+                  {creating ? "PROCESSING..." : "BUY PACKAGE"}
+                </Button>
               </div>
             </div>
           )}
@@ -1190,11 +1183,11 @@ const CampaignBudget = () => {
             >
               <X className="h-5 w-5" />
             </button>
-            
+
             <h2 className="text-xl font-bold text-slate-900 mb-4 pr-8">
               Vidfly strongly advises to set advertising campaign to automatic targeting.
             </h2>
-            
+
             <div className="space-y-4 mb-6">
               <div className="flex items-start gap-3">
                 <div className="h-5 w-5 rounded-full bg-red-600 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -1204,7 +1197,7 @@ const CampaignBudget = () => {
                   Automatic Targeting will utilize the YouTube Ads Algorithm to display your videos in the recommended list, specifically to viewers from your chosen countries who have shown interest in similar content.
                 </p>
               </div>
-              
+
               <div className="flex items-start gap-3">
                 <div className="h-5 w-5 rounded-full bg-red-600 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-white text-xs">✓</span>
@@ -1214,7 +1207,7 @@ const CampaignBudget = () => {
                 </p>
               </div>
             </div>
-            
+
             <div className="flex gap-3">
               <Button
                 variant="outline"
