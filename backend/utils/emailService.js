@@ -1,26 +1,12 @@
-const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
+const { Resend } = require('resend');
 
-// --- SES Client helper ---
-function createSESClient() {
-  // Check if AWS SES is configured
-  if (process.env.AWS_REGION && process.env.AWS_SES_FROM_EMAIL) {
-    const config = {
-      region: process.env.AWS_REGION,
-    };
-
-    // Use explicit credentials if provided, otherwise use default credential chain
-    // (useful for EC2, ECS, Lambda with IAM roles)
-    if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
-      config.credentials = {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      };
-    }
-
-    return new SESClient(config);
+// --- Resend Client helper ---
+function createResendClient() {
+  // Check if Resend is configured
+  if (process.env.RESEND_API_KEY) {
+    return new Resend(process.env.RESEND_API_KEY);
   }
-
-  // Return null if SES is not configured (will fall back to console logging)
+  // Return null if Resend is not configured (will fall back to console logging)
   return null;
 }
 
@@ -288,46 +274,33 @@ function getStatusUpdateEmailTemplate(order, oldStatus, newStatus) {
 
 // --- send wrapper ---
 async function sendEmail(to, subject, html, text) {
-  const sesClient = createSESClient();
-  const fromEmail = process.env.AWS_SES_FROM_EMAIL || process.env.EMAIL_FROM || 'no-reply@vidflyy.com';
+  const resendClient = createResendClient();
+  const fromEmail = process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM || 'no-reply@vidflyy.com';
 
-  // If SES is configured, use it
-  if (sesClient) {
+  // If Resend is configured, use it
+  if (resendClient) {
     try {
-      const command = new SendEmailCommand({
-        Source: fromEmail,
-        Destination: {
-          ToAddresses: Array.isArray(to) ? to : [to],
-        },
-        Message: {
-          Subject: {
-            Data: subject,
-            Charset: 'UTF-8',
-          },
-          Body: {
-            Html: {
-              Data: html,
-              Charset: 'UTF-8',
-            },
-            Text: {
-              Data: text,
-              Charset: 'UTF-8',
-            },
-          },
-        },
+      const response = await resendClient.emails.send({
+        from: fromEmail,
+        to: Array.isArray(to) ? to : [to],
+        subject: subject,
+        html: html,
+        text: text,
       });
 
-      const response = await sesClient.send(command);
-      console.log(`✅ Email sent via AWS SES to ${to}`, response.MessageId);
-      return { messageId: response.MessageId, provider: 'AWS SES' };
+      console.log(`✅ Email sent via Resend to ${to}`, response.data?.id);
+      return { messageId: response.data?.id || `resend-${Date.now()}`, provider: 'Resend' };
     } catch (error) {
-      console.error('❌ Failed to send email via AWS SES:', error.message);
+      console.error('❌ Failed to send email via Resend:', error.message);
+      if (error.response) {
+        console.error('Resend Error Details:', error.response);
+      }
       throw error;
     }
   }
 
-  // Fallback: log email to console (for local development without AWS)
-  console.log('\n📧 ===== EMAIL (Console Mode - No AWS SES Configured) =====');
+  // Fallback: log email to console (for local development without Resend)
+  console.log('\n📧 ===== EMAIL (Console Mode - No Resend Configured) =====');
   console.log(`From: ${fromEmail}`);
   console.log(`To: ${to}`);
   console.log(`Subject: ${subject}`);

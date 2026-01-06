@@ -11,9 +11,11 @@ const UserSchema = new mongoose.Schema(
     preferences: {
       selectedChannelId: { type: String },
       selectedChannelName: { type: String },
+      selectedChannelAvatar: { type: String },
       channels: [{
         channelId: { type: String, required: true },
         channelName: { type: String },
+        channelAvatar: { type: String },
         addedAt: { type: Date, default: Date.now },
       }],
     },

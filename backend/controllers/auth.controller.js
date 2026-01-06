@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const Joi = require('joi');
 const OtpToken = require('../models/OtpToken');
+const User = require('../models/User');
 const {
   EMAIL_COOKIE_NAME,
   EMAIL_COOKIE_MAX_AGE,
@@ -47,7 +48,9 @@ exports.verifyOtp = async (req, res, next) => {
     if (error) return res.status(400).json({ message: error.message });
 
     const { email, otp } = value;
-    const record = await OtpToken.findOne({ email: email.toLowerCase(), otp });
+    const normalizedEmail = email.toLowerCase();
+
+    const record = await OtpToken.findOne({ email: normalizedEmail, otp });
     if (!record) return res.status(400).json({ message: 'Invalid OTP' });
     if (record.expiresAt < new Date()) return res.status(400).json({ message: 'OTP expired' });
 
@@ -63,13 +66,41 @@ exports.verifyOtp = async (req, res, next) => {
       path: '/',
     });
 
-    // Send welcome email after successful verification
-    try {
-      await sendWelcomeEmail(email);
-      console.log(`Welcome email sent to ${email}`);
-    } catch (emailError) {
-      console.error('Failed to send welcome email:', emailError);
-      // Don't fail the verification if email fails
+    // Check if user already exists in database
+    const existingUser = await User.findOne({ email: normalizedEmail });
+
+    if (!existingUser) {
+      // This is a first-time user - send welcome email and create user record
+      console.log(`First-time user detected: ${normalizedEmail}`);
+
+      // Create user record in database
+      try {
+        await User.create({
+          name: normalizedEmail.split('@')[0], // Use email prefix as default name
+          email: normalizedEmail,
+          emailVerified: true,
+        });
+        console.log(`User record created for ${normalizedEmail}`);
+      } catch (createError) {
+        // If user creation fails (e.g., duplicate key), log but don't fail
+        console.warn('Failed to create user record:', createError.message);
+      }
+
+      // Send welcome email only to first-time users
+      try {
+        await sendWelcomeEmail(normalizedEmail);
+        console.log(`Welcome email sent to first-time user: ${normalizedEmail}`);
+      } catch (emailError) {
+        console.error('Failed to send welcome email:', emailError);
+        // Don't fail the verification if email fails
+      }
+    } else {
+      // Existing user logging in again - update emailVerified status, skip welcome email
+      console.log(`Returning user detected: ${normalizedEmail} - skipping welcome email`);
+      if (!existingUser.emailVerified) {
+        existingUser.emailVerified = true;
+        await existingUser.save();
+      }
     }
 
     return res.json({ message: 'OTP verified' });
@@ -77,5 +108,3 @@ exports.verifyOtp = async (req, res, next) => {
     return next(err);
   }
 };
-
-

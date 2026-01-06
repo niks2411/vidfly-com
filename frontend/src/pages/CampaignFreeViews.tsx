@@ -38,12 +38,12 @@ const CampaignFreeViews = () => {
         }, 0);
         return `VID${Math.abs(hash).toString(36).toUpperCase().slice(0, 8)}`;
       };
-      
+
       const code = generateReferralCode(verifiedEmail);
       setReferralCode(code);
       const link = `${window.location.origin}/get-started?ref=${code}`;
       setReferralLink(link);
-      
+
       // Load free views balance and referral stats (would come from API)
       loadFreeViewsData();
     }
@@ -58,7 +58,7 @@ const CampaignFreeViews = () => {
       const response = await fetch(`${API_BASE_URL}/api/free-views/balance?email=${encodeURIComponent(verifiedEmail)}`, {
         credentials: "include",
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setFreeViewsBalance(data.balance || 0);
@@ -121,7 +121,7 @@ const CampaignFreeViews = () => {
       }
 
       const data = await response.json();
-      setSuccess(`Success! You received ${data.viewsEarned || 500} free views!`);
+      setSuccess(`Referral code applied successfully! Your friend earned 500 free views.`);
       setEnteredReferralCode("");
       loadFreeViewsData();
     } catch (err) {
@@ -149,7 +149,7 @@ const CampaignFreeViews = () => {
                 {loading ? "Loading..." : `${freeViewsBalance.toLocaleString()} Views`}
               </p>
             </div>
-            <Button 
+            <Button
               className="bg-red-600 hover:bg-red-700 rounded-xl"
               onClick={() => navigate("/campaign", { state: { email: verifiedEmail } })}
             >
@@ -158,115 +158,115 @@ const CampaignFreeViews = () => {
           </div>
         </div>
 
-            {/* Referral Program */}
-            <div className="space-y-4">
-              <h2 className="text-lg font-bold text-slate-900">Referral Program</h2>
+        {/* Referral Program */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-bold text-slate-900">Referral Program</h2>
 
-              {/* Referral Stats */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="bg-white rounded-xl border border-slate-200 p-4 text-center">
-                  <Users className="h-5 w-5 text-red-600 mx-auto mb-1" />
-                  <p className="text-xs uppercase text-slate-500 mb-0.5">Total Referrals</p>
-                  <p className="text-lg font-bold text-slate-900">{referralStats.totalReferrals}</p>
-                </div>
-                <div className="bg-white rounded-xl border border-slate-200 p-4 text-center">
-                  <Gift className="h-5 w-5 text-red-600 mx-auto mb-1" />
-                  <p className="text-xs uppercase text-slate-500 mb-0.5">Views Earned</p>
-                  <p className="text-lg font-bold text-slate-900">{referralStats.totalViewsEarned.toLocaleString()}</p>
-                </div>
-                <div className="bg-white rounded-xl border border-slate-200 p-4 text-center">
-                  <Share2 className="h-5 w-5 text-red-600 mx-auto mb-1" />
-                  <p className="text-xs uppercase text-slate-500 mb-0.5">Your Code</p>
-                  <p className="text-base font-bold text-red-600 font-mono">{referralCode}</p>
-                </div>
-              </div>
-
-              {/* Share Your Referral Link */}
-              <div className="bg-emerald-50 rounded-xl border border-emerald-200 p-4 space-y-3">
-                <div>
-                  <h3 className="text-base font-bold text-emerald-700 mb-1">
-                    Share Your Referral Link
-                  </h3>
-                  <p className="text-sm text-emerald-900">
-                    Get <span className="font-bold">500 free views</span> for each friend who signs up using your link and creates their first campaign!
-                  </p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <div className="flex-1 flex items-center gap-2 bg-white rounded-xl px-3 py-2 border border-emerald-200">
-                    <Input
-                      value={referralLink}
-                      readOnly
-                      className="border-0 bg-transparent text-sm p-0"
-                    />
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleCopyLink}
-                      className="text-emerald-600 hover:text-emerald-700 h-auto p-1"
-                    >
-                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
-                  </div>
-                  <Button
-                    className="bg-emerald-600 hover:bg-emerald-700 rounded-xl px-4"
-                    onClick={handleCopyLink}
-                  >
-                    SHARE LINK
-                  </Button>
-                </div>
-                <div className="bg-white/50 rounded-lg p-2 text-xs text-emerald-800">
-                  <p className="font-semibold mb-1">How it works:</p>
-                  <ul className="list-disc list-inside space-y-0.5">
-                    <li>Share your referral link with friends</li>
-                    <li>When they sign up and create their first campaign, you both get 500 free views</li>
-                    <li>No limit on how many friends you can refer!</li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Enter Referral Code */}
-              <div className="bg-red-50 rounded-xl border border-red-200 p-4 space-y-3">
-                <div>
-                  <h3 className="text-base font-bold text-red-700 mb-1">
-                    Have a Referral Code?
-                  </h3>
-                  <p className="text-sm text-slate-900">
-                    Enter a friend's referral code to get <span className="font-bold">500 free views</span> when you create your first campaign!
-                  </p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <Input
-                    placeholder="Enter referral code (e.g., VID123456)"
-                    value={enteredReferralCode}
-                    onChange={(e) => {
-                      setEnteredReferralCode(e.target.value.toUpperCase());
-                      setError("");
-                      setSuccess("");
-                    }}
-                    className="flex-1 rounded-xl border-red-200"
-                    maxLength={12}
-                  />
-                  <Button
-                    className="bg-red-600 hover:bg-red-700 rounded-xl px-4"
-                    onClick={handleApplyReferralCode}
-                    disabled={loading || !enteredReferralCode.trim()}
-                  >
-                    {loading ? "APPLYING..." : "APPLY CODE"}
-                  </Button>
-                </div>
-                {error && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-2 text-sm text-red-600">
-                    {error}
-                  </div>
-                )}
-                {success && (
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-sm text-emerald-600">
-                    {success}
-                  </div>
-                )}
-              </div>
+          {/* Referral Stats */}
+          <div className="grid grid-cols-3 gap-3">
+            <div className="bg-white rounded-xl border border-slate-200 p-4 text-center">
+              <Users className="h-5 w-5 text-red-600 mx-auto mb-1" />
+              <p className="text-xs uppercase text-slate-500 mb-0.5">Total Referrals</p>
+              <p className="text-lg font-bold text-slate-900">{referralStats.totalReferrals}</p>
             </div>
-        </CampaignCard>
+            <div className="bg-white rounded-xl border border-slate-200 p-4 text-center">
+              <Gift className="h-5 w-5 text-red-600 mx-auto mb-1" />
+              <p className="text-xs uppercase text-slate-500 mb-0.5">Views Earned</p>
+              <p className="text-lg font-bold text-slate-900">{referralStats.totalViewsEarned.toLocaleString()}</p>
+            </div>
+            <div className="bg-white rounded-xl border border-slate-200 p-4 text-center">
+              <Share2 className="h-5 w-5 text-red-600 mx-auto mb-1" />
+              <p className="text-xs uppercase text-slate-500 mb-0.5">Your Code</p>
+              <p className="text-base font-bold text-red-600 font-mono">{referralCode}</p>
+            </div>
+          </div>
+
+          {/* Share Your Referral Link */}
+          <div className="bg-emerald-50 rounded-xl border border-emerald-200 p-4 space-y-3">
+            <div>
+              <h3 className="text-base font-bold text-emerald-700 mb-1">
+                Share Your Referral Link
+              </h3>
+              <p className="text-sm text-emerald-900">
+                Get <span className="font-bold">500 free views</span> for each friend who signs up using your link!
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex-1 flex items-center gap-2 bg-white rounded-xl px-3 py-2 border border-emerald-200">
+                <Input
+                  value={referralLink}
+                  readOnly
+                  className="border-0 bg-transparent text-sm p-0"
+                />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCopyLink}
+                  className="text-emerald-600 hover:text-emerald-700 h-auto p-1"
+                >
+                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                </Button>
+              </div>
+              <Button
+                className="bg-emerald-600 hover:bg-emerald-700 rounded-xl px-4"
+                onClick={handleCopyLink}
+              >
+                SHARE LINK
+              </Button>
+            </div>
+            <div className="bg-white/50 rounded-lg p-2 text-xs text-emerald-800">
+              <p className="font-semibold mb-1">How it works:</p>
+              <ul className="list-disc list-inside space-y-0.5">
+                <li>Share your referral link with friends</li>
+                <li>When they sign up and apply your code, you get 500 free views!</li>
+                <li>No limit on how many friends you can refer!</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Enter Referral Code */}
+          <div className="bg-red-50 rounded-xl border border-red-200 p-4 space-y-3">
+            <div>
+              <h3 className="text-base font-bold text-red-700 mb-1">
+                Have a Referral Code?
+              </h3>
+              <p className="text-sm text-slate-900">
+                Enter a friend's referral code to help them earn <span className="font-bold">500 free views</span>!
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Input
+                placeholder="Enter referral code (e.g., VID123456)"
+                value={enteredReferralCode}
+                onChange={(e) => {
+                  setEnteredReferralCode(e.target.value.toUpperCase());
+                  setError("");
+                  setSuccess("");
+                }}
+                className="flex-1 rounded-xl border-red-200"
+                maxLength={12}
+              />
+              <Button
+                className="bg-red-600 hover:bg-red-700 rounded-xl px-4"
+                onClick={handleApplyReferralCode}
+                disabled={loading || !enteredReferralCode.trim()}
+              >
+                {loading ? "APPLYING..." : "APPLY CODE"}
+              </Button>
+            </div>
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-2 text-sm text-red-600">
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-sm text-emerald-600">
+                {success}
+              </div>
+            )}
+          </div>
+        </div>
+      </CampaignCard>
     </CampaignLayout>
   );
 };

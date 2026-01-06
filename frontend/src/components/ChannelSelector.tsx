@@ -39,10 +39,10 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showManageModal, setShowManageModal] = useState(false);
 
-  // Load all channels from backend and localStorage
+  // Load all channels from backend (PRIMARY SOURCE - cross-device sync)
   const loadAllChannels = useCallback(async () => {
     if (typeof window === "undefined") return;
-    
+
     try {
       // Get email from localStorage (stored after login)
       const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
@@ -55,7 +55,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
         setSelectedChannelId(savedChannelId);
       }
 
-      // Step 2: Load ALL channels from backend (source of truth, cross-device)
+      // Step 2: Load ALL channels from backend (PRIMARY SOURCE - cross-device)
       try {
         const response = await fetch(
           `${API_BASE_URL}/api/user-preferences/channels?email=${encodeURIComponent(userEmail)}`,
@@ -64,94 +64,54 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
 
         if (response.ok) {
           const data = await response.json();
-          
-          // Update selected channel
+
+          // Update selected channel from backend
           if (data.selectedChannelId) {
             setSelectedChannelId(data.selectedChannelId);
             localStorage.setItem(channelKey, data.selectedChannelId);
           }
 
-          // Load all saved channels and fetch their info
+          // Load all channels DIRECTLY from backend - no YouTube API calls needed!
           if (data.channels && data.channels.length > 0) {
-            const channelsToFetch = data.channels.map((ch: { channelId: string; channelName?: string }) => ({
-              channelId: ch.channelId,
-              channelName: ch.channelName || "",
-            }));
+            const newChannelMap = new Map<string, ChannelInfo>();
 
-            // Fetch info for all channels that aren't already in channelInfoMap
-            for (const channel of channelsToFetch) {
-              if (!channelInfoMap.has(channel.channelId)) {
-                try {
-                  const channelInfoResponse = await fetch(
-                    `${API_BASE_URL}/api/youtube/channel-info?channelId=${encodeURIComponent(channel.channelId)}`,
-                    { credentials: "include" }
-                  );
-                  if (channelInfoResponse.ok) {
-                    const channelInfoData = await channelInfoResponse.json();
-                    const channelInfo: ChannelInfo = {
-                      channelId: channelInfoData.channelId,
-                      name: channelInfoData.name || channel.channelName || "Channel",
-                      avatar: channelInfoData.avatar || "",
-                    };
-                    
-                    // Add to channelInfoMap so it appears in dropdown
-                    setChannelInfoMap((prev) => {
-                      const newMap = new Map(prev);
-                      newMap.set(channel.channelId, channelInfo);
-                      
-                      // Cache in sessionStorage
-                      try {
-                        const cached = Array.from(newMap.values());
-                        sessionStorage.setItem(CHANNEL_INFO_STORAGE_KEY, JSON.stringify(cached));
-                      } catch (err) {
-                        console.error("Failed to cache channel info", err);
-                      }
-                      
-                      return newMap;
-                    });
-                  } else {
-                    // Still add basic info even if API fails
-                    if (channel.channelName) {
-                      const channelInfo: ChannelInfo = {
-                        channelId: channel.channelId,
-                        name: channel.channelName,
-                        avatar: "",
-                      };
-                      setChannelInfoMap((prev) => {
-                        const newMap = new Map(prev);
-                        newMap.set(channel.channelId, channelInfo);
-                        return newMap;
-                      });
-                    }
-                  }
-                } catch (err) {
-                  console.warn(`Failed to fetch channel info for ${channel.channelId}:`, err);
-                  // Still add basic info even if API fails
-                  if (channel.channelName) {
-                    const channelInfo: ChannelInfo = {
-                      channelId: channel.channelId,
-                      name: channel.channelName,
-                      avatar: "",
-                    };
-                    setChannelInfoMap((prev) => {
-                      const newMap = new Map(prev);
-                      newMap.set(channel.channelId, channelInfo);
-                      return newMap;
-                    });
-                  }
-                }
-              }
+            for (const ch of data.channels) {
+              newChannelMap.set(ch.channelId, {
+                channelId: ch.channelId,
+                name: ch.channelName || "YouTube Channel",
+                avatar: ch.channelAvatar || "",
+              });
             }
+
+            // Update channelInfoMap with all backend channels at once
+            setChannelInfoMap(newChannelMap);
+
+            console.log(`✅ Loaded ${data.channels.length} channels from backend`);
           }
+        } else if (response.status === 401) {
+          console.warn("Channel fetch returned 401 - user may need to re-verify email");
         }
       } catch (err) {
-        console.warn("Failed to load channels from backend, using localStorage:", err);
-        // Continue with localStorage value if backend fails
+        console.warn("Failed to load channels from backend:", err);
+        // Fallback: try to use cached sessionStorage data
+        try {
+          const cached = sessionStorage.getItem(CHANNEL_INFO_STORAGE_KEY);
+          if (cached) {
+            const parsedInfo = JSON.parse(cached);
+            const fallbackMap = new Map<string, ChannelInfo>();
+            parsedInfo.forEach((info: ChannelInfo) => {
+              fallbackMap.set(info.channelId, info);
+            });
+            setChannelInfoMap(fallbackMap);
+          }
+        } catch (cacheErr) {
+          console.error("Failed to load from cache:", cacheErr);
+        }
       }
     } catch (err) {
       console.error("Failed to load channels", err);
     }
-  }, [channelInfoMap]);
+  }, []); // Remove channelInfoMap dependency to prevent infinite loops
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -160,7 +120,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
         sessionStorage.getItem(STORAGE_KEY) || "[]"
       );
       setStoredVideos(parsed);
-      
+
       // Load cached channel info
       const cachedChannelInfo = sessionStorage.getItem(CHANNEL_INFO_STORAGE_KEY);
       if (cachedChannelInfo) {
@@ -188,15 +148,31 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
   // Listen for channelChanged events (when channel is updated from other components)
   useEffect(() => {
     const handleChannelChanged = (event: CustomEvent) => {
-      const { channelId } = event.detail;
+      const { channelId, channelName } = event.detail;
       if (channelId) {
         setSelectedChannelId(channelId);
-        // Save to localStorage
+        // Save to localStorage for fast UI
         const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
         if (userEmail) {
           const channelKey = `channel_${userEmail}`;
           localStorage.setItem(channelKey, channelId);
         }
+
+        // If channel not in map, add it immediately for instant UI feedback
+        if (!channelInfoMap.has(channelId) && channelName) {
+          setChannelInfoMap((prev) => {
+            const newMap = new Map(prev);
+            newMap.set(channelId, {
+              channelId,
+              name: channelName,
+              avatar: "",
+            });
+            return newMap;
+          });
+        }
+
+        // Then reload all channels from backend to get full data
+        loadAllChannels();
       }
     };
 
@@ -204,7 +180,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
     return () => {
       window.removeEventListener('channelChanged', handleChannelChanged as EventListener);
     };
-  }, []);
+  }, [channelInfoMap, loadAllChannels]);
 
   const fetchChannelInfo = useCallback(async (channelId: string, channelName: string) => {
     // Skip if already loading or already cached
@@ -234,7 +210,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
       setChannelInfoMap((prev) => {
         const newMap = new Map(prev);
         newMap.set(channelId, channelInfo);
-        
+
         // Cache in sessionStorage
         try {
           const cached = Array.from(newMap.values());
@@ -242,7 +218,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
         } catch (err) {
           console.error("Failed to cache channel info", err);
         }
-        
+
         return newMap;
       });
     } catch (err) {
@@ -279,7 +255,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
 
   const availableChannels = useMemo(() => {
     const channelMap = new Map<string, { channelId: string; name: string; avatar: string }>();
-    
+
     // Add channels from stored videos
     storedVideos.forEach((video) => {
       if (video.channelId && video.author) {
@@ -293,7 +269,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
         }
       }
     });
-    
+
     // Also include channels from channelInfoMap (saved channels from backend that may not be in storedVideos)
     channelInfoMap.forEach((info, channelId) => {
       if (!channelMap.has(channelId)) {
@@ -304,7 +280,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
         });
       }
     });
-    
+
     return Array.from(channelMap.values());
   }, [storedVideos, channelInfoMap]);
 
@@ -316,12 +292,12 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
   // This must be after availableChannels is defined
   useEffect(() => {
     if (typeof window === "undefined") return;
-    
+
     const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
     if (!userEmail) return;
 
     const channelKey = `channel_${userEmail}`;
-    
+
     const handleStorageChange = (e: StorageEvent) => {
       // Check if the changed key is for the current email's selected channel
       if (e.key === channelKey && e.newValue) {
@@ -329,8 +305,8 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
         // Trigger channel change event for other components
         const channel = availableChannels.find(ch => ch.channelId === e.newValue);
         if (channel) {
-          window.dispatchEvent(new CustomEvent('channelChanged', { 
-            detail: { channelId: channel.channelId, channelName: channel.name } 
+          window.dispatchEvent(new CustomEvent('channelChanged', {
+            detail: { channelId: channel.channelId, channelName: channel.name }
           }));
         }
       }
@@ -356,16 +332,19 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
 
   const handleChannelClick = async (channelId: string, channelName: string) => {
     setSelectedChannelId(channelId);
-    
+
     // Get email from localStorage (stored after login)
     const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
     if (userEmail) {
       // Save to localStorage with email in key (fast, instant UI)
       const channelKey = `channel_${userEmail}`;
       localStorage.setItem(channelKey, channelId);
-      
+
       // Save to backend (adds to channels list and sets as selected)
       try {
+        // Get avatar from channelInfoMap if available
+        const channelAvatar = channelInfoMap.get(channelId)?.avatar || '';
+
         await fetch(`${API_BASE_URL}/api/user-preferences/channels`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -373,6 +352,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
             email: userEmail,
             channelId: channelId,
             channelName: channelName,
+            channelAvatar: channelAvatar,
           }),
           credentials: "include",
         });
@@ -381,7 +361,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
         // Don't block the user if backend save fails
       }
     }
-    
+
     setShowDropdown(false);
     if (onChannelSelect) {
       onChannelSelect(channelId, channelName);
@@ -395,7 +375,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
     setChannelInfoMap((prev) => {
       const newMap = new Map(prev);
       newMap.set(channelInfo.channelId, channelInfo);
-      
+
       // Cache in sessionStorage
       try {
         const cached = Array.from(newMap.values());
@@ -403,7 +383,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
       } catch (err) {
         console.error("Failed to cache channel info", err);
       }
-      
+
       return newMap;
     });
 
@@ -413,16 +393,16 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
         sessionStorage.getItem(STORAGE_KEY) || "[]"
       );
       setStoredVideos(parsed);
-      
+
       // Auto-select the newly added channel
       setSelectedChannelId(channelInfo.channelId);
-      
+
       // Save to localStorage with email in key (fast, instant UI)
       const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
       if (userEmail) {
         const channelKey = `channel_${userEmail}`;
         localStorage.setItem(channelKey, channelInfo.channelId);
-        
+
         // Save to backend (adds to channels list and sets as selected)
         try {
           await fetch(`${API_BASE_URL}/api/user-preferences/channels`, {
@@ -432,6 +412,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
               email: userEmail,
               channelId: channelInfo.channelId,
               channelName: channelInfo.name,
+              channelAvatar: channelInfo.avatar || '',
             }),
             credentials: "include",
           });
@@ -440,7 +421,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
           // Don't block the user if backend save fails
         }
       }
-      
+
       if (onChannelSelect) {
         onChannelSelect(channelInfo.channelId, channelInfo.name);
       }
@@ -513,20 +494,19 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
       </button>
 
       {showDropdown && (
-        <div className="absolute z-20 left-0 mt-2 bg-white border-2 border-red-200 rounded-2xl shadow-2xl max-h-80 overflow-y-auto min-w-[380px] w-max animate-fade-in backdrop-blur-sm">
+        <div className="absolute z-20 right-0 mt-2 bg-white border-2 border-red-200 rounded-2xl shadow-2xl max-h-80 overflow-y-auto min-w-[380px] w-max animate-fade-in backdrop-blur-sm">
           <div className="p-3">
             {availableChannels.map((channel) => {
               const channelVideos = storedVideos.filter((v) => v.channelId === channel.channelId);
               const isLoading = loadingChannels.has(channel.channelId);
-              
+
               return (
                 <button
                   key={channel.channelId}
                   type="button"
                   onClick={() => handleChannelClick(channel.channelId, channel.name)}
-                  className={`w-full flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 transition-all duration-200 text-left mb-1 ${
-                    selectedChannelId === channel.channelId ? 'bg-gradient-to-r from-red-50 to-red-100 border border-red-200' : ''
-                  }`}
+                  className={`w-full flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 transition-all duration-200 text-left mb-1 ${selectedChannelId === channel.channelId ? 'bg-gradient-to-r from-red-50 to-red-100 border border-red-200' : ''
+                    }`}
                 >
                   {channel.avatar ? (
                     <img
@@ -571,7 +551,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
                 <p className="text-xs text-slate-500">Add a new YouTube channel</p>
               </div>
             </button>
-            
+
             {availableChannels.length > 0 && (
               <button
                 type="button"
@@ -611,7 +591,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
               sessionStorage.getItem(STORAGE_KEY) || "[]"
             );
             setStoredVideos(parsed);
-            
+
             const cachedChannelInfo = sessionStorage.getItem(CHANNEL_INFO_STORAGE_KEY);
             if (cachedChannelInfo) {
               const parsedInfo: ChannelInfo[] = JSON.parse(cachedChannelInfo);

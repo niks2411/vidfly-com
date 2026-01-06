@@ -103,23 +103,64 @@ const CampaignBudget = () => {
     if (primaryVideo?.channelId) {
       const channelKey = getSelectedChannelKey();
       localStorage.setItem(channelKey, primaryVideo.channelId);
+
       // Notify ChannelSelector to update UI immediately
       window.dispatchEvent(
         new CustomEvent("channelChanged", {
           detail: { channelId: primaryVideo.channelId, channelName: primaryVideo.author || "Channel" },
         })
       );
-      // Also trigger a small delay to ensure ChannelSelector has mounted
-      const timeoutId = setTimeout(() => {
-        window.dispatchEvent(
-          new CustomEvent("channelChanged", {
-            detail: { channelId: primaryVideo.channelId, channelName: primaryVideo.author || "Channel" },
-          })
-        );
-      }, 100);
-      return () => clearTimeout(timeoutId);
+
+      // Also save this channel to backend to ensure it appears in selector
+      const saveChannelToBackend = async () => {
+        try {
+          const userEmail = localStorage.getItem("logged_user_email") || email;
+          if (userEmail && primaryVideo.channelId) {
+            // Fetch channel avatar if not available
+            let channelAvatar = primaryVideo.avatarUrl || "";
+            if (!channelAvatar) {
+              try {
+                const channelInfoResponse = await fetch(
+                  `${API_BASE_URL}/api/youtube/channel-info?channelId=${encodeURIComponent(primaryVideo.channelId)}`
+                );
+                if (channelInfoResponse.ok) {
+                  const channelInfoData = await channelInfoResponse.json();
+                  channelAvatar = channelInfoData.avatar || "";
+                }
+              } catch (err) {
+                console.warn("Failed to fetch channel avatar:", err);
+              }
+            }
+
+            // Save to backend
+            await fetch(`${API_BASE_URL}/api/user-preferences/channels`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: userEmail,
+                channelId: primaryVideo.channelId,
+                channelName: primaryVideo.author || "Channel",
+                channelAvatar: channelAvatar,
+              }),
+              credentials: "include",
+            });
+
+            // Dispatch event again after saving to reload from backend
+            window.dispatchEvent(
+              new CustomEvent("channelChanged", {
+                detail: { channelId: primaryVideo.channelId, channelName: primaryVideo.author || "Channel" },
+              })
+            );
+          }
+        } catch (err) {
+          console.warn("Failed to save channel to backend:", err);
+        }
+      };
+
+      // Run async but don't block
+      saveChannelToBackend();
     }
-  }, [state, selectedVideos]);
+  }, [state, selectedVideos, email]);
 
   // Save state to sessionStorage when it changes
   useEffect(() => {
@@ -426,9 +467,9 @@ const CampaignBudget = () => {
           </div>
         </div>
 
-        {/* Verified Email and Channel Selector */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white rounded-xl border border-slate-200 p-3 flex items-center gap-3">
+        {/* Verified Email and Channel Selector section */}
+        <div className="bg-white rounded-xl border border-slate-200 p-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-full bg-red-600 flex items-center justify-center text-white text-xs font-bold">
               ✓
             </div>
@@ -437,9 +478,9 @@ const CampaignBudget = () => {
               <p className="text-sm font-semibold text-slate-900 truncate">{email}</p>
             </div>
           </div>
-          <div className="flex items-center justify-end">
-            <ChannelSelector />
-          </div>
+          <ChannelSelector onChannelSelect={(channelId, channelName) => {
+            console.log('Channel selected:', channelId, channelName);
+          }} />
         </div>
 
         <CampaignCard className="space-y-6">

@@ -49,7 +49,7 @@ const ManageChannelsModal = ({ isOpen, onClose, onChannelRemoved }: ManageChanne
                 name: ch.channelName || "Channel",
                 avatar: "", // Backend doesn't store avatar, will be loaded from cache or API
               }));
-              
+
               // Try to get avatars from cached info
               const cachedInfo = sessionStorage.getItem(CHANNEL_INFO_STORAGE_KEY);
               if (cachedInfo) {
@@ -63,7 +63,7 @@ const ManageChannelsModal = ({ isOpen, onClose, onChannelRemoved }: ManageChanne
                   }
                 });
               }
-              
+
               setChannels(channelInfos);
               return;
             }
@@ -72,7 +72,7 @@ const ManageChannelsModal = ({ isOpen, onClose, onChannelRemoved }: ManageChanne
           console.warn("Failed to load channels from backend:", err);
         }
       }
-      
+
       // Fallback to sessionStorage
       const cachedInfo = sessionStorage.getItem(CHANNEL_INFO_STORAGE_KEY);
       if (cachedInfo) {

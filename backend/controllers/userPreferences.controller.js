@@ -12,12 +12,13 @@ exports.addChannel = async (req, res, next) => {
       email: Joi.string().email().required(),
       channelId: Joi.string().required(),
       channelName: Joi.string().allow('', null),
+      channelAvatar: Joi.string().allow('', null),
     });
     const { error, value } = schema.validate(req.body);
     if (error) return res.status(400).json({ message: error.message });
 
     const normalizedEmail = value.email.toLowerCase().trim();
-    
+
     // Verify email cookie
     const cookieValue = req.cookies[EMAIL_COOKIE_NAME];
     if (!cookieValue || !verifyEmailCookieValue(cookieValue, normalizedEmail)) {
@@ -48,15 +49,21 @@ exports.addChannel = async (req, res, next) => {
       user.preferences.channels.push({
         channelId: value.channelId,
         channelName: value.channelName || '',
+        channelAvatar: value.channelAvatar || '',
         addedAt: new Date(),
       });
     } else {
-      // Update existing channel name if provided
+      // Update existing channel info if provided
       const channelIndex = user.preferences.channels.findIndex(
         (ch) => ch.channelId === value.channelId
       );
-      if (channelIndex !== -1 && value.channelName) {
-        user.preferences.channels[channelIndex].channelName = value.channelName;
+      if (channelIndex !== -1) {
+        if (value.channelName) {
+          user.preferences.channels[channelIndex].channelName = value.channelName;
+        }
+        if (value.channelAvatar) {
+          user.preferences.channels[channelIndex].channelAvatar = value.channelAvatar;
+        }
       }
     }
 
@@ -65,10 +72,13 @@ exports.addChannel = async (req, res, next) => {
     if (value.channelName) {
       user.preferences.selectedChannelName = value.channelName;
     }
+    if (value.channelAvatar) {
+      user.preferences.selectedChannelAvatar = value.channelAvatar;
+    }
 
     await user.save();
 
-    return res.json({ 
+    return res.json({
       message: 'Channel added successfully',
       channelId: value.channelId,
       channelName: value.channelName
@@ -93,7 +103,7 @@ exports.getAllChannels = async (req, res, next) => {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
-    
+
     // Verify email cookie
     const cookieValue = req.cookies[EMAIL_COOKIE_NAME];
     if (!cookieValue || !verifyEmailCookieValue(cookieValue, normalizedEmail)) {
@@ -102,7 +112,7 @@ exports.getAllChannels = async (req, res, next) => {
 
     const user = await User.findOne({ email: normalizedEmail });
     if (!user || !user.preferences || !user.preferences.channels || user.preferences.channels.length === 0) {
-      return res.json({ 
+      return res.json({
         channels: [],
         selectedChannelId: null,
         selectedChannelName: null
@@ -113,10 +123,12 @@ exports.getAllChannels = async (req, res, next) => {
       channels: user.preferences.channels.map(ch => ({
         channelId: ch.channelId,
         channelName: ch.channelName,
+        channelAvatar: ch.channelAvatar || '',
         addedAt: ch.addedAt,
       })),
       selectedChannelId: user.preferences.selectedChannelId || null,
-      selectedChannelName: user.preferences.selectedChannelName || null
+      selectedChannelName: user.preferences.selectedChannelName || null,
+      selectedChannelAvatar: user.preferences.selectedChannelAvatar || null
     });
   } catch (err) {
     return next(err);
@@ -132,7 +144,7 @@ exports.getSelectedChannel = async (req, res, next) => {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
-    
+
     // Verify email cookie
     const cookieValue = req.cookies[EMAIL_COOKIE_NAME];
     if (!cookieValue || !verifyEmailCookieValue(cookieValue, normalizedEmail)) {
@@ -164,7 +176,7 @@ exports.removeChannel = async (req, res, next) => {
     if (error) return res.status(400).json({ message: error.message });
 
     const normalizedEmail = value.email.toLowerCase().trim();
-    
+
     // Verify email cookie
     const cookieValue = req.cookies[EMAIL_COOKIE_NAME];
     if (!cookieValue || !verifyEmailCookieValue(cookieValue, normalizedEmail)) {
@@ -194,7 +206,7 @@ exports.removeChannel = async (req, res, next) => {
     if (user.preferences.selectedChannelId === value.channelId) {
       user.preferences.selectedChannelId = null;
       user.preferences.selectedChannelName = null;
-      
+
       // Auto-select first remaining channel if any
       if (user.preferences.channels.length > 0) {
         const firstChannel = user.preferences.channels[0];
@@ -208,7 +220,7 @@ exports.removeChannel = async (req, res, next) => {
       await user.save();
     }
 
-    return res.json({ 
+    return res.json({
       message: 'Channel removed successfully',
       channelId: value.channelId
     });
