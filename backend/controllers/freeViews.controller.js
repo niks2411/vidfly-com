@@ -122,21 +122,19 @@ exports.applyReferralCode = async (req, res, next) => {
     userRecord.referralApplied = true;
     await userRecord.save();
 
-    // Award referrer (Person A) with 500 views immediately
-    referrerRecord.balance += REFERRAL_REWARD_VIEWS;
-    referrerRecord.totalEarned += REFERRAL_REWARD_VIEWS;
-    await referrerRecord.save();
+    // DO NOT award views yet - views are awarded when referred user completes first campaign
+    // referrerRecord.balance remains unchanged
 
-    // Create referral record
+    // Create referral record with pending status
     await Referral.create({
       referrerId: referrer._id,
       referredId: user._id,
       referralCode: normalizedCode,
       referrerEmail: referrer.email,
       referredEmail: normalizedEmail,
-      referrerViewsAwarded: REFERRAL_REWARD_VIEWS, // Person A gets 500 views
+      referrerViewsAwarded: 0, // Views NOT awarded yet - pending first campaign completion
       referredViewsAwarded: 0, // Person B gets 0 views
-      status: 'code_applied',
+      status: 'pending', // Waiting for referred user to complete first campaign
     });
 
     return res.json({
@@ -156,20 +154,20 @@ exports.applyReferralCode = async (req, res, next) => {
 exports.redeemFreeViews = async (userId, views) => {
   try {
     const freeViews = await FreeViews.findOne({ userId });
-    
+
     if (!freeViews) {
       throw new Error('Free views record not found');
     }
-    
+
     if (freeViews.balance < views) {
       throw new Error(`Insufficient free views balance. Available: ${freeViews.balance}, Requested: ${views}`);
     }
-    
+
     // Deduct views from balance
     freeViews.balance -= views;
     freeViews.totalRedeemed = (freeViews.totalRedeemed || 0) + views;
     await freeViews.save();
-    
+
     console.log(`Successfully redeemed ${views} free views for user ${userId}. Remaining balance: ${freeViews.balance}`);
     return freeViews;
   } catch (err) {
@@ -182,11 +180,11 @@ exports.redeemFreeViews = async (userId, views) => {
 exports.addFreeViews = async (userId, views, source = 'manual') => {
   try {
     let freeViews = await FreeViews.findOne({ userId });
-    
+
     if (!freeViews) {
       const user = await User.findById(userId);
       if (!user) return;
-      
+
       const referralCode = generateReferralCode(user.email);
       freeViews = await FreeViews.create({
         userId,
@@ -194,7 +192,7 @@ exports.addFreeViews = async (userId, views, source = 'manual') => {
         totalEarned: views,
         referralCode,
       });
-      
+
       user.referralCode = referralCode;
       await user.save();
     } else {
@@ -202,10 +200,62 @@ exports.addFreeViews = async (userId, views, source = 'manual') => {
       freeViews.totalEarned += views;
       await freeViews.save();
     }
-    
+
     return freeViews;
   } catch (err) {
     console.error('Error adding free views:', err);
     throw err;
+  }
+};
+
+// Award referral reward when referred user completes their first campaign
+// This is called from payment.controller.js on successful payment
+exports.awardReferralRewardOnFirstCampaign = async (userId, orderId) => {
+  try {
+    // Find pending referral where this user was referred
+    const referral = await Referral.findOne({
+      referredId: userId,
+      status: 'pending',
+    });
+
+    if (!referral) {
+      console.log(`No pending referral found for user ${userId}`);
+      return null;
+    }
+
+    // Check if reward was already given (safety check)
+    if (referral.referrerViewsAwarded > 0) {
+      console.log(`Referral reward already awarded for user ${userId}`);
+      return null;
+    }
+
+    // Find referrer's FreeViews record
+    const referrerFreeViews = await FreeViews.findOne({ userId: referral.referrerId });
+    if (!referrerFreeViews) {
+      console.error(`FreeViews record not found for referrer ${referral.referrerId}`);
+      return null;
+    }
+
+    // Award referrer with 500 views
+    referrerFreeViews.balance += REFERRAL_REWARD_VIEWS;
+    referrerFreeViews.totalEarned += REFERRAL_REWARD_VIEWS;
+    await referrerFreeViews.save();
+
+    // Update referral record
+    referral.referrerViewsAwarded = REFERRAL_REWARD_VIEWS;
+    referral.status = 'completed';
+    referral.referredUserFirstCampaignId = orderId;
+    await referral.save();
+
+    console.log(`✅ Referral reward of ${REFERRAL_REWARD_VIEWS} views awarded to referrer ${referral.referrerEmail} for successful campaign by ${referral.referredEmail}`);
+
+    return {
+      referrerEmail: referral.referrerEmail,
+      viewsAwarded: REFERRAL_REWARD_VIEWS,
+    };
+  } catch (err) {
+    console.error('Error awarding referral reward:', err);
+    // Don't throw - we don't want to fail the payment if referral reward fails
+    return null;
   }
 };

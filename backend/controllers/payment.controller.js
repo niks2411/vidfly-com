@@ -4,6 +4,7 @@ const Payment = require('../models/Payment');
 const axios = require('axios');
 const crypto = require('crypto');
 const { sendPaymentSummaryEmail } = require('../utils/emailService');
+const { awardReferralRewardOnFirstCampaign } = require('./freeViews.controller');
 
 // Cashfree Payment Gateway Configuration
 const CASHFREE_CLIENT_ID = process.env.CASHFREE_CLIENT_ID || process.env.CASHFREE_APP_ID;
@@ -16,7 +17,7 @@ let CASHFREE_ENVIRONMENT = (process.env.CASHFREE_ENVIRONMENT || 'TEST').toUpperC
 if (CASHFREE_ENVIRONMENT === 'PRODUCTION') {
   const clientIdLength = CASHFREE_CLIENT_ID?.length || 0;
   const clientSecretLength = CASHFREE_CLIENT_SECRET?.length || 0;
-  
+
   // Test credentials are usually shorter or have specific patterns
   // If credentials look like test credentials, warn and use TEST
   if (clientIdLength < 20 || clientSecretLength < 30) {
@@ -26,8 +27,8 @@ if (CASHFREE_ENVIRONMENT === 'PRODUCTION') {
   }
 }
 
-const CASHFREE_BASE_URL = CASHFREE_ENVIRONMENT === 'PRODUCTION' 
-  ? 'https://api.cashfree.com/pg' 
+const CASHFREE_BASE_URL = CASHFREE_ENVIRONMENT === 'PRODUCTION'
+  ? 'https://api.cashfree.com/pg'
   : 'https://sandbox.cashfree.com/pg';
 
 // Note: Cashfree Payment Gateway uses direct header authentication
@@ -35,7 +36,7 @@ const CASHFREE_BASE_URL = CASHFREE_ENVIRONMENT === 'PRODUCTION'
 
 exports.createPayment = async (req, res, next) => {
   try {
-    const schema = Joi.object({ orderId: Joi.string().required(), gateway: Joi.string().valid('razorpay','stripe','cashfree').required() });
+    const schema = Joi.object({ orderId: Joi.string().required(), gateway: Joi.string().valid('razorpay', 'stripe', 'cashfree').required() });
     const { error, value } = schema.validate(req.body);
     if (error) return res.status(400).json({ message: error.message });
 
@@ -73,7 +74,7 @@ const createCashfreePayment = async (req, res, next, order) => {
         clientIdLength: CASHFREE_CLIENT_ID?.length || 0,
         clientSecretLength: CASHFREE_CLIENT_SECRET?.length || 0
       });
-      return res.status(500).json({ 
+      return res.status(500).json({
         message: 'Cashfree Payment Gateway credentials not configured',
         hint: 'Please set CASHFREE_CLIENT_ID and CASHFREE_CLIENT_SECRET in .env file (PG credentials from Payment Gateway section, not Payout credentials)'
       });
@@ -96,7 +97,7 @@ const createCashfreePayment = async (req, res, next, order) => {
       // Check if payment session is still valid (not expired - typically 30 minutes)
       const sessionAge = Date.now() - new Date(payment.updatedAt).getTime();
       const sessionMaxAge = 30 * 60 * 1000; // 30 minutes
-      
+
       if (sessionAge < sessionMaxAge) {
         // Return existing payment session
         return res.json({
@@ -110,24 +111,24 @@ const createCashfreePayment = async (req, res, next, order) => {
 
     // Check if payment is already completed
     if (payment.status === 'captured' || payment.status === 'authorized') {
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: 'Payment already completed for this order',
-        orderId: order.orderId 
+        orderId: order.orderId
       });
     }
 
     // Verify payment amount matches order amount
     const expectedAmount = order.plan?.price || order.packageInfo?.price;
     if (expectedAmount && Math.abs(payment.amount - expectedAmount) > 0.01) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: 'Payment amount mismatch. Please contact support.',
-        orderId: order.orderId 
+        orderId: order.orderId
       });
     }
 
     // Verify credentials are set
     if (!CASHFREE_CLIENT_ID || !CASHFREE_CLIENT_SECRET) {
-      return res.status(500).json({ 
+      return res.status(500).json({
         message: 'Cashfree Payment Gateway credentials not configured',
         hint: 'Please set CASHFREE_CLIENT_ID and CASHFREE_CLIENT_SECRET in .env file (PG credentials from Cashfree Dashboard → Payment Gateway → Credentials)'
       });
@@ -140,7 +141,7 @@ const createCashfreePayment = async (req, res, next, order) => {
 
     const orderAmount = payment.amount;
     const currency = payment.currency || 'INR';
-    
+
     // Generate unique payment gateway order ID: CF + orderId + timestamp + random
     const timestamp = Date.now();
     const randomSuffix = crypto.randomBytes(4).toString('hex').toUpperCase();
@@ -148,7 +149,7 @@ const createCashfreePayment = async (req, res, next, order) => {
 
     // Validate order amount
     if (!orderAmount || orderAmount <= 0) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: 'Invalid order amount',
         amount: orderAmount
       });
@@ -183,7 +184,7 @@ const createCashfreePayment = async (req, res, next, order) => {
     // Cashfree requires x-api-version header
     let response;
     let lastError = null;
-    
+
     // Try different API versions and endpoints
     const apiVersions = ['2023-08-01', '2022-09-01', '2022-01-01', '2021-05-21'];
     const endpoints = [
@@ -218,7 +219,7 @@ const createCashfreePayment = async (req, res, next, order) => {
             status: apiError.response?.status,
             message: errorMsg
           });
-          
+
           // If we got a successful response structure but wrong version, continue trying
           // If we got 404, this endpoint is wrong, try next endpoint
           if (apiError.response?.status === 404) {
@@ -237,8 +238,8 @@ const createCashfreePayment = async (req, res, next, order) => {
         data: lastError?.response?.data,
         message: lastError?.message,
       });
-      
-      return res.status(500).json({ 
+
+      return res.status(500).json({
         message: 'Failed to create Cashfree payment session',
         error: lastError?.response?.data?.message || lastError?.message || 'All API endpoints failed',
         details: lastError?.response?.data,
@@ -255,7 +256,7 @@ const createCashfreePayment = async (req, res, next, order) => {
         status: response?.status,
         statusText: response?.statusText
       });
-      return res.status(500).json({ 
+      return res.status(500).json({
         message: 'Invalid response from Cashfree API',
         details: 'No data received from Cashfree',
         hint: 'Check backend logs for more details'
@@ -269,13 +270,13 @@ const createCashfreePayment = async (req, res, next, order) => {
 
     // Check for payment_session_id and payment_url in various possible structures
     // Cashfree PG API may return data in different formats
-    const paymentSessionId = response.data.payment_session_id 
+    const paymentSessionId = response.data.payment_session_id
       || response.data.data?.payment_session_id
       || response.data.paymentSessionId
       || response.data.data?.paymentSessionId
       || response.data.session_id
       || response.data.data?.session_id;
-      
+
     // Cashfree PG API returns payment_session_id but not payment_url
     // We need to construct the payment URL from the session ID
     let paymentUrl = response.data.payment_url
@@ -298,8 +299,8 @@ const createCashfreePayment = async (req, res, next, order) => {
         responseKeys: Object.keys(response.data || {}),
         status: response.status
       });
-      
-      return res.status(500).json({ 
+
+      return res.status(500).json({
         message: 'Invalid response from Cashfree API',
         details: 'Payment session ID not received',
         responseStructure: response.data,
@@ -312,12 +313,12 @@ const createCashfreePayment = async (req, res, next, order) => {
         hasPaymentSessionId: !!paymentSessionId,
         paymentSessionId: paymentSessionId?.substring(0, 20) + '...'
       });
-      return res.status(500).json({ 
+      return res.status(500).json({
         message: 'Failed to construct payment URL',
         details: 'Payment session ID received but could not create payment URL'
       });
     }
-    
+
     console.log('Successfully extracted payment data:', {
       paymentSessionId: paymentSessionId.substring(0, 20) + '...',
       hasPaymentUrl: !!paymentUrl,
@@ -353,11 +354,11 @@ const createCashfreePayment = async (req, res, next, order) => {
         method: error.config?.method,
       }
     });
-    
+
     // Provide more detailed error message
     let errorMessage = 'Failed to create Cashfree payment session';
     let errorDetails = error.message;
-    
+
     if (error.response) {
       errorDetails = error.response.data?.message || error.response.data?.error || error.response.statusText;
       if (error.response.status === 401) {
@@ -366,8 +367,8 @@ const createCashfreePayment = async (req, res, next, order) => {
         errorMessage = 'Invalid payment request to Cashfree';
       }
     }
-    
-    return res.status(500).json({ 
+
+    return res.status(500).json({
       message: errorMessage,
       error: errorDetails,
       hint: 'Check backend logs for more details'
@@ -377,9 +378,9 @@ const createCashfreePayment = async (req, res, next, order) => {
 
 exports.verifyPayment = async (req, res, next) => {
   try {
-    const schema = Joi.object({ 
-      orderId: Joi.string().required(), 
-      paymentId: Joi.string().allow('', null).optional(), 
+    const schema = Joi.object({
+      orderId: Joi.string().required(),
+      paymentId: Joi.string().allow('', null).optional(),
       signature: Joi.string().allow(''),
       gateway: Joi.string().valid('razorpay', 'stripe', 'cashfree').optional()
     });
@@ -407,7 +408,7 @@ exports.verifyPayment = async (req, res, next) => {
       payment.status = 'captured';
       await payment.save();
     }
-    
+
     order.status = 'paid';
     await order.save();
     return res.json({ message: 'Payment verified', order });
@@ -421,7 +422,7 @@ const verifyCashfreePayment = async (req, res, next, order, paymentId) => {
       return res.status(500).json({ message: 'Cashfree Payment Gateway credentials not configured' });
     }
     const payment = order.paymentId;
-    
+
     if (!payment || !payment.paymentOrderId) {
       return res.status(404).json({ message: 'Payment order not found' });
     }
@@ -473,7 +474,7 @@ const verifyCashfreePayment = async (req, res, next, order, paymentId) => {
     if (paymentData.payment_status === 'SUCCESS') {
       order.status = 'paid';
       await order.save();
-      
+
       // Send payment summary email
       try {
         const populatedOrder = await Order.findById(order._id)
@@ -486,21 +487,32 @@ const verifyCashfreePayment = async (req, res, next, order, paymentId) => {
         console.error('Failed to send payment summary email:', emailError);
         // Don't fail the payment verification if email fails
       }
-      
+
+      // Award referral reward if this is the referred user's first campaign
+      try {
+        const rewardResult = await awardReferralRewardOnFirstCampaign(order.userId, order._id);
+        if (rewardResult) {
+          console.log(`Referral reward awarded: ${rewardResult.viewsAwarded} views to ${rewardResult.referrerEmail}`);
+        }
+      } catch (referralError) {
+        console.error('Failed to award referral reward:', referralError);
+        // Don't fail the payment if referral reward fails
+      }
+
       return res.json({ message: 'Payment verified successfully', order });
     } else {
       order.status = 'failed';
       await order.save();
-      return res.status(400).json({ 
-        message: 'Payment failed', 
-        reason: paymentData.payment_message 
+      return res.status(400).json({
+        message: 'Payment failed',
+        reason: paymentData.payment_message
       });
     }
   } catch (error) {
     console.error('Cashfree verification error:', error.response?.data || error.message);
-    return res.status(500).json({ 
+    return res.status(500).json({
       message: 'Failed to verify Cashfree payment',
-      error: error.response?.data?.message || error.message 
+      error: error.response?.data?.message || error.message
     });
   }
 };
@@ -508,8 +520,8 @@ const verifyCashfreePayment = async (req, res, next, order, paymentId) => {
 // Verify payment using only orderId (for test mode when paymentId not in URL)
 exports.verifyOrderPayment = async (req, res, next) => {
   try {
-    const schema = Joi.object({ 
-      orderId: Joi.string().required(), 
+    const schema = Joi.object({
+      orderId: Joi.string().required(),
       gateway: Joi.string().valid('razorpay', 'stripe', 'cashfree').optional()
     });
     const { error, value } = schema.validate(req.body);
@@ -524,8 +536,8 @@ exports.verifyOrderPayment = async (req, res, next) => {
     }
 
     return res.status(400).json({ message: 'Payment gateway not supported for order verification' });
-  } catch (err) { 
-    return next(err); 
+  } catch (err) {
+    return next(err);
   }
 };
 
@@ -534,14 +546,14 @@ exports.cashfreeWebhook = async (req, res, next) => {
   try {
     const webhookData = req.body;
     const signature = req.headers['x-cashfree-signature'];
-    
+
     // Verify webhook signature for security
     if (process.env.CASHFREE_WEBHOOK_SECRET) {
       const expectedSignature = crypto
         .createHmac('sha256', process.env.CASHFREE_WEBHOOK_SECRET)
         .update(JSON.stringify(webhookData))
         .digest('hex');
-      
+
       if (signature !== expectedSignature) {
         console.error('Invalid webhook signature:', { received: signature, expected: expectedSignature });
         return res.status(401).json({ message: 'Invalid webhook signature' });
@@ -551,7 +563,7 @@ exports.cashfreeWebhook = async (req, res, next) => {
     }
 
     const { orderId, paymentId, paymentStatus } = webhookData.data || {};
-    
+
     if (!orderId || !paymentId) {
       return res.status(400).json({ message: 'Missing orderId or paymentId' });
     }
@@ -597,7 +609,7 @@ exports.cashfreeWebhook = async (req, res, next) => {
     if (paymentStatus === 'SUCCESS') {
       order.status = 'paid';
       await order.save();
-      
+
       // Send payment summary email
       try {
         const populatedOrder = await Order.findById(order._id)
@@ -609,6 +621,17 @@ exports.cashfreeWebhook = async (req, res, next) => {
       } catch (emailError) {
         console.error('Failed to send payment summary email via webhook:', emailError);
         // Don't fail the webhook if email fails
+      }
+
+      // Award referral reward if this is the referred user's first campaign
+      try {
+        const rewardResult = await awardReferralRewardOnFirstCampaign(order.userId, order._id);
+        if (rewardResult) {
+          console.log(`Referral reward awarded via webhook: ${rewardResult.viewsAwarded} views to ${rewardResult.referrerEmail}`);
+        }
+      } catch (referralError) {
+        console.error('Failed to award referral reward via webhook:', referralError);
+        // Don't fail the webhook if referral reward fails
       }
     } else if (paymentStatus === 'FAILED') {
       order.status = 'failed';
