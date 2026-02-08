@@ -13,7 +13,7 @@ import {
 } from "@/lib/verifiedEmail";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") || "http://localhost:5000";
+  import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
 
 const normalizeEmail = (value: string) => value.trim().toLowerCase();
 
@@ -135,7 +135,7 @@ const GetStarted = () => {
       setEmail(normalizedEmail);
       setEmailVerified(true);
       saveVerifiedEmail(normalizedEmail);
-      
+
       // Apply referral code if present
       if (referralCode) {
         try {
@@ -155,7 +155,7 @@ const GetStarted = () => {
           console.error("Failed to apply referral code", err);
         }
       }
-      
+
       setMessage("Email verified successfully! Redirecting...");
       setTimeout(() => {
         navigate("/campaign", { state: { email: normalizedEmail } });
@@ -263,11 +263,11 @@ const GetStarted = () => {
                       SENDING OTP...
                     </>
                   ) : otpSent ? (
-                    "RESEND OTP"
+                    "RESEND"
                   ) : (
                     <>
                       <Mail className="h-4 w-4 mr-2" />
-                      SEND OTP
+                      Continue
                     </>
                   )}
                 </Button>
@@ -311,7 +311,7 @@ const GetStarted = () => {
                     ) : (
                       <>
                         <CheckCircle2 className="h-4 w-4" />
-                        Verify OTP
+                        Verify
                       </>
                     )}
                   </Button>

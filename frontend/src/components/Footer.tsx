@@ -82,15 +82,20 @@ const Footer = () => {
             {/* Brand Section */}
             <div className="lg:col-span-2">
               <div className="flex items-center mb-6 group cursor-pointer">
-                <div className="text-white text-3xl font-bold">
-                  <span className="text-red-500 group-hover:text-red-400 transition-colors duration-300">Vidflyy</span>
-                  <span className="group-hover:text-gray-300 transition-colors duration-300"> LLP</span>
+                <div className="relative h-10 w-fit">
+                  <img src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png" alt="Vidflyy" className="h-10 w-auto" />
+                  <img
+                    src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png"
+                    alt=""
+                    className="h-10 w-auto absolute top-0 left-0 brightness-0 invert"
+                    style={{ clipPath: 'inset(0 0 0 2.5rem)' }}
+                  />
                 </div>
               </div>
               <p className="text-gray-400 mb-8 leading-relaxed text-base">
                 Empowering content creators to reach their full potential through strategic YouTube promotion and organic growth solutions. Your success is our mission.
               </p>
-              
+
               {/* Contact Info Cards */}
               <div className="space-y-4 mb-8">
                 <a href="mailto:info@videopromotion.digital" className="flex items-center gap-3 text-gray-400 hover:text-red-400 transition-colors duration-300 group">
@@ -200,7 +205,7 @@ const Footer = () => {
             </div>
           </div>
 
-         
+
         </div>
 
         {/* Bottom Bar */}
@@ -208,7 +213,7 @@ const Footer = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-gray-400 text-sm text-center md:text-left">
-                © 2025 <span className="text-red-500 font-semibold">Vidflyy</span>. All rights reserved. | Empowering YouTube creators worldwide.
+                © 2026 <span className="text-red-500 font-semibold">Vidflyy</span>. All rights reserved. | Empowering YouTube creators worldwide.
               </p>
               <div className="flex items-center gap-4">
                 <button

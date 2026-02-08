@@ -20,11 +20,11 @@ export const useCampaignSidebar = () => {
 // Campaign Hamburger Button Component - Must be defined before Navbar
 function CampaignHamburgerButton() {
   const sidebarContext = useCampaignSidebar();
-  
+
   if (!sidebarContext) return null;
-  
+
   const { isSidebarOpen, setIsSidebarOpen } = sidebarContext;
-  
+
   return (
     <button
       onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -40,7 +40,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   // Check if we're on a campaign page
   const isCampaignPage = location.pathname.startsWith('/campaign');
 
@@ -61,11 +61,11 @@ const Navbar = () => {
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50 font-montserrat">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center" onClick={scrollToTop}>
             <img src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png" alt="Vidflyy" className="h-8 w-auto" />
           </Link>
-          
+
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               <button onClick={() => handleNavClick("/")} className="text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition-all duration-300 hover:scale-105">
@@ -85,13 +85,13 @@ const Navbar = () => {
               </button>
             </div>
           </div>
-          
+
           <div className="hidden md:block">
             <Button onClick={handleGetStartedClick} className="bg-red-600 hover:bg-red-700 text-white transition-all duration-300 hover:scale-105 active:scale-95 rounded-xl">
               Get Started
             </Button>
           </div>
-          
+
           <div className="md:hidden">
             {!isCampaignPage ? (
               <button
@@ -105,7 +105,7 @@ const Navbar = () => {
             )}
           </div>
         </div>
-        
+
         {isOpen && (
           <div className="md:hidden animate-fade-in">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">

@@ -34,18 +34,18 @@ const ExampleCampaign = () => {
         likes: "0"
       };
     }
-    
+
     // Views calculation: Budget / 0.20
     const totalViews = budget / 0.20;
-    
+
     // Subscribers: 8-13% of views
     const minSubscribers = Math.floor(totalViews * 0.08);
     const maxSubscribers = Math.floor(totalViews * 0.13);
-    
+
     // Likes: 6-9% of views
     const minLikes = Math.floor(totalViews * 0.06);
     const maxLikes = Math.floor(totalViews * 0.09);
-    
+
     return {
       views: formatNumber(totalViews),
       subscribers: `${formatNumber(minSubscribers)} - ${formatNumber(maxSubscribers)}`,
@@ -73,7 +73,7 @@ const ExampleCampaign = () => {
 
   const handleBudgetSelect = (value: string) => {
     setSelectedBudget(value);
-    setCustomBudget("");
+    setCustomBudget(value); // Also update input field to show selected value
   };
 
   return (
@@ -84,9 +84,9 @@ const ExampleCampaign = () => {
           <div className="grid lg:grid-cols-2">
             {/* Left Side - Campaign Performance */}
             <div className="p-6 lg:p-10 border-b lg:border-b-0 lg:border-r border-gray-200">
-              <div className="flex items-center gap-2 mb-6 p-3 bg-blue-50 rounded-lg">
-                <Shield className="h-5 w-5 text-blue-600 flex-shrink-0" />
-                <span className="text-blue-700 font-medium text-sm">You're protected by VIDFLYY's satisfaction guarantee!</span>
+              <div className="flex items-center gap-2 mb-6 p-3 bg-red-50 rounded-lg">
+                <Shield className="h-5 w-5 text-red-600 flex-shrink-0" />
+                <span className="text-red-700 font-medium text-sm">You're protected by VIDFLYY's satisfaction guarantee!</span>
               </div>
 
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Example Campaign Performance</h3>
@@ -106,12 +106,12 @@ const ExampleCampaign = () => {
                       onKeyPress={handleKeyPress}
                       placeholder="0"
                       min="0"
-                      className="w-full pl-8 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base transition-all"
+                      className="w-full pl-8 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base transition-all"
                     />
                   </div>
-                  <Button 
+                  <Button
                     onClick={handleEstimate}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 transition-all duration-300 hover:scale-105 w-full sm:w-auto text-base font-semibold"
+                    className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 transition-all duration-300 hover:scale-105 w-full sm:w-auto text-base font-semibold"
                   >
                     Estimate
                   </Button>
@@ -125,11 +125,10 @@ const ExampleCampaign = () => {
                     <button
                       key={option.value}
                       onClick={() => handleBudgetSelect(option.value)}
-                      className={`p-3 rounded-lg border-2 text-center font-semibold transition-all duration-200 hover:scale-105 text-sm ${
-                        selectedBudget === option.value && !customBudget
-                          ? 'bg-blue-600 text-white border-blue-600'
-                          : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'
-                      }`}
+                      className={`p-3 rounded-lg border-2 text-center font-semibold transition-all duration-200 hover:scale-105 text-sm ${selectedBudget === option.value
+                        ? 'bg-red-600 text-white border-red-600'
+                        : 'bg-white text-gray-700 border-gray-300 hover:border-red-400'
+                        }`}
                     >
                       {option.label}
                     </button>
@@ -137,8 +136,8 @@ const ExampleCampaign = () => {
                 </div>
               </div>
 
-              <div className="bg-blue-50 rounded-lg p-4 mb-4 border border-blue-100">
-                <p className="text-sm text-blue-800 font-semibold">
+              <div className="bg-red-50 rounded-lg p-4 mb-4 border border-red-100">
+                <p className="text-sm text-red-800 font-semibold">
                   💡 Pricing: ₹0.20 per view
                 </p>
               </div>
@@ -149,9 +148,9 @@ const ExampleCampaign = () => {
             </div>
 
             {/* Right Side - Estimated Reach */}
-            <div className="bg-gradient-to-br from-blue-600 to-purple-700 p-6 lg:p-10 text-white">
+            <div className="bg-gradient-to-br from-red-600 to-red-800 p-6 lg:p-10 text-white">
               <h3 className="text-2xl font-bold mb-8">Estimated Potential Reach:</h3>
-              
+
               <div className="space-y-5">
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 hover:bg-white/15 transition-all duration-300">
                   <div className="flex items-center gap-3 mb-2">

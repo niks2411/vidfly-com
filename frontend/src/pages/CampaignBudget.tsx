@@ -11,7 +11,7 @@ import CampaignCard from "@/components/CampaignCard";
 import ChannelSelector from "@/components/ChannelSelector";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") || "http://localhost:5000";
+  import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
 
 type PricingBreakdown = {
   baseViews: { min: number; max: number; exact: number };

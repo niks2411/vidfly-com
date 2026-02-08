@@ -6,7 +6,7 @@ import CampaignLayout from "@/components/CampaignLayout";
 import { Loader2, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") || "http://localhost:5000";
+  import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
 
 type PaymentStatus = "verifying" | "success" | "failed" | "error";
 
@@ -102,7 +102,7 @@ const PaymentCallback = () => {
           setPaymentStatus("success");
           return;
         }
-        
+
         // Check if order failed
         if (data.status === "failed") {
           setPaymentStatus("failed");
@@ -190,7 +190,7 @@ const PaymentCallback = () => {
                   </p>
                 )}
               </div>
-              <Button onClick={handleContinue} size="lg" className="mt-4">
+              <Button onClick={handleContinue} size="lg" className="mt-4 rounded-xl">
                 View My Campaigns
               </Button>
             </>
@@ -213,11 +213,11 @@ const PaymentCallback = () => {
                 )}
               </div>
               <div className="flex flex-col sm:flex-row gap-3 mt-4">
-                <Button variant="outline" onClick={() => navigate("/campaign/my-campaigns")}>
+                <Button variant="outline" onClick={() => navigate("/campaign/my-campaigns")} className="rounded-xl">
                   Go to My Campaigns
                 </Button>
                 {orderId && (
-                  <Button onClick={() => navigate(`/payment/checkout?orderId=${orderId}`)}>
+                  <Button onClick={() => navigate(`/payment/checkout?orderId=${orderId}`)} className="rounded-xl">
                     Try Again
                   </Button>
                 )}
@@ -237,11 +237,11 @@ const PaymentCallback = () => {
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 mt-4">
-                <Button variant="outline" onClick={() => navigate("/campaign/my-campaigns")}>
+                <Button variant="outline" onClick={() => navigate("/campaign/my-campaigns")} className="rounded-xl">
                   Go to My Campaigns
                 </Button>
                 {orderId && (
-                  <Button onClick={() => navigate(`/payment/checkout?orderId=${orderId}`)}>
+                  <Button onClick={() => navigate(`/payment/checkout?orderId=${orderId}`)} className="rounded-xl">
                     Retry Payment
                   </Button>
                 )}

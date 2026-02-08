@@ -166,8 +166,8 @@ const createCashfreePayment = async (req, res, next, order) => {
         customer_phone: order.userId.phone || '9999999999',
       },
       order_meta: {
-        return_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/callback?orderId=${order.orderId}`,
-        notify_url: `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/payments/cashfree-webhook`,
+        return_url: `${process.env.FRONTEND_ORIGIN}/payment/callback?orderId=${order.orderId}`,
+        notify_url: `${process.env.BACKEND_ORIGIN}/api/payments/cashfree-webhook`,
       },
     };
 

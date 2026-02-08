@@ -1,4 +1,7 @@
-require('dotenv').config();
+// Load environment-specific .env file
+const envFile = process.env.NODE_ENV === 'development' ? '.env.development' : '.env';
+require('dotenv').config({ path: envFile });
+
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
@@ -10,7 +13,7 @@ const app = express();
 
 // CORS setup: restrict to configured frontend origin(s)
 // Set FRONTEND_ORIGIN to your deployed frontend, e.g. https://myproject.vercel.app
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || '';
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN;
 const LOCAL_ORIGINS = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
@@ -21,29 +24,42 @@ const LOCAL_ORIGINS = [
   'http://localhost:8080',
   'http://127.0.0.1:8080',
 ];
-const allowedOrigins = [
-  ...LOCAL_ORIGINS,
-  ...(FRONTEND_ORIGIN ? [FRONTEND_ORIGIN] : []),
+const ALLOWED_ORIGIN_REGEX = [
+  /^https:\/\/vidflyy\.in$/,
+  /^https:\/\/www\.vidflyy\.in$/,
+  /^http:\/\/localhost:\d+$/,
+  /^http:\/\/127\.0\.0\.1:\d+$/
 ];
 
 const corsOptions = {
-  origin: function(origin, callback) {
-    console.log('CORS request from origin:', origin);
-    if (!origin) return callback(null, true); // allow non-browser clients (curl/postman)
-    if (allowedOrigins.includes(origin)) {
-      console.log('Origin allowed:', origin);
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // server-to-server
+
+    const isAllowed = ALLOWED_ORIGIN_REGEX.some((regex) =>
+      regex.test(origin)
+    );
+
+    if (isAllowed) {
       return callback(null, true);
     }
-    console.log('Origin blocked:', origin, 'Allowed origins:', allowedOrigins);
+
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-client-id', 'x-client-secret', 'x-api-version', 'x-cashfree-signature'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'x-client-id',
+    'x-client-secret',
+    'x-api-version',
+    'x-cashfree-signature'
+  ],
   optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 
 // When running behind a reverse proxy (nginx), trust the proxy for correct protocol/ip
 app.set('trust proxy', 1);

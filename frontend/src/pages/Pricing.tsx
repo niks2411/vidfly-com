@@ -38,9 +38,9 @@ const PricingPage = () => {
         "Safe, Google Ads–compliant delivery",
         ...(discount && bonusViews
           ? [
-              `${discount}% instant discount`,
-              `+${bonusViews.toLocaleString()} bonus views included`,
-            ]
+            `${discount}% instant discount`,
+            `+${bonusViews.toLocaleString()} bonus views included`,
+          ]
           : []),
       ],
     };
@@ -57,7 +57,7 @@ const PricingPage = () => {
       badge: "STARTER",
       features: [
         "Real audience engagement",
-        "Organic likes & comments", 
+        "Organic likes & comments",
         "Quality subscribers",
         "24/7 support",
         "Money-back guarantee"
@@ -116,7 +116,7 @@ const PricingPage = () => {
       name: "Ultimate",
       price: "₹18000",
       period: "",
-      description: "YouTube Advertising", 
+      description: "YouTube Advertising",
       watchHours: "4000 Watch Hours + 1000 Subscribers",
       popular: true,
       badge: "25% OFF",
@@ -138,18 +138,16 @@ const PricingPage = () => {
     <div className="mb-16">
       <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">{title}</h3>
       <div
-        className={`grid ${
-          plans.length === 2 ? "md:grid-cols-2 max-w-4xl mx-auto" : "md:grid-cols-3"
-        } gap-8`}
+        className={`grid ${plans.length === 2 ? "md:grid-cols-2 max-w-4xl mx-auto" : "md:grid-cols-3"
+          } gap-8`}
       >
         {plans.map((plan, index) => (
-            <div
-              key={index}
-              className={`bg-gradient-to-br from-red-50 via-white to-red-50 rounded-2xl p-8 shadow-lg relative animate-card-float border-2 border-red-100 hover:border-red-300 transition-all duration-500 hover:scale-105 ${
-                plan.popular ? "ring-2 ring-red-500 scale-105" : ""
+          <div
+            key={index}
+            className={`bg-gradient-to-br from-red-50 via-white to-red-50 rounded-2xl p-8 shadow-lg relative animate-card-float border-2 border-red-100 hover:border-red-300 transition-all duration-500 hover:scale-105 ${plan.popular ? "ring-2 ring-red-500 scale-105" : ""
               }`}
-              style={{ animationDelay: `${index * 0.2}s` }}
-            >
+            style={{ animationDelay: `${index * 0.2}s` }}
+          >
             {plan.badge && (
               <div className="absolute -top-4 right-4">
                 <span className="bg-black text-white px-4 py-2 rounded-full text-sm font-bold rotate-12 animate-pulse">
@@ -157,13 +155,13 @@ const PricingPage = () => {
                 </span>
               </div>
             )}
-            
+
             <div className="text-center mb-8">
               <div className="bg-red-600 text-white py-4 px-6 rounded-xl mb-4 animate-gradient-shift" style={{ background: 'linear-gradient(45deg, #dc2626, #ef4444, #dc2626)' }}>
                 <h4 className="text-xl font-bold">{plan.name}</h4>
                 <p className="text-red-100 text-sm">{plan.description}</p>
               </div>
-              
+
               <div className="mb-4 animate-price-scale">
                 <div className="flex items-center justify-center gap-3">
                   <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
@@ -175,20 +173,20 @@ const PricingPage = () => {
                   )}
                 </div>
               </div>
-              
+
               {plan.subscribers && (
                 <div className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold mb-4">
                   {plan.subscribers}
                 </div>
               )}
-              
+
               {plan.watchHours && (
                 <div className="text-gray-700 font-medium mb-4">
                   {plan.watchHours}
                 </div>
               )}
             </div>
-            
+
             <ul className="space-y-4 mb-8">
               {plan.features.map((feature, featureIndex) => (
                 <li key={featureIndex} className="flex items-center gap-3 animate-feature-slide-in" style={{ animationDelay: `${(index * 0.1) + (featureIndex * 0.1)}s` }}>
@@ -204,13 +202,14 @@ const PricingPage = () => {
                 </li>
               ))}
             </ul>
-            
-            <Button 
+
+            <Button
               onClick={handleGetStartedClick}
-              className={`w-full py-3 transition-all duration-300 hover:scale-105 active:scale-95 animate-button-pulse ${plan.popular ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-red-600 hover:bg-red-700 text-white'}`}
+              className={`w-full py-3 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 animate-button-pulse ${plan.popular ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-red-600 hover:bg-red-700 text-white'}`}
             >
               🚀 GET STARTED NOW
             </Button>
+
           </div>
         ))}
       </div>
@@ -220,7 +219,7 @@ const PricingPage = () => {
   return (
     <div className="min-h-screen bg-white font-montserrat">
       <Navbar />
-      
+
       {/* Hero Section for Pricing Page with red themed background */}
       <section className="py-20 bg-gradient-to-br from-red-50 to-pink-50 relative overflow-hidden">
         {/* Enhanced Animated Background */}
@@ -231,7 +230,7 @@ const PricingPage = () => {
           <div className="absolute top-1/4 right-1/4 w-18 h-18 bg-red-200 rounded-full opacity-10 animate-morph"></div>
           <div className="absolute bottom-1/4 left-1/4 w-22 h-22 bg-red-150 rounded-full opacity-15 animate-rotate-slow"></div>
         </div>
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4 animate-text-slide-up">
             Pricing <span className="text-red-600 bg-gradient-to-r from-red-500 to-red-700 bg-clip-text  ">Plans</span>
@@ -244,7 +243,7 @@ const PricingPage = () => {
 
       {/* Example Campaign Performance Section */}
       <ExampleCampaign />
-      
+
       {/* Subscription and Monetization Plans */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -256,13 +255,13 @@ const PricingPage = () => {
               Flexible pricing plans designed to fit every creator's needs and budget.
             </p>
           </div>
-          
+
           <div className="mb-16">
             <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Subscribers Plan</h3>
             <p className="text-center text-gray-600 mb-8 max-w-4xl mx-auto">We Advertise Your YouTube Video in Form Of True View Discovery Ad until The Channel Achieves Commited Target of Subscribers.</p>
             <PlanGrid plans={subscriptionPlans} title="" />
           </div>
-          
+
           <div className="mb-16">
             <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Monetization Plan</h3>
             <p className="text-center text-gray-600 mb-8 max-w-4xl mx-auto">We Achieve YouTube Watch Hour Criteria With The Help Of Ads Platform, We Reward People To Watch Your Video On Different Games & Websites</p>

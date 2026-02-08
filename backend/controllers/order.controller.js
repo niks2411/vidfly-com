@@ -262,7 +262,7 @@ exports.createCampaignOrder = async (req, res, next) => {
       .populate('paymentId', 'amount currency status gateway');
 
     // Generate payment checkout URL pointing to frontend payment page
-    const frontendUrl = process.env.FRONTEND_URL || process.env.CHECKOUT_URL || process.env.FRONTEND_PAYMENT_URL || 'http://localhost:5173';
+    const frontendUrl = process.env.FRONTEND_ORIGIN || process.env.CHECKOUT_URL || process.env.FRONTEND_PAYMENT_URL || 'http://localhost:5173';
     const paymentCheckoutUrl = `${frontendUrl}/payment/checkout?orderId=${orderId}`;
 
     return res.status(201).json({

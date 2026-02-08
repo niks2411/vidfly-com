@@ -1,103 +1,162 @@
-import { Youtube, Play } from "lucide-react";
+
+import { CornerDownRight, CornerRightUp } from "lucide-react";
+import { motion } from "framer-motion";
 
 const YouTubeAdPlacements = () => {
   return (
-    <section className="py-12 lg:py-16 bg-white relative overflow-hidden font-montserrat">
-      <div className="absolute inset-0">
-        <Youtube className="absolute top-10 left-10 h-16 w-16 text-red-100 opacity-30 animate-pulse" />
-        <Play className="absolute top-32 right-20 h-12 w-12 text-red-200 opacity-40 animate-bounce" />
-        <Youtube className="absolute bottom-20 left-32 h-20 w-20 text-red-100 opacity-30" />
-        <Play className="absolute bottom-10 right-10 h-24 w-24 text-red-100 opacity-20" />
-      </div>
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
-            Get your video promoted across YouTube's <span className="text-red-600">top ad placements</span>
+    <section className="py-20 lg:py-24 bg-blue-50/30 overflow-hidden font-montserrat">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          className="text-center mb-16 lg:mb-20"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
+            What the promotion <span className="text-red-600">looks like</span>
           </h2>
-          <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
-            Reach your target audience through strategic ad placements across YouTube's platform
-          </p>
-        </div>
+        </motion.div>
 
-        {/* Exact YouTube Interface Recreation */}
-        <div className="bg-red-600 rounded-3xl p-6 lg:p-8 shadow-2xl">
-          <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
-            {/* Left Side - Before Similar Videos */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              {/* YouTube Header */}
-              <div className="bg-white px-4 py-3 border-b border-gray-200">
-                <div className="flex items-center gap-3">
-                  <Youtube className="h-5 w-5 text-red-600" />
-                  <span className="font-semibold text-gray-700 text-sm">YouTube</span>
-                  <div className="flex-1 bg-gray-100 rounded-full h-7 mx-2"></div>
-                  <div className="w-7 h-7 bg-gray-300 rounded-full"></div>
+        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 max-w-6xl mx-auto items-start">
+
+          {/* In-Stream Card */}
+          <motion.div
+            className="relative"
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div className="bg-white rounded-[2rem] p-6 shadow-xl border border-gray-100 relative z-10">
+              {/* Header Skeleton */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3 w-1/3">
+                  <div className="h-2 w-full bg-gray-100 rounded-full"></div>
                 </div>
+                <div className="h-6 w-6 rounded-full bg-gray-100"></div>
               </div>
-              
-              {/* Main Video Area */}
-              <div className="p-4">
-                <div className="bg-red-500 rounded-xl p-6 lg:p-8 text-white relative mb-4">
-                  <div className="absolute top-3 left-3">
-                    <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs font-bold">Ad</span>
-                  </div>
-                  <div className="text-center">
-                    <h3 className="text-lg lg:text-xl font-bold mb-3">Your Video is Shown Here Before Similar Videos</h3>
-                    <div className="bg-white bg-opacity-20 w-12 h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center mx-auto">
-                      <Play className="h-6 w-6 lg:h-7 lg:w-7 text-white" />
+
+              {/* Video Player Mockup */}
+              <div className="grid grid-cols-12 gap-4">
+                <div className="col-span-8 rounded-2xl aspect-video relative overflow-hidden group">
+                  <img
+                    src="/lovable-uploads/red-theme-vlogger.png"
+                    alt="Video Thumbnail"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  {/* Play Button Overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-12 h-12 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center">
+                      <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-white border-b-[8px] border-b-transparent ml-1"></div>
                     </div>
                   </div>
-                </div>
-                
-                {/* Side Recommendation */}
-                <div className="bg-red-400 rounded-lg p-4 text-white relative">
-                  <div className="absolute top-2 left-2">
-                    <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs font-bold">Ad</span>
+
+                  {/* Progress Bar */}
+                  <div className="absolute bottom-3 left-3 right-3 h-1 bg-white/30 rounded-full overflow-hidden">
+                    <div className="h-full w-1/3 bg-yellow-400"></div>
                   </div>
-                  <h4 className="font-semibold mb-1 text-sm">And Here</h4>
-                  <p className="text-sm text-red-100">Your promoted video shown as recommended</p>
                 </div>
-                
-                {/* Video Descriptions */}
-                <div className="mt-4 space-y-2">
-                  <div className="bg-gray-200 h-3 rounded w-3/4"></div>
-                  <div className="bg-gray-200 h-3 rounded w-1/2"></div>
+
+                <div className="col-span-4 space-y-3">
+                  <div className="bg-yellow-400 text-black text-xs font-bold px-2 py-0.5 rounded-sm inline-block">Ad</div>
+                  <div className="h-2 w-full bg-gray-100 rounded-full"></div>
+                  <div className="h-2 w-2/3 bg-gray-100 rounded-full"></div>
+                  <div className="h-20 w-full bg-gray-50 rounded-xl mt-2"></div>
+                </div>
+              </div>
+
+              {/* Bottom Skeleton */}
+              <div className="mt-6 flex gap-4">
+                <div className="h-10 w-10 rounded-full bg-gray-100 shrink-0"></div>
+                <div className="space-y-2 w-full">
+                  <div className="h-2 w-3/4 bg-gray-100 rounded-full"></div>
+                  <div className="h-2 w-1/2 bg-gray-100 rounded-full"></div>
                 </div>
               </div>
             </div>
 
-            {/* Right Side - In-feed Ads */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              {/* YouTube Header */}
-              <div className="bg-white px-4 py-3 border-b border-gray-200">
-                <div className="flex items-center gap-3">
-                  <Youtube className="h-5 w-5 text-red-600" />
-                  <span className="font-semibold text-gray-700 text-sm">YouTube</span>
-                  <div className="flex-1 bg-gray-100 rounded-full h-7 mx-2"></div>
-                  <div className="w-7 h-7 bg-gray-300 rounded-full"></div>
-                </div>
+            {/* Arrow & Label */}
+            <div className="absolute -bottom-24 left-12 md:left-24 text-center z-0">
+              <svg width="60" height="60" viewBox="0 0 100 100" className="mx-auto text-gray-600 fill-none stroke-current stroke-2 transform rotate-12 filter drop-shadow-sm">
+                <path d="M90,80 Q50,60 50,15" markerEnd="url(#arrowhead)" />
+                <defs>
+                  <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <path d="M0,0 L10,3.5 L0,7 Z" fill="currentColor" />
+                  </marker>
+                </defs>
+              </svg>
+              <p className="text-gray-500 italic mt-1 font-handwriting">Your video in In-Stream</p>
+            </div>
+          </motion.div>
+
+
+          {/* Suggestions Card */}
+          <motion.div
+            className="relative pt-12 md:pt-0"
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <div className="bg-white rounded-[2rem] p-6 shadow-xl border border-gray-100 relative z-10">
+              {/* Header Skeleton */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="h-2 w-16 bg-gray-100 rounded-full"></div>
+                <div className="h-6 w-6 rounded-full bg-gray-100"></div>
               </div>
-              
-              {/* Search Results Area */}
-              <div className="p-4">
-                <div className="bg-red-500 rounded-xl p-5 lg:p-6 text-white relative mb-4">
-                  <h3 className="text-lg font-bold mb-3">In-feed ads will be shown here</h3>
-                  <div className="text-sm mb-3">Your promoted video shown at the top of the search results for relevant keywords</div>
-                  <div className="flex items-center gap-2">
-                    <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs font-bold">Ad</span>
-                    <span className="text-sm text-red-100">Your channel • 140k views</span>
+
+              <div className="grid grid-cols-12 gap-6">
+                {/* Main Content Skeleton */}
+                <div className="col-span-7 bg-gray-50 rounded-xl h-40"></div>
+
+                {/* Sidebar Suggestions */}
+                <div className="col-span-5 space-y-4">
+                  {/* AD Item */}
+                  <div className="relative group cursor-pointer">
+                    <div className="rounded-xl h-20 mb-2 overflow-hidden relative">
+                      <img
+                        src="/lovable-uploads/red-theme-vlogger.png"
+                        alt="Video Thumbnail"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="flex gap-2 items-center mb-1">
+                      <span className="bg-yellow-400 text-black text-[10px] font-bold px-1.5 py-0.5 rounded-sm">Ad</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-gray-100 rounded-full mb-1"></div>
+                  </div>
+
+                  {/* Normal Item 1 */}
+                  <div>
+                    <div className="bg-gray-50 rounded-xl h-20 mb-2"></div>
+                    <div className="h-1.5 w-full bg-gray-100 rounded-full mb-1"></div>
+                    <div className="h-1.5 w-2/3 bg-gray-100 rounded-full"></div>
                   </div>
                 </div>
-                
-                {/* Other Search Results */}
-                <div className="space-y-3">
-                  <div className="bg-gray-200 h-14 rounded-lg"></div>
-                  <div className="bg-gray-200 h-14 rounded-lg"></div>
-                  <div className="bg-gray-200 h-14 rounded-lg"></div>
-                </div>
               </div>
+
+              <div className="mt-4 space-y-2">
+                <div className="h-2 w-full bg-gray-50/50 rounded-full"></div>
+                <div className="h-2 w-2/3 bg-gray-50/50 rounded-full"></div>
+              </div>
+
             </div>
-          </div>
+
+            {/* Arrow & Label */}
+            <div className="absolute -bottom-24 right-12 md:right-24 text-center z-0">
+              <svg width="60" height="60" viewBox="0 0 100 100" className="mx-auto text-gray-600 fill-none stroke-current stroke-2 transform -rotate-12 scale-x-[-1] filter drop-shadow-sm">
+                <path d="M90,80 Q50,60 50,15" markerEnd="url(#arrowhead2)" />
+                <defs>
+                  <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <path d="M0,0 L10,3.5 L0,7 Z" fill="currentColor" />
+                  </marker>
+                </defs>
+              </svg>
+              <p className="text-gray-500 italic mt-1 font-handwriting">Your video in Suggestions</p>
+            </div>
+          </motion.div>
+
         </div>
       </div>
     </section>

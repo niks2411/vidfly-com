@@ -15,42 +15,42 @@ const NewServices = () => {
       title: "Gamers",
       description: "Level up your gaming channel with targeted promotion to passionate gamers worldwide",
       image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&h=600&fit=crop",
-      link: "https://Vidflyy.com/youtube-gaming-channel-promotion/",
+      link: "/youtube-gaming-promotion",
       color: "from-purple-600 to-pink-600"
     },
     {
       title: "Musician",
       description: "Amplify your music and reach more listeners who love your genre",
       image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800&h=600&fit=crop",
-      link: "https://Vidflyy.com/youtube-music-promotion/",
+      link: "/youtube-music-promotion",
       color: "from-blue-600 to-cyan-600"
     },
     {
       title: "Healthy Lifestyle",
       description: "Inspire wellness and grow your health & fitness community organically",
       image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
-      link: "https://Vidflyy.com/youtube-health-beauty-promotion/",
+      link: "/youtube-health-beauty-promotion",
       color: "from-green-600 to-emerald-600"
     },
     {
       title: "Vloggers",
       description: "Share your daily stories and lifestyle with an engaged audience",
       image: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&h=600&fit=crop",
-      link: "https://Vidflyy.com/youtube-vlogging-promotion/",
+      link: "/youtube-vlogging-promotion",
       color: "from-orange-600 to-red-600"
     },
     {
       title: "Motivational Speakers",
       description: "Inspire millions with your powerful message and transformative content",
       image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&h=600&fit=crop",
-      link: "https://Vidflyy.com/youtube-motivation-promotion/",
+      link: "/youtube-motivation-promotion",
       color: "from-yellow-600 to-orange-600"
     },
     {
       title: "Travel",
       description: "Take viewers on adventures around the world with stunning travel content",
       image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop",
-      link: "https://Vidflyy.com/youtube-travel-promotion/",
+      link: "/youtube-travel-promotion",
       color: "from-teal-600 to-blue-600"
     }
   ];
@@ -93,12 +93,13 @@ const NewServices = () => {
           {/* Categories Grid with Staggered Animations */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12">
             {categories.map((category, index) => (
-              <a
+              <div
                 key={index}
-                href={category.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group animate-fade-up"
+                onClick={() => {
+                  navigate(category.link);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                className="group animate-fade-up cursor-pointer"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer h-full border border-gray-100">
@@ -149,7 +150,7 @@ const NewServices = () => {
                     </div>
                   </div>
                 </div>
-              </a>
+              </div>
             ))}
           </div>
 
@@ -169,8 +170,8 @@ const NewServices = () => {
 
               {/* Button */}
               <Button onClick={handleGetStartedClick} className="bg-red-600 hover:bg-red-700 text-white transition-all duration-300 hover:scale-105 active:scale-95 rounded-xl">
-              Get Started Now 
-            </Button>
+                Get Started Now
+              </Button>
 
               {/* Social Proof */}
               <div className="mt-4 flex items-center justify-center gap-2 text-gray-600 text-sm">
