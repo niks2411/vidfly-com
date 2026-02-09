@@ -445,19 +445,19 @@ const CampaignBudget = () => {
     <CampaignLayout activeSidebar="budget">
       <div className="w-full space-y-6">
         {/* Progress Bar */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 overflow-hidden">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-xs font-semibold text-slate-600 uppercase">STEP 3 - BUDGET & TARGETING</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             {["ENTER LINK", "SELECT VIDEOS", "BUDGET & TARGETING", "PAYMENT"].map(
               (step, index) => (
                 <div key={step} className="flex-1 flex items-center">
-                  <div className="flex-1 flex items-center gap-2">
-                    <div className={`h-2 flex-1 rounded-full ${index <= 2 ? "bg-red-600" : "bg-slate-200"
+                  <div className="flex-1 flex items-center gap-1 sm:gap-2">
+                    <div className={`h-1.5 sm:h-2 flex-1 rounded-full ${index <= 2 ? "bg-red-600" : "bg-slate-200"
                       }`} />
                     {index < 3 && (
-                      <div className={`h-2 w-2 rounded-full ${index <= 2 ? "bg-red-600" : "bg-slate-200"
+                      <div className={`h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full ${index <= 2 ? "bg-red-600" : "bg-slate-200"
                         }`} />
                     )}
                   </div>
@@ -473,20 +473,20 @@ const CampaignBudget = () => {
           {/* LEFT COLUMN - INPUTS & TARGETING */}
           <div className="lg:col-span-2 space-y-6">
 
-            {/* Verified Email and Channel Selector section (Now inside left column) */}
-            <div className="bg-white rounded-xl border border-slate-200 p-3 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded-full bg-red-600 flex items-center justify-center text-white text-xs font-bold">
+            {/* Verified Email and Channel Selector section */}
+            <div className="bg-white rounded-xl border border-slate-200 p-3 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-20">
+              <div className="flex items-center gap-3 flex-1 min-w-0 w-full">
+                <div className="h-8 w-8 rounded-full bg-red-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                   ✓
                 </div>
-                <div>
-                  <p className="text-xs font-semibold text-slate-500 uppercase">Verified Email</p>
-                  <p className="text-sm font-semibold text-slate-900 truncate">{email}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-semibold text-slate-500 uppercase whitespace-nowrap">Verified Email</p>
+                  <p className="text-sm font-semibold text-slate-900 truncate block">{email}</p>
                 </div>
               </div>
-              <ChannelSelector onChannelSelect={(channelId, channelName) => {
-                console.log('Channel selected:', channelId, channelName);
-              }} />
+              <div className="flex-shrink-0 w-full sm:w-auto">
+                <ChannelSelector />
+              </div>
             </div>
 
 

@@ -86,7 +86,7 @@ const PaymentCheckout = () => {
   const openCashfreeCheckout = (paymentSessionId: string) => {
     try {
       console.log('🔍 Opening Cashfree checkout with session ID:', paymentSessionId?.substring(0, 30) + '...');
-      
+
       // Validate paymentSessionId
       if (!paymentSessionId || paymentSessionId.trim() === '') {
         setError("Invalid payment session ID received");
@@ -110,11 +110,11 @@ const PaymentCheckout = () => {
       }
 
       console.log('✅ Cashfree SDK loaded, initializing checkout...');
-      
+
       // Determine mode - must match backend environment
       // Since backend uses TEST, frontend should use sandbox
       const cashfreeMode = 'sandbox'; // Always use sandbox for testing
-      
+
       console.log('🔧 Cashfree configuration:', {
         mode: cashfreeMode,
         sessionIdLength: paymentSessionId.length,
@@ -126,12 +126,12 @@ const PaymentCheckout = () => {
       });
 
       console.log('🚀 Calling cashfree.checkout()...');
-      
+
       cashfree.checkout({
         paymentSessionId: paymentSessionId.trim(),
         redirectTarget: '_self', // Opens in same tab
       });
-      
+
       console.log('✅ Checkout initiated');
     } catch (err) {
       console.error('❌ Cashfree checkout error:', err);
@@ -166,7 +166,7 @@ const PaymentCheckout = () => {
       }
 
       const data = await response.json();
-      
+
       console.log('📦 Payment response received:', {
         hasPaymentSessionId: !!data.paymentSessionId,
         hasPaymentUrl: !!data.paymentUrl,
@@ -240,13 +240,13 @@ const PaymentCheckout = () => {
           {/* Order Summary */}
           <div className="bg-slate-50 rounded-xl border border-slate-200 p-6 space-y-4">
             <h2 className="text-lg font-semibold text-slate-900">Order Summary</h2>
-            
+
             <div className="space-y-3">
               <div className="flex justify-between">
                 <span className="text-slate-600">Order ID:</span>
                 <span className="font-semibold text-slate-900">{order.orderId}</span>
               </div>
-              
+
               <div className="flex justify-between">
                 <span className="text-slate-600">Campaign:</span>
                 <span className="font-semibold text-slate-900">{campaignName}</span>
@@ -310,7 +310,7 @@ const PaymentCheckout = () => {
             <Button
               variant="outline"
               onClick={() => navigate("/campaign/my-campaigns")}
-              className="flex-1 rounded-xl"
+              className="flex-1 rounded-xl h-12 border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold"
               disabled={processing}
             >
               Cancel
@@ -318,8 +318,7 @@ const PaymentCheckout = () => {
             <Button
               onClick={handlePayment}
               disabled={processing}
-              className="flex-1 rounded-xl"
-              size="lg"
+              className="flex-1 rounded-xl h-12 bg-red-600 hover:bg-red-700 text-white font-semibold"
             >
               {processing ? (
                 <>

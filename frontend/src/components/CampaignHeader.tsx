@@ -13,7 +13,7 @@ const CampaignHeader = ({ children, verifiedEmail, videoTitle, stepNumber, stepL
   return (
     <div className="sticky top-0 z-10 bg-slate-50/80 backdrop-blur-sm -mx-4 px-4 lg:-mx-8 lg:px-8 pb-2">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between py-2">
-        <div className="flex items-center gap-4 flex-1">
+        <div className="flex items-center gap-4 flex-1 min-w-0">
           {verifiedEmail && (
             <div className="flex items-center gap-3 animate-slide-in-left">
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-700 text-white shadow-lg hover:scale-110 transition-transform duration-300">
@@ -23,7 +23,7 @@ const CampaignHeader = ({ children, verifiedEmail, videoTitle, stepNumber, stepL
                 <p className="text-xs uppercase tracking-wide text-slate-500 font-semibold">
                   Verified email
                 </p>
-                <p className="font-semibold text-sm text-slate-900 truncate max-w-[180px]">
+                <p className="font-semibold text-sm text-slate-900 truncate max-w-[100px] sm:max-w-[200px]">
                   {verifiedEmail}
                 </p>
               </div>

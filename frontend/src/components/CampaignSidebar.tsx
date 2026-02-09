@@ -9,6 +9,7 @@ export type CampaignSidebarKey =
   | "bulk"
   | "free"
   | "budget"
+  | "payment"
   | "campaigns";
 
 type SidebarProps = {
@@ -66,8 +67,8 @@ const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, i
       isMobile ? "w-full" : "p-6"
     )}>
       {sections.map((section, sectionIndex) => (
-        <div 
-          key={section.title} 
+        <div
+          key={section.title}
           className={cn(
             sectionIndex === 0 ? "mb-6" : "mb-8",
             section.title === "STRATEGY PATH" && "hidden lg:block"

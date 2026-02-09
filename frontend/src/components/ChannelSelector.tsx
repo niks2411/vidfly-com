@@ -86,7 +86,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
             // Update channelInfoMap with all backend channels at once
             setChannelInfoMap(newChannelMap);
 
-            console.log(`✅ Loaded ${data.channels.length} channels from backend`);
+
           }
         } else if (response.status === 401) {
           console.warn("Channel fetch returned 401 - user may need to re-verify email");
@@ -443,7 +443,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
             setShowDropdown(!showDropdown);
           }
         }}
-        className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl hover:border-red-300 hover:bg-red-50 transition-all duration-200"
+        className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-xl hover:border-red-300 hover:bg-red-50 transition-all duration-200 min-w-0 max-w-full"
       >
         {selectedChannel ? (
           <>
@@ -458,7 +458,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
                 {selectedChannel.name.charAt(0).toUpperCase()}
               </div>
             )}
-            <span className="text-sm font-semibold text-slate-900">
+            <span className="text-sm font-semibold text-slate-900 truncate min-w-0">
               {selectedChannel.name}
             </span>
             <a
@@ -494,7 +494,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
       </button>
 
       {showDropdown && (
-        <div className="absolute z-20 right-0 mt-2 bg-white border-2 border-red-200 rounded-2xl shadow-2xl max-h-80 overflow-y-auto min-w-[380px] w-max animate-fade-in backdrop-blur-sm">
+        <div className="absolute z-20 right-0 sm:right-0 mt-2 bg-white border-2 border-red-200 rounded-2xl shadow-2xl max-h-80 overflow-y-auto w-[calc(100vw-32px)] sm:min-w-[380px] sm:w-max animate-fade-in backdrop-blur-sm">
           <div className="p-3">
             {availableChannels.map((channel) => {
               const channelVideos = storedVideos.filter((v) => v.channelId === channel.channelId);

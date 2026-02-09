@@ -170,9 +170,9 @@ const CampaignDashboard = () => {
       <CampaignCard>
         {/* Top Section - Verified Email and Channel Selector */}
         <div className="flex items-center justify-end gap-3 mb-6">
-          <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-xl border border-slate-200">
-            <span className="text-xs font-semibold text-slate-500 uppercase">Verified Email</span>
-            <span className="text-sm font-semibold text-slate-900 truncate max-w-[200px]">
+          <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-xl border border-slate-200 min-w-0 max-w-full">
+            <span className="text-xs font-semibold text-slate-500 uppercase whitespace-nowrap flex-shrink-0">Verified Email</span>
+            <span className="text-sm font-semibold text-slate-900 truncate min-w-0 block">
               {displayEmail}
             </span>
           </div>
@@ -261,233 +261,233 @@ const CampaignDashboard = () => {
         {/* Professional Animated Flow with Curly Arrows */}
         <div className="mt-12 mb-8">
           <div className="relative max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-0 relative">
-            {/* Step 1 */}
-            <motion.div
-              className="flex flex-col items-center text-center z-10"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
+            <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-0 relative">
+              {/* Step 1 */}
               <motion.div
-                className="relative mb-3 w-16 h-16"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.3, type: "spring", stiffness: 200 }}
+                className="flex flex-col items-center text-center z-10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
               >
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-tr from-red-500 to-pink-500 rounded-full"
-                  animate={{
-                    boxShadow: [
-                      "0 0 20px rgba(239, 68, 68, 0.5)",
-                      "0 0 35px rgba(239, 68, 68, 0.8)",
-                      "0 0 20px rgba(239, 68, 68, 0.5)",
-                    ],
-                  }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <div className="relative z-10 w-full h-full flex items-center justify-center">
-                  <Layers className="h-8 w-8 text-white" />
-                </div>
-              </motion.div>
-              <h3 className="text-base font-semibold text-slate-900 mb-1 max-w-[140px]">
-                Enter Video Link
-              </h3>
-              <p className="text-xs text-slate-500 max-w-[140px]">
-                Choose your video to promote
-              </p>
-            </motion.div>
-
-            {/* Curly Arrow 1 - Larger and Smoother */}
-            <div className="hidden md:block relative w-64 h-32 pointer-events-none">
-              <svg className="w-full h-full" viewBox="0 0 300 120" fill="none" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#ef4444" />
-                    <stop offset="50%" stopColor="#ec4899" />
-                    <stop offset="100%" stopColor="#a855f7" />
-                  </linearGradient>
-                </defs>
-                <motion.path
-                  d="M 20 60 Q 80 20, 150 50 Q 220 80, 280 60"
-                  stroke="url(#gradient1)"
-                  strokeWidth="4"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeDasharray="1"
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{ pathLength: 1, opacity: 1 }}
-                  transition={{ duration: 1, delay: 0.5, ease: "easeInOut" }}
-                />
-                <motion.path
-                  d="M 280 60 L 265 55 M 280 60 L 265 65"
-                  stroke="url(#gradient1)"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.2, delay: 1.5 }}
-                />
-                {/* Animated dot following the path */}
-                <motion.circle
-                  cx="0"
-                  cy="0"
-                  r="6"
-                  fill="url(#gradient1)"
-                  filter="drop-shadow(0 2px 4px rgba(0,0,0,0.3))"
-                  initial={{ opacity: 0 }}
-                  animate={{
-                    opacity: [0, 1, 1, 0],
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    delay: 0.5,
-                    repeat: Infinity,
-                    repeatDelay: 2,
-                    ease: "linear",
-                  }}
+                  className="relative mb-3 w-16 h-16"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3, type: "spring", stiffness: 200 }}
                 >
-                  <animateMotion
-                    dur="1.5s"
-                    begin="0.5s"
-                    repeatCount="indefinite"
-                    path="M 20 60 Q 80 20, 150 50 Q 220 80, 280 60"
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-tr from-red-500 to-pink-500 rounded-full"
+                    animate={{
+                      boxShadow: [
+                        "0 0 20px rgba(239, 68, 68, 0.5)",
+                        "0 0 35px rgba(239, 68, 68, 0.8)",
+                        "0 0 20px rgba(239, 68, 68, 0.5)",
+                      ],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   />
-                </motion.circle>
-              </svg>
-            </div>
+                  <div className="relative z-10 w-full h-full flex items-center justify-center">
+                    <Layers className="h-8 w-8 text-white" />
+                  </div>
+                </motion.div>
+                <h3 className="text-base font-semibold text-slate-900 mb-1 max-w-[140px]">
+                  Enter Video Link
+                </h3>
+                <p className="text-xs text-slate-500 max-w-[140px]">
+                  Choose your video to promote
+                </p>
+              </motion.div>
 
-            {/* Step 2 */}
-            <motion.div
-              className="flex flex-col items-center text-center z-10"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
-            >
+              {/* Curly Arrow 1 - Larger and Smoother */}
+              <div className="hidden md:block relative w-64 h-32 pointer-events-none">
+                <svg className="w-full h-full" viewBox="0 0 300 120" fill="none" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#ef4444" />
+                      <stop offset="50%" stopColor="#ec4899" />
+                      <stop offset="100%" stopColor="#a855f7" />
+                    </linearGradient>
+                  </defs>
+                  <motion.path
+                    d="M 20 60 Q 80 20, 150 50 Q 220 80, 280 60"
+                    stroke="url(#gradient1)"
+                    strokeWidth="4"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeDasharray="1"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 1, delay: 0.5, ease: "easeInOut" }}
+                  />
+                  <motion.path
+                    d="M 280 60 L 265 55 M 280 60 L 265 65"
+                    stroke="url(#gradient1)"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2, delay: 1.5 }}
+                  />
+                  {/* Animated dot following the path */}
+                  <motion.circle
+                    cx="0"
+                    cy="0"
+                    r="6"
+                    fill="url(#gradient1)"
+                    filter="drop-shadow(0 2px 4px rgba(0,0,0,0.3))"
+                    initial={{ opacity: 0 }}
+                    animate={{
+                      opacity: [0, 1, 1, 0],
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      delay: 0.5,
+                      repeat: Infinity,
+                      repeatDelay: 2,
+                      ease: "linear",
+                    }}
+                  >
+                    <animateMotion
+                      dur="1.5s"
+                      begin="0.5s"
+                      repeatCount="indefinite"
+                      path="M 20 60 Q 80 20, 150 50 Q 220 80, 280 60"
+                    />
+                  </motion.circle>
+                </svg>
+              </div>
+
+              {/* Step 2 */}
               <motion.div
-                className="relative mb-3 w-16 h-16"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.5, delay: 1, type: "spring", stiffness: 200 }}
+                className="flex flex-col items-center text-center z-10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
               >
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-tr from-purple-500 to-indigo-500 rounded-full"
-                  animate={{
-                    boxShadow: [
-                      "0 0 20px rgba(168, 85, 247, 0.5)",
-                      "0 0 35px rgba(168, 85, 247, 0.8)",
-                      "0 0 20px rgba(168, 85, 247, 0.5)",
-                    ],
-                  }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 0.5, ease: "easeInOut" }}
-                />
-                <div className="relative z-10 w-full h-full flex items-center justify-center">
-                  <Settings className="h-8 w-8 text-white" />
-                </div>
-              </motion.div>
-              <h3 className="text-base font-semibold text-slate-900 mb-1 max-w-[140px]">
-                Set Up Campaign
-              </h3>
-              <p className="text-xs text-slate-500 max-w-[140px]">
-                Choose audience & budget
-              </p>
-            </motion.div>
-
-            {/* Curly Arrow 2 - Larger and Smoother */}
-            <div className="hidden md:block relative w-64 h-32 pointer-events-none">
-              <svg className="w-full h-full" viewBox="0 0 300 120" fill="none" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#a855f7" />
-                    <stop offset="50%" stopColor="#8b5cf6" />
-                    <stop offset="100%" stopColor="#3b82f6" />
-                  </linearGradient>
-                </defs>
-                <motion.path
-                  d="M 20 60 Q 80 20, 150 50 Q 220 80, 280 60"
-                  stroke="url(#gradient2)"
-                  strokeWidth="4"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeDasharray="1"
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{ pathLength: 1, opacity: 1 }}
-                  transition={{ duration: 1, delay: 2, ease: "easeInOut" }}
-                />
-                <motion.path
-                  d="M 280 60 L 265 55 M 280 60 L 265 65"
-                  stroke="url(#gradient2)"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.2, delay: 3 }}
-                />
-                {/* Animated dot following the path */}
-                <motion.circle
-                  cx="0"
-                  cy="0"
-                  r="6"
-                  fill="url(#gradient2)"
-                  filter="drop-shadow(0 2px 4px rgba(0,0,0,0.3))"
-                  initial={{ opacity: 0 }}
-                  animate={{
-                    opacity: [0, 1, 1, 0],
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    delay: 2,
-                    repeat: Infinity,
-                    repeatDelay: 2,
-                    ease: "linear",
-                  }}
+                  className="relative mb-3 w-16 h-16"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.5, delay: 1, type: "spring", stiffness: 200 }}
                 >
-                  <animateMotion
-                    dur="1.5s"
-                    begin="2s"
-                    repeatCount="indefinite"
-                    path="M 20 60 Q 80 20, 150 50 Q 220 80, 280 60"
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-tr from-purple-500 to-indigo-500 rounded-full"
+                    animate={{
+                      boxShadow: [
+                        "0 0 20px rgba(168, 85, 247, 0.5)",
+                        "0 0 35px rgba(168, 85, 247, 0.8)",
+                        "0 0 20px rgba(168, 85, 247, 0.5)",
+                      ],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 0.5, ease: "easeInOut" }}
                   />
-                </motion.circle>
-              </svg>
-            </div>
+                  <div className="relative z-10 w-full h-full flex items-center justify-center">
+                    <Settings className="h-8 w-8 text-white" />
+                  </div>
+                </motion.div>
+                <h3 className="text-base font-semibold text-slate-900 mb-1 max-w-[140px]">
+                  Set Up Campaign
+                </h3>
+                <p className="text-xs text-slate-500 max-w-[140px]">
+                  Choose audience & budget
+                </p>
+              </motion.div>
 
-            {/* Step 3 */}
-            <motion.div
-              className="flex flex-col items-center text-center z-10"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1.5 }}
-            >
+              {/* Curly Arrow 2 - Larger and Smoother */}
+              <div className="hidden md:block relative w-64 h-32 pointer-events-none">
+                <svg className="w-full h-full" viewBox="0 0 300 120" fill="none" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#a855f7" />
+                      <stop offset="50%" stopColor="#8b5cf6" />
+                      <stop offset="100%" stopColor="#3b82f6" />
+                    </linearGradient>
+                  </defs>
+                  <motion.path
+                    d="M 20 60 Q 80 20, 150 50 Q 220 80, 280 60"
+                    stroke="url(#gradient2)"
+                    strokeWidth="4"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeDasharray="1"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 1, delay: 2, ease: "easeInOut" }}
+                  />
+                  <motion.path
+                    d="M 280 60 L 265 55 M 280 60 L 265 65"
+                    stroke="url(#gradient2)"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2, delay: 3 }}
+                  />
+                  {/* Animated dot following the path */}
+                  <motion.circle
+                    cx="0"
+                    cy="0"
+                    r="6"
+                    fill="url(#gradient2)"
+                    filter="drop-shadow(0 2px 4px rgba(0,0,0,0.3))"
+                    initial={{ opacity: 0 }}
+                    animate={{
+                      opacity: [0, 1, 1, 0],
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      delay: 2,
+                      repeat: Infinity,
+                      repeatDelay: 2,
+                      ease: "linear",
+                    }}
+                  >
+                    <animateMotion
+                      dur="1.5s"
+                      begin="2s"
+                      repeatCount="indefinite"
+                      path="M 20 60 Q 80 20, 150 50 Q 220 80, 280 60"
+                    />
+                  </motion.circle>
+                </svg>
+              </div>
+
+              {/* Step 3 */}
               <motion.div
-                className="relative mb-3 w-16 h-16"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.5, delay: 1.7, type: "spring", stiffness: 200 }}
+                className="flex flex-col items-center text-center z-10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 1.5 }}
               >
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-tr from-blue-500 to-cyan-500 rounded-full"
-                  animate={{
-                    boxShadow: [
-                      "0 0 20px rgba(59, 130, 246, 0.5)",
-                      "0 0 35px rgba(59, 130, 246, 0.8)",
-                      "0 0 20px rgba(59, 130, 246, 0.5)",
-                    ],
-                  }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 1, ease: "easeInOut" }}
-                />
-                <div className="relative z-10 w-full h-full flex items-center justify-center">
-                  <CreditCard className="h-8 w-8 text-white" />
-                </div>
+                  className="relative mb-3 w-16 h-16"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.5, delay: 1.7, type: "spring", stiffness: 200 }}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-tr from-blue-500 to-cyan-500 rounded-full"
+                    animate={{
+                      boxShadow: [
+                        "0 0 20px rgba(59, 130, 246, 0.5)",
+                        "0 0 35px rgba(59, 130, 246, 0.8)",
+                        "0 0 20px rgba(59, 130, 246, 0.5)",
+                      ],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 1, ease: "easeInOut" }}
+                  />
+                  <div className="relative z-10 w-full h-full flex items-center justify-center">
+                    <CreditCard className="h-8 w-8 text-white" />
+                  </div>
+                </motion.div>
+                <h3 className="text-base font-semibold text-slate-900 mb-1 max-w-[140px]">
+                  Make Payment
+                </h3>
+                <p className="text-xs text-slate-500 max-w-[140px]">
+                  Approve ad delivery
+                </p>
               </motion.div>
-              <h3 className="text-base font-semibold text-slate-900 mb-1 max-w-[140px]">
-                Make Payment
-              </h3>
-              <p className="text-xs text-slate-500 max-w-[140px]">
-                Approve ad delivery
-              </p>
-            </motion.div>
-          </div>
+            </div>
           </div>
         </div>
       </CampaignCard>

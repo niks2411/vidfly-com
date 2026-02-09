@@ -25,8 +25,8 @@ const CampaignLayout = ({
 
         {/* Mobile Sidebar Overlay */}
         {isSidebarOpen && (
-          <div 
-            className="lg:hidden fixed inset-0 bg-black/50 z-40 top-16" 
+          <div
+            className="lg:hidden fixed inset-0 bg-black/50 z-40 top-16"
             onClick={() => setIsSidebarOpen(false)}
           />
         )}
@@ -51,10 +51,10 @@ const CampaignLayout = ({
               <X className="h-5 w-5" />
             </button>
           </div>
-          
+
           <div className="p-6">
-            <CampaignSidebar 
-              active={activeSidebar} 
+            <CampaignSidebar
+              active={activeSidebar}
               onNavigate={() => setIsSidebarOpen(false)}
               isMobile={true}
             />
