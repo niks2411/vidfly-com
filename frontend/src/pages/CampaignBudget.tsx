@@ -492,45 +492,62 @@ const CampaignBudget = () => {
 
             {/* Enter Budget Section */}
             {!isBulkViews && (
-              <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-                <h3 className="text-base font-semibold text-slate-900 mb-4 flex items-center gap-2">
-                  <CreditCard className="h-4 w-4 text-red-600" />
-                  Enter Budget
-                </h3>
-                <div className="space-y-4">
-                  <input
-                    type="range"
-                    min={800}
-                    max={10000}
-                    step={100}
-                    value={budget}
-                    onChange={(e) => setBudget(Number(e.target.value))}
-                    className="w-full accent-red-600 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
-                  />
+              <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+                    <CreditCard className="h-4 w-4 text-red-600" />
+                    Enter Budget
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-slate-500">Custom Budget:</span>
+                    <div className="relative w-32">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm font-medium">₹</span>
+                      <Input
+                        type="number"
+                        min={800}
+                        max={10000}
+                        value={budget}
+                        onChange={(e) => setBudget(Number(e.target.value))}
+                        className={`pl-6 h-9 text-sm font-semibold border-slate-200 focus:ring-red-100 ${budget < 800 || budget > 10000
+                          ? "border-red-500 text-red-600 focus:border-red-500 ring-2 ring-red-50"
+                          : "focus:border-red-500"
+                          }`}
+                        placeholder="800"
+                      />
+                    </div>
+                  </div>
+                </div>
+                {(budget < 800 || budget > 10000) && (
+                  <div className="mb-4 -mt-2 text-xs font-medium text-red-600 bg-red-50 px-3 py-2 rounded-lg border border-red-100 flex items-center gap-2">
+                    <span className="text-lg">⚠️</span> Budget must be between ₹800 and ₹10,000
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <div className="relative pt-4 pb-1">
+                    <input
+                      type="range"
+                      min={800}
+                      max={10000}
+                      step={100}
+                      value={budget}
+                      onChange={(e) => setBudget(Number(e.target.value))}
+                      className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-0
+                      [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-red-600 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110
+                      [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:bg-red-600 [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:transition-transform [&::-moz-range-thumb]:hover:scale-110"
+                      style={{
+                        background: `linear-gradient(to right, #dc2626 ${((budget - 800) / (10000 - 800)) * 100}%, #e2e8f0 ${((budget - 800) / (10000 - 800)) * 100}%)`
+                      }}
+                    />
+                  </div>
                   <div className="flex justify-between text-xs text-slate-400 font-medium">
                     {[800, 2000, 4000, 6000, 8000, 10000].map((mark) => (
                       <span key={mark}>{mark.toLocaleString()}</span>
                     ))}
                   </div>
-
-                  <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                    <div className="text-center">
-                      <p className="text-xs text-slate-500 uppercase font-semibold">Videos Selected</p>
-                      <p className="text-lg font-bold text-slate-900">{selectedCount}</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-xs text-slate-500 uppercase font-semibold">Per Video Budget</p>
-                      <p className="text-lg font-bold text-slate-900">₹ {perVideoBudget}</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-xs text-slate-500 uppercase font-semibold">Total Budget</p>
-                      <div className="text-xl font-bold text-red-600 bg-red-50 px-3 py-1 rounded-lg border border-red-100">
-                        ₹ {budget}
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
+
             )}
 
             {/* Targeting Options Group */}
@@ -797,7 +814,7 @@ const CampaignBudget = () => {
                   </h3>
                 </div>
 
-                <div className="p-5 space-y-6">
+                <div className="p-4 space-y-4">
                   {/* Estimated Views */}
                   <div>
                     <div className="flex justify-between items-end mb-2">
@@ -832,20 +849,23 @@ const CampaignBudget = () => {
                   <div className="border-t border-slate-100" />
 
                   {/* Total */}
-                  <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm text-slate-600">Total Budget</span>
-                      <span className="text-2xl font-bold text-red-600">₹ {isBulkViews ? bulkViewsPrice : budget}</span>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <span className="text-sm font-semibold text-slate-600 block">Total Budget</span>
+                      <p className="text-[10px] text-slate-400">Includes all taxes</p>
                     </div>
-                    <p className="text-xs text-right text-slate-400">Includes all taxes</p>
+                    <span className="text-xl font-bold text-red-600">₹ {isBulkViews ? bulkViewsPrice : budget}</span>
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="space-y-3 pt-2">
+                  <div className="space-y-2 pt-2">
                     <Button
                       onClick={handleCreateCampaign}
-                      disabled={creating}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white rounded-xl py-6 text-lg shadow-red-200 shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                      disabled={creating || (!isBulkViews && (budget < 800 || budget > 10000))}
+                      className={`w-full rounded-xl py-3 text-base font-bold shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] ${creating || (!isBulkViews && (budget < 800 || budget > 10000))
+                        ? "bg-slate-300 text-slate-500 cursor-not-allowed shadow-none hover:scale-100"
+                        : "bg-red-600 hover:bg-red-700 text-white shadow-red-200"
+                        }`}
                     >
                       {creating ? (
                         <span className="flex items-center gap-2">
@@ -901,7 +921,7 @@ const CampaignBudget = () => {
 
             </div>
           </div>
-        </div>
+        </div >
 
         {createError && (
           <div className="fixed bottom-4 right-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl shadow-lg animate-in slide-in-from-bottom-5">
@@ -910,9 +930,9 @@ const CampaignBudget = () => {
           </div>
         )}
 
-      </div>
+      </div >
       {/* Ad Preview Modal */}
-      <AdPreviewModal
+      < AdPreviewModal
         isOpen={showPreview}
         onClose={() => setShowPreview(false)}
         video={{
