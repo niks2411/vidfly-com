@@ -32,6 +32,15 @@ const GetStarted = () => {
   const [message, setMessage] = useState("");
   const [checkingVerification, setCheckingVerification] = useState(true);
   const [referralCode, setReferralCode] = useState<string | null>(null);
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  // Timer for resend cooldown
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
 
   // Check for referral code in URL and store it
   useEffect(() => {
@@ -97,6 +106,7 @@ const GetStarted = () => {
       setEmail(normalizedEmail);
       setOtpSent(true);
       setMessage("OTP sent! Please check your inbox.");
+      setResendCooldown(30); // Start 30s cooldown
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to send OTP.");
     } finally {
@@ -249,7 +259,7 @@ const GetStarted = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button
                   onClick={sendOtp}
-                  disabled={sendingOtp || emailVerified || !email || otpSent}
+                  disabled={sendingOtp || emailVerified || !email || (otpSent && resendCooldown > 0)}
                   className="flex-1 h-12 rounded-xl bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   {emailVerified ? (
@@ -263,7 +273,7 @@ const GetStarted = () => {
                       SENDING OTP...
                     </>
                   ) : otpSent ? (
-                    "RESEND"
+                    resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "RESEND OTP"
                   ) : (
                     <>
                       <Mail className="h-4 w-4 mr-2" />
