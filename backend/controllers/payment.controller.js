@@ -163,7 +163,8 @@ const createCashfreePayment = async (req, res, next, order) => {
       customer_details: {
         customer_id: order.userId._id?.toString() || order.userId.toString(),
         customer_email: order.userId.email || 'customer@example.com',
-        customer_phone: order.userId.phone || '9999999999',
+        customer_phone: order.userId.phone || '0000000000',
+        customer_name: order.userId.name || order.userId.email?.split('@')[0] || 'Customer',
       },
       order_meta: {
         return_url: `${process.env.FRONTEND_ORIGIN}/payment/callback?orderId=${order.orderId}`,
