@@ -112,8 +112,8 @@ const PaymentCheckout = () => {
       console.log('✅ Cashfree SDK loaded, initializing checkout...');
 
       // Determine mode - must match backend environment
-      // Since backend uses TEST, frontend should use sandbox
-      const cashfreeMode = 'sandbox'; // Always use sandbox for testing
+      // VITE_CASHFREE_MODE can be 'sandbox' or 'production'
+      const cashfreeMode = import.meta.env.VITE_CASHFREE_MODE || 'sandbox';
 
       console.log('🔧 Cashfree configuration:', {
         mode: cashfreeMode,
