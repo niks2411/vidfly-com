@@ -85,7 +85,7 @@ const OurWorks = () => {
         <Column images={[images[9], images[10], images[11]]} y={y4} />
       </div>
 
-      <div className=" relative flex h-[50vh] items-center justify-center gap-2">
+      <div className=" relative flex h-[15vh] items-center justify-center gap-2">
         <div className="absolute left-1/2 top-[10%] grid -translate-x-1/2 content-start justify-items-center gap-6 text-center text-black">
           <span className="relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-gradient-to-b after:from-black after:to-white after:content-['']">
             scroll Up to see

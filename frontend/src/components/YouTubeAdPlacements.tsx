@@ -18,7 +18,7 @@ const YouTubeAdPlacements = () => {
           </h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 max-w-6xl mx-auto items-start">
+        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 max-w-6xl mx-auto items-stretch">
 
           {/* In-Stream Card */}
           <motion.div
@@ -28,7 +28,7 @@ const YouTubeAdPlacements = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="bg-white rounded-[2rem] p-6 shadow-xl border border-gray-100 relative z-10">
+            <div className="bg-white rounded-[2rem] p-6 shadow-xl border border-gray-100 relative z-10 h-full">
               {/* Header Skeleton */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3 w-1/3">
@@ -99,7 +99,7 @@ const YouTubeAdPlacements = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <div className="bg-white rounded-[2rem] p-6 shadow-xl border border-gray-100 relative z-10">
+            <div className="bg-white rounded-[2rem] p-6 shadow-xl border border-gray-100 relative z-10 h-full">
               {/* Header Skeleton */}
               <div className="flex items-center justify-between mb-6">
                 <div className="h-2 w-16 bg-gray-100 rounded-full"></div>

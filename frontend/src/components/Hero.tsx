@@ -23,10 +23,10 @@ const Hero = ({ showStats = false }: HeroProps) => {
   };
 
   return (
-    <section id="home" className="py-16 lg:py-24 bg-gradient-to-br from-red-50 to-white relative overflow-hidden font-montserrat">
+    <section id="home" className="min-h-[calc(100vh-80px)] flex items-center py-16 lg:py-24 bg-gradient-to-br from-red-50 to-white relative overflow-hidden font-montserrat">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Div - Centered */}
-        <div className="max-w-2xl mx-auto mb-8 lg:mb-12">
+        <div className="max-w-2xl mx-auto mb-16 lg:mb-20">
           {/* Content Div */}
 
           <div className="text-center animate-fade-in space-y-4">
@@ -44,7 +44,7 @@ const Hero = ({ showStats = false }: HeroProps) => {
                 <span className="text-gray-700 font-medium text-xs sm:text-sm">Partner</span>
               </div>
             </div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight">
               Start Your <span className="text-red-600">YouTube</span>
               <br />
               <span className="text-red-600">Promotions</span> with just <span className="text-red-600">₹999</span>
@@ -95,7 +95,7 @@ const Hero = ({ showStats = false }: HeroProps) => {
 
         {/* Stats Div - Conditionally rendered */}
         {showStats && (
-          <div className="border-t border-gray-200 mt-32 pt-32 lg:pt-40 animate-fade-in-delay-2">
+          <div className="border-t border-gray-200 mt-24 pt-12 lg:pt-16 animate-fade-in-delay-2">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
