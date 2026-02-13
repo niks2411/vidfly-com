@@ -201,65 +201,225 @@ const VideoShowcase = () => {
           </motion.p>
         </motion.div>
 
-        {/* Steps Grid */}
+        {/* Steps Flow with Curly Arrows */}
         <div className="relative">
-
-          <motion.div
-            className="grid lg:grid-cols-3 gap-8 lg:gap-12"
-            variants={containerVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-          >
-            {steps.map((step, index) => (
+          <div className="relative max-w-5xl mx-auto">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-0 relative">
+              {/* Step 1 */}
               <motion.div
-                key={index}
-                className="relative group"
-                variants={cardVariants}
-                whileHover={{ y: -12 }}
+                className="flex flex-col items-center text-center z-10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: 0.3 }}
               >
-                {/* Card */}
                 <motion.div
-                  className={`bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl ${step.shadowColor} border-2 ${step.borderColor} ${step.hoverBorder} relative overflow-hidden transition-all duration-500 h-full group-hover:shadow-2xl`}
-                  whileHover={{ scale: 1.02 }}
+                  className="relative mb-4 w-20 h-20"
+                  initial={{ scale: 0 }}
+                  animate={isInView ? { scale: 1 } : {}}
+                  transition={{ duration: 0.5, delay: 0.5, type: "spring", stiffness: 200 }}
                 >
-                  {/* Background gradient on hover */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${step.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl`} />
-
-                  {/* Decorative corner elements */}
-                  <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-current to-transparent opacity-0 group-hover:opacity-5 transition-opacity duration-500" />
-                  <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-current to-transparent opacity-0 group-hover:opacity-5 transition-opacity duration-500" />
-
-                  <div className="relative z-10">
-                    {/* Icon */}
-                    <motion.div
-                      className="mb-6 flex justify-center"
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      <div className={`w-18 h-18 p-4 rounded-2xl bg-gradient-to-br ${step.iconBg} flex items-center justify-center shadow-lg transform transition-transform duration-300 group-hover:shadow-xl`}>
-                        <step.icon className="h-10 w-10 text-white" />
-                      </div>
-                    </motion.div>
-
-                    <h3 className="text-xl font-bold text-slate-900 mb-4 text-center group-hover:text-slate-800 transition-colors">
-                      {step.title}
-                    </h3>
-                    <p className="text-slate-600 text-center text-sm leading-relaxed group-hover:text-slate-700 transition-colors">
-                      {step.description}
-                    </p>
-                  </div>
-
-                  {/* Bottom accent line */}
                   <motion.div
-                    className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${step.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-                    initial={{ scaleX: 0 }}
-                    whileHover={{ scaleX: 1 }}
-                    transition={{ duration: 0.3 }}
+                    className="absolute inset-0 bg-gradient-to-tr from-red-500 to-pink-500 rounded-full"
+                    animate={{
+                      boxShadow: [
+                        "0 0 20px rgba(239, 68, 68, 0.4)",
+                        "0 0 40px rgba(239, 68, 68, 0.7)",
+                        "0 0 20px rgba(239, 68, 68, 0.4)",
+                      ],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   />
+                  <div className="relative z-10 w-full h-full flex items-center justify-center">
+                    <Link className="h-9 w-9 text-white" />
+                  </div>
                 </motion.div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2 max-w-[200px]">
+                  Select Your Video URL
+                </h3>
+                <p className="text-xs text-slate-500 max-w-[200px] leading-relaxed">
+                  Pick your preferred video URL to advertise on YouTube and paste it into the Vidflyy dashboard.
+                </p>
               </motion.div>
-            ))}
-          </motion.div>
+
+              {/* Curly Arrow 1 */}
+              <motion.div
+                className="hidden md:block relative w-56 h-28 pointer-events-none"
+                initial={{ opacity: 0 }}
+                animate={isInView ? { opacity: 1 } : {}}
+                transition={{ delay: 0.8 }}
+              >
+                <svg className="w-full h-full" viewBox="0 0 300 120" fill="none" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="vs_gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#ef4444" />
+                      <stop offset="50%" stopColor="#ec4899" />
+                      <stop offset="100%" stopColor="#6366f1" />
+                    </linearGradient>
+                  </defs>
+                  <motion.path
+                    d="M 20 60 Q 80 20, 150 50 Q 220 80, 280 60"
+                    stroke="url(#vs_gradient1)"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeDasharray="1"
+                    initial={{ pathLength: 0 }}
+                    animate={isInView ? { pathLength: 1 } : {}}
+                    transition={{ duration: 1, delay: 0.8, ease: "easeInOut" }}
+                  />
+                  <motion.path
+                    d="M 280 60 L 265 55 M 280 60 L 265 65"
+                    stroke="url(#vs_gradient1)"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    initial={{ opacity: 0 }}
+                    animate={isInView ? { opacity: 1 } : {}}
+                    transition={{ duration: 0.2, delay: 1.8 }}
+                  />
+                  <motion.circle
+                    cx="0" cy="0" r="5"
+                    fill="url(#vs_gradient1)"
+                    filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1, 1, 0] }}
+                    transition={{ duration: 1.5, delay: 0.8, repeat: Infinity, repeatDelay: 2, ease: "linear" }}
+                  >
+                    <animateMotion
+                      dur="1.5s"
+                      begin="0.8s"
+                      repeatCount="indefinite"
+                      path="M 20 60 Q 80 20, 150 50 Q 220 80, 280 60"
+                    />
+                  </motion.circle>
+                </svg>
+              </motion.div>
+
+              {/* Step 2 */}
+              <motion.div
+                className="flex flex-col items-center text-center z-10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: 0.7 }}
+              >
+                <motion.div
+                  className="relative mb-4 w-20 h-20"
+                  initial={{ scale: 0 }}
+                  animate={isInView ? { scale: 1 } : {}}
+                  transition={{ duration: 0.5, delay: 0.9, type: "spring", stiffness: 200 }}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-full"
+                    animate={{
+                      boxShadow: [
+                        "0 0 20px rgba(99, 102, 241, 0.4)",
+                        "0 0 40px rgba(99, 102, 241, 0.7)",
+                        "0 0 20px rgba(99, 102, 241, 0.4)",
+                      ],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 0.5, ease: "easeInOut" }}
+                  />
+                  <div className="relative z-10 w-full h-full flex items-center justify-center">
+                    <Globe className="h-9 w-9 text-white" />
+                  </div>
+                </motion.div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2 max-w-[200px]">
+                  Target Ideal Location
+                </h3>
+                <p className="text-xs text-slate-500 max-w-[200px] leading-relaxed">
+                  Target viewers in specific countries or expand globally for effective YouTube video marketing.
+                </p>
+              </motion.div>
+
+              {/* Curly Arrow 2 */}
+              <motion.div
+                className="hidden md:block relative w-56 h-28 pointer-events-none"
+                initial={{ opacity: 0 }}
+                animate={isInView ? { opacity: 1 } : {}}
+                transition={{ delay: 1.4 }}
+              >
+                <svg className="w-full h-full" viewBox="0 0 300 120" fill="none" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="vs_gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#6366f1" />
+                      <stop offset="50%" stopColor="#8b5cf6" />
+                      <stop offset="100%" stopColor="#10b981" />
+                    </linearGradient>
+                  </defs>
+                  <motion.path
+                    d="M 20 60 Q 80 20, 150 50 Q 220 80, 280 60"
+                    stroke="url(#vs_gradient2)"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeDasharray="1"
+                    initial={{ pathLength: 0 }}
+                    animate={isInView ? { pathLength: 1 } : {}}
+                    transition={{ duration: 1, delay: 1.4, ease: "easeInOut" }}
+                  />
+                  <motion.path
+                    d="M 280 60 L 265 55 M 280 60 L 265 65"
+                    stroke="url(#vs_gradient2)"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    initial={{ opacity: 0 }}
+                    animate={isInView ? { opacity: 1 } : {}}
+                    transition={{ duration: 0.2, delay: 2.4 }}
+                  />
+                  <motion.circle
+                    cx="0" cy="0" r="5"
+                    fill="url(#vs_gradient2)"
+                    filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1, 1, 0] }}
+                    transition={{ duration: 1.5, delay: 1.4, repeat: Infinity, repeatDelay: 2, ease: "linear" }}
+                  >
+                    <animateMotion
+                      dur="1.5s"
+                      begin="1.4s"
+                      repeatCount="indefinite"
+                      path="M 20 60 Q 80 20, 150 50 Q 220 80, 280 60"
+                    />
+                  </motion.circle>
+                </svg>
+              </motion.div>
+
+              {/* Step 3 */}
+              <motion.div
+                className="flex flex-col items-center text-center z-10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: 1.1 }}
+              >
+                <motion.div
+                  className="relative mb-4 w-20 h-20"
+                  initial={{ scale: 0 }}
+                  animate={isInView ? { scale: 1 } : {}}
+                  transition={{ duration: 0.5, delay: 1.3, type: "spring", stiffness: 200 }}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-tr from-emerald-500 to-teal-500 rounded-full"
+                    animate={{
+                      boxShadow: [
+                        "0 0 20px rgba(16, 185, 129, 0.4)",
+                        "0 0 40px rgba(16, 185, 129, 0.7)",
+                        "0 0 20px rgba(16, 185, 129, 0.4)",
+                      ],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 1, ease: "easeInOut" }}
+                  />
+                  <div className="relative z-10 w-full h-full flex items-center justify-center">
+                    <Rocket className="h-9 w-9 text-white" />
+                  </div>
+                </motion.div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2 max-w-[200px]">
+                  Launch Your Campaign
+                </h3>
+                <p className="text-xs text-slate-500 max-w-[200px] leading-relaxed">
+                  Set your target audience and interests, preview and launch your campaign to connect with real viewers.
+                </p>
+              </motion.div>
+            </div>
+          </div>
         </div>
 
         {/* Call to Action */}

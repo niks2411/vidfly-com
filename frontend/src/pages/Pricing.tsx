@@ -43,91 +43,12 @@ const PricingPage = () => {
           ]
           : []),
       ],
+      borderColor: (pkg as any).borderColor,
+      hasAI: hasAI,
     };
   });
 
-  const subscriptionPlans = [
-    {
-      name: "Trial Package",
-      price: "₹799",
-      originalPrice: "₹999",
-      description: "Perfect for Beginners",
-      subscribers: "100-120 SUBSCRIBERS",
-      popular: false,
-      badge: "STARTER",
-      features: [
-        "Real audience engagement",
-        "Organic likes & comments",
-        "Quality subscribers",
-        "24/7 support",
-        "Money-back guarantee"
-      ]
-    },
-    {
-      name: "Trust Package",
-      price: "₹1,499",
-      originalPrice: "₹1,999",
-      description: "Most Popular Choice",
-      subscribers: "250-300 SUBSCRIBERS",
-      popular: true,
-      badge: "BESTSELLER",
-      features: [
-        "Premium targeting options",
-        "Enhanced engagement",
-        "Priority customer support",
-        "Detailed analytics report",
-        "Growth strategy consultation"
-      ]
-    },
-    {
-      name: "Expert Package",
-      price: "₹5,999",
-      originalPrice: "₹7,999",
-      description: "For Serious Creators",
-      subscribers: "1000-1200 SUBSCRIBERS",
-      popular: false,
-      badge: "PROFESSIONAL",
-      features: [
-        "Advanced demographic targeting",
-        "Multi-platform promotion",
-        "Dedicated account manager",
-        "Custom campaign strategy",
-        "Monthly performance reviews"
-      ]
-    }
-  ];
 
-  const monetizationPlans = [
-    {
-      name: "Beginner",
-      price: "₹12000",
-      period: "",
-      description: "YouTube Advertising",
-      watchHours: "4000 Watch Hours",
-      popular: false,
-      features: [
-        "Likes",
-        "Comments",
-        "Subscribers",
-        "Engagement"
-      ]
-    },
-    {
-      name: "Ultimate",
-      price: "₹18000",
-      period: "",
-      description: "YouTube Advertising",
-      watchHours: "4000 Watch Hours + 1000 Subscribers",
-      popular: true,
-      badge: "25% OFF",
-      features: [
-        "Likes",
-        "Comments",
-        "Subscribers",
-        "Engagement"
-      ]
-    }
-  ];
 
   const handleGetStartedClick = () => {
     navigate("/get-started");
@@ -256,16 +177,195 @@ const PricingPage = () => {
             </p>
           </div>
 
-          <div className="mb-16">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Subscribers Plan</h3>
-            <p className="text-center text-gray-600 mb-8 max-w-4xl mx-auto">We Advertise Your YouTube Video in Form Of True View Discovery Ad until The Channel Achieves Commited Target of Subscribers.</p>
-            <PlanGrid plans={subscriptionPlans} title="" />
-          </div>
+          {/* Packages Grid - Inverted Triangle Layout (3, 2, 1) */}
+          <div className="flex flex-col items-center gap-6">
+            {/* Row 1: 3 packages (top row) */}
+            {viewPlans.length > 2 && (
+              <div className="flex justify-center gap-6 w-full flex-wrap">
+                {viewPlans.slice(0, 3).map((plan: any, index) => (
+                  <div key={index} className="w-full max-w-sm">
+                    <div className={`relative rounded-2xl border-2 ${plan.borderColor || 'border-blue-200'} bg-white p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 h-full flex flex-col justify-between`}>
+                      {plan.popular && plan.badge !== "PREMIUM" && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-4 py-1 rounded-full whitespace-nowrap">
+                          MOST POPULAR
+                        </div>
+                      )}
+                      {plan.badge === "PREMIUM" && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-4 py-1 rounded-full whitespace-nowrap">
+                          PREMIUM
+                        </div>
+                      )}
 
-          <div className="mb-16">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Monetization Plan</h3>
-            <p className="text-center text-gray-600 mb-8 max-w-4xl mx-auto">We Achieve YouTube Watch Hour Criteria With The Help Of Ads Platform, We Reward People To Watch Your Video On Different Games & Websites</p>
-            <PlanGrid plans={monetizationPlans} title="" />
+                      <div>
+                        <div className="text-center mb-6">
+                          <h2 className="text-2xl font-bold text-slate-900 mb-2">{plan.name}</h2>
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="text-3xl font-bold text-red-600">{plan.price}</span>
+                          </div>
+                        </div>
+
+                        <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                          <p className="text-2xl font-bold text-slate-900">{plan.watchHours}</p>
+                          <p className="text-sm text-slate-600 mt-1">Real, High-Intent Viewers</p>
+                        </div>
+
+                        <div className="mb-6 p-3 bg-slate-100 rounded-lg flex items-center justify-between">
+                          <span className="text-sm font-semibold text-slate-700">AI Targeting:</span>
+                          {plan.hasAI ? (
+                            <span className="text-green-600 font-bold text-sm">✓ Included</span>
+                          ) : (
+                            <span className="text-red-500 font-bold text-sm">✗ Not Included</span>
+                          )}
+                        </div>
+
+                        <ul className="space-y-3 mb-6">
+                          {plan.features.slice(2).map((feature: any, idx: number) => (
+                            <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                              <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                              <span>{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <Button
+                        onClick={handleGetStartedClick}
+                        className={`w-full rounded-xl py-6 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ${plan.badge === "PREMIUM"
+                          ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                          : plan.hasAI
+                            ? "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+                            : "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white"
+                          }`}
+                      >
+                        🚀 GET STARTED NOW
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Row 2: 2 packages (middle row) */}
+            {viewPlans.length > 4 && (
+              <div className="flex justify-center gap-6 w-full flex-wrap">
+                {viewPlans.slice(3, 5).map((plan: any, index) => (
+                  <div key={index} className="w-full max-w-sm">
+                    <div className={`relative rounded-2xl border-2 ${plan.borderColor || 'border-orange-300'} bg-white p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 h-full flex flex-col justify-between`}>
+                      {plan.popular && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-4 py-1 rounded-full whitespace-nowrap">
+                          MOST POPULAR
+                        </div>
+                      )}
+
+                      <div>
+                        <div className="text-center mb-6">
+                          <h2 className="text-2xl font-bold text-slate-900 mb-2">{plan.name}</h2>
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="text-3xl font-bold text-red-600">{plan.price}</span>
+                          </div>
+                        </div>
+
+                        <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                          <p className="text-2xl font-bold text-slate-900">{plan.watchHours}</p>
+                          <p className="text-sm text-slate-600 mt-1">Real, High-Intent Viewers</p>
+                        </div>
+
+                        <div className="mb-6 p-3 bg-slate-100 rounded-lg flex items-center justify-between">
+                          <span className="text-sm font-semibold text-slate-700">AI Targeting:</span>
+                          {plan.hasAI ? (
+                            <span className="text-green-600 font-bold text-sm">✓ Included</span>
+                          ) : (
+                            <span className="text-red-500 font-bold text-sm">✗ Not Included</span>
+                          )}
+                        </div>
+
+                        <ul className="space-y-3 mb-6">
+                          {plan.features.slice(2).map((feature: any, idx: number) => (
+                            <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                              <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                              <span>{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <Button
+                        onClick={handleGetStartedClick}
+                        className={`w-full rounded-xl py-6 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ${plan.badge === "PREMIUM"
+                          ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                          : plan.hasAI
+                            ? "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+                            : "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white"
+                          }`}
+                      >
+                        🚀 GET STARTED NOW
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Row 3: 1 package (bottom row) */}
+            {viewPlans.length > 5 && (
+              <div className="flex justify-center w-full flex-wrap">
+                {viewPlans.slice(5, 6).map((plan: any, index) => (
+                  <div key={index} className="w-full max-w-sm">
+                    <div className={`relative rounded-2xl border-2 ${plan.borderColor || 'border-purple-400'} bg-white p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 h-full flex flex-col justify-between`}>
+                      {plan.badge === "PREMIUM" && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-4 py-1 rounded-full whitespace-nowrap">
+                          PREMIUM
+                        </div>
+                      )}
+
+                      <div>
+                        <div className="text-center mb-6">
+                          <h2 className="text-2xl font-bold text-slate-900 mb-2">{plan.name}</h2>
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="text-3xl font-bold text-red-600">{plan.price}</span>
+                          </div>
+                        </div>
+
+                        <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                          <p className="text-2xl font-bold text-slate-900">{plan.watchHours}</p>
+                          <p className="text-sm text-slate-600 mt-1">Real, High-Intent Viewers</p>
+                        </div>
+
+                        <div className="mb-6 p-3 bg-slate-100 rounded-lg flex items-center justify-between">
+                          <span className="text-sm font-semibold text-slate-700">AI Targeting:</span>
+                          {plan.hasAI ? (
+                            <span className="text-green-600 font-bold text-sm">✓ Included</span>
+                          ) : (
+                            <span className="text-red-500 font-bold text-sm">✗ Not Included</span>
+                          )}
+                        </div>
+
+                        <ul className="space-y-3 mb-6">
+                          {plan.features.slice(2).map((feature: any, idx: number) => (
+                            <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                              <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                              <span>{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <Button
+                        onClick={handleGetStartedClick}
+                        className={`w-full rounded-xl py-6 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ${plan.badge === "PREMIUM"
+                          ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                          : plan.hasAI
+                            ? "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+                            : "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white"
+                          }`}
+                      >
+                        🚀 GET STARTED NOW
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>

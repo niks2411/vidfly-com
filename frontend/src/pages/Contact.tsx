@@ -28,7 +28,7 @@ const Contact = () => {
 *Submitted from:* Contact Page`;
 
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(whatsappMessage)}`;
-    
+
     window.open(whatsappUrl, '_blank');
 
     toast({
@@ -121,7 +121,7 @@ const Contact = () => {
                 </p>
                 <Button
                   onClick={handleWhatsAppClick}
-                  className="bg-white text-red-600 hover:bg-gray-100 transition-all duration-300 hover:scale-105 active:scale-95"
+                  className="bg-white text-red-600 hover:bg-gray-100 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95"
                 >
                   Start WhatsApp Chat
                 </Button>
@@ -217,7 +217,7 @@ const Contact = () => {
                       ></textarea>
                     </motion.div>
                   </div>
-                  
+
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -226,7 +226,7 @@ const Contact = () => {
                   >
                     <Button
                       type="submit"
-                      className="w-full bg-red-600 hover:bg-red-700 text-white py-3 transition-all duration-300 hover:scale-105 active:scale-95"
+                      className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95"
                     >
                       Send Message via WhatsApp
                     </Button>

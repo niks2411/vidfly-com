@@ -35,8 +35,8 @@ const ExampleCampaign = () => {
       };
     }
 
-    // Views calculation: Budget / 0.20
-    const totalViews = budget / 0.20;
+    // Views calculation: Budget / 0.21
+    const totalViews = budget / 0.21;
 
     // Subscribers: 8-13% of views
     const minSubscribers = Math.floor(totalViews * 0.08);
@@ -138,7 +138,7 @@ const ExampleCampaign = () => {
 
               <div className="bg-red-50 rounded-lg p-4 mb-4 border border-red-100">
                 <p className="text-sm text-red-800 font-semibold">
-                  💡 Pricing: ₹0.20 per view
+                  💡 Pricing: ₹0.21 per view
                 </p>
               </div>
 

@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const OtpToken = require('../models/OtpToken');
 const User = require('../models/User');
@@ -8,6 +9,9 @@ const {
   buildEmailCookieValue,
 } = require('../utils/emailVerification');
 const { sendWelcomeEmail, sendOtpEmail } = require('../utils/emailService');
+
+const AUTH_COOKIE_NAME = 'vidfly_token';
+const AUTH_COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 const emailSchema = Joi.object({
   email: Joi.string().email().required(),
@@ -103,8 +107,47 @@ exports.verifyOtp = async (req, res, next) => {
       }
     }
 
-    return res.json({ message: 'OTP verified' });
+    // Generate JWT and set as HTTPOnly cookie
+    const jwtPayload = { email: normalizedEmail, userId: existingUser ? existingUser._id : undefined };
+    const token = jwt.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+    res.cookie(AUTH_COOKIE_NAME, token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: AUTH_COOKIE_MAX_AGE,
+      path: '/',
+    });
+
+    return res.json({ message: 'OTP verified', email: normalizedEmail });
   } catch (err) {
     return next(err);
   }
+};
+
+// GET /api/auth/me — Return current authenticated user from cookie
+exports.getMe = async (req, res) => {
+  try {
+    const token = req.cookies[AUTH_COOKIE_NAME];
+    if (!token) return res.status(401).json({ message: 'Not authenticated' });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({ email: decoded.email }).select('-__v');
+    if (!user) return res.status(401).json({ message: 'User not found' });
+
+    return res.json({ user: { email: user.email, name: user.name, id: user._id } });
+  } catch (err) {
+    return res.status(401).json({ message: 'Invalid or expired token' });
+  }
+};
+
+// POST /api/auth/logout — Clear the auth cookie
+exports.logout = (req, res) => {
+  res.clearCookie(AUTH_COOKIE_NAME, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+  });
+  return res.json({ message: 'Logged out' });
 };

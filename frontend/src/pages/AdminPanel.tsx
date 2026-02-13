@@ -408,7 +408,7 @@ const AdminPanel = () => {
                   <div className="grid md:grid-cols-3 gap-4 text-sm">
                     {/* Goal */}
                     <div>
-                      <p className="text-xs text-slate-500 uppercase mb-1">Goal (Besides Views)</p>
+                      <p className="text-xs text-slate-500 uppercase mb-1">Goal</p>
                       <p className="font-medium text-slate-700">{order.targeting.goal || "Not specified"}</p>
                     </div>
                     {/* Duration */}

@@ -47,6 +47,37 @@ const CampaignDashboard = () => {
   }, [verifiedEmail, navigate]);
 
   const [youtubeLink, setYoutubeLink] = useState("");
+
+  // Pre-fill YouTube link from location state or session storage
+  useEffect(() => {
+    // 1. Check location state (Highest priority - direct navigation)
+    const stateLink = (location.state as any)?.youtubeLink;
+    if (stateLink) {
+      setYoutubeLink(stateLink);
+      return;
+    }
+
+    try {
+      // 2. Check promoted video storage (New flow)
+      const promotedVideo = sessionStorage.getItem("vidfly_promoted_video");
+      if (promotedVideo) {
+        const { link, timestamp } = JSON.parse(promotedVideo);
+        // Valid for 1 hour
+        if (Date.now() - timestamp < 3600000) {
+          setYoutubeLink(link);
+          sessionStorage.removeItem("vidfly_promoted_video"); // Consume once
+          return;
+        }
+      }
+
+      // 3. Check hero input storage (Legacy flow)
+      const heroInput = sessionStorage.getItem("vidfly_hero_channel_input");
+      if (heroInput) {
+        setYoutubeLink(heroInput);
+        sessionStorage.removeItem("vidfly_hero_channel_input"); // Clear after use
+      }
+    } catch { }
+  }, [location.state]);
   const [videoInfo, setVideoInfo] = useState<{
     title: string;
     author?: string;
@@ -157,7 +188,6 @@ const CampaignDashboard = () => {
     navigate("/campaign/budget", {
       state: {
         email: verifiedEmail,
-        youtubeLink,
         youtubeLink,
         videoInfo,
         videos: [videoInfo],

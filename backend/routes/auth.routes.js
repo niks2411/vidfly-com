@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { sendOtp, verifyOtp } = require('../controllers/auth.controller');
+const { sendOtp, verifyOtp, getMe, logout } = require('../controllers/auth.controller');
 
 /**
  * @openapi
@@ -43,6 +43,28 @@ router.post('/send-otp', sendOtp);
  */
 router.post('/verify-otp', verifyOtp);
 
+/**
+ * @openapi
+ * /api/auth/me:
+ *   get:
+ *     summary: Get current authenticated user
+ *     responses:
+ *       200:
+ *         description: User info
+ *       401:
+ *         description: Not authenticated
+ */
+router.get('/me', getMe);
+
+/**
+ * @openapi
+ * /api/auth/logout:
+ *   post:
+ *     summary: Logout and clear auth cookie
+ *     responses:
+ *       200:
+ *         description: Logged out
+ */
+router.post('/logout', logout);
+
 module.exports = router;
-
-

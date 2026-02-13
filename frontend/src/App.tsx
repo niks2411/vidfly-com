@@ -35,53 +35,56 @@ import AdminCompleted from "./pages/AdminCompleted";
 import PaymentCheckout from "./pages/PaymentCheckout";
 import PaymentCallback from "./pages/PaymentCallback";
 import ScrollToTop from "./components/ScrollToTop";
+import { AuthProvider } from "./context/AuthContext";
 const queryClient = new QueryClient();
 
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/youtube-vlogging-promotion" element={<YoutubeVloggingPromotion />} />
-          <Route path="/youtube-motivation-promotion" element={<YoutubeMotivationPromotion />} />
-          <Route path="/youtube-health-beauty-promotion" element={<YoutubeHealthBeautyPromotion />} />
-          <Route path="/youtube-travel-promotion" element={<YoutubeTravelPromotion />} />
-          <Route path="/youtube-gaming-promotion" element={<YoutubeGamingPromotion />} />
-          <Route path="/youtube-music-promotion" element={<YoutubeMusicPromotion />} />
-          <Route path="/features" element={<Features />} />
-          <Route path="/success-stories" element={<SuccessStoriesPage />} />
-          <Route path="/pricing" element={<PricingPage />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/get-started" element={<GetStarted />} />
-          <Route path="/campaign" element={<CampaignDashboard />} />
-          <Route path="/campaign/channel" element={<CampaignChannel />} />
-          <Route path="/campaign/budget" element={<CampaignBudget />} />
-          <Route path="/campaign/packages" element={<CampaignPackages />} />
-          <Route path="/campaign/packages/:id" element={<CampaignPackageDetail />} />
-          <Route path="/campaign/bulk-views" element={<CampaignBulkViews />} />
-          <Route path="/campaign/bulk-views/select" element={<CampaignBulkViewsSelect />} />
-          <Route path="/campaign/free-views" element={<CampaignFreeViews />} />
-          <Route path="/campaign/my-campaigns" element={<MyCampaigns />} />
-          <Route path="/payment/checkout" element={<PaymentCheckout />} />
-          <Route path="/payment/callback" element={<PaymentCallback />} />
-          <Route path="/admin" element={<AdminPanel />} />
-          <Route path="/admin/completed" element={<AdminCompleted />} />
-          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/disclaimer" element={<Disclaimer />} />
-          <Route path="/refund-policy" element={<RefundPolicy />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <WhatsAppFloat />
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/youtube-vlogging-promotion" element={<YoutubeVloggingPromotion />} />
+            <Route path="/youtube-motivation-promotion" element={<YoutubeMotivationPromotion />} />
+            <Route path="/youtube-health-beauty-promotion" element={<YoutubeHealthBeautyPromotion />} />
+            <Route path="/youtube-travel-promotion" element={<YoutubeTravelPromotion />} />
+            <Route path="/youtube-gaming-promotion" element={<YoutubeGamingPromotion />} />
+            <Route path="/youtube-music-promotion" element={<YoutubeMusicPromotion />} />
+            <Route path="/features" element={<Features />} />
+            <Route path="/success-stories" element={<SuccessStoriesPage />} />
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/get-started" element={<GetStarted />} />
+            <Route path="/campaign" element={<CampaignDashboard />} />
+            <Route path="/campaign/channel" element={<CampaignChannel />} />
+            <Route path="/campaign/budget" element={<CampaignBudget />} />
+            <Route path="/campaign/packages" element={<CampaignPackages />} />
+            <Route path="/campaign/packages/:id" element={<CampaignPackageDetail />} />
+            <Route path="/campaign/bulk-views" element={<CampaignBulkViews />} />
+            <Route path="/campaign/bulk-views/select" element={<CampaignBulkViewsSelect />} />
+            <Route path="/campaign/free-views" element={<CampaignFreeViews />} />
+            <Route path="/campaign/my-campaigns" element={<MyCampaigns />} />
+            <Route path="/payment/checkout" element={<PaymentCheckout />} />
+            <Route path="/payment/callback" element={<PaymentCallback />} />
+            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/admin/completed" element={<AdminCompleted />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/disclaimer" element={<Disclaimer />} />
+            <Route path="/refund-policy" element={<RefundPolicy />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <WhatsAppFloat />
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </AuthProvider>
 );
 
 

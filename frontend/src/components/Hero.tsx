@@ -41,17 +41,17 @@ const Hero = ({ showStats = false }: HeroProps) => {
                   <path fill="#EA4335" d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" />
                   <path fill="#4285F4" d="M35.29 41.41V32H67c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z" />
                 </svg>
-                <span className="text-gray-700 font-medium text-xs sm:text-sm">Partner</span>
+                <span className="text-gray-700 font-medium text-xs sm:text-sm">Premier Partner</span>
               </div>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight">
-              Start Your <span className="text-red-600">YouTube</span>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 leading-tight">
+              <span className="text-red-600">YouTube promotions</span>
               <br />
-              <span className="text-red-600">Promotions</span> with just <span className="text-red-600">₹999</span>
+              starting at ₹999
             </h1>
 
             <p className="text-gray-600 text-sm sm:text-base md:text-lg max-w-2xl mx-auto mt-2">
-              Reach a broader audience interested in your content. We use Google Ads to promote your YouTube channel
+              Reach a real audience interested in your content. We clear the clutter and use Google Ads for your YouTube channel promotion.
             </p>
 
 
@@ -78,57 +78,46 @@ const Hero = ({ showStats = false }: HeroProps) => {
               </div>
             </div>
 
-            {/* SiteJabber Rating */}
-            <div className="flex flex-wrap items-center justify-center gap-2 animate-fade-in-delay">
-              <div className="flex gap-0.5">
-                {[1, 2, 3, 4].map((star) => (
-                  <Star key={star} className="h-5 w-5 sm:h-6 sm:w-6 fill-yellow-400 text-yellow-400" />
-                ))}
-                <Star className="h-5 w-5 sm:h-6 sm:w-6 fill-yellow-400 text-yellow-400 opacity-50" />
-              </div>
-              <span className="text-gray-600 text-sm sm:text-base">
-                Excellent rating on <a href="https://www.sitejabber.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">SiteJabber</a>
-              </span>
-            </div>
+
           </div>
         </div>
 
         {/* Stats Div - Conditionally rendered */}
         {showStats && (
-          <div className="border-t border-gray-200 mt-24 pt-12 lg:pt-16 animate-fade-in-delay-2">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
+          <div className="border-t border-gray-200 mt-16 pt-8 lg:pt-10 animate-fade-in-delay-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
               <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <Video className="h-10 w-10 text-red-600" />
+                <div className="flex items-center justify-center mb-1">
+                  <Video className="h-7 w-7 text-red-600" />
                 </div>
-                <div className="text-4xl font-bold text-red-600 mb-2">
+                <div className="text-2xl font-bold text-red-600 mb-1">
                   58K+
                 </div>
-                <div className="text-sm text-gray-700 uppercase font-semibold tracking-wide">
+                <div className="text-xs text-gray-700 uppercase font-semibold tracking-wide">
                   Promoted YouTube Channel
                 </div>
               </div>
 
               <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <Eye className="h-10 w-10 text-red-600" />
+                <div className="flex items-center justify-center mb-1">
+                  <Eye className="h-7 w-7 text-red-600" />
                 </div>
-                <div className="text-4xl font-bold text-red-600 mb-2">
+                <div className="text-2xl font-bold text-red-600 mb-1">
                   6.9B+
                 </div>
-                <div className="text-sm text-gray-700 uppercase font-semibold tracking-wide">
+                <div className="text-xs text-gray-700 uppercase font-semibold tracking-wide">
                   Real Views Delivered
                 </div>
               </div>
 
               <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <Heart className="h-10 w-10 text-red-600" />
+                <div className="flex items-center justify-center mb-1">
+                  <Heart className="h-7 w-7 text-red-600" />
                 </div>
-                <div className="text-4xl font-bold text-red-600 mb-2">
+                <div className="text-2xl font-bold text-red-600 mb-1">
                   56K+
                 </div>
-                <div className="text-sm text-gray-700 uppercase font-semibold tracking-wide">
+                <div className="text-xs text-gray-700 uppercase font-semibold tracking-wide">
                   Creators Love Us
                 </div>
               </div>

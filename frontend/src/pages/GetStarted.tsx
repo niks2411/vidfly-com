@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CampaignCard from "@/components/CampaignCard";
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, Shield, CheckCircle2, ArrowRight, Sparkles } from "lucide-react";
@@ -22,6 +23,7 @@ const REFERRAL_STORAGE_KEY = "vidfly_referral_code";
 const GetStarted = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { refreshUser } = useAuth();
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -145,6 +147,9 @@ const GetStarted = () => {
       setEmail(normalizedEmail);
       setEmailVerified(true);
       saveVerifiedEmail(normalizedEmail);
+
+      // Refresh global auth context (picks up the new HTTPOnly cookie session)
+      await refreshUser();
 
       // Apply referral code if present
       if (referralCode) {

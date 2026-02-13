@@ -214,7 +214,7 @@ const CampaignBudget = () => {
   const [customDurationDays, setCustomDurationDays] = useState<number>(7);
   const [autoTargeting, setAutoTargeting] = useState(true);
   const [showTargetingModal, setShowTargetingModal] = useState(false);
-  const [goalType, setGoalType] = useState("Watch Time");
+  const [goalType, setGoalType] = useState("Engagement");
   const [createError, setCreateError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
@@ -581,17 +581,14 @@ const CampaignBudget = () => {
                   {/* Goal Type */}
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Goal (Besides Views)
+                      Goal
                     </label>
                     <select
                       className="w-full border border-slate-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-red-100 focus:border-red-500 transition-all bg-slate-50"
                       value={goalType}
                       onChange={(e) => setGoalType(e.target.value)}
                     >
-                      <option value="Subscribers">Subscribers</option>
-                      <option value="Likes">Likes</option>
-                      <option value="Comments">Comments</option>
-                      <option value="Watch Time">Watch Time</option>
+                      <option value="Engagement">Engagement</option>
                     </select>
                   </div>
                 </div>
@@ -988,7 +985,7 @@ const CampaignBudget = () => {
               <div className="flex gap-3">
                 <Button
                   variant="outline"
-                  className="flex-1"
+                  className="flex-1 rounded-xl border-red-600 text-red-600 hover:bg-red-50 uppercase font-semibold"
                   onClick={() => {
                     setShowTargetingModal(false);
                     setAutoTargeting(false);
@@ -997,7 +994,7 @@ const CampaignBudget = () => {
                   SELECT MANUALLY
                 </Button>
                 <Button
-                  className="flex-1"
+                  className="flex-1 rounded-xl bg-red-600 hover:bg-red-700 text-white uppercase font-bold"
                   onClick={() => {
                     setShowTargetingModal(false);
                     setAutoTargeting(true);

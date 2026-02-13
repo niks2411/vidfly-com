@@ -8,9 +8,9 @@ const VideoPromotionCalculator = () => {
   const [views, setViews] = useState(1000);
   const [price, setPrice] = useState(200);
 
-  // Calculate price based on views (₹0.20 per view)
+  // Calculate price based on views (₹0.21 per view)
   const calculatePrice = (viewCount: number) => {
-    const basePrice = viewCount * 0.20;
+    const basePrice = viewCount * 0.21;
     setPrice(basePrice);
   };
 
@@ -23,7 +23,7 @@ const VideoPromotionCalculator = () => {
   // Handle manual input in views field
   const handleViewsInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/,/g, ''); // Remove commas
-    
+
     // Allow empty input for user to clear and type
     if (value === '') {
       setViews(1000);
@@ -32,7 +32,7 @@ const VideoPromotionCalculator = () => {
     }
 
     const numValue = parseInt(value);
-    
+
     // Only update if it's a valid number
     if (!isNaN(numValue)) {
       handleViewsChange(numValue);
@@ -84,16 +84,16 @@ const VideoPromotionCalculator = () => {
         {/* Heading */}
         <div className="text-center mb-12">
           <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
-             We will show your video to your target <span className="text-red-600">audience directly on YouTube!</span>
+            We will show your video to your target <span className="text-red-600">audience directly on YouTube!</span>
           </h2>
-          
+
         </div>
 
         {/* Main Card */}
         <div className="bg-white rounded-3xl shadow-2xl p-6 lg:p-10 border-4 border-red-400 relative overflow-hidden">
           {/* Gradient Border Effect */}
           <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-red-400 via-red-500 to-red-400 opacity-10 pointer-events-none"></div>
-          
+
           <div className="relative z-10">
             {/* URL Input */}
             <div className="mb-8">
@@ -150,7 +150,7 @@ const VideoPromotionCalculator = () => {
             {/* Pricing Info */}
             <div className="bg-red-50 rounded-xl p-4 mb-6 border border-red-100">
               <p className="text-sm text-red-800 font-semibold text-center">
-                 Pricing: ₹0.20 per view
+                Pricing: ₹0.21 per view
               </p>
             </div>
 
@@ -186,11 +186,10 @@ const VideoPromotionCalculator = () => {
                     key={opt.value}
                     type="button"
                     onClick={() => handleViewsChange(opt.value)}
-                    className={`text-center cursor-pointer focus:outline-none ${
-                      views === opt.value
+                    className={`text-center cursor-pointer focus:outline-none ${views === opt.value
                         ? "text-red-600 font-semibold"
                         : "text-gray-500 hover:text-red-500"
-                    }`}
+                      }`}
                   >
                     {opt.label}
                   </button>
@@ -202,7 +201,7 @@ const VideoPromotionCalculator = () => {
             {getDiscount() && (
               <div className="mt-6 text-center">
                 <div className="inline-block bg-gradient-to-r from-red-100 to-red-200 text-red-700 px-6 py-2 rounded-full text-sm font-bold">
-                   {getDiscount()} applied!
+                  {getDiscount()} applied!
                 </div>
               </div>
             )}
