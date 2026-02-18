@@ -14,6 +14,7 @@ import Disclaimer from "./pages/disclaimer";
 import RefundPolicy from "./pages/refund-policy";
 import NotFound from "./pages/NotFound";
 import WhatsAppFloat from "./components/WhatsAppFloat";
+import Blog from "./pages/Blog";
 import YoutubeMusicPromotion from "./pages/YoutubeMusicPromotion";
 import YoutubeGamingPromotion from "./pages/YoutubeGamingPromotion";
 import YoutubeTravelPromotion from "./pages/YoutubeTravelPromotion";
@@ -35,6 +36,7 @@ import AdminCompleted from "./pages/AdminCompleted";
 import PaymentCheckout from "./pages/PaymentCheckout";
 import PaymentCallback from "./pages/PaymentCallback";
 import ScrollToTop from "./components/ScrollToTop";
+import CanonicalTag from "./components/CanonicalTag";
 import { AuthProvider } from "./context/AuthContext";
 const queryClient = new QueryClient();
 
@@ -59,6 +61,7 @@ const App = () => (
             <Route path="/success-stories" element={<SuccessStoriesPage />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/blog" element={<Blog />} />
             <Route path="/get-started" element={<GetStarted />} />
             <Route path="/campaign" element={<CampaignDashboard />} />
             <Route path="/campaign/channel" element={<CampaignChannel />} />
@@ -81,6 +84,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           <WhatsAppFloat />
+          <CanonicalTag />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
