@@ -4,7 +4,22 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import {
+  Mail,
+  User,
+  Clock,
+  ChevronLeft,
+  Trash2,
+  ExternalLink,
+  CheckCircle2,
+  AlertCircle,
+  Search,
+  RefreshCw,
+  Inbox,
+  ArrowLeft,
+  X,
+  Eye
+} from "lucide-react";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
@@ -28,7 +43,13 @@ type Order = {
 };
 
 const statusColors: Record<string, string> = {
+  pending: "bg-yellow-100 text-yellow-800",
+  payment_pending: "bg-orange-100 text-orange-800",
+  paid: "bg-blue-100 text-blue-800",
+  promotion_scheduled: "bg-purple-100 text-purple-800",
+  in_progress: "bg-indigo-100 text-indigo-800",
   completed: "bg-green-100 text-green-800",
+  failed: "bg-red-100 text-red-800",
 };
 
 const campaignLabels: Record<string, string> = {
@@ -49,7 +70,11 @@ const AdminCompleted = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const itemsPerPage = 20;
+
+  // Since these are completed, they are all "seen" by definition or we treat them as such
+  // but we can still track them if needed. For now, we'll just show them as "read".
 
   useEffect(() => {
     if (!token) {
@@ -96,7 +121,7 @@ const AdminCompleted = () => {
   const filteredOrders = useMemo(() => {
     if (!searchQuery.trim()) return orders;
     const query = searchQuery.toLowerCase();
-    return orders.filter(order => 
+    return orders.filter(order =>
       order.orderId.toLowerCase().includes(query) ||
       order.userId?.email?.toLowerCase().includes(query) ||
       order.userId?.name?.toLowerCase().includes(query) ||
@@ -118,188 +143,207 @@ const AdminCompleted = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-montserrat">
+    <div className="min-h-screen bg-white font-montserrat flex flex-col">
       <Navbar />
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Completed Orders</h1>
-            <p className="text-slate-500">View all completed campaign orders.</p>
-          </div>
-          <div className="flex gap-3">
-            <Button variant="outline" onClick={() => navigate("/admin")}>
-              Back to Dashboard
-            </Button>
-            <Button variant="outline" onClick={fetchOrders} disabled={loading}>
-              {loading ? "Refreshing..." : "Refresh"}
-            </Button>
-            <Button onClick={handleLogout} className="bg-red-600 hover:bg-red-700">
-              Logout
-            </Button>
-          </div>
-        </div>
 
-        {error && (
-          <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-            {error}
-          </div>
-        )}
-
-        {/* Search */}
-        <div className="mb-6">
-          <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 bg-white max-w-md">
-            <Search className="text-slate-500" />
-            <Input
-              placeholder="Search by order ID, email, name, or video title..."
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setCurrentPage(1); // Reset to first page on search
-              }}
-              className="border-0 shadow-none focus-visible:ring-0"
-            />
-            {searchQuery && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSearchQuery("")}
-                className="text-slate-600"
-              >
-                Clear
+      <div className="flex-1 flex flex-col max-w-[1600px] mx-auto w-full h-[calc(100vh-80px)] overflow-hidden border-x border-slate-200">
+        {/* Header */}
+        <div className="flex flex-col border-b border-slate-200">
+          <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="icon" onClick={() => navigate("/admin")}>
+                <ArrowLeft className="w-5 h-5" />
               </Button>
-            )}
+              <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                <CheckCircle2 className="w-6 h-6 text-green-600" />
+                Completed Orders
+              </h1>
+              <div className="hidden md:flex relative flex-1 min-w-[300px] lg:min-w-[500px]">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search completed orders..."
+                  className="w-full bg-slate-100 border-none rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-green-500 focus:bg-white transition-all"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="icon" onClick={fetchOrders} disabled={loading}>
+                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              </Button>
+              <Button onClick={handleLogout} variant="ghost" size="sm" className="text-red-500">
+                Logout
+              </Button>
+            </div>
           </div>
+
+          {!selectedOrder && (
+            <div className="flex items-center justify-between px-6 py-2 bg-slate-50/50 border-t border-slate-200">
+              <div className="text-xs text-slate-500 font-medium">
+                {filteredOrders.length} Completed
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-slate-500 mr-2">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button variant="ghost" size="icon" className="h-8 w-8" disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)}>
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                <Button variant="ghost" size="icon" className="h-8 w-8" disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)}>
+                  <ChevronLeft className="w-4 h-4 rotate-180" />
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
 
-        {paginatedOrders.length === 0 && !loading && (
-          <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center text-slate-500">
-            {searchQuery ? "No completed orders found matching your search." : "No completed orders yet."}
-          </div>
-        )}
+        <div className="flex-1 overflow-hidden flex flex-col">
+          {error && <div className="m-4 p-3 bg-red-50 text-red-700 text-sm rounded-lg">{error}</div>}
 
-        <div className="grid gap-4">
-          {paginatedOrders.map((order) => (
-            <article
-              key={order._id}
-              className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"
-            >
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <p className="text-lg font-semibold text-slate-900">{order.orderId}</p>
-                    <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${statusColors[order.status] || statusColors.completed}`}>
-                      COMPLETED
-                    </span>
-                    {order.campaignType && (
-                      <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                        {campaignLabels[order.campaignType] || order.campaignType}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs uppercase text-slate-500 mb-1">Order ID</p>
-                  {order.userId && (
-                    <p className="text-sm text-slate-500">
-                      {order.userId.name} · {order.userId.email}
-                    </p>
-                  )}
+          {!selectedOrder ? (
+            <div className="flex-1 overflow-y-auto">
+              {paginatedOrders.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-slate-400">
+                  <Inbox className="w-12 h-12 mb-2 opacity-20" />
+                  <p>{loading ? "Loading..." : "No completed orders"}</p>
                 </div>
-                <div className="text-right">
-                  <p className="text-xs uppercase text-slate-500">Amount</p>
-                  <p className="text-lg font-semibold text-slate-900">
-                    {order.plan?.currency === "USD" ? "$" : "₹"}
-                    {order.plan?.price || order.budget || 0}
-                  </p>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Completed {new Date(order.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-4 grid md:grid-cols-2 gap-4 text-sm text-slate-600">
-                <div>
-                  <p className="font-semibold text-slate-800">Plan</p>
-                  <p>{order.plan?.name || "N/A"}</p>
-                  {order.plan?.quantity && (
-                    <p>
-                      Quantity: {order.plan.quantity.toLocaleString()}{" "}
-                      {order.plan.type === "package" ? "units" : "views"}
-                    </p>
-                  )}
-                  {order.budget && <p>Budget: ₹{order.budget}</p>}
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-800">Channel</p>
-                  <p>{order.channel?.name || "N/A"}</p>
-                  {order.channel?.link && (
-                    <a
-                      href={order.channel.link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-purple-600 hover:underline"
+              ) : (
+                <div className="divide-y divide-slate-100">
+                  {paginatedOrders.map((order) => (
+                    <div
+                      key={order._id}
+                      onClick={() => setSelectedOrder(order)}
+                      className="group flex items-center px-6 py-3 cursor-pointer transition-colors bg-white hover:bg-slate-50 border-l-4 border-l-transparent hover:border-l-green-500"
                     >
-                      View channel
-                    </a>
-                  )}
-                </div>
-              </div>
-
-              {order.videos?.length ? (
-                <div className="mt-4">
-                  <p className="text-sm font-semibold text-slate-800 mb-2">
-                    Videos ({order.videos.length})
-                  </p>
-                  <div className="space-y-2 text-sm text-slate-600">
-                    {order.videos.map((video, idx) => (
-                      <div key={`${order.orderId}-${video.videoId}-${idx}`}>
-                        <p className="font-medium">{video.title}</p>
-                        {video.link && (
-                          <a
-                            href={video.link}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-purple-600 hover:underline text-xs"
-                          >
-                            {video.link}
-                          </a>
-                        )}
-                        {video.viewsRequested && (
-                          <p className="text-xs text-slate-500">
-                            Requested: {video.viewsRequested.toLocaleString()} views
-                          </p>
-                        )}
+                      <div className="mr-4 flex-shrink-0">
+                        <CheckCircle2 className="w-5 h-5 text-green-500" />
                       </div>
-                    ))}
+
+                      <div className="w-1/4 min-w-[150px] truncate pr-4 font-medium text-slate-700">
+                        {order.userId?.name || "Anonymous"}
+                        <div className="text-[10px] text-slate-400 font-normal uppercase mt-0.5">
+                          {order.userId?.email || "No Email"}
+                        </div>
+                      </div>
+
+                      <div className="flex-1 flex flex-col md:flex-row md:items-center gap-1 md:gap-3 truncate pr-4 text-slate-600">
+                        <span className="truncate font-semibold">{order.orderId}</span>
+                        <span className="hidden md:inline text-slate-300">•</span>
+                        <span className="text-slate-500 text-sm truncate">
+                          {order.plan?.name || "Custom Campaign"} — {order.channel?.name || "No Channel"}
+                        </span>
+                      </div>
+
+                      <div className="text-xs text-slate-400 whitespace-nowrap text-right">
+                        {new Date(order.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                        <div className="text-[10px] opacity-60">
+                          {new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            /* Detail View */
+            <div className="flex-1 overflow-y-auto bg-slate-50 p-6">
+              <div className="max-w-4xl mx-auto space-y-6">
+                <div className="flex items-center justify-between bg-white p-4 rounded-2xl shadow-sm">
+                  <div className="flex items-center gap-4">
+                    <Button variant="ghost" size="icon" onClick={() => setSelectedOrder(null)}>
+                      <ArrowLeft className="w-5 h-5" />
+                    </Button>
+                    <div>
+                      <h2 className="text-lg font-bold text-slate-900">{selectedOrder.orderId}</h2>
+                      <p className="text-xs text-green-600 font-bold uppercase tracking-wide flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> Completed
+                      </p>
+                    </div>
                   </div>
                 </div>
-              ) : null}
-            </article>
-          ))}
-        </div>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-6">
-            <Button
-              variant="outline"
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </Button>
-            <span className="text-sm text-slate-600">
-              Page {currentPage} of {totalPages} ({filteredOrders.length} total)
-            </span>
-            <Button
-              variant="outline"
-              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </Button>
-          </div>
-        )}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="lg:col-span-2 space-y-6">
+                    <div className="bg-white rounded-2xl p-6 shadow-sm">
+                      <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Client Information</h3>
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold text-xl">
+                          {selectedOrder.userId?.name?.[0] || "?"}
+                        </div>
+                        <div>
+                          <p className="text-lg font-bold text-slate-900">{selectedOrder.userId?.name || "Anonymous"}</p>
+                          <p className="text-sm text-slate-500">{selectedOrder.userId?.email}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-white rounded-2xl p-6 shadow-sm">
+                      <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Plan & Channel</h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-[10px] text-slate-400 uppercase font-bold">Plan</p>
+                          <p className="font-bold text-slate-800">{selectedOrder.plan?.name}</p>
+                          <p className="text-xs text-slate-500">
+                            {selectedOrder.plan?.quantity?.toLocaleString()} views/units
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-slate-400 uppercase font-bold">Channel</p>
+                          <p className="font-bold text-slate-800">{selectedOrder.channel?.name || "N/A"}</p>
+                          {selectedOrder.channel?.link && (
+                            <a href={selectedOrder.channel.link} target="_blank" rel="noreferrer" className="text-purple-600 text-xs hover:underline truncate block">
+                              {selectedOrder.channel.link}
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {selectedOrder.videos?.length ? (
+                      <div className="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Videos</h3>
+                        <div className="space-y-3">
+                          {selectedOrder.videos.map((v, i) => (
+                            <div key={i} className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                              <p className="text-sm font-bold text-slate-800">{v.title}</p>
+                              <a href={v.link} target="_blank" rel="noreferrer" className="text-xs text-purple-600 hover:underline">{v.link}</a>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <div className="space-y-6">
+                    <div className="bg-white rounded-2xl p-6 shadow-sm border-t-4 border-green-500">
+                      <h3 className="text-sm font-bold text-slate-900 mb-2">Order Summary</h3>
+                      <div className="space-y-3">
+                        <div>
+                          <p className="text-[10px] text-slate-400 uppercase font-bold">Total Spent</p>
+                          <p className="text-xl font-black text-slate-900">
+                            {selectedOrder.plan?.currency === "USD" ? "$" : "₹"}
+                            {selectedOrder.plan?.price || selectedOrder.budget || 0}
+                          </p>
+                        </div>
+                        <div className="pt-3 border-t border-slate-100">
+                          <p className="text-[10px] text-slate-400 uppercase font-bold">Completed On</p>
+                          <p className="text-sm font-bold text-slate-700">
+                            {new Date(selectedOrder.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-      <Footer />
+      {!selectedOrder && <Footer />}
     </div>
   );
 };
