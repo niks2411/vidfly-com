@@ -2,7 +2,7 @@ import { Youtube, Star, Eye, Heart, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface HeroProps {
   showStats?: boolean;
@@ -26,7 +26,7 @@ const Hero = ({ showStats = false }: HeroProps) => {
     <section id="home" className="pt-24 lg:pt-28 pb-16 lg:pb-20 bg-gradient-to-br from-red-50 to-white relative overflow-hidden font-montserrat">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Div - Centered */}
-        <div className="max-w-2xl mx-auto mb-24 lg:mb-28">
+        <div className="max-w-2xl mx-auto mb-10 lg:mb-12">
           {/* Content Div */}
 
           <div className="text-center animate-fade-in space-y-4">
@@ -44,7 +44,7 @@ const Hero = ({ showStats = false }: HeroProps) => {
                 <span className="text-gray-700 font-medium text-xs sm:text-sm">Premier Partner</span>
               </div>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight">
+            <h1 className="text-4xl font-bold text-gray-800 leading-tight">
               <span className="text-red-600">YouTube promotions</span>
               <br />
               starting at ₹999
@@ -78,6 +78,25 @@ const Hero = ({ showStats = false }: HeroProps) => {
               </div>
             </div>
 
+            {/* Trust bullets — aligned to input field */}
+            <ul className="mt-4 space-y-1.5 w-full max-w-lg mx-auto">
+              {[
+                { text: "Choose Your Video, We'll Create the YouTube Ads." },
+                { text: "100% Real Viewers — No Bots, Ever!" },
+                { text: "Our Satisfaction Policy Has You Covered.", underline: true },
+              ].map((item, i) => (
+                <li key={i} className="flex items-center gap-2 text-sm text-gray-800 font-medium">
+                  <svg className="w-4 h-4 text-blue-600 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clipRule="evenodd" />
+                  </svg>
+                  {item.underline ? (
+                    <Link to="/privacy-policy" className="underline hover:text-red-600 transition-colors">
+                      {item.text}
+                    </Link>
+                  ) : <span>{item.text}</span>}
+                </li>
+              ))}
+            </ul>
 
           </div>
         </div>

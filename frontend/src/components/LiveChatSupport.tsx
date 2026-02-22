@@ -25,12 +25,12 @@ const LiveChatSupport = () => {
                 </div>
 
                 {/* Heading */}
-                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-                  We are always here to help you
+                <h2 className="section-heading">
+                  We are always here to <span className="text-red-600">help you</span>
                 </h2>
 
                 {/* Description */}
-                <p className="text-base lg:text-lg text-gray-600 mb-2 leading-relaxed">
+                <p className="section-desc" style={{ marginLeft: 0 }}>
                   If you have questions, please, contact us via Live Chat or email at
                 </p>
                 <a

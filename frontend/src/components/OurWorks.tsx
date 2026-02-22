@@ -64,7 +64,7 @@ const OurWorks = () => {
     <main className="w-full bg-white text-black font-montserrat">
       <div className="flex h-[50vh] items-center justify-center gap-2">
         <div className="text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
+          <h2 className="section-heading text-center">
             OUR <span className="text-red-600">WORKS</span>
           </h2>
           <div className="mt-8 grid justify-items-center gap-6 text-center text-black">

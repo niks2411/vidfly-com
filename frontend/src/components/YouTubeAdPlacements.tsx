@@ -13,7 +13,7 @@ const YouTubeAdPlacements = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
+          <h2 className="section-heading text-center">
             What the promotion <span className="text-red-600">looks like</span>
           </h2>
         </motion.div>

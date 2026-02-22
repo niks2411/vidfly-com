@@ -179,20 +179,18 @@ const VideoShowcase = () => {
           </motion.div>
 
           <motion.h2
-            className="text-3xl lg:text-4xl font-bold text-slate-900 mb-6 leading-tight"
+            className="section-heading text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
             How To Promote YouTube Video
             <br />
-            <span className="bg-gradient-to-r from-red-600 via-pink-600 to-red-600 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
-              with Vidflyy?
-            </span>
+            <span className="text-red-600">with Vidflyy?</span>
           </motion.h2>
 
           <motion.p
-            className="text-base lg:text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed"
+            className="section-desc text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.4, duration: 0.6 }}
@@ -236,9 +234,7 @@ const VideoShowcase = () => {
                 <h3 className="text-lg font-bold text-slate-900 mb-2 max-w-[200px]">
                   Select Your Video URL
                 </h3>
-                <p className="text-sm text-slate-500 max-w-[200px] leading-relaxed">
-                  Pick your preferred video URL to advertise on YouTube and paste it into the Vidflyy dashboard.
-                </p>
+
               </motion.div>
 
               {/* Curly Arrow 1 */}
@@ -325,9 +321,7 @@ const VideoShowcase = () => {
                 <h3 className="text-lg font-bold text-slate-900 mb-2 max-w-[200px]">
                   Target Ideal Location
                 </h3>
-                <p className="text-sm text-slate-500 max-w-[200px] leading-relaxed">
-                  Target viewers in specific countries or expand globally for effective YouTube video marketing.
-                </p>
+
               </motion.div>
 
               {/* Curly Arrow 2 */}
@@ -414,9 +408,7 @@ const VideoShowcase = () => {
                 <h3 className="text-lg font-bold text-slate-900 mb-2 max-w-[200px]">
                   Launch Your Campaign
                 </h3>
-                <p className="text-sm text-slate-500 max-w-[200px] leading-relaxed">
-                  Set your target audience and interests, preview and launch your campaign to connect with real viewers.
-                </p>
+
               </motion.div>
             </div>
           </div>

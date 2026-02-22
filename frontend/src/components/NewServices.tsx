@@ -49,10 +49,10 @@ const NewServices = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+          <h2 className="section-heading text-center">
             YouTube <span className="text-red-600">Channel Promotion</span>
           </h2>
-          <p className="text-base lg:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed">
+          <p className="section-desc text-center">
             Vidflyy's YouTube promotion services are suitable for channels across multiple domains. Irrespective of your YouTube channel size, our advanced targeting options using Google Ads can promote your YouTube videos to a relevant audience, thus increasing the odds of gaining higher engagement rates.
           </p>
         </div>
@@ -64,7 +64,7 @@ const NewServices = () => {
         <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
         <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
-        <div className="services-carousel-track flex gap-6 py-4 group-hover:[animation-play-state:paused]">
+        <div className="services-carousel-track flex gap-10 py-4 group-hover:[animation-play-state:paused]">
           {scrollItems.map((category, index) => (
             <div
               key={index}
@@ -72,7 +72,7 @@ const NewServices = () => {
               className="flex-shrink-0 w-[280px] cursor-pointer group/card"
             >
               {/* Image */}
-              <div className="relative h-[340px] rounded-lg overflow-hidden transition-all duration-500 group-hover/card:scale-[1.03]">
+              <div className="relative h-[340px] rounded-xl overflow-hidden transition-all duration-500 group-hover/card:scale-[1.03]">
                 <img
                   src={category.image}
                   alt={category.title}

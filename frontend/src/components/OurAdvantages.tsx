@@ -34,8 +34,8 @@ const OurAdvantages = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                        Our advantages
+                    <h2 className="section-heading text-center">
+                        Our <span className="text-red-600">advantages</span>
                     </h2>
                 </motion.div>
 

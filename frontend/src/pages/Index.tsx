@@ -12,13 +12,13 @@ import Testimonials from "@/components/Testimonials";
 import OurWorks from "@/components/OurWorks";
 import FeaturedPartners from "@/components/FeaturedPartners";
 import Footer from "@/components/Footer";
-import TipsSection from "@/components/TipsSection";
 import LiveChatSupport from "@/components/LiveChatSupport";
 
 
 import GoogleAdsSection from "@/components/GoogleAdsSection";
 import OurAdvantages from "@/components/OurAdvantages";
 import WeeklyBudgetCTA from "@/components/WeeklyBudgetCTA";
+import ComparisonTable from "@/components/ComparisonTable";
 
 const Index = () => {
   return (
@@ -31,7 +31,6 @@ const Index = () => {
 
       <VideoShowcase />
       <NewServices />
-      <TipsSection />
       <YouTubeAdPlacements />
       <Testimonials />
 
@@ -39,6 +38,7 @@ const Index = () => {
       <OurWorks />
       <LiveChatSupport />
       <WeeklyBudgetCTA />
+      <ComparisonTable />
       <Footer />
     </div>
   );
