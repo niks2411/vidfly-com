@@ -23,10 +23,10 @@ const Hero = ({ showStats = false }: HeroProps) => {
   };
 
   return (
-    <section id="home" className="min-h-[calc(100vh-80px)] flex items-center py-16 lg:py-24 bg-gradient-to-br from-red-50 to-white relative overflow-hidden font-montserrat">
+    <section id="home" className="pt-24 lg:pt-28 pb-16 lg:pb-20 bg-gradient-to-br from-red-50 to-white relative overflow-hidden font-montserrat">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Div - Centered */}
-        <div className="max-w-2xl mx-auto mb-16 lg:mb-20">
+        <div className="max-w-2xl mx-auto mb-24 lg:mb-28">
           {/* Content Div */}
 
           <div className="text-center animate-fade-in space-y-4">
@@ -44,7 +44,7 @@ const Hero = ({ showStats = false }: HeroProps) => {
                 <span className="text-gray-700 font-medium text-xs sm:text-sm">Premier Partner</span>
               </div>
             </div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight">
               <span className="text-red-600">YouTube promotions</span>
               <br />
               starting at ₹999
@@ -84,13 +84,13 @@ const Hero = ({ showStats = false }: HeroProps) => {
 
         {/* Stats Div - Conditionally rendered */}
         {showStats && (
-          <div className="border-t border-gray-200 mt-16 pt-8 lg:pt-10 animate-fade-in-delay-2">
+          <div className="border-t border-gray-200 mt-8 pt-8 lg:pt-10 animate-fade-in-delay-2">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
               <div className="text-center">
                 <div className="flex items-center justify-center mb-1">
                   <Video className="h-7 w-7 text-red-600" />
                 </div>
-                <div className="text-2xl font-bold text-red-600 mb-1">
+                <div className="text-4xl font-bold text-red-600 mb-1">
                   58K+
                 </div>
                 <div className="text-xs text-gray-700 uppercase font-semibold tracking-wide">
@@ -102,7 +102,7 @@ const Hero = ({ showStats = false }: HeroProps) => {
                 <div className="flex items-center justify-center mb-1">
                   <Eye className="h-7 w-7 text-red-600" />
                 </div>
-                <div className="text-2xl font-bold text-red-600 mb-1">
+                <div className="text-4xl font-bold text-red-600 mb-1">
                   6.9B+
                 </div>
                 <div className="text-xs text-gray-700 uppercase font-semibold tracking-wide">
@@ -114,7 +114,7 @@ const Hero = ({ showStats = false }: HeroProps) => {
                 <div className="flex items-center justify-center mb-1">
                   <Heart className="h-7 w-7 text-red-600" />
                 </div>
-                <div className="text-2xl font-bold text-red-600 mb-1">
+                <div className="text-4xl font-bold text-red-600 mb-1">
                   56K+
                 </div>
                 <div className="text-xs text-gray-700 uppercase font-semibold tracking-wide">

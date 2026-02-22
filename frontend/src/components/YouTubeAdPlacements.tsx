@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const YouTubeAdPlacements = () => {
   return (
-    <section className="py-20 lg:py-24 bg-blue-50/30 overflow-hidden font-montserrat">
+    <section className="py-16 lg:py-20 bg-blue-50/30 overflow-hidden font-montserrat">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-16 lg:mb-20"
@@ -13,12 +13,12 @@ const YouTubeAdPlacements = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
             What the promotion <span className="text-red-600">looks like</span>
           </h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 max-w-6xl mx-auto items-stretch">
+        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 max-w-6xl mx-auto items-stretch pb-28">
 
           {/* In-Stream Card */}
           <motion.div
@@ -31,10 +31,16 @@ const YouTubeAdPlacements = () => {
             <div className="bg-white rounded-[2rem] p-6 shadow-xl border border-gray-100 relative z-10 h-full">
               {/* Header Skeleton */}
               <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3 w-1/3">
-                  <div className="h-2 w-full bg-gray-100 rounded-full"></div>
+                <div className="flex items-center gap-2">
+                  <svg className="h-5 w-7 text-red-600" viewBox="0 0 28 20" fill="currentColor">
+                    <path d="M27.4 3.1c-.3-1.2-1.2-2.1-2.4-2.4C22.8 0 14 0 14 0S5.2 0 3 .7C1.8 1 .9 1.9.6 3.1 0 5.3 0 10 0 10s0 4.7.6 6.9c.3 1.2 1.2 2.1 2.4 2.4C5.2 20 14 20 14 20s8.8 0 11-.7c1.2-.3 2.1-1.2 2.4-2.4.6-2.2.6-6.9.6-6.9s0-4.7-.6-6.9zM11.2 14.3V5.7l7.3 4.3-7.3 4.3z" />
+                  </svg>
+                  <span className="text-xs font-semibold text-gray-800">YouTube</span>
                 </div>
-                <div className="h-6 w-6 rounded-full bg-gray-100"></div>
+                <div className="flex items-center gap-2">
+                  <div className="h-5 w-24 bg-gray-100 rounded-full"></div>
+                  <div className="h-6 w-6 rounded-full bg-gray-100"></div>
+                </div>
               </div>
 
               {/* Video Player Mockup */}
@@ -102,8 +108,16 @@ const YouTubeAdPlacements = () => {
             <div className="bg-white rounded-[2rem] p-6 shadow-xl border border-gray-100 relative z-10 h-full">
               {/* Header Skeleton */}
               <div className="flex items-center justify-between mb-6">
-                <div className="h-2 w-16 bg-gray-100 rounded-full"></div>
-                <div className="h-6 w-6 rounded-full bg-gray-100"></div>
+                <div className="flex items-center gap-2">
+                  <svg className="h-5 w-7 text-red-600" viewBox="0 0 28 20" fill="currentColor">
+                    <path d="M27.4 3.1c-.3-1.2-1.2-2.1-2.4-2.4C22.8 0 14 0 14 0S5.2 0 3 .7C1.8 1 .9 1.9.6 3.1 0 5.3 0 10 0 10s0 4.7.6 6.9c.3 1.2 1.2 2.1 2.4 2.4C5.2 20 14 20 14 20s8.8 0 11-.7c1.2-.3 2.1-1.2 2.4-2.4.6-2.2.6-6.9.6-6.9s0-4.7-.6-6.9zM11.2 14.3V5.7l7.3 4.3-7.3 4.3z" />
+                  </svg>
+                  <span className="text-xs font-semibold text-gray-800">YouTube</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-5 w-24 bg-gray-100 rounded-full"></div>
+                  <div className="h-6 w-6 rounded-full bg-gray-100"></div>
+                </div>
               </div>
 
               <div className="grid grid-cols-12 gap-6">

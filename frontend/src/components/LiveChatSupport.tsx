@@ -7,13 +7,13 @@ const LiveChatSupport = () => {
   };
 
   return (
-    <section className="py-12 lg:py-16 bg-gradient-to-br from-gray-50 to-white font-montserrat">
+    <section className="py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-white font-montserrat">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Container with Border */}
         <div className="bg-white rounded-3xl shadow-2xl p-6 lg:p-10 border-4 border-red-400 relative overflow-hidden">
           {/* Light Red Gradient Overlay */}
           <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-red-400 via-red-500 to-red-400 opacity-10 pointer-events-none"></div>
-          
+
           <div className="relative z-10">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               {/* Left Side - Content */}
@@ -25,16 +25,16 @@ const LiveChatSupport = () => {
                 </div>
 
                 {/* Heading */}
-                <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-6 leading-tight">
+                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight">
                   We are always here to help you
                 </h2>
 
                 {/* Description */}
-                <p className="text-base text-gray-600 mb-2 leading-relaxed">
+                <p className="text-base lg:text-lg text-gray-600 mb-2 leading-relaxed">
                   If you have questions, please, contact us via Live Chat or email at
                 </p>
-                <a 
-                  href="mailto:support@vidflyy.in" 
+                <a
+                  href="mailto:support@vidflyy.in"
                   className="text-red-600 font-medium text-base hover:underline mb-8 inline-block"
                 >
                   support@vidflyy.in
@@ -68,8 +68,8 @@ const LiveChatSupport = () => {
                         </div>
                       </div>
                       <div className="relative flex-shrink-0">
-                        <img 
-                          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" 
+                        <img
+                          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
                           alt="Customer"
                           className="w-12 h-12 rounded-full object-cover ring-2 ring-red-200 shadow-lg"
                         />
@@ -80,8 +80,8 @@ const LiveChatSupport = () => {
                     {/* Support Message */}
                     <div className="flex items-start gap-3">
                       <div className="relative flex-shrink-0">
-                        <img 
-                          src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" 
+                        <img
+                          src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face"
                           alt="Support"
                           className="w-12 h-12 rounded-full object-cover ring-2 ring-red-200 shadow-lg"
                         />
@@ -108,8 +108,8 @@ const LiveChatSupport = () => {
                         </div>
                       </div>
                       <div className="relative flex-shrink-0">
-                        <img 
-                          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" 
+                        <img
+                          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
                           alt="Customer"
                           className="w-12 h-12 rounded-full object-cover ring-2 ring-red-200 shadow-lg"
                         />

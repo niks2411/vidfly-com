@@ -57,11 +57,11 @@ const TipsSection = () => {
     ];
 
     return (
-        <section className="py-12 lg:py-16 bg-gradient-to-br from-red-50 to-white relative overflow-hidden font-montserrat">
+        <section className="py-16 lg:py-20 bg-gradient-to-br from-red-50 to-white relative overflow-hidden font-montserrat">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Header */}
                 <div className="mb-10 text-center animate-fade-in">
-                    <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">
+                    <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
                         Tips on <span className="text-red-600">How To Promote Your YouTube Channel</span>
                     </h1>
                 </div>
