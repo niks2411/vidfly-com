@@ -138,7 +138,7 @@ const Testimonials = () => {
           </button>
 
           {/* Cards */}
-          <div className="overflow-hidden px-2">
+          <div className="overflow-hidden px-4 py-10 -my-10">
             <div
               className="grid gap-6"
               style={{ gridTemplateColumns: `repeat(${visible}, 1fr)` }}
