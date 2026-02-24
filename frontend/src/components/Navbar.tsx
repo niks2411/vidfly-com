@@ -59,40 +59,51 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50 font-montserrat">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          <Link to="/" className="flex items-center" onClick={scrollToTop}>
-            <img src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png" alt="Vidflyy" className="h-8 w-auto" />
+    <nav className="bg-white footer-shadow sticky top-0 z-50 font-montserrat w-full">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center h-16 lg:h-[72px]">
+          {/* Logo */}
+          <Link to="/" className="flex items-center shrink-0 mr-8 lg:mr-12" onClick={scrollToTop}>
+            <img src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png" alt="Vidflyy" className="h-9 w-auto" />
           </Link>
 
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
-              <button onClick={() => handleNavClick("/")} className="text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition-all duration-300 hover:scale-105">
-                HOME
-              </button>
-              <button onClick={() => handleNavClick("/features")} className="text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition-all duration-300 hover:scale-105">
-                FEATURES
-              </button>
-              <button onClick={() => handleNavClick("/success-stories")} className="text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition-all duration-300 hover:scale-105">
-                SUCCESS STORIES
-              </button>
-              <button onClick={() => handleNavClick("/pricing")} className="text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition-all duration-300 hover:scale-105">
-                PRICING
-              </button>
-              <button onClick={() => handleNavClick("/contact")} className="text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition-all duration-300 hover:scale-105">
-                CONTACT US
-              </button>
-            </div>
+          {/* Desktop Nav Links - sit right next to the logo */}
+          <div className="hidden lg:flex items-center gap-6 xl:gap-8">
+            <button onClick={() => handleNavClick("/how-it-works")} className="text-[#0E172B] hover:text-red-600 text-[14px] font-semibold transition-colors duration-300 whitespace-nowrap">
+              How Vidflyy Works
+            </button>
+            <button onClick={() => handleNavClick("/pricing")} className="text-[#0E172B] hover:text-red-600 text-[14px] font-semibold transition-colors duration-300 whitespace-nowrap">
+              Pricing
+            </button>
+            <button onClick={() => handleNavClick("/features")} className="text-[#0E172B] hover:text-red-600 text-[14px] font-semibold transition-colors duration-300 whitespace-nowrap">
+              Features
+            </button>
+            <button onClick={() => handleNavClick("/success-stories")} className="text-[#0E172B] hover:text-red-600 text-[14px] font-semibold transition-colors duration-300 whitespace-nowrap">
+              Success Stories
+            </button>
+            <button onClick={() => handleNavClick("/faq")} className="text-[#0E172B] hover:text-red-600 text-[14px] font-semibold transition-colors duration-300 whitespace-nowrap">
+              FAQ
+            </button>
+            <button onClick={() => handleNavClick("/contact")} className="text-[#0E172B] hover:text-red-600 text-[14px] font-semibold transition-colors duration-300 whitespace-nowrap">
+              Contact Us
+            </button>
           </div>
 
-          <div className="hidden md:block">
-            <Button onClick={handleGetStartedClick} className="bg-red-600 hover:bg-red-700 text-white transition-all duration-300 hover:scale-105 active:scale-95 rounded-xl">
-              Get Started
+          {/* Right side: Login + CTA pushed to the far right */}
+          <div className="hidden lg:flex items-center gap-6 ml-auto shrink-0">
+            <button onClick={() => handleNavClick("/")} className="text-[#0E172B] hover:text-red-600 text-[14px] font-semibold whitespace-nowrap">
+              Login
+            </button>
+            <Button
+              onClick={handleGetStartedClick}
+              className="bg-[#E52D27] hover:bg-[#D42621] text-white px-6 py-5 rounded-lg text-[14px] font-bold transition-all duration-300 transform hover:scale-105 whitespace-nowrap"
+            >
+              Get started now
             </Button>
           </div>
 
-          <div className="md:hidden">
+          {/* Hamburger Menu Icon - Visible below 1024px */}
+          <div className="lg:hidden ml-auto">
             {!isCampaignPage ? (
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -107,29 +118,39 @@ const Navbar = () => {
         </div>
 
         {isOpen && (
-          <div className="md:hidden animate-fade-in">
+          <div className="lg:hidden animate-fade-in pb-6">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
-              <button onClick={() => handleNavClick("/")} className="text-gray-700 hover:text-red-600 block px-3 py-2 text-base font-medium w-full text-left transition-colors duration-300">
-                HOME
-              </button>
-              <button onClick={() => handleNavClick("/features")} className="text-gray-700 hover:text-red-600 block px-3 py-2 text-base font-medium w-full text-left transition-colors duration-300">
-                FEATURES
-              </button>
-              <button onClick={() => handleNavClick("/success-stories")} className="text-gray-700 hover:text-red-600 block px-3 py-2 text-base font-medium w-full text-left transition-colors duration-300">
-                SUCCESS STORIES
-              </button>
-              <button onClick={() => handleNavClick("/pricing")} className="text-gray-700 hover:text-red-600 block px-3 py-2 text-base font-medium w-full text-left transition-colors duration-300">
-                PRICING
-              </button>
-              <button onClick={() => handleNavClick("/contact")} className="text-gray-700 hover:text-red-600 block px-3 py-2 text-base font-medium w-full text-left transition-colors duration-300">
-                CONTACT US
-              </button>
-              <Button onClick={handleGetStartedClick} className="bg-red-600 hover:bg-red-700 text-white w-full mt-4 transition-all duration-300 hover:scale-105 active:scale-95">
-                Get Started
-              </Button>
+              {[
+                { label: "How Vidflyy Works", path: "/how-it-works" },
+                { label: "Pricing", path: "/pricing" },
+                { label: "Features", path: "/features" },
+                { label: "Success Stories", path: "/success-stories" },
+                { label: "FAQ", path: "/faq" },
+                { label: "Contact Us", path: "/contact" },
+              ].map((link) => (
+                <button
+                  key={link.path}
+                  onClick={() => handleNavClick(link.path)}
+                  className="text-[#0E172B] hover:text-red-600 block px-3 py-4 text-lg font-bold w-full text-left transition-colors duration-300 border-b border-gray-50"
+                >
+                  {link.label}
+                </button>
+              ))}
+              <div className="pt-6 space-y-4 px-3">
+                <button onClick={() => handleNavClick("/")} className="text-[#0E172B] font-bold w-full text-left text-lg">
+                  Login
+                </button>
+                <Button onClick={handleGetStartedClick} className="bg-[#E52D27] hover:bg-[#D42621] text-white w-full py-7 text-lg font-bold rounded-xl shadow-lg">
+                  Get started now
+                </Button>
+              </div>
             </div>
           </div>
         )}
+
+
+
+
       </div>
     </nav>
   );
