@@ -1,451 +1,192 @@
 import { Link } from "react-router-dom";
-import { Phone, Mail } from "lucide-react";
+import { Youtube, Facebook, Instagram, Linkedin } from "lucide-react";
 
 const Footer = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
-  const navLinks = [
-    [
-      { label: "Blog", url: "/blog" },
-      { label: "FAQ", url: "/features" },
-    ],
-    [
-      { label: "Terms of Service", url: "/terms-and-conditions" },
-      { label: "Pricing", url: "/pricing" },
-    ],
-    [
-      { label: "Privacy Policy", url: "/privacy-policy" },
-      { label: "Disclaimer", url: "/disclaimer" },
-    ],
-    [
-      { label: "About Us", url: "/features" },
-      { label: "Refund Policy", url: "/refund-policy" },
-    ],
-    [
-      { label: "Success Stories", url: "/success-stories" },
-      { label: "Contact Us", url: "/contact" },
-    ],
-  ];
-
-  const paymentMethods = ["VISA", "MC", "AMEX", "Discover", "Apple Pay", "G Pay", "PayPal"];
-
   return (
-    <footer className="nf-footer" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+    <footer className="footer-section bg-white font-montserrat pt-12 pb-8">
+      <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Top thin red border */}
+        <div className="w-full h-[1px] bg-[#E52D27] mb-12 opacity-80"></div>
 
-      {/* ── Band 1: Nav links + Trust badges ── */}
-      <div className="nf-band1">
-        <div className="nf-container">
-          {/* Nav grid */}
-          <nav className="nf-nav-grid">
-            {navLinks.map((col, ci) => (
-              <div key={ci} className="nf-nav-col">
-                {col.map((link) => (
-                  <Link
-                    key={link.label}
-                    to={link.url}
-                    onClick={scrollToTop}
-                    className="nf-nav-link"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            ))}
-          </nav>
-
-          {/* Trust badges */}
-          <div className="nf-badges">
-            <div className="nf-premier-badge">
-              {/* Google G logo SVG */}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="38" height="38">
-                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
-                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
-                <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
-                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
-                <path fill="none" d="M0 0h48v48H0z" />
-              </svg>
-              <div className="nf-premier-text">
-                <span className="nf-premier-google">Google</span>
-                <span className="nf-premier-label">Premier Partner</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Band 2: Contact + Payment methods ── */}
-      <div className="nf-band2">
-        <div className="nf-container">
-          {/* Contact */}
-          <div className="nf-contact">
-            <a href="tel:+917355518761" className="nf-contact-item">
-              <Phone size={15} strokeWidth={2} />
-              <span>+91 7355518761</span>
-            </a>
-            <a href="mailto:info@videopromotion.digital" className="nf-contact-item">
-              <Mail size={15} strokeWidth={2} />
-              <span>info@videopromotion.digital</span>
-            </a>
-          </div>
-
-          {/* Payment icons */}
-          <div className="nf-payments">
-            <div className="nf-pay-badge nf-pay-visa">VISA</div>
-            <div className="nf-pay-badge nf-pay-mc">
-              <span className="nf-mc-left">●</span>
-              <span className="nf-mc-right">●</span>
-            </div>
-            <div className="nf-pay-badge nf-pay-amex">AMEX</div>
-            <div className="nf-pay-badge nf-pay-disc">DISC</div>
-            <div className="nf-pay-badge nf-pay-apple">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" /></svg>
-              Pay
-            </div>
-            <div className="nf-pay-badge nf-pay-gpay">G Pay</div>
-            <div className="nf-pay-badge nf-pay-paypal">
-              <span style={{ color: "#003087", fontWeight: 800 }}>Pay</span>
-              <span style={{ color: "#009cde", fontWeight: 800 }}>Pal</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Band 3: Copyright + App links + Social ── */}
-      <div className="nf-band3">
-        <div className="nf-container nf-band3-inner">
-          {/* Left: copyright + disclaimer + address */}
-          <div className="nf-copy-block">
-            <p className="nf-copyright">© 2026, Vidflyy</p>
-            <p className="nf-disclaimer">
-              Vidflyy is an independent advertising service and is not associated with or endorsed by YouTube.
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          {/* Column 1: Logo, Desc, Social, Badge */}
+          <div className="flex flex-col gap-6">
+            <Link to="/" onClick={scrollToTop}>
+              <img
+                src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png"
+                alt="Vidflyy"
+                className="h-7 w-auto object-contain"
+              />
+            </Link>
+            <p className="text-[14px] text-[#4b5563] font-medium leading-[1.6] max-w-[260px]">
+              Run YouTube growth campaigns with real audience reach, full control, and transparent results.
             </p>
-            <div className="nf-lang">
-              <span>🇮🇳</span>
-              <span>English (IN)</span>
+
+            {/* Social Icons - Red Squares matching reference */}
+            <div className="flex items-center gap-3">
+              <a href="#" className="w-[30px] h-[30px] bg-[#E52D27] rounded-[4px] flex items-center justify-center hover:bg-[#CC2420] transition-colors">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.238 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.751.79 1.751 1.764-.784 1.764-1.751 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                </svg>
+              </a>
+              <a href="#" className="w-[30px] h-[30px] bg-[#E52D27] rounded-[4px] flex items-center justify-center hover:bg-[#CC2420] transition-colors">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                  <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                </svg>
+              </a>
+              <a href="#" className="w-[30px] h-[30px] bg-[#E52D27] rounded-[4px] flex items-center justify-center hover:bg-[#CC2420] transition-colors">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+              <a href="#" className="w-[30px] h-[30px] bg-[#E52D27] rounded-[4px] flex items-center justify-center hover:bg-[#CC2420] transition-colors">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                  <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+                </svg>
+              </a>
+            </div>
+            {/* Premium Google Partner Badge */}
+            <div className="mt-2 w-[115px] border border-[#dadce0] rounded-[4px] overflow-hidden bg-white">
+              <div className="p-2 flex flex-col items-center gap-1">
+                <svg width="28" height="28" viewBox="0 0 48 48">
+                  <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
+                  <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
+                  <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" />
+                  <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
+                </svg>
+                <span className="text-[10px] font-bold text-[#5f6368] whitespace-nowrap">Google Partner</span>
+              </div>
+              <div className="bg-[#5f6368] text-white text-[8px] font-bold py-1.5 w-full text-center uppercase tracking-wider">
+                Premier 2025
+              </div>
             </div>
           </div>
 
-          {/* Right: app + social */}
-          <div className="nf-right-block">
-            {/* Social icons */}
-            <div className="nf-social">
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="nf-social-icon"
-                aria-label="YouTube"
-              >
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M21.58 7.19c-.23-.87-.9-1.55-1.77-1.78C18.25 5 12 5 12 5s-6.25 0-7.81.41c-.87.23-1.54.91-1.77 1.78C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.87.9 1.55 1.77 1.78C5.75 19 12 19 12 19s6.25 0 7.81-.41c.87-.23 1.54-.91 1.77-1.78C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z" /></svg>
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="nf-social-icon"
-                aria-label="Facebook"
-              >
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="nf-social-icon"
-                aria-label="X / Twitter"
-              >
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
-              </a>
+          {/* Column 2: Youtube Promotion */}
+          <div className="lg:pl-8">
+            <h4 className="text-[15px] font-bold text-[#111] mb-5">Youtube Promotion</h4>
+            <ul className="flex flex-col gap-3 font-medium">
+              {["Buy Youtube Views", "Buy Youtube Subscribers", "Buy Youtube Likes", "Free Youtube Views"].map((text) => (
+                <li key={text}>
+                  <Link to="#" onClick={scrollToTop} className="text-[14px] text-[#4b5563] hover:text-[#E52D27] transition-colors">
+                    {text}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3: Channel Promotion */}
+          <div>
+            <h4 className="text-[15px] font-bold text-[#111] mb-5">Channel Promotion</h4>
+            <ul className="flex flex-col gap-3 font-medium">
+              {[
+                "Youtube Music Promotion",
+                "Youtube Gaming Channel Promotion",
+                "Youtube Travel Promotion",
+                "Youtube Health & Beauty Promotion",
+                "Youtube Motivation Promotion",
+                "Youtube Vlogging Promotion"
+              ].map((text) => (
+                <li key={text}>
+                  <Link to="#" onClick={scrollToTop} className="text-[14px] text-[#4b5563] hover:text-[#E52D27] transition-colors">
+                    {text}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 4: Contact & Action */}
+          <div className="flex flex-col items-start gap-6">
+            <Link to="/get-started" onClick={scrollToTop}>
+              <button className="bg-[#E52D27] hover:bg-[#CC2420] text-white font-extrabold text-[14px] px-8 py-3 rounded-[4px] transition-all transform hover:scale-[1.02]">
+                Get started now
+              </button>
+            </Link>
+
+            <div className="space-y-4">
+              <div>
+                <h5 className="text-[14px] font-bold text-[#111] mb-2">FIND US:</h5>
+                <p className="text-[13px] text-[#6b7280] leading-[1.6]">
+                  3rd Floor, SC0-40, Janta Nagar,
+                  <br />
+                  Sahibzada Ajit Singh Nagar,
+                  <br />
+                  Kharar, Punjab 160062
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <a href="tel:+917355518761" className="text-[14px] font-bold text-[#111] hover:text-[#E52D27]">
+                  +91 7355518761
+                </a>
+                <a href="mailto:Support@vidflyy.in" className="text-[14px] font-bold text-[#111] hover:text-[#E52D27]">
+                  Support@vidflyy.in
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom thin red border */}
+        <div className="w-full h-[1px] bg-[#E52D27] mb-8 opacity-80"></div>
+
+        {/* Last Line: Policies, Copyright, Payments */}
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-2 text-[13px] font-bold text-[#6b7280]">
+              <Link to="/privacy-policy" className="hover:text-[#111]">Privacy Policy</Link>
+              <span>|</span>
+              <Link to="/terms-and-conditions" className="hover:text-[#111]">Terms & Conditions</Link>
+            </div>
+
+            <div className="flex items-center gap-6 saturate-[0.8]">
+              {/* Visual Payment Logos */}
+              <div className="flex items-center gap-5">
+                <span className="text-[14px] font-black italic text-[#1A1F71] tracking-tighter">VISA</span>
+                <div className="flex items-center -gap-1">
+                  <div className="w-4 h-4 rounded-full bg-[#EB001B] z-10"></div>
+                  <div className="w-4 h-4 rounded-full bg-[#F79E1B] -ml-2 opacity-90"></div>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-[14px] font-extrabold text-[#003087]">Pay<span className="text-[#009CDE]">Pal</span></span>
+                </div>
+                <div className="flex items-center gap-1 opacity-70">
+                  <svg width="20" height="20" viewBox="0 0 48 48">
+                    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
+                    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
+                    <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" />
+                    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
+                  </svg>
+                  <span className="font-bold text-[14px]">Pay</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <p className="text-[12px] font-bold text-[#6b7280]">© 2026, Vidflyy</p>
+              <p className="text-[11px] text-[#9ca3af] leading-relaxed max-w-2xl">
+                Vidflyy is an independent advertising service and is not associated with or endorsed by YouTube.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/1200px-Flag_of_India.svg.png"
+                alt="India"
+                className="h-3 w-auto rounded-[1px] shadow-sm"
+              />
+              <span className="text-[11px] font-bold text-[#6b7280]">Proud Indian Company</span>
             </div>
           </div>
         </div>
       </div>
-
-      <style>{`
-        .nf-footer {
-          background: #f3f4f8;
-          border-top: 1px solid #e0e2ea;
-          font-size: clamp(0.78rem, 1vw, 0.95rem);
-        }
-
-        .nf-container {
-          max-width: min(1300px, 98vw);
-          margin: 0 auto;
-          padding: 0 clamp(0.5rem, 1.5vw, 1rem);
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 1.5rem;
-        }
-
-        /* ── Band 1 ── */
-        .nf-band1 {
-          background: #fff;
-          padding: clamp(1rem, 2.5vw, 1.5rem) 0;
-          border-bottom: 1px solid #e0e2ea;
-        }
-
-        .nf-nav-grid {
-          display: flex;
-          gap: clamp(1rem, 3vw, 2.25rem);
-          flex-wrap: wrap;
-        }
-
-        .nf-nav-col {
-          display: flex;
-          flex-direction: column;
-          gap: 0.625rem;
-        }
-
-        .nf-nav-link {
-          color: #333;
-          text-decoration: none;
-          font-size: clamp(0.72rem, 1vw, 0.85rem);
-          font-weight: 500;
-          white-space: nowrap;
-          transition: color 0.18s;
-        }
-
-        .nf-nav-link:hover {
-          color: #e52020;
-        }
-
-        .nf-badges {
-          display: flex;
-          gap: 10px;
-          flex-shrink: 0;
-        }
-
-        /* Google Premier Partner pill badge */
-        .nf-premier-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.625rem;
-          border: 1.5px solid #dadce0;
-          border-radius: 100px;
-          padding: 0.5rem clamp(0.75rem, 1.5vw, 1.125rem) 0.5rem 0.75rem;
-          background: #fff;
-          box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-        }
-
-        .nf-premier-text {
-          display: flex;
-          align-items: center;
-          gap: 0.3rem;
-          line-height: 1;
-        }
-
-        .nf-premier-google {
-          font-size: clamp(0.78rem, 1vw, 0.92rem);
-          font-weight: 400;
-          color: #5f6368;
-          letter-spacing: 0.01em;
-        }
-
-        .nf-premier-label {
-          font-size: clamp(0.78rem, 1vw, 0.92rem);
-          font-weight: 700;
-          color: #202124;
-          letter-spacing: 0.01em;
-        }
-
-        /* ── Band 2 ── */
-        .nf-band2 {
-          background: #fff;
-          padding: clamp(0.75rem, 1.5vw, 1rem) 0;
-          border-bottom: 1px solid #e0e2ea;
-        }
-
-        .nf-contact {
-          display: flex;
-          gap: clamp(1rem, 2.5vw, 1.75rem);
-          flex-wrap: wrap;
-        }
-
-        .nf-contact-item {
-          display: flex;
-          align-items: center;
-          gap: 0.44rem;
-          color: #333;
-          text-decoration: none;
-          font-size: clamp(0.72rem, 1vw, 0.85rem);
-          font-weight: 500;
-          transition: color 0.18s;
-        }
-
-        .nf-contact-item:hover {
-          color: #e52020;
-        }
-
-        /* Payment badges */
-        .nf-payments {
-          display: flex;
-          align-items: center;
-          gap: 0.375rem;
-          flex-wrap: wrap;
-          justify-content: flex-end;
-        }
-
-        .nf-pay-badge {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: clamp(22px, 2vw, 28px);
-          min-width: clamp(32px, 3vw, 42px);
-          padding: 0 0.375rem;
-          border: 1px solid #d1d5db;
-          border-radius: 4px;
-          background: #fff;
-          font-size: clamp(0.55rem, 0.8vw, 0.7rem);
-          font-weight: 800;
-          letter-spacing: 0.03em;
-          white-space: nowrap;
-          gap: 2px;
-        }
-
-        .nf-pay-visa  { color: #1a1f71; }
-        .nf-pay-amex  { color: #007bc1; }
-        .nf-pay-disc  { color: #f76f20; }
-        .nf-pay-apple { color: #111; gap: 3px; }
-        .nf-pay-gpay  { color: #555; letter-spacing: 0; }
-        .nf-pay-paypal { gap: 0; }
-
-        .nf-pay-mc {
-          position: relative;
-          overflow: visible;
-          border: none;
-          background: transparent;
-          min-width: 36px;
-          padding: 0;
-        }
-
-        .nf-mc-left {
-          color: #eb001b;
-          font-size: 1.4rem;
-          line-height: 1;
-          opacity: 0.95;
-        }
-
-        .nf-mc-right {
-          color: #f79e1b;
-          font-size: 1.4rem;
-          line-height: 1;
-          margin-left: -10px;
-          opacity: 0.9;
-        }
-
-        /* ── Band 3 ── */
-        .nf-band3 {
-          background: #f3f4f8;
-          padding: clamp(1rem, 2vw, 1.375rem) 0;
-        }
-
-        .nf-band3-inner {
-          align-items: flex-start;
-        }
-
-        .nf-copy-block {
-          display: flex;
-          flex-direction: column;
-          gap: 5px;
-        }
-
-        .nf-copyright {
-          font-weight: 700;
-          color: #111;
-          font-size: clamp(0.72rem, 1vw, 0.85rem);
-          margin: 0;
-        }
-
-        .nf-disclaimer {
-          color: #2563eb;
-          font-size: clamp(0.68rem, 0.9vw, 0.8rem);
-          margin: 0;
-          line-height: 1.5;
-          max-width: min(580px, 90vw);
-        }
-
-        .nf-address {
-          color: #555;
-          font-size: clamp(0.66rem, 0.9vw, 0.78rem);
-          margin: 0;
-          line-height: 1.6;
-        }
-
-        .nf-lang {
-          display: flex;
-          align-items: center;
-          gap: 0.375rem;
-          color: #555;
-          font-size: clamp(0.66rem, 0.9vw, 0.78rem);
-          margin-top: 0.25rem;
-        }
-
-        /* Right block */
-        .nf-right-block {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          gap: 14px;
-          flex-shrink: 0;
-        }
-
-        /* Social icons */
-        .nf-social {
-          display: flex;
-          gap: 0.5rem;
-        }
-
-        .nf-social-icon {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: clamp(28px, 2.5vw, 36px);
-          height: clamp(28px, 2.5vw, 36px);
-          border-radius: 50%;
-          border: 1px solid #d1d5db;
-          background: #fff;
-          color: #444;
-          text-decoration: none;
-          transition: border-color 0.18s, color 0.18s, background 0.18s;
-        }
-
-        .nf-social-icon:hover {
-          background: #e52020;
-          border-color: #e52020;
-          color: #fff;
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 860px) {
-          .nf-container {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-
-          .nf-badges {
-            align-self: flex-start;
-          }
-
-          .nf-payments {
-            justify-content: flex-start;
-          }
-
-          .nf-right-block {
-            align-items: flex-start;
-          }
-        }
-
-        @media (max-width: 560px) {
-          .nf-nav-grid {
-            gap: 20px;
-          }
-
-          .nf-app-buttons {
-            flex-direction: column;
-          }
-        }
-      `}</style>
     </footer>
   );
 };

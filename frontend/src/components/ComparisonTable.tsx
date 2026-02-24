@@ -40,11 +40,11 @@ const ComparisonTable = () => {
 
           {/* Left: heading + description */}
           <div className="ct-header-left">
-            <h2 className="ct-heading">
+            <h2 className="section-heading">
               The smarter way to{" "}
-              <span className="ct-highlight">grow on YouTube</span>
+              <span className="text-red-600">grow on YouTube</span>
             </h2>
-            <p className="ct-sub">
+            <p className="section-desc">
               Most creators waste weeks and thousands of rupees trying to figure out Google Ads.
               Vidflyy does it all for you — real targeting, real views, real growth.
               Setup takes 3 minutes. Results start in hours.
@@ -104,12 +104,13 @@ const ComparisonTable = () => {
           grid-template-columns: 1fr ${COL_ICON} ${COL_ICON};
           align-items: flex-end;
           column-gap: 12px;
-          margin-bottom: 0;
+          margin-bottom: 1rem;
         }
 
         .ct-header-left {
           padding-right: clamp(1rem, 3vw, 2.5rem);
-          padding-bottom: 1.5rem;
+          padding-bottom: 0;
+          margin-top: 1rem;
         }
 
         .ct-heading {
@@ -143,7 +144,7 @@ const ComparisonTable = () => {
           height: clamp(60px, 7vw, 80px);
           border-radius: 0.625rem;
           background: #fff;
-          margin-bottom: 0;
+          margin-bottom: 40px;
         }
 
         .ct-vidflyy-card {

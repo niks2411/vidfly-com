@@ -63,7 +63,7 @@ const Navbar = () => {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-16 lg:h-[72px]">
           {/* Logo */}
-          <Link to="/" className="flex items-center shrink-0 mr-8 lg:mr-12" onClick={scrollToTop}>
+          <Link to="/" className="flex items-center shrink-0 mr-8 lg:mr-12 lg:ml-4" onClick={scrollToTop}>
             <img src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png" alt="Vidflyy" className="h-9 w-auto" />
           </Link>
 
@@ -96,7 +96,7 @@ const Navbar = () => {
             </button>
             <Button
               onClick={handleGetStartedClick}
-              className="bg-[#E52D27] hover:bg-[#D42621] text-white px-6 py-5 rounded-lg text-[14px] font-bold transition-all duration-300 transform hover:scale-105 whitespace-nowrap"
+              className="bg-[#E52D27] hover:bg-[#D42621] text-white px-6 py-5 rounded-lg text-[14px] font-bold transition-all duration-300 transform hover:scale-105 whitespace-nowrap normal-case"
             >
               Get started now
             </Button>

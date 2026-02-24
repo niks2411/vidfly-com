@@ -1,144 +1,94 @@
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import React from "react";
 
 const GoogleAdsSection = () => {
-  const navigate = useNavigate();
-
-  const handleWannaKnowMore = () => {
-    navigate('/how-it-works');
-  };
-
-  const handleStartPromotion = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    navigate('/get-started');
-  };
+  const stats = [
+    {
+      icon: (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3056D3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+      ),
+      number: "8.9B+",
+      label: "REAL VIEWS DELIVERED",
+    },
+    {
+      icon: (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#3056D3">
+          <rect x="2" y="4" width="20" height="16" rx="3" ry="3" />
+          <path d="M10 8l5 4-5 4V8z" fill="white" />
+        </svg>
+      ),
+      number: "58K+",
+      label: "PROMOTED YOUTUBE CHANNEL",
+    },
+    {
+      icon: (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#3056D3">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        </svg>
+      ),
+      number: "56K+",
+      label: "CREATORS LOVE US",
+    },
+  ];
 
   return (
-    <section className="py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-white font-montserrat relative overflow-hidden">
-      {/* Background Animated Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-24 -left-24 w-64 h-64 bg-red-100 rounded-full blur-3xl opacity-20 animate-blob"></div>
-        <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-red-50 rounded-full blur-3xl opacity-15 animate-blob animation-delay-2000"></div>
-      </div>
-
-      <div className="max-w-6xl mx-auto relative z-10">
-        {/* Top Section */}
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center mb-12">
-          {/* Left - Google Partner Card */}
-          <div className="flex justify-center md:justify-start animate-fade-in">
-            <div className="bg-gradient-to-br from-red-400 to-red-500 rounded-3xl p-8 lg:p-10 text-center text-white shadow-2xl max-w-sm w-full transform hover:scale-105 transition-transform duration-300">
-              {/* Google Partner Badge */}
-              <div className="bg-white rounded-2xl p-6 lg:p-8 mb-6 inline-block">
-                <svg viewBox="0 0 272 92" className="h-12 lg:h-14 mx-auto mb-3">
-                  <path fill="#EA4335" d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" />
-                  <path fill="#FBBC05" d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" />
-                  <path fill="#4285F4" d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z" />
-                  <path fill="#34A853" d="M225 3v65h-9.5V3h9.5z" />
-                  <path fill="#EA4335" d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" />
-                  <path fill="#4285F4" d="M35.29 41.41V32H67c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z" />
-                </svg>
-                <h3 className="text-gray-800 text-base font-semibold">Google Partner</h3>
+    <section className="bg-white font-montserrat py-14 lg:py-20">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Stats Row */}
+        <div className="flex flex-col sm:flex-row justify-between gap-10 mb-16 lg:mb-20">
+          {stats.map((stat, index) => (
+            <div key={index} className="flex items-center gap-4">
+              <div className="flex-shrink-0 w-[52px] h-[52px] rounded-full bg-[#E2E5EB] flex items-center justify-center">
+                {stat.icon}
               </div>
+              <div>
+                <div className="text-[30px] lg:text-[36px] font-extrabold text-[#0E172B] leading-none">
+                  {stat.number}
+                </div>
+                <div className="text-[10px] lg:text-[11px] font-bold text-[#64748B] tracking-[0.1em] mt-1">
+                  {stat.label}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
 
-              {/* Text Content */}
-              <h2 className="text-xl font-bold mb-6 leading-tight">
-                We only use Google Ads to promote your videos.
-              </h2>
-
-              {/* CTA Button */}
-              <Button
-                onClick={handleWannaKnowMore}
-                variant="outline"
-                className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-red-600 px-6 py-4 rounded-xl text-base font-semibold transition-all duration-300 hover:scale-105 active:scale-95 w-full"
-              >
-                Wanna know more?
-              </Button>
+        {/* Google Partner Card */}
+        <div className="border border-gray-200 rounded-xl p-8 lg:p-10 flex flex-col md:flex-row items-center gap-8">
+          {/* Google Partner Badge */}
+          <div className="flex-shrink-0">
+            <div className="border border-gray-200 rounded-lg p-5 flex flex-col items-center relative">
+              {/* External link icon */}
+              <svg className="absolute top-3 right-3 w-3.5 h-3.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
+              </svg>
+              {/* Google G Logo */}
+              <svg width="48" height="48" viewBox="0 0 48 48" className="mb-2">
+                <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
+                <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
+                <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" />
+                <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
+              </svg>
+              <span className="text-[14px] font-semibold text-[#0E172B]">Google Partner</span>
+              <span className="bg-[#1A73E8] text-white text-[11px] font-bold px-4 py-1 rounded-sm mt-2 tracking-wide">PREMIER 2025</span>
             </div>
           </div>
 
-          {/* Right - How Videos Will Be Seen */}
-          <div className="animate-fade-up animation-delay-100">
-            <img
-              src="/lovable-uploads/how-videos-seen.png"
-              alt="How your videos will be seen on YouTube"
-              className="w-full h-auto rounded-2xl   transform hover:scale-105 transition-all duration-300"
-              loading="lazy"
-            />
+          {/* Text Content */}
+          <div>
+            <h3 className="text-[20px] lg:text-[22px] font-bold text-[#0E172B] mb-2">
+              Official Google Partner — Powered by Google Ads
+            </h3>
+            <p className="section-desc !mx-0 !text-left">
+              Vidflyy promotes your YouTube content by running ad
+              <br className="hidden sm:block" />
+              campaigns via Google Ads on your behalf
+            </p>
           </div>
         </div>
-
-        {/* Bottom CTA Banner */}
-        <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-3xl p-6 lg:p-10 flex flex-col md:flex-row items-center justify-between shadow-xl gap-6 animate-fade-up animation-delay-200">
-          <h2 className="text-2xl lg:text-3xl font-bold text-white text-center md:text-left">
-            Promote your YouTube Videos Now
-          </h2>
-          <Button
-            onClick={handleStartPromotion}
-            className="bg-white text-red-600 hover:bg-gray-100 px-8 py-5 rounded-xl text-base font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl whitespace-nowrap"
-          >
-            Start Promotion →
-          </Button>
-        </div>
       </div>
-
-      <style>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes fadeUp {
-          from {
-            opacity: 0;
-            transform: translateY(25px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes blob {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-        }
-
-        .animate-fade-in {
-          animation: fadeIn 0.7s ease-out forwards;
-        }
-
-        .animate-fade-up {
-          opacity: 0;
-          animation: fadeUp 0.7s ease-out forwards;
-        }
-
-        .animation-delay-100 {
-          animation-delay: 0.2s;
-        }
-
-        .animation-delay-200 {
-          animation-delay: 0.4s;
-        }
-
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-      `}</style>
     </section>
   );
 };

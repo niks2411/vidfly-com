@@ -1,24 +1,14 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import NewServices from "@/components/NewServices";
-import YouTubeAdPlacements from "@/components/YouTubeAdPlacements";
-import VideoShowcase from "@/components/VideoShowcase";
-
-import Stats from "@/components/Stats";
-import ExampleCampaign from "@/components/ExampleCampaign";
-import Pricing from "@/components/Pricing";
-import Testimonials from "@/components/Testimonials";
-
-import OurWorks from "@/components/OurWorks";
-import FeaturedPartners from "@/components/FeaturedPartners";
-import Footer from "@/components/Footer";
-import LiveChatSupport from "@/components/LiveChatSupport";
-
-
+import YouTubeGrowthCampaigns from "@/components/YouTubeGrowthCampaigns";
+import PromotionCTA from "@/components/PromotionCTA";
+import HowItWorks from "@/components/HowItWorks";
 import GoogleAdsSection from "@/components/GoogleAdsSection";
-import OurAdvantages from "@/components/OurAdvantages";
+import VideoShowcaseNew from "@/components/VideoShowcaseNew";
 import WeeklyBudgetCTA from "@/components/WeeklyBudgetCTA";
 import ComparisonTable from "@/components/ComparisonTable";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
@@ -27,18 +17,14 @@ const Index = () => {
       <Hero showStats={true} />
       <GoogleAdsSection />
 
-
-
-      <VideoShowcase />
+      <HowItWorks />
+      <YouTubeGrowthCampaigns />
+      <PromotionCTA />
+      <VideoShowcaseNew />
       <NewServices />
-      <YouTubeAdPlacements />
-      <Testimonials />
-
-      <OurAdvantages />
-      <OurWorks />
-      <LiveChatSupport />
       <WeeklyBudgetCTA />
       <ComparisonTable />
+
       <Footer />
     </div>
   );
