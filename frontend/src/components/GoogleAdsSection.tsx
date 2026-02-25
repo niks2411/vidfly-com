@@ -4,8 +4,8 @@ const GoogleAdsSection = () => {
   const stats = [
     {
       icon: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3056D3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0z" />
           <circle cx="12" cy="12" r="3" />
         </svg>
       ),
@@ -14,9 +14,9 @@ const GoogleAdsSection = () => {
     },
     {
       icon: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="#3056D3">
-          <rect x="2" y="4" width="20" height="16" rx="3" ry="3" />
-          <path d="M10 8l5 4-5 4V8z" fill="white" />
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="#2563EB">
+          <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z" />
+          <polygon fill="white" points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
         </svg>
       ),
       number: "58K+",
@@ -24,8 +24,8 @@ const GoogleAdsSection = () => {
     },
     {
       icon: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="#3056D3">
-          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="#2563EB">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
         </svg>
       ),
       number: "56K+",
@@ -40,14 +40,14 @@ const GoogleAdsSection = () => {
         <div className="flex flex-col sm:flex-row justify-between gap-10 mb-16 lg:mb-20">
           {stats.map((stat, index) => (
             <div key={index} className="flex items-center gap-4">
-              <div className="flex-shrink-0 w-[52px] h-[52px] rounded-full bg-[#E2E5EB] flex items-center justify-center">
+              <div className="flex-shrink-0 w-[64px] h-[64px] rounded-[14px] border border-gray-200 bg-white flex items-center justify-center">
                 {stat.icon}
               </div>
               <div>
                 <div className="text-[30px] lg:text-[36px] font-extrabold text-[#0E172B] leading-none">
                   {stat.number}
                 </div>
-                <div className="text-[10px] lg:text-[11px] font-bold text-[#64748B] tracking-[0.1em] mt-1">
+                <div className="text-[15px] lg:text-[17px] font-bold text-[rgb(41,40,40)] tracking-[0.05em] mt-1">
                   {stat.label}
                 </div>
               </div>
@@ -56,7 +56,7 @@ const GoogleAdsSection = () => {
         </div>
 
         {/* Google Partner Card */}
-        <div className="border border-gray-200 rounded-xl p-8 lg:p-10 flex flex-col md:flex-row items-center gap-8">
+        <div className="border border-gray-200 rounded-xl p-8 lg:p-10 flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-16">
           {/* Google Partner Badge */}
           <div className="flex-shrink-0">
             <div className="border border-gray-200 rounded-lg p-5 flex flex-col items-center relative">

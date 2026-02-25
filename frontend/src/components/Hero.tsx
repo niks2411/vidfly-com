@@ -42,17 +42,17 @@ const Hero = ({ showStats }: HeroProps) => {
                   Add video → Set budget → Launch instantly
                 </div>
 
-                {/* YouTube Icon + Start Button */}
-                <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 bg-white p-3 rounded-xl shadow-md">
-                    <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+                {/* YouTube Icon + Start Button in a combined white box */}
+                <div className="inline-flex items-center bg-white p-2 rounded-lg shadow-sm border border-gray-100/50">
+                  <div className="px-4 py-2 border-r border-gray-100">
+                    <svg width="32" height="32" viewBox="0 0 48 48" fill="none">
                       <path d="M43.2 14.4C42.7 12.5 41.2 11 39.3 10.5C35.8 9.6 24 9.6 24 9.6C24 9.6 12.2 9.6 8.7 10.5C6.8 11 5.3 12.5 4.8 14.4C3.9 17.9 3.9 24 3.9 24C3.9 24 3.9 30.1 4.8 33.6C5.3 35.5 6.8 37 8.7 37.5C12.2 38.4 24 38.4 24 38.4C24 38.4 35.8 38.4 39.3 37.5C41.2 37 42.7 35.5 43.2 33.6C44.1 30.1 44.1 24 44.1 24C44.1 24 44.1 17.9 43.2 14.4Z" fill="#E52D27" />
                       <path d="M19.8 30.6L31.2 24L19.8 17.4V30.6Z" fill="white" />
                     </svg>
                   </div>
                   <Button
                     onClick={handlePromoteNow}
-                    className="bg-[#E52D27] hover:bg-[#D42621] text-white px-10 py-7 rounded-lg text-lg font-bold transition-all duration-300 transform hover:scale-105 active:scale-95"
+                    className="bg-[#E52D27] hover:bg-[#D42621] text-white pl-10 pr-24 py-6 rounded-r-md text-[17px] font-extrabold transition-all duration-300 ml-1 h-[52px]"
                   >
                     Start Your Promotion
                   </Button>

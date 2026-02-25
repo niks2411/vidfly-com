@@ -9,41 +9,35 @@ const PromotionCTA = () => {
     };
 
     return (
-        <section className="bg-[#EEF1F6] font-montserrat py-14 lg:py-20 border-t-[40px] border-b-[40px] border-white">
-            <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-                    {/* Left - Text */}
-                    <div className="max-w-xl">
-                        <h2 className="section-heading">
-                            Ready to take control of your{" "}
-                            <br className="hidden sm:block" />
-                            YouTube growth?
+        <section className="bg-[#f2f5f9] font-montserrat py-14 lg:py-18 border-t-[30px] border-b-[30px] border-white">
+            <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-10">
+                <div className="flex flex-col md:flex-row items-start justify-start gap-10 lg:gap-24">
+                    {/* Left Column: Text Content */}
+                    <div className="flex-1 min-w-0">
+                        <h2 className="text-[28px] lg:text-[42px] font-[900] text-[#0E172B] leading-[1.1] tracking-tight mb-4 lg:whitespace-nowrap">
+                            Ready to take control of your YouTube growth?
                         </h2>
-                        <p className="section-desc">
-                            Launch your first campaign in seconds. Reach real viewers, track
-                            <br className="hidden sm:block" />
-                            performance, and scale with confidence.
+                        <p className="text-[15px] lg:text-[18px] text-[rgb(41,40,40)] font-medium leading-[1.6] max-w-2xl">
+                            Join thousands of creators expanding their reach with targeted YouTube Ads.
+                            <br className="hidden lg:block" />
+                            Get started in just minutes and start connecting with new viewers and potential fans.
                         </p>
                     </div>
 
-                    {/* Right - CTA */}
-                    <div className="flex flex-col items-center gap-3 shrink-0">
+                    {/* Right Column: CTA Elements - Offset to be slightly lower than heading */}
+                    <div className="flex flex-col items-center gap-4 shrink-0 md:pt-8">
                         <button
                             onClick={handleStartPromotion}
-                            className="bg-[#E52D27] hover:bg-[#CC2420] text-white font-bold text-[15px] px-8 py-3.5 rounded-lg transition-colors duration-200 whitespace-nowrap"
+                            className="bg-[#E52D27] hover:bg-[#CC2420] text-white font-bold text-[16px] px-12 py-4 rounded-[4px] shadow-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
                         >
                             Start Your Promotion
                         </button>
-                        <a
-                            href="/get-started"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handleStartPromotion();
-                            }}
-                            className="text-[#2B8AC4] hover:text-[#1E6F9F] text-[13px] font-semibold transition-colors"
+                        <button
+                            onClick={handleStartPromotion}
+                            className="text-[#4299e1] hover:text-[#3182ce] text-[15px] font-bold transition-colors flex items-center gap-1"
                         >
-                            Try with ₹499 →
-                        </a>
+                            Try with ₹499 <span className="text-[18px] leading-none mb-0.5">→</span>
+                        </button>
                     </div>
                 </div>
             </div>

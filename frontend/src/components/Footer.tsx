@@ -20,7 +20,7 @@ const Footer = () => {
                 className="h-7 w-auto object-contain"
               />
             </Link>
-            <p className="text-[14px] text-[#4b5563] font-medium leading-[1.6] max-w-[260px]">
+            <p className="text-[14px] text-[rgb(41,40,40)] font-medium leading-[1.6] max-w-[260px]">
               Run YouTube growth campaigns with real audience reach, full control, and transparent results.
             </p>
 
@@ -72,7 +72,7 @@ const Footer = () => {
             <ul className="flex flex-col gap-3 font-medium">
               {["Buy Youtube Views", "Buy Youtube Subscribers", "Buy Youtube Likes", "Free Youtube Views"].map((text) => (
                 <li key={text}>
-                  <Link to="#" onClick={scrollToTop} className="text-[14px] text-[#4b5563] hover:text-[#E52D27] transition-colors">
+                  <Link to="#" onClick={scrollToTop} className="text-[14px] text-[rgb(41,40,40)] hover:text-[#E52D27] transition-colors">
                     {text}
                   </Link>
                 </li>
@@ -93,7 +93,7 @@ const Footer = () => {
                 "Youtube Vlogging Promotion"
               ].map((text) => (
                 <li key={text}>
-                  <Link to="#" onClick={scrollToTop} className="text-[14px] text-[#4b5563] hover:text-[#E52D27] transition-colors">
+                  <Link to="#" onClick={scrollToTop} className="text-[14px] text-[rgb(41,40,40)] hover:text-[#E52D27] transition-colors">
                     {text}
                   </Link>
                 </li>
@@ -112,7 +112,7 @@ const Footer = () => {
             <div className="space-y-4">
               <div>
                 <h5 className="text-[14px] font-bold text-[#111] mb-2">FIND US:</h5>
-                <p className="text-[13px] text-[#6b7280] leading-[1.6]">
+                <p className="text-[13px] text-[rgb(41,40,40)] leading-[1.6]">
                   3rd Floor, SC0-40, Janta Nagar,
                   <br />
                   Sahibzada Ajit Singh Nagar,
@@ -139,7 +139,7 @@ const Footer = () => {
         {/* Last Line: Policies, Copyright, Payments */}
         <div className="flex flex-col gap-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-2 text-[13px] font-bold text-[#6b7280]">
+            <div className="flex items-center gap-2 text-[13px] font-bold text-[rgb(41,40,40)]">
               <Link to="/privacy-policy" className="hover:text-[#111]">Privacy Policy</Link>
               <span>|</span>
               <Link to="/terms-and-conditions" className="hover:text-[#111]">Terms & Conditions</Link>
@@ -171,8 +171,8 @@ const Footer = () => {
 
           <div className="space-y-4">
             <div className="space-y-1">
-              <p className="text-[12px] font-bold text-[#6b7280]">© 2026, Vidflyy</p>
-              <p className="text-[11px] text-[#9ca3af] leading-relaxed max-w-2xl">
+              <p className="text-[12px] font-bold text-[rgb(41,40,40)]">© 2026, Vidflyy</p>
+              <p className="text-[11px] text-[rgb(41,40,40)] opacity-80 leading-relaxed max-w-2xl">
                 Vidflyy is an independent advertising service and is not associated with or endorsed by YouTube.
               </p>
             </div>
@@ -182,7 +182,7 @@ const Footer = () => {
                 alt="India"
                 className="h-3 w-auto rounded-[1px] shadow-sm"
               />
-              <span className="text-[11px] font-bold text-[#6b7280]">Proud Indian Company</span>
+              <span className="text-[11px] font-bold text-[rgb(41,40,40)]">Proud Indian Company</span>
             </div>
           </div>
         </div>

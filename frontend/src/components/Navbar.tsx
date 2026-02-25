@@ -63,40 +63,40 @@ const Navbar = () => {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-16 lg:h-[72px]">
           {/* Logo */}
-          <Link to="/" className="flex items-center shrink-0 mr-8 lg:mr-12 lg:ml-4" onClick={scrollToTop}>
+          <Link to="/" className="flex items-center shrink-0 mr-8 lg:mr-12 lg:ml-4 transform translate-y-[6px]" onClick={scrollToTop}>
             <img src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png" alt="Vidflyy" className="h-9 w-auto" />
           </Link>
 
           {/* Desktop Nav Links - sit right next to the logo */}
-          <div className="hidden lg:flex items-center gap-6 xl:gap-8">
-            <button onClick={() => handleNavClick("/how-it-works")} className="text-[#0E172B] hover:text-red-600 text-[14px] font-semibold transition-colors duration-300 whitespace-nowrap">
+          <div className="hidden lg:flex items-center gap-6 xl:gap-8 transform translate-y-[6px]">
+            <button onClick={() => handleNavClick("/how-it-works")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap">
               How Vidflyy Works
             </button>
-            <button onClick={() => handleNavClick("/pricing")} className="text-[#0E172B] hover:text-red-600 text-[14px] font-semibold transition-colors duration-300 whitespace-nowrap">
+            <button onClick={() => handleNavClick("/pricing")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap">
               Pricing
             </button>
-            <button onClick={() => handleNavClick("/features")} className="text-[#0E172B] hover:text-red-600 text-[14px] font-semibold transition-colors duration-300 whitespace-nowrap">
+            <button onClick={() => handleNavClick("/features")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap">
               Features
             </button>
-            <button onClick={() => handleNavClick("/success-stories")} className="text-[#0E172B] hover:text-red-600 text-[14px] font-semibold transition-colors duration-300 whitespace-nowrap">
+            <button onClick={() => handleNavClick("/success-stories")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap">
               Success Stories
             </button>
-            <button onClick={() => handleNavClick("/faq")} className="text-[#0E172B] hover:text-red-600 text-[14px] font-semibold transition-colors duration-300 whitespace-nowrap">
+            <button onClick={() => handleNavClick("/faq")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap">
               FAQ
             </button>
-            <button onClick={() => handleNavClick("/contact")} className="text-[#0E172B] hover:text-red-600 text-[14px] font-semibold transition-colors duration-300 whitespace-nowrap">
+            <button onClick={() => handleNavClick("/contact")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap">
               Contact Us
             </button>
           </div>
 
           {/* Right side: Login + CTA pushed to the far right */}
-          <div className="hidden lg:flex items-center gap-6 ml-auto shrink-0">
-            <button onClick={() => handleNavClick("/")} className="text-[#0E172B] hover:text-red-600 text-[14px] font-semibold whitespace-nowrap">
+          <div className="hidden lg:flex items-center gap-6 ml-auto shrink-0 transform translate-y-[6px]">
+            <button onClick={() => handleNavClick("/")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold whitespace-nowrap">
               Login
             </button>
             <Button
               onClick={handleGetStartedClick}
-              className="bg-[#E52D27] hover:bg-[#D42621] text-white px-6 py-5 rounded-lg text-[14px] font-bold transition-all duration-300 transform hover:scale-105 whitespace-nowrap normal-case"
+              className="bg-[#E52D27] hover:bg-[#D42621] text-white px-9 py-2.5 h-11 rounded-lg text-[16px] font-bold transition-all duration-300 transform hover:scale-105 whitespace-nowrap normal-case"
             >
               Get started now
             </Button>

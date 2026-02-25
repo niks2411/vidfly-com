@@ -91,7 +91,11 @@ const VideoShowcase = () => {
                     </div>
 
                     {/* Right - YouTube Thumbnails Marquee */}
-                    <div className="hidden lg:flex flex-col gap-2 h-[420px] overflow-hidden">
+                    <div className="hidden lg:flex flex-col gap-2 h-[420px] overflow-hidden relative">
+                        {/* Blur Overlays - More Blur */}
+                        <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-[#000000] via-[#000000]/80 to-transparent z-10 pointer-events-none"></div>
+                        <div className="absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-[#000000] via-[#000000]/80 to-transparent z-10 pointer-events-none"></div>
+
                         {[
                             { items: thumbnails.slice(0, 4), direction: "animate-marquee" },
                             { items: thumbnails.slice(4, 8), direction: "animate-marquee-reverse" },
