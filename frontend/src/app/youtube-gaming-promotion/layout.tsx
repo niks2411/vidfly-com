@@ -3,6 +3,7 @@ import { constructMetadata } from "@/lib/seo";
 export const metadata = constructMetadata({
     title: "YouTube Gaming Channel Promotion - Vidflyy",
     description: "Boost your gaming channel. Reach real gaming enthusiasts and grow your subscriber base with Vidflyy's targeted campaigns.",
+    canonical: "https://www.vidflyy.in/youtube-gaming-promotion",
 });
 
 export default function GamingPromotionLayout({
