@@ -11,7 +11,7 @@ import Providers from "./providers";
 import { AuthProvider } from "@/context/AuthContext";
 import { CampaignSidebarProvider } from "./campaign-sidebar-provider";
 import ScrollToTop from "@/components/ScrollToTop";
-import CanonicalTag from "@/components/CanonicalTag";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const montserrat = Montserrat({
     subsets: ["latin"],
@@ -28,10 +28,12 @@ const sourceSans = Source_Sans_3({
     variable: "--font-sourcesans",
 });
 
-export const metadata: Metadata = {
-    title: "Vidflyy - YouTube Growth Campaigns",
-    description: "Launch YouTube Growth Campaigns in Seconds. Get real views, subscribers & engagement on demand.",
-};
+import { constructMetadata } from "@/lib/seo";
+
+export const metadata = constructMetadata();
+
+import { GoogleAnalytics, MetaPixel } from "@/components/Analytics";
+import { OrganizationSchema, ServiceSchema } from "@/components/Schema";
 
 export default function RootLayout({
     children,
@@ -41,18 +43,23 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${montserrat.variable} ${openSans.variable} ${sourceSans.variable} antialiased font-montserrat`}>
+                <GoogleAnalytics />
+                <MetaPixel />
+                <OrganizationSchema />
+                <ServiceSchema />
                 <CampaignSidebarProvider>
                     <AuthProvider>
                         <Providers>
                             <TooltipProvider>
-                                <ScrollToTop />
-                                <CanonicalTag />
-                                <Navbar />
-                                <main>{children}</main>
-                                <Footer />
-                                <WhatsAppFloat />
-                                <Toaster />
-                                <Sonner />
+                                <SmoothScroll>
+                                    <ScrollToTop />
+                                    <Navbar />
+                                    <main>{children}</main>
+                                    <Footer />
+                                    <WhatsAppFloat />
+                                    <Toaster />
+                                    <Sonner />
+                                </SmoothScroll>
                             </TooltipProvider>
                         </Providers>
                     </AuthProvider>

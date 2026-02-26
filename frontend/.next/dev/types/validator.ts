@@ -321,10 +321,109 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
 
 
 
+// Validate ../../../src/app/blog/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/blog">> = Specific
+  const handler = {} as typeof import("../../../src/app/blog/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../src/app/contact/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/contact">> = Specific
+  const handler = {} as typeof import("../../../src/app/contact/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../src/app/features/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/features">> = Specific
+  const handler = {} as typeof import("../../../src/app/features/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../../src/app/layout.tsx
 {
   type __IsExpected<Specific extends LayoutConfig<"/">> = Specific
   const handler = {} as typeof import("../../../src/app/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../src/app/pricing/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/pricing">> = Specific
+  const handler = {} as typeof import("../../../src/app/pricing/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../src/app/success-stories/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/success-stories">> = Specific
+  const handler = {} as typeof import("../../../src/app/success-stories/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../src/app/youtube-gaming-promotion/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/youtube-gaming-promotion">> = Specific
+  const handler = {} as typeof import("../../../src/app/youtube-gaming-promotion/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../src/app/youtube-health-beauty-promotion/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/youtube-health-beauty-promotion">> = Specific
+  const handler = {} as typeof import("../../../src/app/youtube-health-beauty-promotion/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../src/app/youtube-motivation-promotion/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/youtube-motivation-promotion">> = Specific
+  const handler = {} as typeof import("../../../src/app/youtube-motivation-promotion/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../src/app/youtube-music-promotion/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/youtube-music-promotion">> = Specific
+  const handler = {} as typeof import("../../../src/app/youtube-music-promotion/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../src/app/youtube-travel-promotion/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/youtube-travel-promotion">> = Specific
+  const handler = {} as typeof import("../../../src/app/youtube-travel-promotion/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../src/app/youtube-vlogging-promotion/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/youtube-vlogging-promotion">> = Specific
+  const handler = {} as typeof import("../../../src/app/youtube-vlogging-promotion/layout.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

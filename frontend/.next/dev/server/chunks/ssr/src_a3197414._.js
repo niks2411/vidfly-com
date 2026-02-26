@@ -94,51 +94,45 @@ __turbopack_context__.s([
     ()=>Animated
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-ssr] (ecmascript)");
 "use client";
 ;
 ;
-function useInView(options) {
-    const ref = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
-    const [inView, setInView] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
-        const node = ref.current;
-        if (!node) return;
-        const observer = new IntersectionObserver((entries)=>{
-            entries.forEach((e)=>{
-                if (e.isIntersecting) {
-                    setInView(true);
-                    observer.unobserve(node);
-                }
-            });
-        }, {
-            threshold: 0.15,
-            ...options
-        });
-        observer.observe(node);
-        return ()=>observer.disconnect();
-    }, [
-        ref,
-        options
-    ]);
-    return {
-        ref,
-        inView
-    };
-}
-const Animated = ({ children, delay = 0, className = "" })=>{
-    const { ref, inView } = useInView();
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        ref: ref,
-        style: {
-            transitionDelay: `${delay}ms`
+const Animated = ({ children, delay = 0, className = "", direction = "up", duration = 0.7 })=>{
+    const variants = {
+        hidden: {
+            opacity: 0,
+            y: direction === "up" ? 24 : direction === "down" ? -24 : 0,
+            x: direction === "left" ? 24 : direction === "right" ? -24 : 0
         },
-        className: `${className} transform transition-all duration-700 ease-out ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`,
+        visible: {
+            opacity: 1,
+            y: 0,
+            x: 0,
+            transition: {
+                duration,
+                delay: delay / 1000,
+                ease: "easeOut"
+            }
+        }
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+        initial: "hidden",
+        whileInView: "visible",
+        viewport: {
+            once: true,
+            margin: "-10% 0px"
+        },
+        variants: variants,
+        className: className,
+        style: {
+            willChange: "opacity, transform"
+        },
         children: children
     }, void 0, false, {
         fileName: "[project]/src/components/Animated.tsx",
-        lineNumber: 33,
-        columnNumber: 9
+        lineNumber: 37,
+        columnNumber: 13
     }, ("TURBOPACK compile-time value", void 0));
 };
 }),

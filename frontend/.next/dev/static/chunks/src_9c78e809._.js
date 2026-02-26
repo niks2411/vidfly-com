@@ -97,70 +97,47 @@ __turbopack_context__.s([
     ()=>Animated
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
-;
-var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-client] (ecmascript)");
 "use client";
 ;
-function useInView(options) {
-    _s();
-    const ref = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
-    const [inView, setInView] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
-        "useInView.useEffect": ()=>{
-            const node = ref.current;
-            if (!node) return;
-            const observer = new IntersectionObserver({
-                "useInView.useEffect": (entries)=>{
-                    entries.forEach({
-                        "useInView.useEffect": (e)=>{
-                            if (e.isIntersecting) {
-                                setInView(true);
-                                observer.unobserve(node);
-                            }
-                        }
-                    }["useInView.useEffect"]);
-                }
-            }["useInView.useEffect"], {
-                threshold: 0.15,
-                ...options
-            });
-            observer.observe(node);
-            return ({
-                "useInView.useEffect": ()=>observer.disconnect()
-            })["useInView.useEffect"];
-        }
-    }["useInView.useEffect"], [
-        ref,
-        options
-    ]);
-    return {
-        ref,
-        inView
-    };
-}
-_s(useInView, "K+dCFMkCcTyPMHOI0MxAWPXS6Js=");
-const Animated = ({ children, delay = 0, className = "" })=>{
-    _s1();
-    const { ref, inView } = useInView();
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        ref: ref,
-        style: {
-            transitionDelay: `${delay}ms`
+;
+const Animated = ({ children, delay = 0, className = "", direction = "up", duration = 0.7 })=>{
+    const variants = {
+        hidden: {
+            opacity: 0,
+            y: direction === "up" ? 24 : direction === "down" ? -24 : 0,
+            x: direction === "left" ? 24 : direction === "right" ? -24 : 0
         },
-        className: `${className} transform transition-all duration-700 ease-out ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`,
+        visible: {
+            opacity: 1,
+            y: 0,
+            x: 0,
+            transition: {
+                duration,
+                delay: delay / 1000,
+                ease: "easeOut"
+            }
+        }
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
+        initial: "hidden",
+        whileInView: "visible",
+        viewport: {
+            once: true,
+            margin: "-10% 0px"
+        },
+        variants: variants,
+        className: className,
+        style: {
+            willChange: "opacity, transform"
+        },
         children: children
     }, void 0, false, {
         fileName: "[project]/src/components/Animated.tsx",
-        lineNumber: 33,
-        columnNumber: 9
+        lineNumber: 37,
+        columnNumber: 13
     }, ("TURBOPACK compile-time value", void 0));
 };
-_s1(Animated, "oyd/E8SD7Fx4uOp6P7gVV2pVlaE=", false, function() {
-    return [
-        useInView
-    ];
-});
 _c = Animated;
 var _c;
 __turbopack_context__.k.register(_c, "Animated");
@@ -233,6 +210,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/styled-jsx/style.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/button.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/image.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$gamepad$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Gamepad$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/gamepad.js [app-client] (ecmascript) <export default as Gamepad>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$users$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Users$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/users.js [app-client] (ecmascript) <export default as Users>");
@@ -248,6 +226,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Counter
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 ;
@@ -306,14 +285,14 @@ function YoutubeGamingPromotion() {
                         className: "jsx-bde8482bec195583" + " " + "absolute -left-32 -top-24 w-80 h-80 bg-red-100 rounded-full opacity-25 animate-blob pointer-events-none"
                     }, void 0, false, {
                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                        lineNumber: 61,
+                        lineNumber: 62,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "jsx-bde8482bec195583" + " " + "absolute right-8 top-16 w-64 h-64 bg-red-200 rounded-full opacity-18 animate-blob animation-delay-2500 pointer-events-none"
                     }, void 0, false, {
                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                        lineNumber: 62,
+                        lineNumber: 63,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -334,7 +313,7 @@ function YoutubeGamingPromotion() {
                                                             className: "h-6 w-6 text-red-600"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                            lineNumber: 69,
+                                                            lineNumber: 70,
                                                             columnNumber: 37
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -342,13 +321,13 @@ function YoutubeGamingPromotion() {
                                                             children: "Gaming Promotion"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                            lineNumber: 70,
+                                                            lineNumber: 71,
                                                             columnNumber: 37
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                    lineNumber: 68,
+                                                    lineNumber: 69,
                                                     columnNumber: 33
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -356,7 +335,7 @@ function YoutubeGamingPromotion() {
                                                     children: "Grow Your Gaming Channel — Reach Real Players & Active Fans"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                    lineNumber: 73,
+                                                    lineNumber: 74,
                                                     columnNumber: 33
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -364,7 +343,7 @@ function YoutubeGamingPromotion() {
                                                     children: "Target players by game, platform, and playstyle. We run conversion-focused YouTube campaigns that bring engaged viewers who subscribe, comment, and watch."
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                    lineNumber: 77,
+                                                    lineNumber: 78,
                                                     columnNumber: 33
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -376,7 +355,7 @@ function YoutubeGamingPromotion() {
                                                             children: "Promote My Channel"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                            lineNumber: 82,
+                                                            lineNumber: 83,
                                                             columnNumber: 37
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -385,13 +364,13 @@ function YoutubeGamingPromotion() {
                                                             children: "See Pricing"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                            lineNumber: 85,
+                                                            lineNumber: 86,
                                                             columnNumber: 37
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                    lineNumber: 81,
+                                                    lineNumber: 82,
                                                     columnNumber: 33
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -404,14 +383,14 @@ function YoutubeGamingPromotion() {
                                                                     className: "h-4 w-4 text-red-600"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                    lineNumber: 91,
+                                                                    lineNumber: 92,
                                                                     columnNumber: 78
                                                                 }, this),
                                                                 " Platform & genre focus"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                            lineNumber: 91,
+                                                            lineNumber: 92,
                                                             columnNumber: 37
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -421,31 +400,31 @@ function YoutubeGamingPromotion() {
                                                                     className: "h-4 w-4 text-red-600"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                    lineNumber: 92,
+                                                                    lineNumber: 93,
                                                                     columnNumber: 78
                                                                 }, this),
                                                                 " Community growth"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                            lineNumber: 92,
+                                                            lineNumber: 93,
                                                             columnNumber: 37
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                    lineNumber: 90,
+                                                    lineNumber: 91,
                                                     columnNumber: 33
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                            lineNumber: 67,
+                                            lineNumber: 68,
                                             columnNumber: 29
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                        lineNumber: 66,
+                                        lineNumber: 67,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Animated$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Animated"], {
@@ -456,15 +435,18 @@ function YoutubeGamingPromotion() {
                                                 className: "jsx-bde8482bec195583" + " " + "bg-white rounded-3xl p-6 shadow-2xl w-full max-w-md transform hover:-translate-y-3 transition",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "jsx-bde8482bec195583" + " " + "relative overflow-hidden rounded-xl",
+                                                        className: "jsx-bde8482bec195583" + " " + "relative h-56 overflow-hidden rounded-xl",
                                                         children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                                 src: "/lovable-uploads/gaming-hero.png",
                                                                 alt: "Gaming promotion",
-                                                                className: "jsx-bde8482bec195583" + " " + "w-full h-56 object-cover"
+                                                                fill: true,
+                                                                priority: true,
+                                                                className: "object-cover",
+                                                                sizes: "(max-width: 768px) 100vw, 400px"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                lineNumber: 101,
+                                                                lineNumber: 102,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -475,23 +457,23 @@ function YoutubeGamingPromotion() {
                                                                         className: "h-8 w-8 text-white"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                        lineNumber: 104,
+                                                                        lineNumber: 112,
                                                                         columnNumber: 49
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                    lineNumber: 103,
+                                                                    lineNumber: 111,
                                                                     columnNumber: 45
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                lineNumber: 102,
+                                                                lineNumber: 110,
                                                                 columnNumber: 41
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 100,
+                                                        lineNumber: 101,
                                                         columnNumber: 37
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -502,7 +484,7 @@ function YoutubeGamingPromotion() {
                                                                 children: "Starter Pack"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                lineNumber: 110,
+                                                                lineNumber: 118,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -510,7 +492,7 @@ function YoutubeGamingPromotion() {
                                                                 children: "Start from ₹700"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                lineNumber: 111,
+                                                                lineNumber: 119,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -518,7 +500,7 @@ function YoutubeGamingPromotion() {
                                                                 children: "Target specific game audiences, platforms and watch intents."
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                lineNumber: 112,
+                                                                lineNumber: 120,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -530,7 +512,7 @@ function YoutubeGamingPromotion() {
                                                                         children: "Promote"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                        lineNumber: 114,
+                                                                        lineNumber: 122,
                                                                         columnNumber: 45
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -539,41 +521,41 @@ function YoutubeGamingPromotion() {
                                                                         children: "Custom plan"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                        lineNumber: 115,
+                                                                        lineNumber: 123,
                                                                         columnNumber: 45
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                lineNumber: 113,
+                                                                lineNumber: 121,
                                                                 columnNumber: 41
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 109,
+                                                        lineNumber: 117,
                                                         columnNumber: 37
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 99,
+                                                lineNumber: 100,
                                                 columnNumber: 33
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                            lineNumber: 98,
+                                            lineNumber: 99,
                                             columnNumber: 29
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                        lineNumber: 97,
+                                        lineNumber: 98,
                                         columnNumber: 25
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                lineNumber: 65,
+                                lineNumber: 66,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Animated$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Animated"], {
@@ -590,7 +572,7 @@ function YoutubeGamingPromotion() {
                                                         to: 58000
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 127,
+                                                        lineNumber: 135,
                                                         columnNumber: 38
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -598,13 +580,13 @@ function YoutubeGamingPromotion() {
                                                         children: "Creators"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 127,
+                                                        lineNumber: 135,
                                                         columnNumber: 60
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 127,
+                                                lineNumber: 135,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -614,7 +596,7 @@ function YoutubeGamingPromotion() {
                                                         to: 42000000
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 128,
+                                                        lineNumber: 136,
                                                         columnNumber: 38
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -622,13 +604,13 @@ function YoutubeGamingPromotion() {
                                                         children: "Real Views"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 128,
+                                                        lineNumber: 136,
                                                         columnNumber: 63
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 128,
+                                                lineNumber: 136,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -638,7 +620,7 @@ function YoutubeGamingPromotion() {
                                                         to: 72000
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 129,
+                                                        lineNumber: 137,
                                                         columnNumber: 38
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -646,13 +628,13 @@ function YoutubeGamingPromotion() {
                                                         children: "Campaigns Run"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 129,
+                                                        lineNumber: 137,
                                                         columnNumber: 60
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 129,
+                                                lineNumber: 137,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -662,7 +644,7 @@ function YoutubeGamingPromotion() {
                                                         to: 1500000
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 130,
+                                                        lineNumber: 138,
                                                         columnNumber: 38
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -670,41 +652,41 @@ function YoutubeGamingPromotion() {
                                                         children: "Subscribers Gained"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 130,
+                                                        lineNumber: 138,
                                                         columnNumber: 62
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 130,
+                                                lineNumber: 138,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                        lineNumber: 126,
+                                        lineNumber: 134,
                                         columnNumber: 29
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                    lineNumber: 125,
+                                    lineNumber: 133,
                                     columnNumber: 25
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                lineNumber: 124,
+                                lineNumber: 132,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                        lineNumber: 64,
+                        lineNumber: 65,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                lineNumber: 60,
+                lineNumber: 61,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -720,7 +702,7 @@ function YoutubeGamingPromotion() {
                                     children: "Why Gaming Channels Grow With Our Campaigns"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                    lineNumber: 141,
+                                    lineNumber: 149,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -728,13 +710,13 @@ function YoutubeGamingPromotion() {
                                     children: "We combine platform signals with creative testing to reach viewers most likely to subscribe and join your community."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                    lineNumber: 142,
+                                    lineNumber: 150,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                            lineNumber: 140,
+                            lineNumber: 148,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -752,7 +734,7 @@ function YoutubeGamingPromotion() {
                                                         className: "h-6 w-6 text-red-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 148,
+                                                        lineNumber: 156,
                                                         columnNumber: 79
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -760,13 +742,13 @@ function YoutubeGamingPromotion() {
                                                         children: "Game Title Targeting"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 148,
+                                                        lineNumber: 156,
                                                         columnNumber: 122
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 148,
+                                                lineNumber: 156,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -774,18 +756,18 @@ function YoutubeGamingPromotion() {
                                                 children: "Reach players searching for specific titles and creators in that genre."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 149,
+                                                lineNumber: 157,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                        lineNumber: 147,
+                                        lineNumber: 155,
                                         columnNumber: 29
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                    lineNumber: 146,
+                                    lineNumber: 154,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Animated$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Animated"], {
@@ -800,7 +782,7 @@ function YoutubeGamingPromotion() {
                                                         className: "h-6 w-6 text-red-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 154,
+                                                        lineNumber: 162,
                                                         columnNumber: 79
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -808,13 +790,13 @@ function YoutubeGamingPromotion() {
                                                         children: "Live Event Boosts"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 154,
+                                                        lineNumber: 162,
                                                         columnNumber: 121
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 154,
+                                                lineNumber: 162,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -822,18 +804,18 @@ function YoutubeGamingPromotion() {
                                                 children: "Promote live streams, tournaments and highlight reels when player interest is high."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 155,
+                                                lineNumber: 163,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                        lineNumber: 153,
+                                        lineNumber: 161,
                                         columnNumber: 29
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                    lineNumber: 152,
+                                    lineNumber: 160,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Animated$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Animated"], {
@@ -848,7 +830,7 @@ function YoutubeGamingPromotion() {
                                                         className: "h-6 w-6 text-red-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 160,
+                                                        lineNumber: 168,
                                                         columnNumber: 79
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -856,13 +838,13 @@ function YoutubeGamingPromotion() {
                                                         children: "Community Growth"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 160,
+                                                        lineNumber: 168,
                                                         columnNumber: 121
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 160,
+                                                lineNumber: 168,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -870,35 +852,35 @@ function YoutubeGamingPromotion() {
                                                 children: "We optimize for comments, live viewers and repeat watchers to build active communities."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 161,
+                                                lineNumber: 169,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                        lineNumber: 159,
+                                        lineNumber: 167,
                                         columnNumber: 29
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                    lineNumber: 158,
+                                    lineNumber: 166,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                            lineNumber: 145,
+                            lineNumber: 153,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                    lineNumber: 139,
+                    lineNumber: 147,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                lineNumber: 138,
+                lineNumber: 146,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -916,7 +898,7 @@ function YoutubeGamingPromotion() {
                                         children: "Who We Reach"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                        lineNumber: 173,
+                                        lineNumber: 181,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -929,7 +911,7 @@ function YoutubeGamingPromotion() {
                                                         className: "h-5 w-5 text-red-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 175,
+                                                        lineNumber: 183,
                                                         columnNumber: 72
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -940,7 +922,7 @@ function YoutubeGamingPromotion() {
                                                                 children: "FPS & Competitive Players"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                lineNumber: 175,
+                                                                lineNumber: 183,
                                                                 columnNumber: 125
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -948,19 +930,19 @@ function YoutubeGamingPromotion() {
                                                                 children: "Viewers who watch tutorials, highlights & pro commentary."
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                lineNumber: 175,
+                                                                lineNumber: 183,
                                                                 columnNumber: 187
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 175,
+                                                        lineNumber: 183,
                                                         columnNumber: 120
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 175,
+                                                lineNumber: 183,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -970,7 +952,7 @@ function YoutubeGamingPromotion() {
                                                         className: "h-5 w-5 text-red-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 176,
+                                                        lineNumber: 184,
                                                         columnNumber: 72
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -981,7 +963,7 @@ function YoutubeGamingPromotion() {
                                                                 children: "Mobile Gaming Audiences"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                lineNumber: 176,
+                                                                lineNumber: 184,
                                                                 columnNumber: 125
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -989,19 +971,19 @@ function YoutubeGamingPromotion() {
                                                                 children: "Shorts and short-form placements for mobile-first players."
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                lineNumber: 176,
+                                                                lineNumber: 184,
                                                                 columnNumber: 185
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 176,
+                                                        lineNumber: 184,
                                                         columnNumber: 120
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 176,
+                                                lineNumber: 184,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -1011,7 +993,7 @@ function YoutubeGamingPromotion() {
                                                         className: "h-5 w-5 text-red-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 177,
+                                                        lineNumber: 185,
                                                         columnNumber: 72
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1022,7 +1004,7 @@ function YoutubeGamingPromotion() {
                                                                 children: "Casual & Indie Fans"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                lineNumber: 177,
+                                                                lineNumber: 185,
                                                                 columnNumber: 125
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1030,36 +1012,36 @@ function YoutubeGamingPromotion() {
                                                                 children: "Niche reach for indie titles and community builders."
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                lineNumber: 177,
+                                                                lineNumber: 185,
                                                                 columnNumber: 181
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 177,
+                                                        lineNumber: 185,
                                                         columnNumber: 120
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 177,
+                                                lineNumber: 185,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                        lineNumber: 174,
+                                        lineNumber: 182,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                lineNumber: 172,
+                                lineNumber: 180,
                                 columnNumber: 25
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                            lineNumber: 171,
+                            lineNumber: 179,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Animated$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Animated"], {
@@ -1072,7 +1054,7 @@ function YoutubeGamingPromotion() {
                                         children: "Placement Examples"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                        lineNumber: 184,
+                                        lineNumber: 192,
                                         columnNumber: 29
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1086,7 +1068,7 @@ function YoutubeGamingPromotion() {
                                                         children: "In-stream (Pre-roll)"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 186,
+                                                        lineNumber: 194,
                                                         columnNumber: 77
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1094,13 +1076,13 @@ function YoutubeGamingPromotion() {
                                                         children: "Shown before related gameplay videos."
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 186,
+                                                        lineNumber: 194,
                                                         columnNumber: 142
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 186,
+                                                lineNumber: 194,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1111,7 +1093,7 @@ function YoutubeGamingPromotion() {
                                                         children: "Shorts & Clips"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 187,
+                                                        lineNumber: 195,
                                                         columnNumber: 77
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1119,13 +1101,13 @@ function YoutubeGamingPromotion() {
                                                         children: "Mobile-first placements to capture quick viewers."
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 187,
+                                                        lineNumber: 195,
                                                         columnNumber: 136
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 187,
+                                                lineNumber: 195,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1136,7 +1118,7 @@ function YoutubeGamingPromotion() {
                                                         children: "In-feed & Search"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 188,
+                                                        lineNumber: 196,
                                                         columnNumber: 77
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1144,41 +1126,41 @@ function YoutubeGamingPromotion() {
                                                         children: "Top placement for discovery and channel growth."
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                        lineNumber: 188,
+                                                        lineNumber: 196,
                                                         columnNumber: 138
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                lineNumber: 188,
+                                                lineNumber: 196,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                        lineNumber: 185,
+                                        lineNumber: 193,
                                         columnNumber: 29
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                lineNumber: 183,
+                                lineNumber: 191,
                                 columnNumber: 25
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                            lineNumber: 182,
+                            lineNumber: 190,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                    lineNumber: 170,
+                    lineNumber: 178,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                lineNumber: 169,
+                lineNumber: 177,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1193,12 +1175,12 @@ function YoutubeGamingPromotion() {
                                 children: "Recommended Packages"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                lineNumber: 198,
+                                lineNumber: 206,
                                 columnNumber: 42
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                            lineNumber: 198,
+                            lineNumber: 206,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1215,7 +1197,7 @@ function YoutubeGamingPromotion() {
                                                     children: "MOST POPULAR"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                    lineNumber: 207,
+                                                    lineNumber: 215,
                                                     columnNumber: 49
                                                 }, this),
                                                 plan.badge === "PREMIUM" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1223,7 +1205,7 @@ function YoutubeGamingPromotion() {
                                                     children: "PREMIUM"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                    lineNumber: 212,
+                                                    lineNumber: 220,
                                                     columnNumber: 49
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1237,7 +1219,7 @@ function YoutubeGamingPromotion() {
                                                                     children: plan.name
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                    lineNumber: 219,
+                                                                    lineNumber: 227,
                                                                     columnNumber: 53
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1247,18 +1229,18 @@ function YoutubeGamingPromotion() {
                                                                         children: plan.price
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                        lineNumber: 221,
+                                                                        lineNumber: 229,
                                                                         columnNumber: 57
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                    lineNumber: 220,
+                                                                    lineNumber: 228,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                            lineNumber: 218,
+                                                            lineNumber: 226,
                                                             columnNumber: 49
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1269,7 +1251,7 @@ function YoutubeGamingPromotion() {
                                                                     children: plan.watchHours
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                    lineNumber: 226,
+                                                                    lineNumber: 234,
                                                                     columnNumber: 53
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1277,13 +1259,13 @@ function YoutubeGamingPromotion() {
                                                                     children: "Real, High-Intent Viewers"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                    lineNumber: 227,
+                                                                    lineNumber: 235,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                            lineNumber: 225,
+                                                            lineNumber: 233,
                                                             columnNumber: 49
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1294,7 +1276,7 @@ function YoutubeGamingPromotion() {
                                                                     children: "AI Targeting:"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                    lineNumber: 231,
+                                                                    lineNumber: 239,
                                                                     columnNumber: 53
                                                                 }, this),
                                                                 plan.hasAI ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1302,20 +1284,20 @@ function YoutubeGamingPromotion() {
                                                                     children: "✓ Included"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                    lineNumber: 233,
+                                                                    lineNumber: 241,
                                                                     columnNumber: 57
                                                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                     className: "jsx-bde8482bec195583" + " " + "text-red-500 font-bold text-sm",
                                                                     children: "✗ Not Included"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                    lineNumber: 235,
+                                                                    lineNumber: 243,
                                                                     columnNumber: 57
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                            lineNumber: 230,
+                                                            lineNumber: 238,
                                                             columnNumber: 49
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -1327,7 +1309,7 @@ function YoutubeGamingPromotion() {
                                                                             className: "h-4 w-4 text-green-600 mt-0.5 flex-shrink-0"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                            lineNumber: 242,
+                                                                            lineNumber: 250,
                                                                             columnNumber: 61
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1335,24 +1317,24 @@ function YoutubeGamingPromotion() {
                                                                             children: feature
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                            lineNumber: 243,
+                                                                            lineNumber: 251,
                                                                             columnNumber: 61
                                                                         }, this)
                                                                     ]
                                                                 }, idx, true, {
                                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                                    lineNumber: 241,
+                                                                    lineNumber: 249,
                                                                     columnNumber: 57
                                                                 }, this))
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                            lineNumber: 239,
+                                                            lineNumber: 247,
                                                             columnNumber: 49
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                    lineNumber: 217,
+                                                    lineNumber: 225,
                                                     columnNumber: 45
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1361,39 +1343,39 @@ function YoutubeGamingPromotion() {
                                                     children: "🚀 GET STARTED NOW"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                                    lineNumber: 249,
+                                                    lineNumber: 257,
                                                     columnNumber: 45
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                            lineNumber: 205,
+                                            lineNumber: 213,
                                             columnNumber: 41
                                         }, this)
                                     }, index, false, {
                                         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                        lineNumber: 204,
+                                        lineNumber: 212,
                                         columnNumber: 37
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                lineNumber: 202,
+                                lineNumber: 210,
                                 columnNumber: 29
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                            lineNumber: 200,
+                            lineNumber: 208,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                    lineNumber: 197,
+                    lineNumber: 205,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                lineNumber: 196,
+                lineNumber: 204,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1409,7 +1391,7 @@ function YoutubeGamingPromotion() {
                                     children: "Ready to level up your gaming channel?"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                    lineNumber: 273,
+                                    lineNumber: 281,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1417,13 +1399,13 @@ function YoutubeGamingPromotion() {
                                     children: "Start a campaign optimized for community growth and watch-time."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                    lineNumber: 274,
+                                    lineNumber: 282,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                            lineNumber: 272,
+                            lineNumber: 280,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1435,7 +1417,7 @@ function YoutubeGamingPromotion() {
                                     children: "Start Promotion"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                    lineNumber: 277,
+                                    lineNumber: 285,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1444,24 +1426,24 @@ function YoutubeGamingPromotion() {
                                     children: "View Plans"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                                    lineNumber: 278,
+                                    lineNumber: 286,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                            lineNumber: 276,
+                            lineNumber: 284,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                    lineNumber: 271,
+                    lineNumber: 279,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-                lineNumber: 270,
+                lineNumber: 278,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1471,7 +1453,7 @@ function YoutubeGamingPromotion() {
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/youtube-gaming-promotion/page.tsx",
-        lineNumber: 58,
+        lineNumber: 59,
         columnNumber: 9
     }, this);
 }

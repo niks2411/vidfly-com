@@ -1353,6 +1353,8 @@ __turbopack_context__.s([
     ()=>__TURBOPACK__default__export__
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/rsc/react-jsx-dev-runtime.js [app-rsc] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/image.js [app-rsc] (ecmascript)");
+;
 ;
 const VideoShowcase = ()=>{
     const thumbnails = [
@@ -1445,17 +1447,17 @@ const VideoShowcase = ()=>{
                                         className: "w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-white border-b-[10px] border-b-transparent ml-1"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                        lineNumber: 38,
+                                        lineNumber: 40,
                                         columnNumber: 33
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                    lineNumber: 37,
+                                    lineNumber: 39,
                                     columnNumber: 29
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                lineNumber: 35,
+                                lineNumber: 37,
                                 columnNumber: 25
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1465,27 +1467,27 @@ const VideoShowcase = ()=>{
                                         className: "w-3 h-3 rounded-full bg-white"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                        lineNumber: 44,
-                                        columnNumber: 29
-                                    }, ("TURBOPACK compile-time value", void 0)),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "w-3 h-3 rounded-full bg-white/40"
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                        lineNumber: 45,
-                                        columnNumber: 29
-                                    }, ("TURBOPACK compile-time value", void 0)),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "w-3 h-3 rounded-full bg-white/40"
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/components/VideoShowcaseNew.tsx",
                                         lineNumber: 46,
+                                        columnNumber: 29
+                                    }, ("TURBOPACK compile-time value", void 0)),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "w-3 h-3 rounded-full bg-white/40"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/VideoShowcaseNew.tsx",
+                                        lineNumber: 47,
+                                        columnNumber: 29
+                                    }, ("TURBOPACK compile-time value", void 0)),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "w-3 h-3 rounded-full bg-white/40"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/VideoShowcaseNew.tsx",
+                                        lineNumber: 48,
                                         columnNumber: 29
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                lineNumber: 43,
+                                lineNumber: 45,
                                 columnNumber: 25
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1509,22 +1511,22 @@ const VideoShowcase = ()=>{
                                                                 d: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                                                lineNumber: 57,
+                                                                lineNumber: 59,
                                                                 columnNumber: 49
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                                            lineNumber: 56,
+                                                            lineNumber: 58,
                                                             columnNumber: 45
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     }, i, false, {
                                                         fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                                        lineNumber: 55,
+                                                        lineNumber: 57,
                                                         columnNumber: 41
                                                     }, ("TURBOPACK compile-time value", void 0)))
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                                lineNumber: 53,
+                                                lineNumber: 55,
                                                 columnNumber: 33
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
@@ -1536,12 +1538,12 @@ const VideoShowcase = ()=>{
                                                     d: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                                    lineNumber: 63,
+                                                    lineNumber: 65,
                                                     columnNumber: 37
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                                lineNumber: 62,
+                                                lineNumber: 64,
                                                 columnNumber: 33
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1549,20 +1551,20 @@ const VideoShowcase = ()=>{
                                                 children: "Trustpilot"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                                lineNumber: 65,
+                                                lineNumber: 67,
                                                 columnNumber: 33
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                        lineNumber: 52,
+                                        lineNumber: 54,
                                         columnNumber: 29
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "w-px h-5 bg-white/30"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                        lineNumber: 69,
+                                        lineNumber: 71,
                                         columnNumber: 29
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1580,29 +1582,29 @@ const VideoShowcase = ()=>{
                                                         d: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                                        lineNumber: 76,
+                                                        lineNumber: 78,
                                                         columnNumber: 45
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 }, i, false, {
                                                     fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                                    lineNumber: 75,
+                                                    lineNumber: 77,
                                                     columnNumber: 41
                                                 }, ("TURBOPACK compile-time value", void 0)))
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                            lineNumber: 73,
+                                            lineNumber: 75,
                                             columnNumber: 33
                                         }, ("TURBOPACK compile-time value", void 0))
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                        lineNumber: 72,
+                                        lineNumber: 74,
                                         columnNumber: 29
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "w-px h-5 bg-white/30"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                        lineNumber: 83,
+                                        lineNumber: 85,
                                         columnNumber: 29
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1613,7 +1615,7 @@ const VideoShowcase = ()=>{
                                                 children: "G"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                                lineNumber: 87,
+                                                lineNumber: 89,
                                                 columnNumber: 33
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1621,25 +1623,25 @@ const VideoShowcase = ()=>{
                                                 children: "4.7/5"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                                lineNumber: 88,
+                                                lineNumber: 90,
                                                 columnNumber: 33
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                        lineNumber: 86,
+                                        lineNumber: 88,
                                         columnNumber: 29
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                lineNumber: 50,
+                                lineNumber: 52,
                                 columnNumber: 25
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                        lineNumber: 34,
+                        lineNumber: 36,
                         columnNumber: 21
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1649,14 +1651,14 @@ const VideoShowcase = ()=>{
                                 className: "absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-[#000000] via-[#000000]/80 to-transparent z-10 pointer-events-none"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                lineNumber: 96,
+                                lineNumber: 98,
                                 columnNumber: 25
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-[#000000] via-[#000000]/80 to-transparent z-10 pointer-events-none"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                lineNumber: 97,
+                                lineNumber: 99,
                                 columnNumber: 25
                             }, ("TURBOPACK compile-time value", void 0)),
                             [
@@ -1684,52 +1686,53 @@ const VideoShowcase = ()=>{
                                             ...row.items,
                                             ...row.items
                                         ].map((thumb, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "w-[180px] h-[95px] rounded-2xl overflow-hidden shrink-0 border border-white/10",
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                                className: "w-[180px] h-[95px] rounded-2xl overflow-hidden shrink-0 border border-white/10 relative",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {
                                                     src: thumb.src,
                                                     alt: thumb.alt,
-                                                    className: "w-full h-full object-cover hover:scale-110 transition-transform duration-300",
-                                                    loading: "lazy"
+                                                    fill: true,
+                                                    sizes: "180px",
+                                                    className: "object-cover hover:scale-110 transition-transform duration-300"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                                    lineNumber: 112,
+                                                    lineNumber: 114,
                                                     columnNumber: 45
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, i, false, {
                                                 fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                                lineNumber: 108,
+                                                lineNumber: 110,
                                                 columnNumber: 41
                                             }, ("TURBOPACK compile-time value", void 0)))
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                        lineNumber: 106,
+                                        lineNumber: 108,
                                         columnNumber: 33
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, rowIndex, false, {
                                     fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                                    lineNumber: 105,
+                                    lineNumber: 107,
                                     columnNumber: 29
                                 }, ("TURBOPACK compile-time value", void 0)))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                        lineNumber: 94,
+                        lineNumber: 96,
                         columnNumber: 21
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-                lineNumber: 32,
+                lineNumber: 34,
                 columnNumber: 17
             }, ("TURBOPACK compile-time value", void 0))
         }, void 0, false, {
             fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-            lineNumber: 31,
+            lineNumber: 33,
             columnNumber: 13
         }, ("TURBOPACK compile-time value", void 0))
     }, void 0, false, {
         fileName: "[project]/src/components/VideoShowcaseNew.tsx",
-        lineNumber: 22,
+        lineNumber: 24,
         columnNumber: 9
     }, ("TURBOPACK compile-time value", void 0));
 };

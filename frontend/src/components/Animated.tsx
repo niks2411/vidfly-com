@@ -1,42 +1,49 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
-function useInView(options?: IntersectionObserverInit) {
-    const ref = useRef<HTMLElement | null>(null);
-    const [inView, setInView] = useState(false);
-
-    useEffect(() => {
-        const node = ref.current;
-        if (!node) return;
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((e) => {
-                    if (e.isIntersecting) {
-                        setInView(true);
-                        observer.unobserve(node);
-                    }
-                });
+export const Animated: React.FC<{
+    children: React.ReactNode;
+    delay?: number;
+    className?: string;
+    direction?: "up" | "down" | "left" | "right";
+    duration?: number;
+}> = ({
+    children,
+    delay = 0,
+    className = "",
+    direction = "up",
+    duration = 0.7
+}) => {
+        const variants = {
+            hidden: {
+                opacity: 0,
+                y: direction === "up" ? 24 : direction === "down" ? -24 : 0,
+                x: direction === "left" ? 24 : direction === "right" ? -24 : 0,
             },
-            { threshold: 0.15, ...options }
+            visible: {
+                opacity: 1,
+                y: 0,
+                x: 0,
+                transition: {
+                    duration,
+                    delay: delay / 1000,
+                    ease: "easeOut"
+                }
+            }
+        };
+
+        return (
+            <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-10% 0px" }}
+                variants={variants as any}
+                className={className}
+                style={{ willChange: "opacity, transform" }} // Hint for GPU
+            >
+                {children}
+            </motion.div>
         );
-        observer.observe(node);
-        return () => observer.disconnect();
-    }, [ref, options]);
+    };
 
-    return { ref, inView };
-}
-
-export const Animated: React.FC<{ children: React.ReactNode; delay?: number; className?: string }> = ({ children, delay = 0, className = "" }) => {
-    const { ref, inView } = useInView();
-    return (
-        <div
-            ref={ref as any}
-            style={{ transitionDelay: `${delay}ms` }}
-            className={`${className} transform transition-all duration-700 ease-out ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-                }`}
-        >
-            {children}
-        </div>
-    );
-};

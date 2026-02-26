@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
     Heart,
@@ -108,8 +109,15 @@ export default function YoutubeHealthBeautyPromotion() {
                         <Animated delay={180}>
                             <div className="flex justify-center lg:justify-end">
                                 <div className="bg-white rounded-3xl p-6 shadow-2xl w-full max-w-md transform hover:-translate-y-3 transition">
-                                    <div className="relative overflow-hidden rounded-xl">
-                                        <img src="/lovable-uploads/health-beauty-hero.png" alt="Health & beauty promotion" className="w-full h-56 object-cover" />
+                                    <div className="relative h-56 overflow-hidden rounded-xl">
+                                        <Image
+                                            src="/lovable-uploads/health-beauty-hero.png"
+                                            alt="Health & beauty promotion"
+                                            fill
+                                            priority
+                                            className="object-cover"
+                                            sizes="(max-width: 768px) 100vw, 400px"
+                                        />
                                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                             <div className="bg-black/40 rounded-full p-4 animate-pulse">
                                                 <Play className="h-8 w-8 text-white" />

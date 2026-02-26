@@ -3,7 +3,7 @@
 
 type AppRoutes = "/" | "/about" | "/admin" | "/admin/completed" | "/blog" | "/campaign" | "/campaign/budget" | "/campaign/bulk-views" | "/campaign/bulk-views/select" | "/campaign/channel" | "/campaign/free-views" | "/campaign/my-campaigns" | "/campaign/packages" | "/campaign/packages/[id]" | "/contact" | "/disclaimer" | "/features" | "/get-started" | "/payment/callback" | "/payment/checkout" | "/pricing" | "/privacy-policy" | "/refund-policy" | "/success-stories" | "/terms-and-conditions" | "/youtube-gaming-promotion" | "/youtube-health-beauty-promotion" | "/youtube-motivation-promotion" | "/youtube-music-promotion" | "/youtube-travel-promotion" | "/youtube-vlogging-promotion"
 type PageRoutes = never
-type LayoutRoutes = "/"
+type LayoutRoutes = "/" | "/blog" | "/contact" | "/features" | "/pricing" | "/success-stories" | "/youtube-gaming-promotion" | "/youtube-health-beauty-promotion" | "/youtube-motivation-promotion" | "/youtube-music-promotion" | "/youtube-travel-promotion" | "/youtube-vlogging-promotion"
 type RedirectRoutes = never
 type RewriteRoutes = never
 type Routes = AppRoutes | PageRoutes | LayoutRoutes | RedirectRoutes | RewriteRoutes
@@ -48,6 +48,17 @@ export type ParamsOf<Route extends Routes> = ParamMap[Route]
 
 interface LayoutSlotMap {
   "/": never
+  "/blog": never
+  "/contact": never
+  "/features": never
+  "/pricing": never
+  "/success-stories": never
+  "/youtube-gaming-promotion": never
+  "/youtube-health-beauty-promotion": never
+  "/youtube-motivation-promotion": never
+  "/youtube-music-promotion": never
+  "/youtube-travel-promotion": never
+  "/youtube-vlogging-promotion": never
 }
 
 

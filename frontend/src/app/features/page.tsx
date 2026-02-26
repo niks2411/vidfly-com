@@ -1,4 +1,5 @@
 import YouTubeAdPlacements from "@/components/YouTubeAdPlacements";
+import Image from "next/image";
 import { Play, Target, TrendingUp, Users, Youtube, CheckCircle, Zap, Shield, Globe, BarChart3 } from "lucide-react";
 
 export default function FeaturesPage() {
@@ -9,10 +10,12 @@ export default function FeaturesPage() {
                 <div className="max-w-[1400px] mx-auto">
                     {/* Top Banner Image - Using new featuresbg.png */}
                     <div className="relative rounded-[32px] overflow-hidden shadow-xl h-[160px] sm:h-[220px] md:h-[260px] lg:h-[300px] animate-fade-in mb-12 max-w-6xl mx-auto">
-                        <img
+                        <Image
                             src="/featuresbg.png"
                             alt="Vidflyy Features Studio"
-                            className="w-full h-full object-cover object-center"
+                            fill
+                            priority
+                            className="object-cover object-center"
                         />
                     </div>
 

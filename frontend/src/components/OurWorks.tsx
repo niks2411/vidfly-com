@@ -1,8 +1,8 @@
 "use client";
 
 import { motion, MotionValue, useScroll, useTransform } from "framer-motion";
-import Lenis from "lenis";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 // EXISTING IMAGES from your project
 // You can replace these URLs with your new images later.
@@ -37,25 +37,15 @@ const OurWorks = () => {
   const y4 = useTransform(scrollYProgress, [0, 1], [0, height * 3]);
 
   useEffect(() => {
-    // Initialize Lenis for smooth scrolling
-    const lenis = new Lenis();
-
-    const raf = (time: number) => {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    };
-
     const resize = () => {
       setDimension({ width: window.innerWidth, height: window.innerHeight });
     };
 
     window.addEventListener("resize", resize);
-    requestAnimationFrame(raf);
     resize();
 
     return () => {
       window.removeEventListener("resize", resize);
-      lenis.destroy(); // Cleanup
     };
   }, []);
 
@@ -108,11 +98,14 @@ const Column = ({ images, y, className = "" }: ColumnProps) => {
       style={{ y }}
     >
       {images.map((src, i) => (
-        <div key={i} className="relative h-full w-full overflow-hidden rounded-xl shadow-lg">
-          <img
-            src={`${src}`}
-            alt="project thumbnail"
-            className="pointer-events-none object-cover w-full h-full"
+        <div key={i} className="relative h-full w-full overflow-hidden rounded-xl shadow-lg min-h-[40vh]">
+          <Image
+            src={src}
+            alt="YouTube promotion project"
+            fill
+            sizes="(max-width: 768px) 50vw, 25vw"
+            priority={i < 2}
+            className="pointer-events-none object-cover"
           />
         </div>
       ))}

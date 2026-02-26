@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
     Flame,
@@ -114,11 +115,14 @@ export default function YoutubeMotivationPromotion() {
                         <Animated delay={180}>
                             <div className="flex justify-center lg:justify-end">
                                 <div className="bg-white rounded-3xl p-6 shadow-2xl max-w-md w-full transform hover:-translate-y-3 transition">
-                                    <div className="relative overflow-hidden rounded-xl">
-                                        <img
+                                    <div className="relative h-56 overflow-hidden rounded-xl">
+                                        <Image
                                             src="/lovable-uploads/motivation-hero.png"
-                                            className="w-full h-56 object-cover"
+                                            className="object-cover"
                                             alt="Motivation Promotion"
+                                            fill
+                                            priority
+                                            sizes="(max-width: 768px) 100vw, 400px"
                                         />
                                         <div className="absolute inset-0 flex items-center justify-center">
                                             <div className="bg-black/40 p-4 rounded-full animate-pulse">

@@ -1,4 +1,5 @@
 import { CheckCircle, Play, TrendingUp, Star } from "lucide-react";
+import Image from "next/image";
 
 export default function SuccessStoriesPage() {
     const stories = [
@@ -70,12 +71,15 @@ export default function SuccessStoriesPage() {
                             <div key={index} className={`grid lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
                                 <div className={`${index % 2 === 1 ? 'lg:col-start-2' : ''} animate-fade-in`}>
                                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-105">
-                                        <img
-                                            src={story.image}
-                                            alt={story.title}
-                                            className="w-full h-64 object-cover"
-                                        />
-                                        <div className="p-6">
+                                        <div className="relative w-full h-64">
+                                            <Image
+                                                src={story.image}
+                                                alt={story.title}
+                                                fill
+                                                className="object-cover"
+                                                sizes="(max-width: 1024px) 100vw, 50vw"
+                                            />
+                                        </div>                                        <div className="p-6">
                                             <h3 className="text-2xl font-bold text-gray-900 mb-2">{story.title}</h3>
                                             <p className="text-red-600 font-semibold text-lg mb-4">{story.subtitle}</p>
                                             <div className="flex items-center gap-2 text-sm text-gray-600">

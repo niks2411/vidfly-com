@@ -3,6 +3,8 @@
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { useTrackEvent } from "@/hooks/use-track-event";
 
 interface HeroProps {
   showStats?: boolean;
@@ -10,8 +12,10 @@ interface HeroProps {
 
 const Hero = ({ showStats }: HeroProps) => {
   const router = useRouter();
+  const trackEvent = useTrackEvent();
 
   const handlePromoteNow = () => {
+    trackEvent("click_hero_promote_now");
     router.push("/get-started");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -129,12 +133,14 @@ const Hero = ({ showStats }: HeroProps) => {
                 </div>
               </div>
 
-              {/* Right Column: Image */}
               <div className="relative lg:block hidden animate-fade-in">
                 <div className="relative w-full">
-                  <img
+                  <Image
                     src="/right image.png"
                     alt="Vidflyy Hero - How your videos will be seen"
+                    width={700}
+                    height={700}
+                    priority
                     className="w-full h-auto drop-shadow-2xl transform transition-transform duration-700 hover:scale-[1.02]"
                   />
                 </div>

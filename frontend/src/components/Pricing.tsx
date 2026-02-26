@@ -8,10 +8,12 @@ import ScrollProgress from "@/components/ScrollProgress";
 import { Check, Users, Eye, Heart, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useTrackEvent } from "@/hooks/use-track-event";
 import { promotionPackages } from "./CampaignPackages";
 
 const PricingPage = () => {
   const router = useRouter();
+  const trackEvent = useTrackEvent();
 
   // View-based promotion packages (kept in sync with /campaign/packages)
   const viewPlans = promotionPackages.map((pkg) => {
@@ -129,7 +131,8 @@ const PricingPage = () => {
     }
   ];
 
-  const handleGetStartedClick = () => {
+  const handleGetStartedClick = (planName?: string) => {
+    trackEvent("click_pricing_get_started", { plan: planName || "unknown" });
     router.push("/get-started");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -204,7 +207,7 @@ const PricingPage = () => {
             </ul>
 
             <Button
-              onClick={handleGetStartedClick}
+              onClick={() => handleGetStartedClick(plan.name)}
               className={`w-full py-3 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 animate-button-pulse ${plan.popular ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-red-600 hover:bg-red-700 text-white'}`}
             >
               🚀 GET STARTED NOW

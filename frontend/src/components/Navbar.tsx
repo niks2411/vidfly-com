@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useCampaignSidebar } from "@/app/campaign-sidebar-provider";
+import Image from "next/image";
 
 // Campaign Hamburger Button Component - Must be defined before Navbar
 function CampaignHamburgerButton() {
@@ -72,7 +73,14 @@ const Navbar = () => {
           <div className="flex items-center h-16 lg:h-[72px]">
             {/* Logo */}
             <Link href="/" className="flex items-center shrink-0 mr-8 lg:mr-12 lg:ml-4 transform translate-y-[6px]" onClick={scrollToTop}>
-              <img src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png" alt="Vidflyy" className="h-9 w-auto" />
+              <Image
+                src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png"
+                alt="Vidflyy"
+                width={120}
+                height={36}
+                className="h-9 w-auto"
+                priority
+              />
             </Link>
 
             {/* Desktop Nav Links - sit right next to the logo */}

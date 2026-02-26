@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Youtube, Music, Play, CheckCircle } from "lucide-react";
 import { Animated } from "@/components/Animated";
@@ -127,9 +128,12 @@ export default function YoutubeMusicPromotion() {
                         <Animated delay={150}>
                             <div className="flex justify-center lg:justify-end overflow-hidden">
                                 <div className="relative w-full max-w-md">
-                                    <img
+                                    <Image
                                         src="/lovable-uploads/music.png"
                                         alt="Music Promotion Visualization"
+                                        width={448}
+                                        height={448}
+                                        priority
                                         className="w-full h-auto drop-shadow-2xl transform hover:scale-105 transition-transform duration-700"
                                     />
                                 </div>
@@ -167,10 +171,12 @@ export default function YoutubeMusicPromotion() {
                                             <span className="text-[10px] text-gray-500 font-medium">YouTube</span>
                                         </div>
                                         <div className="flex-1 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center relative">
-                                            <img
+                                            <Image
                                                 src="/lovable-uploads/music-thumbnail.png"
                                                 alt="Music video thumbnail"
-                                                className="w-full h-full object-cover"
+                                                fill
+                                                className="object-cover"
+                                                sizes="(max-width: 1024px) 300px, 500px"
                                             />
                                             <div className="absolute inset-0 flex items-center justify-center">
                                                 <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center shadow-lg">

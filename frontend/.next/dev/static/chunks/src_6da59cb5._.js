@@ -97,70 +97,47 @@ __turbopack_context__.s([
     ()=>Animated
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
-;
-var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-client] (ecmascript)");
 "use client";
 ;
-function useInView(options) {
-    _s();
-    const ref = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
-    const [inView, setInView] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
-        "useInView.useEffect": ()=>{
-            const node = ref.current;
-            if (!node) return;
-            const observer = new IntersectionObserver({
-                "useInView.useEffect": (entries)=>{
-                    entries.forEach({
-                        "useInView.useEffect": (e)=>{
-                            if (e.isIntersecting) {
-                                setInView(true);
-                                observer.unobserve(node);
-                            }
-                        }
-                    }["useInView.useEffect"]);
-                }
-            }["useInView.useEffect"], {
-                threshold: 0.15,
-                ...options
-            });
-            observer.observe(node);
-            return ({
-                "useInView.useEffect": ()=>observer.disconnect()
-            })["useInView.useEffect"];
-        }
-    }["useInView.useEffect"], [
-        ref,
-        options
-    ]);
-    return {
-        ref,
-        inView
-    };
-}
-_s(useInView, "K+dCFMkCcTyPMHOI0MxAWPXS6Js=");
-const Animated = ({ children, delay = 0, className = "" })=>{
-    _s1();
-    const { ref, inView } = useInView();
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        ref: ref,
-        style: {
-            transitionDelay: `${delay}ms`
+;
+const Animated = ({ children, delay = 0, className = "", direction = "up", duration = 0.7 })=>{
+    const variants = {
+        hidden: {
+            opacity: 0,
+            y: direction === "up" ? 24 : direction === "down" ? -24 : 0,
+            x: direction === "left" ? 24 : direction === "right" ? -24 : 0
         },
-        className: `${className} transform transition-all duration-700 ease-out ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`,
+        visible: {
+            opacity: 1,
+            y: 0,
+            x: 0,
+            transition: {
+                duration,
+                delay: delay / 1000,
+                ease: "easeOut"
+            }
+        }
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
+        initial: "hidden",
+        whileInView: "visible",
+        viewport: {
+            once: true,
+            margin: "-10% 0px"
+        },
+        variants: variants,
+        className: className,
+        style: {
+            willChange: "opacity, transform"
+        },
         children: children
     }, void 0, false, {
         fileName: "[project]/src/components/Animated.tsx",
-        lineNumber: 33,
-        columnNumber: 9
+        lineNumber: 37,
+        columnNumber: 13
     }, ("TURBOPACK compile-time value", void 0));
 };
-_s1(Animated, "oyd/E8SD7Fx4uOp6P7gVV2pVlaE=", false, function() {
-    return [
-        useInView
-    ];
-});
 _c = Animated;
 var _c;
 __turbopack_context__.k.register(_c, "Animated");
@@ -233,6 +210,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/styled-jsx/style.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/button.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/image.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$globe$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Globe$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/globe.js [app-client] (ecmascript) <export default as Globe>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$map$2d$pin$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MapPin$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/map-pin.js [app-client] (ecmascript) <export default as MapPin>");
@@ -248,6 +226,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Counter
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 ;
@@ -306,14 +285,14 @@ function YoutubeTravelPromotion() {
                         className: "jsx-5aa2d242e4011273" + " " + "absolute -left-32 -top-24 w-80 h-80 bg-blue-100 rounded-full opacity-25 animate-blob pointer-events-none"
                     }, void 0, false, {
                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                        lineNumber: 71,
+                        lineNumber: 72,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "jsx-5aa2d242e4011273" + " " + "absolute right-8 top-20 w-64 h-64 bg-blue-200 rounded-full opacity-20 animate-blob animation-delay-2500 pointer-events-none"
                     }, void 0, false, {
                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                        lineNumber: 72,
+                        lineNumber: 73,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -334,7 +313,7 @@ function YoutubeTravelPromotion() {
                                                             className: "h-6 w-6 text-red-600"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                            lineNumber: 79,
+                                                            lineNumber: 80,
                                                             columnNumber: 37
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -342,13 +321,13 @@ function YoutubeTravelPromotion() {
                                                             children: "Travel Promotion"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                            lineNumber: 80,
+                                                            lineNumber: 81,
                                                             columnNumber: 37
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                    lineNumber: 78,
+                                                    lineNumber: 79,
                                                     columnNumber: 33
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -356,7 +335,7 @@ function YoutubeTravelPromotion() {
                                                     children: "Grow Your Travel Channel — Reach Viewers Who Love Exploring New Destinations"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                    lineNumber: 83,
+                                                    lineNumber: 84,
                                                     columnNumber: 33
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -364,7 +343,7 @@ function YoutubeTravelPromotion() {
                                                     children: "Promote your travel vlogs, cinematic journeys, and destination guides to viewers actively searching for travel, adventure, tourism and lifestyle content. Real engagement. No bots."
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                    lineNumber: 87,
+                                                    lineNumber: 88,
                                                     columnNumber: 33
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -376,7 +355,7 @@ function YoutubeTravelPromotion() {
                                                             children: "Promote My Channel"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                            lineNumber: 93,
+                                                            lineNumber: 94,
                                                             columnNumber: 37
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -385,13 +364,13 @@ function YoutubeTravelPromotion() {
                                                             children: "See Pricing"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                            lineNumber: 100,
+                                                            lineNumber: 101,
                                                             columnNumber: 37
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                    lineNumber: 92,
+                                                    lineNumber: 93,
                                                     columnNumber: 33
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -404,14 +383,14 @@ function YoutubeTravelPromotion() {
                                                                     className: "h-4 w-4 text-red-600"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                    lineNumber: 109,
+                                                                    lineNumber: 110,
                                                                     columnNumber: 78
                                                                 }, this),
                                                                 " Destination targeting"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                            lineNumber: 109,
+                                                            lineNumber: 110,
                                                             columnNumber: 37
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -421,31 +400,31 @@ function YoutubeTravelPromotion() {
                                                                     className: "h-4 w-4 text-red-600"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                    lineNumber: 110,
+                                                                    lineNumber: 111,
                                                                     columnNumber: 78
                                                                 }, this),
                                                                 " Real travel audience"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                            lineNumber: 110,
+                                                            lineNumber: 111,
                                                             columnNumber: 37
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                    lineNumber: 108,
+                                                    lineNumber: 109,
                                                     columnNumber: 33
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                            lineNumber: 77,
+                                            lineNumber: 78,
                                             columnNumber: 29
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                        lineNumber: 76,
+                                        lineNumber: 77,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Animated$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Animated"], {
@@ -456,15 +435,18 @@ function YoutubeTravelPromotion() {
                                                 className: "jsx-5aa2d242e4011273" + " " + "bg-white rounded-3xl p-6 shadow-2xl w-full max-w-md transform hover:-translate-y-3 transition",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "jsx-5aa2d242e4011273" + " " + "relative overflow-hidden rounded-xl",
+                                                        className: "jsx-5aa2d242e4011273" + " " + "relative h-56 overflow-hidden rounded-xl",
                                                         children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                                                 src: "/lovable-uploads/travel-hero.png",
                                                                 alt: "Travel promotion",
-                                                                className: "jsx-5aa2d242e4011273" + " " + "w-full h-56 object-cover"
+                                                                fill: true,
+                                                                priority: true,
+                                                                className: "object-cover",
+                                                                sizes: "(max-width: 768px) 100vw, 400px"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                lineNumber: 119,
+                                                                lineNumber: 120,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -475,23 +457,23 @@ function YoutubeTravelPromotion() {
                                                                         className: "h-8 w-8 text-white"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                        lineNumber: 126,
+                                                                        lineNumber: 130,
                                                                         columnNumber: 49
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                    lineNumber: 125,
+                                                                    lineNumber: 129,
                                                                     columnNumber: 45
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                lineNumber: 124,
+                                                                lineNumber: 128,
                                                                 columnNumber: 41
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 118,
+                                                        lineNumber: 119,
                                                         columnNumber: 37
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -502,7 +484,7 @@ function YoutubeTravelPromotion() {
                                                                 children: "Starter Pack"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                lineNumber: 132,
+                                                                lineNumber: 136,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -510,7 +492,7 @@ function YoutubeTravelPromotion() {
                                                                 children: "Start from ₹600"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                lineNumber: 133,
+                                                                lineNumber: 137,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -518,7 +500,7 @@ function YoutubeTravelPromotion() {
                                                                 children: "Reach travel lovers looking for destination vlogs, packing guides & adventure content."
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                lineNumber: 134,
+                                                                lineNumber: 138,
                                                                 columnNumber: 41
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -530,7 +512,7 @@ function YoutubeTravelPromotion() {
                                                                         children: "Promote"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                        lineNumber: 139,
+                                                                        lineNumber: 143,
                                                                         columnNumber: 45
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -539,41 +521,41 @@ function YoutubeTravelPromotion() {
                                                                         children: "Custom plan"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                        lineNumber: 145,
+                                                                        lineNumber: 149,
                                                                         columnNumber: 45
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                lineNumber: 138,
+                                                                lineNumber: 142,
                                                                 columnNumber: 41
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 131,
+                                                        lineNumber: 135,
                                                         columnNumber: 37
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 117,
+                                                lineNumber: 118,
                                                 columnNumber: 33
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                            lineNumber: 116,
+                                            lineNumber: 117,
                                             columnNumber: 29
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                        lineNumber: 115,
+                                        lineNumber: 116,
                                         columnNumber: 25
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                lineNumber: 75,
+                                lineNumber: 76,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Animated$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Animated"], {
@@ -590,7 +572,7 @@ function YoutubeTravelPromotion() {
                                                         to: 37000
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 161,
+                                                        lineNumber: 165,
                                                         columnNumber: 38
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -598,13 +580,13 @@ function YoutubeTravelPromotion() {
                                                         children: "Travel Creators"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 161,
+                                                        lineNumber: 165,
                                                         columnNumber: 60
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 161,
+                                                lineNumber: 165,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -614,7 +596,7 @@ function YoutubeTravelPromotion() {
                                                         to: 29000000
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 162,
+                                                        lineNumber: 166,
                                                         columnNumber: 38
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -622,13 +604,13 @@ function YoutubeTravelPromotion() {
                                                         children: "Real Views"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 162,
+                                                        lineNumber: 166,
                                                         columnNumber: 63
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 162,
+                                                lineNumber: 166,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -638,7 +620,7 @@ function YoutubeTravelPromotion() {
                                                         to: 95000
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 163,
+                                                        lineNumber: 167,
                                                         columnNumber: 38
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -646,13 +628,13 @@ function YoutubeTravelPromotion() {
                                                         children: "Campaigns Run"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 163,
+                                                        lineNumber: 167,
                                                         columnNumber: 60
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 163,
+                                                lineNumber: 167,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -662,7 +644,7 @@ function YoutubeTravelPromotion() {
                                                         to: 800000
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 164,
+                                                        lineNumber: 168,
                                                         columnNumber: 38
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -670,41 +652,41 @@ function YoutubeTravelPromotion() {
                                                         children: "Subs Gained"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 164,
+                                                        lineNumber: 168,
                                                         columnNumber: 61
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 164,
+                                                lineNumber: 168,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                        lineNumber: 160,
+                                        lineNumber: 164,
                                         columnNumber: 29
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 159,
+                                    lineNumber: 163,
                                     columnNumber: 25
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                lineNumber: 158,
+                                lineNumber: 162,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                        lineNumber: 74,
+                        lineNumber: 75,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                lineNumber: 70,
+                lineNumber: 71,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -720,7 +702,7 @@ function YoutubeTravelPromotion() {
                                     children: "Why Travel Creators Grow Faster With Our Campaigns"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 175,
+                                    lineNumber: 179,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -728,13 +710,13 @@ function YoutubeTravelPromotion() {
                                     children: "We focus on viewers interested in tourism, adventure, travel vlogging, backpacking, hotels, and destination guides."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 178,
+                                    lineNumber: 182,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                            lineNumber: 174,
+                            lineNumber: 178,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -752,7 +734,7 @@ function YoutubeTravelPromotion() {
                                                         className: "h-6 w-6 text-red-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 187,
+                                                        lineNumber: 191,
                                                         columnNumber: 37
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -760,13 +742,13 @@ function YoutubeTravelPromotion() {
                                                         children: "Interest-based Targeting"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 188,
+                                                        lineNumber: 192,
                                                         columnNumber: 37
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 186,
+                                                lineNumber: 190,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -774,18 +756,18 @@ function YoutubeTravelPromotion() {
                                                 children: "Reach users planning trips, searching destinations, or watching travel guides."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 190,
+                                                lineNumber: 194,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                        lineNumber: 185,
+                                        lineNumber: 189,
                                         columnNumber: 29
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 184,
+                                    lineNumber: 188,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Animated$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Animated"], {
@@ -800,7 +782,7 @@ function YoutubeTravelPromotion() {
                                                         className: "h-6 w-6 text-red-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 196,
+                                                        lineNumber: 200,
                                                         columnNumber: 37
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -808,13 +790,13 @@ function YoutubeTravelPromotion() {
                                                         children: "Adventure Audience"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 197,
+                                                        lineNumber: 201,
                                                         columnNumber: 37
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 195,
+                                                lineNumber: 199,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -822,18 +804,18 @@ function YoutubeTravelPromotion() {
                                                 children: "Best for trekking, hiking, cliff-jumping, and nature lovers."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 199,
+                                                lineNumber: 203,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                        lineNumber: 194,
+                                        lineNumber: 198,
                                         columnNumber: 29
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 193,
+                                    lineNumber: 197,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Animated$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Animated"], {
@@ -848,7 +830,7 @@ function YoutubeTravelPromotion() {
                                                         className: "h-6 w-6 text-red-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 205,
+                                                        lineNumber: 209,
                                                         columnNumber: 37
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -856,13 +838,13 @@ function YoutubeTravelPromotion() {
                                                         children: "Cinematic Fans"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                        lineNumber: 206,
+                                                        lineNumber: 210,
                                                         columnNumber: 37
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 204,
+                                                lineNumber: 208,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -870,35 +852,35 @@ function YoutubeTravelPromotion() {
                                                 children: "Promote beautifully shot travel films to viewers who love visuals."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 208,
+                                                lineNumber: 212,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                        lineNumber: 203,
+                                        lineNumber: 207,
                                         columnNumber: 29
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 202,
+                                    lineNumber: 206,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                            lineNumber: 183,
+                            lineNumber: 187,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                    lineNumber: 173,
+                    lineNumber: 177,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                lineNumber: 172,
+                lineNumber: 176,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -913,12 +895,12 @@ function YoutubeTravelPromotion() {
                                 children: "How It Works — 3 Easy Steps"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                lineNumber: 219,
+                                lineNumber: 223,
                                 columnNumber: 25
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                            lineNumber: 218,
+                            lineNumber: 222,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -936,12 +918,12 @@ function YoutubeTravelPromotion() {
                                                     children: "1"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                    lineNumber: 226,
+                                                    lineNumber: 230,
                                                     columnNumber: 37
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 225,
+                                                lineNumber: 229,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
@@ -949,7 +931,7 @@ function YoutubeTravelPromotion() {
                                                 children: "Share your vlog or channel link"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 228,
+                                                lineNumber: 232,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -957,18 +939,18 @@ function YoutubeTravelPromotion() {
                                                 children: "Tell us your niche: adventure, resort travel, budget trips."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 229,
+                                                lineNumber: 233,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                        lineNumber: 224,
+                                        lineNumber: 228,
                                         columnNumber: 29
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 223,
+                                    lineNumber: 227,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Animated$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Animated"], {
@@ -983,12 +965,12 @@ function YoutubeTravelPromotion() {
                                                     children: "2"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                    lineNumber: 235,
+                                                    lineNumber: 239,
                                                     columnNumber: 37
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 234,
+                                                lineNumber: 238,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
@@ -996,7 +978,7 @@ function YoutubeTravelPromotion() {
                                                 children: "Choose preferred audience"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 237,
+                                                lineNumber: 241,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1004,18 +986,18 @@ function YoutubeTravelPromotion() {
                                                 children: "Target countries, nature lovers, photographers & tourists."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 238,
+                                                lineNumber: 242,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                        lineNumber: 233,
+                                        lineNumber: 237,
                                         columnNumber: 29
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 232,
+                                    lineNumber: 236,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Animated$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Animated"], {
@@ -1030,12 +1012,12 @@ function YoutubeTravelPromotion() {
                                                     children: "3"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                    lineNumber: 244,
+                                                    lineNumber: 248,
                                                     columnNumber: 37
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 243,
+                                                lineNumber: 247,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
@@ -1043,7 +1025,7 @@ function YoutubeTravelPromotion() {
                                                 children: "Get optimized growth"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 246,
+                                                lineNumber: 250,
                                                 columnNumber: 33
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1051,35 +1033,35 @@ function YoutubeTravelPromotion() {
                                                 children: "We fine-tune reach, retention and click-through results."
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 247,
+                                                lineNumber: 251,
                                                 columnNumber: 33
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                        lineNumber: 242,
+                                        lineNumber: 246,
                                         columnNumber: 29
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 241,
+                                    lineNumber: 245,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                            lineNumber: 222,
+                            lineNumber: 226,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                    lineNumber: 217,
+                    lineNumber: 221,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                lineNumber: 216,
+                lineNumber: 220,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1094,12 +1076,12 @@ function YoutubeTravelPromotion() {
                                 children: "Recommended Travel Packages"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                lineNumber: 258,
+                                lineNumber: 262,
                                 columnNumber: 25
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                            lineNumber: 257,
+                            lineNumber: 261,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1116,7 +1098,7 @@ function YoutubeTravelPromotion() {
                                                     children: "MOST POPULAR"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                    lineNumber: 268,
+                                                    lineNumber: 272,
                                                     columnNumber: 49
                                                 }, this),
                                                 plan.badge === "PREMIUM" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1124,7 +1106,7 @@ function YoutubeTravelPromotion() {
                                                     children: "PREMIUM"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                    lineNumber: 273,
+                                                    lineNumber: 277,
                                                     columnNumber: 49
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1138,7 +1120,7 @@ function YoutubeTravelPromotion() {
                                                                     children: plan.name
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                    lineNumber: 280,
+                                                                    lineNumber: 284,
                                                                     columnNumber: 53
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1148,18 +1130,18 @@ function YoutubeTravelPromotion() {
                                                                         children: plan.price
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                        lineNumber: 282,
+                                                                        lineNumber: 286,
                                                                         columnNumber: 57
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                    lineNumber: 281,
+                                                                    lineNumber: 285,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                            lineNumber: 279,
+                                                            lineNumber: 283,
                                                             columnNumber: 49
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1170,7 +1152,7 @@ function YoutubeTravelPromotion() {
                                                                     children: plan.watchHours
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                    lineNumber: 287,
+                                                                    lineNumber: 291,
                                                                     columnNumber: 53
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1178,13 +1160,13 @@ function YoutubeTravelPromotion() {
                                                                     children: "Real, High-Intent Viewers"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                    lineNumber: 288,
+                                                                    lineNumber: 292,
                                                                     columnNumber: 53
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                            lineNumber: 286,
+                                                            lineNumber: 290,
                                                             columnNumber: 49
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1195,7 +1177,7 @@ function YoutubeTravelPromotion() {
                                                                     children: "AI Targeting:"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                    lineNumber: 292,
+                                                                    lineNumber: 296,
                                                                     columnNumber: 53
                                                                 }, this),
                                                                 plan.hasAI ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1203,20 +1185,20 @@ function YoutubeTravelPromotion() {
                                                                     children: "✓ Included"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                    lineNumber: 294,
+                                                                    lineNumber: 298,
                                                                     columnNumber: 57
                                                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                     className: "jsx-5aa2d242e4011273" + " " + "text-red-500 font-bold text-sm",
                                                                     children: "✗ Not Included"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                    lineNumber: 296,
+                                                                    lineNumber: 300,
                                                                     columnNumber: 57
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                            lineNumber: 291,
+                                                            lineNumber: 295,
                                                             columnNumber: 49
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -1228,7 +1210,7 @@ function YoutubeTravelPromotion() {
                                                                             className: "h-4 w-4 text-green-600 mt-0.5 flex-shrink-0"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                            lineNumber: 303,
+                                                                            lineNumber: 307,
                                                                             columnNumber: 61
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1236,24 +1218,24 @@ function YoutubeTravelPromotion() {
                                                                             children: feature
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                            lineNumber: 304,
+                                                                            lineNumber: 308,
                                                                             columnNumber: 61
                                                                         }, this)
                                                                     ]
                                                                 }, idx, true, {
                                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                                    lineNumber: 302,
+                                                                    lineNumber: 306,
                                                                     columnNumber: 57
                                                                 }, this))
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                            lineNumber: 300,
+                                                            lineNumber: 304,
                                                             columnNumber: 49
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                    lineNumber: 278,
+                                                    lineNumber: 282,
                                                     columnNumber: 45
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1262,39 +1244,39 @@ function YoutubeTravelPromotion() {
                                                     children: "🚀 GET STARTED NOW"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                    lineNumber: 310,
+                                                    lineNumber: 314,
                                                     columnNumber: 45
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                            lineNumber: 266,
+                                            lineNumber: 270,
                                             columnNumber: 41
                                         }, this)
                                     }, index, false, {
                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                        lineNumber: 265,
+                                        lineNumber: 269,
                                         columnNumber: 37
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                lineNumber: 263,
+                                lineNumber: 267,
                                 columnNumber: 29
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                            lineNumber: 261,
+                            lineNumber: 265,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                    lineNumber: 256,
+                    lineNumber: 260,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                lineNumber: 255,
+                lineNumber: 259,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1309,12 +1291,12 @@ function YoutubeTravelPromotion() {
                                 children: "Success Stories"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                lineNumber: 334,
+                                lineNumber: 338,
                                 columnNumber: 25
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                            lineNumber: 333,
+                            lineNumber: 337,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1348,7 +1330,7 @@ function YoutubeTravelPromotion() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 345,
+                                                lineNumber: 349,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1356,7 +1338,7 @@ function YoutubeTravelPromotion() {
                                                 children: t.stat
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 346,
+                                                lineNumber: 350,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1364,34 +1346,34 @@ function YoutubeTravelPromotion() {
                                                 children: t.desc
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 347,
+                                                lineNumber: 351,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                        lineNumber: 344,
+                                        lineNumber: 348,
                                         columnNumber: 33
                                     }, this)
                                 }, t.ch, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 343,
+                                    lineNumber: 347,
                                     columnNumber: 29
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                            lineNumber: 337,
+                            lineNumber: 341,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                    lineNumber: 332,
+                    lineNumber: 336,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                lineNumber: 331,
+                lineNumber: 335,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1406,12 +1388,12 @@ function YoutubeTravelPromotion() {
                                 children: "Frequently Asked Questions"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                lineNumber: 359,
+                                lineNumber: 363,
                                 columnNumber: 25
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                            lineNumber: 358,
+                            lineNumber: 362,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1439,7 +1421,7 @@ function YoutubeTravelPromotion() {
                                                 children: f.q
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 370,
+                                                lineNumber: 374,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1447,34 +1429,34 @@ function YoutubeTravelPromotion() {
                                                 children: f.a
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                                lineNumber: 371,
+                                                lineNumber: 375,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                        lineNumber: 369,
+                                        lineNumber: 373,
                                         columnNumber: 33
                                     }, this)
                                 }, f.q, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 368,
+                                    lineNumber: 372,
                                     columnNumber: 29
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                            lineNumber: 362,
+                            lineNumber: 366,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                    lineNumber: 357,
+                    lineNumber: 361,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                lineNumber: 356,
+                lineNumber: 360,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1490,7 +1472,7 @@ function YoutubeTravelPromotion() {
                                     children: "Ready to get real travel viewers?"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 383,
+                                    lineNumber: 387,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1498,13 +1480,13 @@ function YoutubeTravelPromotion() {
                                     children: "Let us promote your channel to travel lovers who truly enjoy exploring new places."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 384,
+                                    lineNumber: 388,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                            lineNumber: 382,
+                            lineNumber: 386,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1516,7 +1498,7 @@ function YoutubeTravelPromotion() {
                                     children: "Start Promotion"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 390,
+                                    lineNumber: 394,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1525,24 +1507,24 @@ function YoutubeTravelPromotion() {
                                     children: "View Plans"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                                    lineNumber: 396,
+                                    lineNumber: 400,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                            lineNumber: 389,
+                            lineNumber: 393,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                    lineNumber: 381,
+                    lineNumber: 385,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-                lineNumber: 380,
+                lineNumber: 384,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1552,7 +1534,7 @@ function YoutubeTravelPromotion() {
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/youtube-travel-promotion/page.tsx",
-        lineNumber: 68,
+        lineNumber: 69,
         columnNumber: 9
     }, this);
 }

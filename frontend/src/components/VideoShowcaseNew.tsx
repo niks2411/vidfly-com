@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const VideoShowcase = () => {
     const thumbnails = [
         { src: "/lovable-uploads/1.jpg", alt: "YouTube video" },
@@ -107,13 +109,14 @@ const VideoShowcase = () => {
                                     {[...row.items, ...row.items].map((thumb, i) => (
                                         <div
                                             key={i}
-                                            className="w-[180px] h-[95px] rounded-2xl overflow-hidden shrink-0 border border-white/10"
+                                            className="w-[180px] h-[95px] rounded-2xl overflow-hidden shrink-0 border border-white/10 relative"
                                         >
-                                            <img
+                                            <Image
                                                 src={thumb.src}
                                                 alt={thumb.alt}
-                                                className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                                                loading="lazy"
+                                                fill
+                                                sizes="180px"
+                                                className="object-cover hover:scale-110 transition-transform duration-300"
                                             />
                                         </div>
                                     ))}

@@ -97,70 +97,47 @@ __turbopack_context__.s([
     ()=>Animated
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
-;
-var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-client] (ecmascript)");
 "use client";
 ;
-function useInView(options) {
-    _s();
-    const ref = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
-    const [inView, setInView] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
-        "useInView.useEffect": ()=>{
-            const node = ref.current;
-            if (!node) return;
-            const observer = new IntersectionObserver({
-                "useInView.useEffect": (entries)=>{
-                    entries.forEach({
-                        "useInView.useEffect": (e)=>{
-                            if (e.isIntersecting) {
-                                setInView(true);
-                                observer.unobserve(node);
-                            }
-                        }
-                    }["useInView.useEffect"]);
-                }
-            }["useInView.useEffect"], {
-                threshold: 0.15,
-                ...options
-            });
-            observer.observe(node);
-            return ({
-                "useInView.useEffect": ()=>observer.disconnect()
-            })["useInView.useEffect"];
-        }
-    }["useInView.useEffect"], [
-        ref,
-        options
-    ]);
-    return {
-        ref,
-        inView
-    };
-}
-_s(useInView, "K+dCFMkCcTyPMHOI0MxAWPXS6Js=");
-const Animated = ({ children, delay = 0, className = "" })=>{
-    _s1();
-    const { ref, inView } = useInView();
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        ref: ref,
-        style: {
-            transitionDelay: `${delay}ms`
+;
+const Animated = ({ children, delay = 0, className = "", direction = "up", duration = 0.7 })=>{
+    const variants = {
+        hidden: {
+            opacity: 0,
+            y: direction === "up" ? 24 : direction === "down" ? -24 : 0,
+            x: direction === "left" ? 24 : direction === "right" ? -24 : 0
         },
-        className: `${className} transform transition-all duration-700 ease-out ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`,
+        visible: {
+            opacity: 1,
+            y: 0,
+            x: 0,
+            transition: {
+                duration,
+                delay: delay / 1000,
+                ease: "easeOut"
+            }
+        }
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
+        initial: "hidden",
+        whileInView: "visible",
+        viewport: {
+            once: true,
+            margin: "-10% 0px"
+        },
+        variants: variants,
+        className: className,
+        style: {
+            willChange: "opacity, transform"
+        },
         children: children
     }, void 0, false, {
         fileName: "[project]/src/components/Animated.tsx",
-        lineNumber: 33,
-        columnNumber: 9
+        lineNumber: 37,
+        columnNumber: 13
     }, ("TURBOPACK compile-time value", void 0));
 };
-_s1(Animated, "oyd/E8SD7Fx4uOp6P7gVV2pVlaE=", false, function() {
-    return [
-        useInView
-    ];
-});
 _c = Animated;
 var _c;
 __turbopack_context__.k.register(_c, "Animated");
