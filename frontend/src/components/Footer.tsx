@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { Youtube, Facebook, Instagram, Linkedin } from "lucide-react";
 
 const Footer = () => {
@@ -13,7 +15,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {/* Column 1: Logo, Desc, Social, Badge */}
           <div className="flex flex-col gap-6">
-            <Link to="/" onClick={scrollToTop}>
+            <Link href="/" onClick={scrollToTop}>
               <img
                 src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png"
                 alt="Vidflyy"
@@ -70,10 +72,15 @@ const Footer = () => {
           <div className="lg:pl-8">
             <h4 className="text-[15px] font-bold text-[#111] mb-5">Youtube Promotion</h4>
             <ul className="flex flex-col gap-3 font-medium">
-              {["Buy Youtube Views", "Buy Youtube Subscribers", "Buy Youtube Likes", "Free Youtube Views"].map((text) => (
-                <li key={text}>
-                  <Link to="#" onClick={scrollToTop} className="text-[14px] text-[rgb(41,40,40)] hover:text-[#E52D27] transition-colors">
-                    {text}
+              {[
+                { text: "Buy Youtube Views", path: "/get-started" },
+                { text: "Buy Youtube Subscribers", path: "/get-started" },
+                { text: "Buy Youtube Likes", path: "/get-started" },
+                { text: "Free Youtube Views", path: "/campaign/free-views" }
+              ].map((item) => (
+                <li key={item.text}>
+                  <Link href={item.path} onClick={scrollToTop} className="text-[14px] text-[rgb(41,40,40)] hover:text-[#E52D27] transition-colors">
+                    {item.text}
                   </Link>
                 </li>
               ))}
@@ -85,16 +92,16 @@ const Footer = () => {
             <h4 className="text-[15px] font-bold text-[#111] mb-5">Channel Promotion</h4>
             <ul className="flex flex-col gap-3 font-medium">
               {[
-                "Youtube Music Promotion",
-                "Youtube Gaming Channel Promotion",
-                "Youtube Travel Promotion",
-                "Youtube Health & Beauty Promotion",
-                "Youtube Motivation Promotion",
-                "Youtube Vlogging Promotion"
-              ].map((text) => (
-                <li key={text}>
-                  <Link to="#" onClick={scrollToTop} className="text-[14px] text-[rgb(41,40,40)] hover:text-[#E52D27] transition-colors">
-                    {text}
+                { text: "Youtube Music Promotion", path: "/youtube-music-promotion" },
+                { text: "Youtube Gaming Channel Promotion", path: "/youtube-gaming-promotion" },
+                { text: "Youtube Travel Promotion", path: "/youtube-travel-promotion" },
+                { text: "Youtube Health & Beauty Promotion", path: "/youtube-health-beauty-promotion" },
+                { text: "Youtube Motivation Promotion", path: "/youtube-motivation-promotion" },
+                { text: "Youtube Vlogging Promotion", path: "/youtube-vlogging-promotion" }
+              ].map((link) => (
+                <li key={link.text}>
+                  <Link href={link.path} onClick={scrollToTop} className="text-[14px] text-[rgb(41,40,40)] hover:text-[#E52D27] transition-colors">
+                    {link.text}
                   </Link>
                 </li>
               ))}
@@ -103,7 +110,7 @@ const Footer = () => {
 
           {/* Column 4: Contact & Action */}
           <div className="flex flex-col items-start gap-6">
-            <Link to="/get-started" onClick={scrollToTop}>
+            <Link href="/get-started" onClick={scrollToTop}>
               <button className="bg-[#E52D27] hover:bg-[#CC2420] text-white font-extrabold text-[14px] px-8 py-3 rounded-[4px] transition-all transform hover:scale-[1.02]">
                 Get started now
               </button>
@@ -140,9 +147,9 @@ const Footer = () => {
         <div className="flex flex-col gap-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2 text-[13px] font-bold text-[rgb(41,40,40)]">
-              <Link to="/privacy-policy" className="hover:text-[#111]">Privacy Policy</Link>
+              <Link href="/privacy-policy" className="hover:text-[#111]">Privacy Policy</Link>
               <span>|</span>
-              <Link to="/terms-and-conditions" className="hover:text-[#111]">Terms & Conditions</Link>
+              <Link href="/terms-and-conditions" className="hover:text-[#111]">Terms & Conditions</Link>
             </div>
 
             <div className="flex items-center gap-6 saturate-[0.8]">

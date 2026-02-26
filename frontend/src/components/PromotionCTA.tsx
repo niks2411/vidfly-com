@@ -1,10 +1,12 @@
-import { useNavigate } from "react-router-dom";
+"use client";
+
+import { useRouter } from "next/navigation";
 
 const PromotionCTA = () => {
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const handleStartPromotion = () => {
-        navigate("/get-started");
+        router.push("/get-started");
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 

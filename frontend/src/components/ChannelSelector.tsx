@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { ChevronDown, Plus, Settings } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import AddChannelModal from "./AddChannelModal";
 import ManageChannelsModal from "./ManageChannelsModal";
 import { getVerifiedEmail, getSelectedChannelKey } from "@/lib/verifiedEmail";
@@ -8,7 +8,7 @@ import { getVerifiedEmail, getSelectedChannelKey } from "@/lib/verifiedEmail";
 const STORAGE_KEY = "vidfly_channel_videos";
 const CHANNEL_INFO_STORAGE_KEY = "vidfly_channel_info";
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
+  (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
 
 type StoredVideo = {
   title: string;
@@ -30,7 +30,7 @@ type ChannelSelectorProps = {
 };
 
 const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [storedVideos, setStoredVideos] = useState<StoredVideo[]>([]);
   const [channelInfoMap, setChannelInfoMap] = useState<Map<string, ChannelInfo>>(new Map());
   const [selectedChannelId, setSelectedChannelId] = useState<string | null>(null);

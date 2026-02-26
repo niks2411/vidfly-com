@@ -1,9 +1,11 @@
+"use client";
+
 import { Helmet } from 'react-helmet-async';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 
 const CanonicalTag = () => {
-    const location = useLocation();
-    const canonicalUrl = `https://www.vidflyy.in${location.pathname === '/' ? '' : location.pathname}`;
+    const pathname = usePathname();
+    const canonicalUrl = `https://www.vidflyy.in${pathname === '/' ? '' : pathname}`;
 
     return (
         <Helmet>

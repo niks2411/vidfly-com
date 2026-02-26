@@ -2,16 +2,16 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calculator, TrendingUp, Users, Eye } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 const EstimateSection = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [budget, setBudget] = useState("");
   const [estimatedViews, setEstimatedViews] = useState(0);
   const [estimatedSubscribers, setEstimatedSubscribers] = useState(0);
 
   const handleGetStartedClick = () => {
-    navigate("/get-started");
+    router.push("/get-started");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -20,10 +20,10 @@ const EstimateSection = () => {
     // Conversion rates based on Indian market
     const viewsPerRupee = 10; // Approximately 10 views per rupee
     const subscribersPerThousandViews = 15; // 1.5% conversion rate
-    
+
     const views = Math.round(budgetAmount * viewsPerRupee);
     const subscribers = Math.round((views * subscribersPerThousandViews) / 1000);
-    
+
     setEstimatedViews(views);
     setEstimatedSubscribers(subscribers);
   };
@@ -66,7 +66,7 @@ const EstimateSection = () => {
                 </div>
               </div>
 
-              <Button 
+              <Button
                 onClick={calculateEstimate}
                 className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg transition-all duration-300 hover:scale-105 active:scale-95"
               >
@@ -102,9 +102,9 @@ const EstimateSection = () => {
             <p className="text-gray-600 mb-4">
               Ready to start promoting your videos?
             </p>
-            <Button 
+            <Button
               onClick={handleGetStartedClick}
-              variant="outline" 
+              variant="outline"
               className="border-red-600 text-red-600 hover:bg-red-50 px-8 py-3 transition-all duration-300 hover:scale-105 active:scale-95"
             >
               Get Started Now

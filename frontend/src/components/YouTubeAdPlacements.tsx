@@ -1,3 +1,4 @@
+"use client";
 
 import { CornerDownRight, CornerRightUp } from "lucide-react";
 import { motion } from "framer-motion";
@@ -16,6 +17,9 @@ const YouTubeAdPlacements = () => {
           <h2 className="section-heading text-center">
             What the promotion <span className="text-red-600">looks like</span>
           </h2>
+          <p className="section-desc text-center !max-w-2xl mx-auto mt-4">
+            See exactly where your video appears to viewers when you launch a campaign. We place your content in the most engaging sections of the YouTube ecosystem.
+          </p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-12 lg:gap-20 max-w-6xl mx-auto items-stretch pb-28">

@@ -1,7 +1,9 @@
-import { useNavigate } from "react-router-dom";
+"use client";
+
+import { useRouter } from "next/navigation";
 
 const NewServices = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const categories = [
     {
@@ -40,7 +42,7 @@ const NewServices = () => {
   const scrollItems = [...categories, ...categories];
 
   const handleCategoryClick = (link: string) => {
-    navigate(link);
+    router.push(link);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 

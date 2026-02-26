@@ -1,15 +1,17 @@
+"use client";
+
 import { Link, ArrowRight, Sparkles, Zap, Globe, Rocket, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 const VideoShowcase = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleGetStarted = () => {
-    navigate("/get-started");
+    router.push("/get-started");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 

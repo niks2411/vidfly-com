@@ -7,11 +7,11 @@ import ExampleCampaign from "@/components/ExampleCampaign";
 import ScrollProgress from "@/components/ScrollProgress";
 import { Check, Users, Eye, Heart, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { promotionPackages } from "./CampaignPackages";
 
 const PricingPage = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // View-based promotion packages (kept in sync with /campaign/packages)
   const viewPlans = promotionPackages.map((pkg) => {
@@ -130,7 +130,7 @@ const PricingPage = () => {
   ];
 
   const handleGetStartedClick = () => {
-    navigate("/get-started");
+    router.push("/get-started");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 

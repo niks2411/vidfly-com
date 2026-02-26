@@ -1,4 +1,6 @@
-import { useNavigate } from "react-router-dom";
+"use client";
+
+import { useRouter } from "next/navigation";
 
 const features = [
   { text: "Ability to reach YouTubers based on their interests", vidflyy: true, googleAds: true },
@@ -29,7 +31,7 @@ const CrossIcon = () => (
 const COL_ICON = "var(--ct-col, clamp(72px, 12vw, 140px))";
 
 const ComparisonTable = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <section className="ct-section">

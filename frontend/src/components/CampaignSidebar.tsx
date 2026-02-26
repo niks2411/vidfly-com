@@ -1,4 +1,6 @@
-import { useLocation, useNavigate } from "react-router-dom";
+"use client";
+
+import { useRouter, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Play, Users, Grid3x3, Package, ShoppingCart, Gift, ChevronRight } from "lucide-react";
 
@@ -19,8 +21,8 @@ type SidebarProps = {
 };
 
 const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, isMobile = false }: SidebarProps) => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const sections = [
     {
@@ -48,7 +50,7 @@ const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, i
 
   const handleNavigate = (path?: string) => {
     if (!path) return;
-    navigate(path);
+    router.push(path);
     // Call the callback to close mobile menu if provided
     if (onNavigateCallback) {
       onNavigateCallback();
@@ -57,7 +59,7 @@ const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, i
 
   const isActive = (item: typeof sections[0]["items"][0]) => {
     if (item.key && item.key === active) return true;
-    if (!item.key && item.path === location.pathname) return true;
+    if (!item.key && item.path === pathname) return true;
     return false;
   };
 

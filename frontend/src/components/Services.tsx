@@ -1,13 +1,14 @@
+"use client";
 
 import { Users, Eye, Clock, DollarSign, Target, TrendingUp, MessageCircle, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 const Services = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleGetStartedClick = () => {
-    navigate("/get-started");
+    router.push("/get-started");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -20,7 +21,7 @@ const Services = () => {
       gradient: "from-red-500 to-pink-500"
     },
     {
-      title: "YOUTUBE VIEWS", 
+      title: "YOUTUBE VIEWS",
       description: "We provide real content viewers for your video, bringing quality traffic at minimal cost",
       features: ["High Retention Views", "Real User Interaction", "Worldwide Campaigns", "100% Secure Process"],
       icon: Eye,
@@ -49,7 +50,7 @@ const Services = () => {
       description: "Select the perfect service package that matches your channel's growth goals and budget requirements."
     },
     {
-      step: "02", 
+      step: "02",
       title: "Provide Video Details",
       description: "Share your video URL, target audience preferences, and campaign specifications with our team."
     },
@@ -75,7 +76,7 @@ const Services = () => {
           <div className="absolute top-1/2 right-20 w-24 h-24 bg-red-100 rounded-full opacity-40 animate-bounce"></div>
           <div className="absolute bottom-20 left-1/3 w-40 h-40 bg-red-50 rounded-full opacity-20 animate-pulse"></div>
         </div>
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           {/* Animated Header Background */}
           <div className="absolute inset-0 opacity-10">
@@ -83,7 +84,7 @@ const Services = () => {
             <div className="absolute top-12 right-20 w-6 h-6 bg-red-600 rounded-full animate-bounce"></div>
             <div className="absolute bottom-5 left-32 w-10 h-10 bg-red-400 rounded-full animate-pulse"></div>
           </div>
-          
+
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 relative z-10">
             OUR <span className="text-red-600">SERVICES</span>
           </h1>
@@ -108,7 +109,7 @@ const Services = () => {
               <div key={index} className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 relative overflow-hidden">
                 {/* Animated background gradient */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
-                
+
                 <div className="relative z-10 p-8">
                   {/* Header Section */}
                   <div className={`bg-gradient-to-r ${service.gradient} rounded-xl p-6 mb-6 text-white group-hover:scale-105 transition-transform duration-300`}>
@@ -118,7 +119,7 @@ const Services = () => {
                     </div>
                     <p className="text-white/90">{service.description}</p>
                   </div>
-                  
+
                   {/* Features List */}
                   <div className="space-y-3 mb-6">
                     {service.features.map((feature, featureIndex) => (
@@ -128,8 +129,8 @@ const Services = () => {
                       </div>
                     ))}
                   </div>
-                  
-                  <Button 
+
+                  <Button
                     onClick={handleGetStartedClick}
                     className="w-full bg-red-600 hover:bg-red-700 text-white py-3 transition-all duration-300 hover:scale-105 active:scale-95"
                   >
@@ -166,13 +167,13 @@ const Services = () => {
               Our proven 4-step process ensures maximum results for your YouTube promotion campaigns
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {workSteps.map((step, index) => (
               <div key={index} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 group relative overflow-hidden">
                 {/* Background animation */}
                 <div className="absolute inset-0 bg-gradient-to-br from-red-50/0 to-red-100/0 group-hover:from-red-50/50 group-hover:to-red-100/30 transition-all duration-500 rounded-2xl"></div>
-                
+
                 <div className="relative z-10 text-center">
                   <div className="bg-gradient-to-r from-red-500 to-red-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-xl font-bold group-hover:scale-110 transition-transform duration-300 shadow-lg">
                     {step.step}

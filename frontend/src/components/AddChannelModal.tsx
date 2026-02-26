@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "");
+  (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
 
 type AddChannelModalProps = {
   isOpen: boolean;
@@ -31,7 +31,7 @@ const AddChannelModal = ({ isOpen, onClose, onChannelAdded }: AddChannelModalPro
       // Normalize input - add https:// if missing
       let normalizedInput = channelInput.trim();
       let isPlainName = false;
-      
+
       if (!normalizedInput.startsWith("http://") && !normalizedInput.startsWith("https://")) {
         // If it looks like a URL path, add https://
         if (normalizedInput.includes("youtube.com") || normalizedInput.includes("youtu.be")) {
@@ -57,13 +57,13 @@ const AddChannelModal = ({ isOpen, onClose, onChannelAdded }: AddChannelModalPro
 
       // Check if it's a video URL - if so, extract channel info from video
       const isVideoUrl = normalizedInput.includes("youtube.com/watch") || normalizedInput.includes("youtu.be");
-      const isChannelUrl = normalizedInput.includes("youtube.com/channel/") || 
-                          normalizedInput.includes("youtube.com/@") || 
-                          normalizedInput.includes("youtube.com/c/") || 
-                          normalizedInput.includes("youtube.com/user/");
-      
+      const isChannelUrl = normalizedInput.includes("youtube.com/channel/") ||
+        normalizedInput.includes("youtube.com/@") ||
+        normalizedInput.includes("youtube.com/c/") ||
+        normalizedInput.includes("youtube.com/user/");
+
       let channelInfo;
-      
+
       if (isVideoUrl) {
         // Fetch video info first to get channelId
         const videoResponse = await fetch(`${API_BASE_URL}/api/youtube/info`, {
@@ -98,7 +98,7 @@ const AddChannelModal = ({ isOpen, onClose, onChannelAdded }: AddChannelModalPro
       } else if (isChannelUrl) {
         // Extract channel ID from channel URL
         let channelId = null;
-        
+
         // Handle different channel URL formats
         const channelMatch = normalizedInput.match(/youtube\.com\/channel\/([^/?]+)/);
         if (channelMatch) {
@@ -129,7 +129,7 @@ const AddChannelModal = ({ isOpen, onClose, onChannelAdded }: AddChannelModalPro
           if (!channelResponse.ok) {
             const errorData = await channelResponse.json().catch(() => ({}));
             const errorMessage = errorData?.message || "Could not find channel";
-            
+
             // Provide helpful error message
             if (normalizedInput.includes('@')) {
               throw new Error(`${errorMessage}. Please try:\n• Entering a video URL from this channel\n• Using the full channel URL: youtube.com/channel/CHANNEL_ID\n• Verifying the @username is correct`);
@@ -139,7 +139,7 @@ const AddChannelModal = ({ isOpen, onClose, onChannelAdded }: AddChannelModalPro
           }
 
           channelInfo = await channelResponse.json();
-          
+
           // Verify we got valid channel info
           if (!channelInfo || !channelInfo.channelId) {
             throw new Error("Could not retrieve channel information. Please try entering a video URL from this channel instead.");
@@ -171,17 +171,17 @@ const AddChannelModal = ({ isOpen, onClose, onChannelAdded }: AddChannelModalPro
           if (!channelResponse.ok) {
             const errorData = await channelResponse.json().catch(() => ({}));
             const errorMessage = errorData?.message || "Could not find channel";
-            
+
             // If that fails and it was a name, provide helpful suggestions
             if (isPlainName || (!normalizedInput.includes("youtube.com") && !normalizedInput.includes("youtu.be"))) {
               throw new Error(`Could not find channel "${channelInput}". Please try:\n• A video URL from this channel (e.g., youtube.com/watch?v=...)\n• Full channel URL: youtube.com/@username or youtube.com/channel/ID\n• Channel ID (starts with UC)\n• Make sure the channel name or @username is spelled correctly`);
             }
-            
+
             throw new Error(`${errorMessage}. Please enter a valid YouTube video URL, channel URL (youtube.com/channel/ID or youtube.com/@username), or channel ID`);
           }
 
           channelInfo = await channelResponse.json();
-          
+
           // Verify we got valid channel info
           if (!channelInfo || !channelInfo.channelId) {
             throw new Error("Could not retrieve channel information. Please try entering a video URL from this channel instead.");
@@ -196,7 +196,7 @@ const AddChannelModal = ({ isOpen, onClose, onChannelAdded }: AddChannelModalPro
       // Add a placeholder video to sessionStorage so the channel appears
       const STORAGE_KEY = "vidfly_channel_videos";
       const existing: any[] = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "[]");
-      
+
       // Check if channel already exists
       const channelExists = existing.some((v) => v.channelId === channelInfo.channelId);
       if (!channelExists) {
@@ -220,7 +220,7 @@ const AddChannelModal = ({ isOpen, onClose, onChannelAdded }: AddChannelModalPro
         name: channelInfo.name,
         avatar: channelInfo.avatar || "",
       };
-      
+
       const existingChannelIndex = cachedInfo.findIndex((c) => c.channelId === channelInfo.channelId);
       if (existingChannelIndex >= 0) {
         cachedInfo[existingChannelIndex] = channelInfoToCache;

@@ -1,3 +1,4 @@
+"use client";
 
 import { ShieldCheck, TrendingUp, ThumbsUp } from "lucide-react";
 import { motion } from "framer-motion";

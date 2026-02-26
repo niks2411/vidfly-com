@@ -1,16 +1,18 @@
+"use client";
+
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 interface HeroProps {
   showStats?: boolean;
 }
 
 const Hero = ({ showStats }: HeroProps) => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handlePromoteNow = () => {
-    navigate("/get-started");
+    router.push("/get-started");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 

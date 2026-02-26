@@ -1,18 +1,19 @@
+"use client";
 
 import { Youtube, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 const WeeklyBudgetCTA = () => {
     const [inputVal, setInputVal] = useState("");
-    const navigate = useNavigate();
+    const router = useRouter();
 
     const handleStart = () => {
         sessionStorage.setItem("channelInput", inputVal);
-        navigate("/get-started");
+        router.push("/get-started");
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
