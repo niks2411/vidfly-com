@@ -22,13 +22,7 @@ const VideoShowcase = () => {
 
     return (
         <section
-            className="relative font-montserrat py-16 lg:py-20 overflow-hidden"
-            style={{
-                backgroundImage: "url('/blackbg.png')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-            }}
+            className="relative font-founders py-16 lg:py-20 overflow-hidden bg-[#000000]"
         >
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid lg:grid-cols-[0.8fr_1.4fr] gap-8 lg:gap-12 items-center">

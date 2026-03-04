@@ -2,7 +2,7 @@ import { Users, Target, Award, Youtube, Play, TrendingUp } from "lucide-react";
 
 export default function About() {
     return (
-        <div className="min-h-screen bg-white font-montserrat">
+        <div className="min-h-screen bg-white font-founders">
             {/* About Us Header with YouTube Background */}
             <section className="py-20 bg-gradient-to-br from-red-50 to-gray-50 relative overflow-hidden">
                 <div className="absolute inset-0">
@@ -14,10 +14,10 @@ export default function About() {
                     <TrendingUp className="absolute top-20 right-1/3 h-18 w-18 text-red-100 opacity-40" />
                 </div>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                    <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 animate-fade-in">
+                    <h1 className="section-heading !mb-6 text-center">
                         ABOUT US
                     </h1>
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in">
+                    <p className="section-desc text-center max-w-3xl mx-auto">
                         Your trusted partner in YouTube growth and digital success
                     </p>
                 </div>
@@ -35,10 +35,10 @@ export default function About() {
                             />
                         </div>
                         <div className="animate-fade-in">
-                            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+                            <h2 className="section-heading !text-left !mb-6">
                                 Professional And Certified YouTube Ads Expert
                             </h2>
-                            <p className="text-gray-600 mb-6 leading-relaxed">
+                            <p className="section-desc !text-left !mx-0 mb-6">
                                 Welcome to VidFlyy, your business can count for video marketing & promotion. We're dedicated to delivering top-notch expert service, with an emphasis on technical engagement, subscribers, views and quality.
                             </p>
                             <p className="text-gray-600 mb-8 leading-relaxed">
@@ -79,10 +79,10 @@ export default function About() {
                 </div>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                        <h2 className="section-heading text-center !mb-4">
                             Our Core Values
                         </h2>
-                        <p className="text-gray-600 max-w-3xl mx-auto">
+                        <p className="section-desc text-center max-w-3xl mx-auto">
                             We are a team of experts who provides first class service to customers, satisfaction & promotions to your YouTube channel. We are looking forward to serving to others and promote more content creators to make their goals.
                         </p>
                     </div>
@@ -122,10 +122,10 @@ export default function About() {
             {/* Mission Section */}
             <section className="py-20 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+                    <h2 className="section-heading text-center !mb-6">
                         Our Mission
                     </h2>
-                    <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+                    <p className="section-desc text-center max-w-4xl mx-auto">
                         Our mission is to provided you the best YouTube services at affordable price so that your channel can reach to millions of users worldwide.
                     </p>
                 </div>

@@ -41,7 +41,7 @@ export default function SuccessStoriesPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-white font-montserrat">
+        <div className="min-h-screen bg-white font-founders">
             {/* Hero Section */}
             <section className="py-20 bg-gradient-to-br from-red-50 to-white relative overflow-hidden">
                 <div className="absolute inset-0">
@@ -52,10 +52,10 @@ export default function SuccessStoriesPage() {
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="text-center mb-16">
-                        <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 animate-fade-in">
+                        <h1 className="section-heading text-center !mb-6">
                             Success <span className="text-red-600">Stories</span>
                         </h1>
-                        <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in">
+                        <p className="section-desc text-center max-w-3xl mx-auto">
                             Real Results from 2024: See how Vidflyy helped YouTubers like you achieve their growth goals.
                             Our clients have seen significant increases in views, subscribers, and engagement.
                         </p>
@@ -113,7 +113,7 @@ export default function SuccessStoriesPage() {
                     {/* Testimonials Section */}
                     <div className="mt-20">
                         <div className="text-center mb-12">
-                            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                            <h2 className="section-heading text-center !mb-4">
                                 What Our <span className="text-red-600">Clients Say</span>
                             </h2>
                             <div className="flex items-center justify-center gap-2 mb-4">

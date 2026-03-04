@@ -2,7 +2,7 @@ import { Lock, Shield, Eye, Database } from "lucide-react";
 
 export default function PrivacyPolicyPage() {
     return (
-        <div className="min-h-screen bg-white font-montserrat">
+        <div className="min-h-screen bg-white font-founders">
             {/* Header Section */}
             <section className="py-20 bg-gradient-to-br from-red-50 to-gray-50 relative overflow-hidden">
                 <div className="absolute inset-0">
@@ -12,10 +12,10 @@ export default function PrivacyPolicyPage() {
                     <Database className="absolute bottom-10 right-10 h-32 w-32 text-red-100 opacity-20" />
                 </div>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                    <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 animate-fade-in">
+                    <h1 className="section-heading text-center !mb-6">
                         Privacy Policy
                     </h1>
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in">
+                    <p className="section-desc text-center max-w-3xl mx-auto">
                         Last Updated: 11 Oct, 2025
                     </p>
                 </div>

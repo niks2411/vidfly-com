@@ -1,96 +1,94 @@
-
-import { Check, Clock, Target, TrendingUp, Shield } from "lucide-react";
+import Image from "next/image";
 
 const PricingInfo = () => {
-  const features = [
-    {
-      icon: Target,
-      title: "Targeted Promotion",
-      description: "We promote your videos to audiences most likely to engage with your content"
-    },
-    {
-      icon: Clock,
-      title: "Quick Results",
-      description: "See initial results within 24-48 hours of campaign launch"
-    },
-    {
-      icon: TrendingUp,
-      title: "Organic Growth",
-      description: "All views and engagement come from real, active YouTube users"
-    },
-    {
-      icon: Shield,
-      title: "Safe & Secure",
-      description: "100% compliant with YouTube's terms of service and guidelines"
-    }
+  const comparisons = [
+    { vidflyy: "Real ads", others: "Bot Traffic", isBlue: true },
+    { vidflyy: "Targeted audience", others: "Random views", isWhite: true },
+    { vidflyy: "Long-term growth", others: "Dead engagement", isBlue: true },
+    { vidflyy: "Transparent tracking", others: "No clarity", isWhite: true },
   ];
 
   return (
-    <section className="py-20 bg-white font-montserrat">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 bg-white font-founders">
+      <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            How <span className="text-red-600">VIDFLYY</span> Pricing Works
+          <h2 className="text-[36px] md:text-[48px] font-bold text-gray-900 leading-tight tracking-tight">
+            Why <span className="relative inline-block px-1">
+              Vidflyy
+              <svg
+                className="absolute -top-[5%] -left-[10%] w-[120%] h-[120%] text-red-500 overflow-visible pointer-events-none"
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+              >
+                <path
+                  d="M10,50 Q10,10 50,10 Q90,10 90,50 Q90,90 50,90 Q10,90 10,50"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  className="animate-draw-circle"
+                  style={{
+                    strokeDasharray: '400',
+                    strokeDashoffset: '400',
+                    animation: 'draw-circle 1s ease-out forwards'
+                  }}
+                />
+              </svg>
+            </span> Beats
+            <br />
+            Fake Promotion Services
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Our transparent pricing model ensures you get the best value for your investment in YouTube growth.
-          </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          {features.map((feature, index) => (
-            <div key={index} className="text-center">
-              <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <feature.icon className="h-8 w-8 text-red-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
-              <p className="text-gray-600">{feature.description}</p>
+        {/* Comparison Table Header */}
+        <div className="flex items-center justify-between mb-10 px-4">
+          <div className="w-[42%] bg-white border-2 border-blue-500 rounded-[4px] p-6 flex items-center justify-center shadow-sm">
+            <div className="flex items-center gap-2">
+              <Image
+                src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png"
+                alt="Vidflyy"
+                width={140}
+                height={40}
+                className="h-8 md:h-10 w-auto object-contain"
+              />
+            </div>
+          </div>
+
+          <div className="text-xl font-bold text-gray-900">vs</div>
+
+          <div className="w-[42%] bg-white border border-gray-200 rounded-[4px] p-6 flex items-center justify-center shadow-sm">
+            <span className="text-2xl md:text-3xl font-black text-gray-900 relative">
+              Others
+              <div className="absolute top-1/2 left-0 right-0 h-[3px] bg-gray-900 -rotate-2"></div>
+            </span>
+          </div>
+        </div>
+
+        {/* Rows */}
+        <div className="border border-gray-100 rounded-md overflow-hidden shadow-sm font-founders">
+          {comparisons.map((row, index) => (
+            <div
+              key={index}
+              className={`flex justify-between items-center px-8 py-5 border-b last:border-b-0 border-gray-100 ${row.isBlue ? 'bg-[#F4F7FB]' : 'bg-white'}`}
+            >
+              <span className="text-[17px] font-bold text-blue-600 tracking-tight">
+                {row.vidflyy}
+              </span>
+              <span className="text-[17px] font-bold text-gray-500 tracking-tight">
+                {row.others}
+              </span>
             </div>
           ))}
         </div>
-
-        <div className="bg-gray-50 rounded-2xl p-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">What's Included in Every Plan</h3>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
-                <span className="text-gray-700">Real, organic views from active users</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
-                <span className="text-gray-700">Detailed analytics and progress reports</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
-                <span className="text-gray-700">24/7 customer support</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
-                <span className="text-gray-700">Money-back guarantee</span>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
-                <span className="text-gray-700">YouTube ToS compliant promotion</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
-                <span className="text-gray-700">Targeted audience engagement</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
-                <span className="text-gray-700">No password or sensitive info required</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
-                <span className="text-gray-700">Dedicated account manager</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
+
+      <style jsx>{`
+        @keyframes draw-circle {
+          to {
+            stroke-dashoffset: 0;
+          }
+        }
+      `}</style>
     </section>
   );
 };

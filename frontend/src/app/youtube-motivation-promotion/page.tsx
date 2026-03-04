@@ -67,7 +67,7 @@ export default function YoutubeMotivationPromotion() {
     };
 
     return (
-        <div className="min-h-screen bg-white font-montserrat">
+        <div className="min-h-screen bg-white font-founders">
             {/* HERO */}
             <header className="relative overflow-hidden bg-gradient-to-br from-yellow-50 to-white py-24 lg:py-32">
                 <div className="absolute -left-32 -top-24 w-80 h-80 bg-yellow-200 rounded-full opacity-30 blur-xl animate-blob"></div>
@@ -82,11 +82,11 @@ export default function YoutubeMotivationPromotion() {
                                     <span className="text-xs font-semibold text-red-600 uppercase">Motivation Promotion</span>
                                 </div>
 
-                                <h1 className="text-3xl lg:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
+                                <h1 className="section-heading !text-left !mb-6">
                                     Inspire Millions. Grow Your Motivation Channel With Real Interested Viewers.
                                 </h1>
 
-                                <p className="text-gray-600 max-w-xl mb-6">
+                                <p className="section-desc !text-left !mx-0 mb-6">
                                     Promote motivational speeches, success stories, life lessons, productivity tips and inspirational shorts to people actively seeking motivation daily.
                                 </p>
 
@@ -167,10 +167,10 @@ export default function YoutubeMotivationPromotion() {
             <section className="py-16">
                 <div className="max-w-6xl mx-auto px-4">
                     <Animated delay={100}>
-                        <h2 className="text-2xl lg:text-3xl font-bold text-center mb-6">
+                        <h2 className="section-heading text-center !mb-6">
                             Why Motivational Channels Grow Fast With Us
                         </h2>
-                        <p className="text-gray-600 text-center max-w-2xl mx-auto mb-10">
+                        <p className="section-desc text-center max-w-2xl mx-auto mb-10">
                             Motivational audiences watch more, save videos, follow channels, and return daily — our campaigns attract high-retention viewers.
                         </p>
                     </Animated>

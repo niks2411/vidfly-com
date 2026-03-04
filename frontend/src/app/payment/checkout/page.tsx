@@ -100,7 +100,8 @@ export default function PaymentCheckout() {
             />
             <CampaignCard className="max-w-2xl mx-auto">
                 <div className="space-y-8">
-                    <div className="text-center">
+                    <div className="text-center flex flex-col items-center">
+                        <img src="/favicon.png" alt="Vidflyy" className="w-16 h-16 mb-4 object-contain" />
                         <h1 className="text-3xl font-bold text-slate-900">Checkout</h1>
                         <p className="text-slate-500">Secure payment via Cashfree</p>
                     </div>

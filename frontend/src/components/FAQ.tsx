@@ -6,8 +6,8 @@ const FAQ = () => {
   const [openItems, setOpenItems] = useState<number[]>([]);
 
   const toggleItem = (index: number) => {
-    setOpenItems(prev => 
-      prev.includes(index) 
+    setOpenItems(prev =>
+      prev.includes(index)
         ? prev.filter(i => i !== index)
         : [...prev, index]
     );
@@ -37,13 +37,13 @@ const FAQ = () => {
   ];
 
   return (
-    <section className="py-20 bg-gray-50 font-montserrat">
+    <section className="py-20 bg-gray-50 font-founders">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="section-heading text-center !mb-4">
             Frequently Asked <span className="text-red-600">Questions</span>
           </h2>
-          <p className="text-xl text-gray-600">
+          <p className="section-desc text-center">
             Got questions? We've got answers to help you get started.
           </p>
         </div>

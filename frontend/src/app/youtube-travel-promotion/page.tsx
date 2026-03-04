@@ -66,7 +66,7 @@ export default function YoutubeTravelPromotion() {
     };
 
     return (
-        <div className="min-h-screen bg-white font-montserrat">
+        <div className="min-h-screen bg-white font-founders">
             {/* HERO SECTION */}
             <header className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-white py-24 lg:py-32">
                 <div className="absolute -left-32 -top-24 w-80 h-80 bg-blue-100 rounded-full opacity-25 animate-blob pointer-events-none"></div>
@@ -81,11 +81,11 @@ export default function YoutubeTravelPromotion() {
                                     <span className="text-xs font-semibold text-red-600 uppercase">Travel Promotion</span>
                                 </div>
 
-                                <h1 className="text-3xl lg:text-5xl font-extrabold text-gray-900 leading-tight mb-6">
+                                <h1 className="section-heading !text-left !mb-6">
                                     Grow Your Travel Channel — Reach Viewers Who Love Exploring New Destinations
                                 </h1>
 
-                                <p className="text-gray-600 max-w-2xl mb-6">
+                                <p className="section-desc !text-left !mx-0 mb-6">
                                     Promote your travel vlogs, cinematic journeys, and destination guides to viewers actively searching for travel,
                                     adventure, tourism and lifestyle content. Real engagement. No bots.
                                 </p>
@@ -176,10 +176,10 @@ export default function YoutubeTravelPromotion() {
             <section className="py-16">
                 <div className="max-w-6xl mx-auto px-4">
                     <Animated delay={80}>
-                        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-6 text-center">
+                        <h2 className="section-heading text-center !mb-6">
                             Why Travel Creators Grow Faster With Our Campaigns
                         </h2>
-                        <p className="text-gray-600 text-center max-w-2xl mx-auto mb-10">
+                        <p className="section-desc text-center max-w-2xl mx-auto mb-10">
                             We focus on viewers interested in tourism, adventure, travel vlogging, backpacking, hotels, and destination guides.
                         </p>
                     </Animated>

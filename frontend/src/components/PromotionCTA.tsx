@@ -16,10 +16,10 @@ const PromotionCTA = () => {
                 <div className="flex flex-col md:flex-row items-start justify-start gap-10 lg:gap-24">
                     {/* Left Column: Text Content */}
                     <div className="flex-1 min-w-0">
-                        <h2 className="text-[28px] lg:text-[42px] font-[900] text-[#0E172B] leading-[1.1] tracking-tight mb-4 lg:whitespace-nowrap">
+                        <h2 className="section-heading !mb-4 lg:!whitespace-nowrap">
                             Ready to take control of your YouTube growth?
                         </h2>
-                        <p className="text-[15px] lg:text-[18px] text-[rgb(41,40,40)] font-medium leading-[1.6] max-w-2xl">
+                        <p className="section-desc !text-[15px] lg:!text-[18px] !mx-0 !text-left max-w-2xl">
                             Join thousands of creators expanding their reach with targeted YouTube Ads.
                             <br className="hidden lg:block" />
                             Get started in just minutes and start connecting with new viewers and potential fans.

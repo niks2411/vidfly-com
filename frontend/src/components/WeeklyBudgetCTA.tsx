@@ -18,7 +18,7 @@ const WeeklyBudgetCTA = () => {
     };
 
     return (
-        <section className="py-16 lg:py-20 bg-white font-montserrat">
+        <section className="py-16 lg:py-20 bg-white font-founders">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <motion.div
                     className="bg-white rounded-[2.5rem] shadow-2xl shadow-red-100/50 p-10 lg:p-16 text-center max-w-5xl mx-auto relative overflow-hidden border border-red-50"

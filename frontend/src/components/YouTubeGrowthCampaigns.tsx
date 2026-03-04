@@ -1,6 +1,6 @@
 const YouTubeGrowthCampaigns = () => {
     return (
-        <section className="relative font-montserrat">
+        <section className="relative font-founders">
             {/* Blue background - positioned at bottom 30% */}
             <div className="absolute bottom-0 left-0 right-0 h-[35%] bg-[rgb(98,142,241)]"></div>
 

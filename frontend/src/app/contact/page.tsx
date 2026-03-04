@@ -51,7 +51,7 @@ export default function ContactPage() {
     };
 
     return (
-        <div className="min-h-screen bg-white font-montserrat">
+        <div className="min-h-screen bg-white font-founders">
             {/* Contact Header with Animation */}
             <section className="py-20 bg-gradient-to-br from-red-50 to-gray-50 relative overflow-hidden">
                 {/* Animated Background */}
@@ -62,10 +62,10 @@ export default function ContactPage() {
                 </div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                    <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 animate-fade-in">
+                    <h1 className="section-heading text-center !mb-6">
                         Contact <span className="text-red-600">Us</span>
                     </h1>
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in-delay">
+                    <p className="section-desc text-center max-w-3xl mx-auto">
                         Ready to grow your YouTube channel? Get in touch with our team and let's discuss your promotion strategy.
                     </p>
                 </div>
@@ -77,7 +77,7 @@ export default function ContactPage() {
                     <div className="grid lg:grid-cols-2 gap-12">
                         {/* Contact Information */}
                         <div className="animate-fade-in">
-                            <h2 className="text-3xl font-bold text-gray-900 mb-8">Get in Touch</h2>
+                            <h2 className="section-heading !text-left !mb-8">Get in Touch</h2>
 
                             <div className="space-y-6 mb-8">
                                 <div className="flex items-center gap-4 p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors duration-300">

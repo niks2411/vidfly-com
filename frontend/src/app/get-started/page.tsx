@@ -193,7 +193,7 @@ function GetStartedContent() {
     // Show loading state while checking verification
     if (checkingVerification) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-red-50 to-white font-montserrat flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-red-50 to-white font-founders flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
                     <p className="text-slate-600">Checking verification status...</p>
@@ -203,7 +203,7 @@ function GetStartedContent() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-red-50 to-white font-montserrat">
+        <div className="min-h-screen bg-gradient-to-br from-red-50 to-white font-founders">
             <section className="py-12 lg:py-16 px-4">
                 <div className="max-w-4xl mx-auto">
                     {/* Hero Section */}
@@ -417,7 +417,7 @@ function GetStartedContent() {
 export default function GetStarted() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen bg-gradient-to-br from-red-50 to-white font-montserrat flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-red-50 to-white font-founders flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
                     <p className="text-slate-600">Loading...</p>

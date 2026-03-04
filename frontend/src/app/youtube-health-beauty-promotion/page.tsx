@@ -66,7 +66,7 @@ export default function YoutubeHealthBeautyPromotion() {
     };
 
     return (
-        <div className="min-h-screen bg-white font-montserrat">
+        <div className="min-h-screen bg-white font-founders">
             {/* HERO */}
             <header className="relative overflow-hidden bg-gradient-to-br from-pink-50 to-white py-24 lg:py-32">
                 <div className="absolute -left-32 -top-24 w-80 h-80 bg-pink-100 rounded-full opacity-25 animate-blob pointer-events-none"></div>
@@ -81,11 +81,11 @@ export default function YoutubeHealthBeautyPromotion() {
                                     <span className="text-xs font-semibold text-red-600 uppercase">Health & Beauty Promotion</span>
                                 </div>
 
-                                <h1 className="text-3xl lg:text-5xl font-extrabold text-gray-900 leading-tight mb-6">
+                                <h1 className="section-heading !text-left !mb-6">
                                     Get Your Beauty & Wellness Videos In Front Of Real, Engaged Viewers
                                 </h1>
 
-                                <p className="text-gray-600 max-w-2xl mb-6">
+                                <p className="section-desc !text-left !mx-0 mb-6">
                                     Promote skincare routines, makeup tutorials, wellness guides and product reviews to audiences most likely to engage, save and convert.
                                 </p>
 
@@ -157,8 +157,8 @@ export default function YoutubeHealthBeautyPromotion() {
             <section className="py-16">
                 <div className="max-w-6xl mx-auto px-4">
                     <Animated delay={80}>
-                        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-6 text-center">Why Beauty Creators Choose Our Promotions</h2>
-                        <p className="text-gray-600 text-center max-w-2xl mx-auto mb-10">We target viewers who are ready to try, buy and follow — product-intent audiences, routine watchers and trend followers.</p>
+                        <h2 className="section-heading text-center !mb-6">Why Beauty Creators Choose Our Promotions</h2>
+                        <p className="section-desc text-center max-w-2xl mx-auto mb-10">We target viewers who are ready to try, buy and follow — product-intent audiences, routine watchers and trend followers.</p>
                     </Animated>
 
                     <div className="grid md:grid-cols-3 gap-8">

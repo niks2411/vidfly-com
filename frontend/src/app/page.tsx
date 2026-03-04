@@ -10,7 +10,7 @@ import ComparisonTable from "@/components/ComparisonTable";
 
 export default function Home() {
     return (
-        <div className="min-h-screen bg-white font-montserrat">
+        <div className="min-h-screen bg-white font-founders home-page-container">
             <Hero showStats={true} />
             <GoogleAdsSection />
             <HowItWorks />
@@ -18,8 +18,8 @@ export default function Home() {
             <PromotionCTA />
             <VideoShowcaseNew />
             <NewServices />
-            <WeeklyBudgetCTA />
             <ComparisonTable />
+            <WeeklyBudgetCTA />
         </div>
     );
 }

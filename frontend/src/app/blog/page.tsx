@@ -58,7 +58,7 @@ export default function Blog() {
     };
 
     return (
-        <div className="min-h-screen bg-[#FDFDFD] font-montserrat">
+        <div className="min-h-screen bg-[#FDFDFD] font-founders">
             {/* Progress Bar */}
             <motion.div
                 className="fixed top-0 left-0 right-0 h-1 bg-[#EE2B2E] z-50 origin-left"

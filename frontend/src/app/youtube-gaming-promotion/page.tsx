@@ -56,7 +56,7 @@ export default function YoutubeGamingPromotion() {
     };
 
     return (
-        <div className="min-h-screen bg-white font-montserrat">
+        <div className="min-h-screen bg-white font-founders">
             {/* HERO */}
             <header className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-white py-24 lg:py-32">
                 <div className="absolute -left-32 -top-24 w-80 h-80 bg-red-100 rounded-full opacity-25 animate-blob pointer-events-none"></div>
@@ -71,11 +71,11 @@ export default function YoutubeGamingPromotion() {
                                     <span className="text-xs font-semibold text-red-600 uppercase">Gaming Promotion</span>
                                 </div>
 
-                                <h1 className="text-3xl lg:text-5xl font-extrabold text-gray-900 leading-tight mb-6">
+                                <h1 className="section-heading !text-left !mb-6">
                                     Grow Your Gaming Channel — Reach Real Players & Active Fans
                                 </h1>
 
-                                <p className="text-gray-600 max-w-2xl mb-6">
+                                <p className="section-desc !text-left !mx-0 mb-6">
                                     Target players by game, platform, and playstyle. We run conversion-focused YouTube campaigns that bring engaged viewers who subscribe, comment, and watch.
                                 </p>
 
@@ -146,8 +146,8 @@ export default function YoutubeGamingPromotion() {
             <section className="py-16">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Animated delay={80}>
-                        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-6 text-center">Why Gaming Channels Grow With Our Campaigns</h2>
-                        <p className="text-gray-600 text-center max-w-2xl mx-auto mb-10">We combine platform signals with creative testing to reach viewers most likely to subscribe and join your community.</p>
+                        <h2 className="section-heading text-center !mb-6">Why Gaming Channels Grow With Our Campaigns</h2>
+                        <p className="section-desc text-center max-w-2xl mx-auto mb-10">We combine platform signals with creative testing to reach viewers most likely to subscribe and join your community.</p>
                     </Animated>
 
                     <div className="grid md:grid-cols-3 gap-8">

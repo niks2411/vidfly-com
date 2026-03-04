@@ -40,7 +40,7 @@ const HowItWorks = () => {
                     <h2 className="section-heading mb-6 max-w-2xl">
                         Get your video in front of real viewers — instantly.
                     </h2>
-                    <p className="text-[15px] lg:text-[17px] text-gray-700 font-medium leading-relaxed max-w-3xl">
+                    <p className="section-desc !mx-0 !text-left max-w-3xl">
                         Just add your video, choose your growth goal, and launch your campaign in
                         seconds. <span className="font-bold">VIDFLLY's</span> system delivers real views, subscribers, and
                         engagement with full transparency and control.

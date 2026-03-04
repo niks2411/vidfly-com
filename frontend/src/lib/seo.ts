@@ -4,7 +4,7 @@ export function constructMetadata({
     title = "Vidflyy - YouTube Growth Campaigns",
     description = "Launch YouTube Growth Campaigns in Seconds. Get real views, subscribers & engagement on demand.",
     image = "/og-image.png",
-    icons = "/favicon.ico",
+    icons = "/favicon.png",
     noIndex = false,
     canonical = "https://www.vidflyy.in",
 }: {

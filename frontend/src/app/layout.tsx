@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter, Montserrat, Open_Sans, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -12,22 +11,6 @@ import { AuthProvider } from "@/context/AuthContext";
 import { CampaignSidebarProvider } from "./campaign-sidebar-provider";
 import ScrollToTop from "@/components/ScrollToTop";
 import SmoothScroll from "@/components/SmoothScroll";
-
-const montserrat = Montserrat({
-    subsets: ["latin"],
-    variable: "--font-montserrat",
-});
-
-const openSans = Open_Sans({
-    subsets: ["latin"],
-    variable: "--font-opensans",
-});
-
-const sourceSans = Source_Sans_3({
-    subsets: ["latin"],
-    variable: "--font-sourcesans",
-});
-
 import { constructMetadata } from "@/lib/seo";
 
 export const metadata = constructMetadata();
@@ -42,7 +25,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${montserrat.variable} ${openSans.variable} ${sourceSans.variable} antialiased font-montserrat`}>
+            <body className="antialiased font-founders text-[rgb(41,40,40)]">
                 <GoogleAnalytics />
                 <MetaPixel />
                 <OrganizationSchema />

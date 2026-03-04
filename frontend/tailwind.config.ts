@@ -20,9 +20,10 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'montserrat': ['Montserrat', 'sans-serif'],
-				'opensans': ['"Open Sans"', 'sans-serif'],
-				'sourcesans': ['"Source Sans 3"', 'sans-serif'],
+				'montserrat': ['"Founders Grotesk"', 'sans-serif'],
+				'opensans': ['"Founders Grotesk"', 'sans-serif'],
+				'sourcesans': ['"Founders Grotesk"', 'sans-serif'],
+				'founders': ['"Founders Grotesk"', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

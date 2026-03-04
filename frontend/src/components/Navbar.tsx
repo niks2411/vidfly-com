@@ -156,7 +156,7 @@ const Navbar = () => {
                   <button onClick={() => handleNavClick("/")} className="text-[#0E172B] font-bold w-full text-left text-lg">
                     Login
                   </button>
-                  <Button onClick={handleGetStartedClick} className="bg-[#E52D27] hover:bg-[#D42621] text-white w-full py-7 text-lg font-bold rounded-xl shadow-lg">
+                  <Button onClick={handleGetStartedClick} className="bg-[#E52D27] hover:bg-[#D42621] text-white w-full py-7 text-lg font-bold rounded-xl shadow-lg normal-case">
                     Get started now
                   </Button>
                 </div>

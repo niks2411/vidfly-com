@@ -34,7 +34,7 @@ const GoogleAdsSection = () => {
   ];
 
   return (
-    <section className="bg-white font-montserrat py-14 lg:py-20">
+    <section className="bg-white font-founders py-14 lg:py-20">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Stats Row */}
         <div className="flex flex-col sm:flex-row justify-between gap-10 mb-16 lg:mb-20">
@@ -78,7 +78,7 @@ const GoogleAdsSection = () => {
 
           {/* Text Content */}
           <div>
-            <h3 className="text-[20px] lg:text-[22px] font-bold text-[#0E172B] mb-2">
+            <h3 className="text-[20px] lg:text-[22px] font-bold text-[#101828] mb-2 leading-tight">
               Official Google Partner — Powered by Google Ads
             </h3>
             <p className="section-desc !mx-0 !text-left">
