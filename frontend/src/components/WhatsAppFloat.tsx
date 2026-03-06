@@ -1,8 +1,12 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 const WhatsAppFloat = () => {
+  const pathname = usePathname();
+  if (pathname === "/get-started") return null;
+
   const handleWhatsAppClick = () => {
     window.open('https://wa.me/917355518761', '_blank');
   };

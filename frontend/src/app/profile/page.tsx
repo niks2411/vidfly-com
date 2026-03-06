@@ -59,7 +59,7 @@ export default function ProfilePage() {
                     <div className="px-8 pb-8">
                         <div className="relative flex flex-col sm:flex-row items-center sm:items-end gap-6 -mt-12 mb-8">
                             <Avatar className="h-32 w-32 border-4 border-white shadow-lg shrink-0">
-                                <AvatarImage src={`/avatars/${avatar}.png`} alt={user.name || user.email} />
+                                <AvatarImage src={user.avatar || `/avatars/${avatar}.png`} alt={user.name || user.email} referrerPolicy="no-referrer" />
                                 <AvatarFallback className="bg-slate-100 text-slate-600 text-3xl font-bold">
                                     <User className="h-16 w-16" />
                                 </AvatarFallback>

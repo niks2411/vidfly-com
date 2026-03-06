@@ -84,6 +84,8 @@ const Navbar = () => {
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
+  if (pathname === "/get-started") return null;
+
   // Check if we're on a campaign page
   const isCampaignPage = pathname?.startsWith('/campaign');
 
@@ -154,7 +156,7 @@ const Navbar = () => {
                     <DropdownMenuTrigger asChild>
                       <button className="flex items-center gap-2 outline-none group">
                         <Avatar className="h-9 w-9 border-2 border-transparent group-hover:border-red-500 transition-all duration-300">
-                          <AvatarImage src={`/avatars/${avatar}.png`} alt={user.name || user.email} />
+                          <AvatarImage src={user.avatar || `/avatars/${avatar}.png`} alt={user.name || user.email} referrerPolicy="no-referrer" />
                           <AvatarFallback className="bg-slate-100 text-slate-600">
                             <User className="h-5 w-5" />
                           </AvatarFallback>
@@ -252,7 +254,7 @@ const Navbar = () => {
                     <div className="space-y-4">
                       <div className="flex items-center gap-3 p-4 bg-white border border-gray-100 rounded-2xl mb-4 shadow-sm">
                         <Avatar className="h-12 w-12 border border-slate-100">
-                          <AvatarImage src={`/avatars/${avatar}.png`} alt={user.name || user.email} />
+                          <AvatarImage src={user.avatar || `/avatars/${avatar}.png`} alt={user.name || user.email} referrerPolicy="no-referrer" />
                           <AvatarFallback className="bg-slate-100 text-slate-600">
                             <User className="h-6 w-6" />
                           </AvatarFallback>

@@ -135,7 +135,7 @@ exports.getMe = async (req, res) => {
     const user = await User.findOne({ email: decoded.email }).select('-__v');
     if (!user) return res.status(401).json({ message: 'User not found' });
 
-    return res.json({ user: { email: user.email, name: user.name, id: user._id } });
+    return res.json({ user: { email: user.email, name: user.name, id: user._id, avatar: user.avatar, googleId: user.googleId } });
   } catch (err) {
     return res.status(401).json({ message: 'Invalid or expired token' });
   }
@@ -150,4 +150,38 @@ exports.logout = (req, res) => {
     path: '/',
   });
   return res.json({ message: 'Logged out' });
+};
+
+// GET /api/auth/google/callback — Handle Google OAuth callback
+exports.googleCallback = async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.redirect(`${process.env.FRONTEND_URL || process.env.FRONTEND_ORIGIN}/?error=auth_failed`);
+    }
+
+    // Generate JWT (same as OTP flow)
+    const token = jwt.sign(
+      { email: user.email, userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Set HTTPOnly cookie (same as OTP flow)
+    res.cookie(AUTH_COOKIE_NAME, token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: AUTH_COOKIE_MAX_AGE,
+      path: '/',
+    });
+
+    // Redirect to frontend
+    const frontendUrl = process.env.FRONTEND_URL || process.env.FRONTEND_ORIGIN || 'http://localhost:3000';
+    res.redirect(`${frontendUrl}/campaign`);
+  } catch (err) {
+    console.error('Google callback error:', err);
+    const frontendUrl = process.env.FRONTEND_URL || process.env.FRONTEND_ORIGIN || 'http://localhost:3000';
+    res.redirect(`${frontendUrl}/?error=auth_failed`);
+  }
 };

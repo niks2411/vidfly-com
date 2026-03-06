@@ -71,6 +71,11 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(helmet());
 
+// Passport initialization (for Google OAuth)
+const passport = require('./config/passport');
+app.use(passport.initialize());
+
+
 // DB Connection
 const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/vidflyy';
 mongoose

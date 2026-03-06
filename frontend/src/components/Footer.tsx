@@ -2,8 +2,12 @@
 
 import Link from "next/link";
 import { Youtube, Facebook, Instagram, Linkedin } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
+  const pathname = usePathname();
+  if (pathname === "/get-started") return null;
+
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (

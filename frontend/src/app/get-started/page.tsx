@@ -2,11 +2,15 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import CampaignCard from "@/components/CampaignCard";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail, Shield, CheckCircle2, ArrowRight, Sparkles } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import {
+    Check,
+    ChevronLeft,
+} from "lucide-react";
 import {
     clearVerifiedEmail,
     saveVerifiedEmail,
@@ -16,13 +20,13 @@ import {
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
 
 const normalizeEmail = (value: string) => value.trim().toLowerCase();
-
 const REFERRAL_STORAGE_KEY = "vidfly_referral_code";
 
 function GetStartedContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { refreshUser } = useAuth();
+    
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
     const [otpSent, setOtpSent] = useState(false);
@@ -35,7 +39,6 @@ function GetStartedContent() {
     const [referralCode, setReferralCode] = useState<string | null>(null);
     const [resendCooldown, setResendCooldown] = useState(0);
 
-    // Timer for resend cooldown
     useEffect(() => {
         if (resendCooldown > 0) {
             const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
@@ -43,34 +46,20 @@ function GetStartedContent() {
         }
     }, [resendCooldown]);
 
-    // Check for referral code in URL and store it
     useEffect(() => {
         const refCode = searchParams.get("ref");
         if (refCode) {
             const normalizedCode = refCode.trim().toUpperCase();
             setReferralCode(normalizedCode);
-            if (typeof window !== "undefined") {
-                try {
-                    sessionStorage.setItem(REFERRAL_STORAGE_KEY, normalizedCode);
-                } catch (err) {
-                    console.warn("Unable to store referral code", err);
-                }
-            }
+            try { sessionStorage.setItem(REFERRAL_STORAGE_KEY, normalizedCode); } catch (e) {}
         } else {
-            if (typeof window !== "undefined") {
-                try {
-                    const stored = sessionStorage.getItem(REFERRAL_STORAGE_KEY);
-                    if (stored) {
-                        setReferralCode(stored);
-                    }
-                } catch (err) {
-                    console.warn("Unable to read referral code", err);
-                }
-            }
+            try {
+                const stored = sessionStorage.getItem(REFERRAL_STORAGE_KEY);
+                if (stored) setReferralCode(stored);
+            } catch (e) {}
         }
     }, [searchParams]);
 
-    // Check if email is already verified on component mount
     useEffect(() => {
         const storedEmail = getVerifiedEmail();
         if (storedEmail) {
@@ -83,7 +72,7 @@ function GetStartedContent() {
     const sendOtp = async () => {
         const normalizedEmail = normalizeEmail(email);
         if (!normalizedEmail) {
-            setError("Please enter your email address.");
+            setError("Please enter your email.");
             return;
         }
 
@@ -104,12 +93,11 @@ function GetStartedContent() {
                 throw new Error(data?.message || "Failed to send OTP.");
             }
 
-            setEmail(normalizedEmail);
             setOtpSent(true);
-            setMessage("OTP sent! Please check your inbox.");
-            setResendCooldown(30); // Start 30s cooldown
+            setMessage("OTP sent to your email.");
+            setResendCooldown(30);
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Failed to send OTP.");
+            setError(err instanceof Error ? err.message : "Error sending OTP.");
         } finally {
             setSendingOtp(false);
         }
@@ -117,18 +105,13 @@ function GetStartedContent() {
 
     const verifyOtp = async () => {
         const normalizedEmail = normalizeEmail(email);
-        if (!normalizedEmail) {
-            setError("Please enter your email address.");
-            return;
-        }
         if (otp.length !== 6) {
-            setError("Please enter the 6-digit OTP.");
+            setError("Enter 6-digit code.");
             return;
         }
 
         setVerifyingOtp(true);
         setError("");
-        setMessage("");
 
         try {
             const response = await fetch(`${API_BASE_URL}/api/auth/verify-otp`, {
@@ -143,287 +126,202 @@ function GetStartedContent() {
                 throw new Error(data?.message || "Invalid OTP.");
             }
 
-            setEmail(normalizedEmail);
-            setEmailVerified(true);
             saveVerifiedEmail(normalizedEmail);
-
-            // Refresh global auth context (picks up the new HTTPOnly cookie session)
             await refreshUser();
 
-            // Apply referral code if present
             if (referralCode) {
                 try {
                     await fetch(`${API_BASE_URL}/api/free-views/apply-referral`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            email: normalizedEmail,
-                            referralCode: referralCode,
-                        }),
+                        body: JSON.stringify({ email: normalizedEmail, referralCode }),
                         credentials: "include",
                     });
-                    if (typeof window !== "undefined") {
-                        sessionStorage.removeItem(REFERRAL_STORAGE_KEY);
-                    }
-                } catch (err) {
-                    console.error("Failed to apply referral code", err);
-                }
+                    sessionStorage.removeItem(REFERRAL_STORAGE_KEY);
+                } catch (e) {}
             }
 
-            setMessage("Email verified successfully! Redirecting...");
-            setTimeout(() => {
-                router.push("/campaign");
-            }, 800);
+            setMessage("Redirecting...");
+            setTimeout(() => router.push("/campaign"), 500);
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Failed to verify OTP.");
+            setError(err instanceof Error ? err.message : "Verification failed.");
         } finally {
             setVerifyingOtp(false);
         }
     };
 
-    const resetState = () => {
-        setOtp("");
-        setOtpSent(false);
-        setEmailVerified(false);
-        setMessage("");
-        setError("");
-        clearVerifiedEmail();
-    };
-
-    // Show loading state while checking verification
-    if (checkingVerification) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-red-50 to-white font-founders flex items-center justify-center">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
-                    <p className="text-slate-600">Checking verification status...</p>
-                </div>
-            </div>
-        );
-    }
+    if (checkingVerification) return null;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-red-50 to-white font-founders">
-            <section className="py-12 lg:py-16 px-4">
-                <div className="max-w-4xl mx-auto">
-                    {/* Hero Section */}
-                    <div className="text-center mb-8 animate-fade-in">
-                        <div className="inline-flex items-center justify-center mb-5">
-                            <div className="relative">
-                                <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-pink-500 rounded-full blur-lg opacity-30 animate-pulse"></div>
-                                <div className="relative bg-gradient-to-r from-red-600 to-pink-600 text-white px-5 py-2 rounded-full text-xs font-semibold shadow-lg flex items-center gap-2">
-                                    <Shield className="h-3.5 w-3.5" />
-                                    Secure Email Verification
-                                </div>
-                            </div>
-                        </div>
-                        <h1 className="text-3xl md:text-4xl font-bold text-red-600 mb-3">
-                            Get Started With Vidflyy
-                        </h1>
-                        <p className="text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
-                            Verify your email to unlock powerful YouTube promotion tools. Start growing your channel in minutes.
-                        </p>
+        <div className="h-screen flex flex-col lg:flex-row font-montserrat tracking-tight overflow-hidden bg-white">
+            {/* ── Left Side: Red/Pink Panel ──────────────────────────────────── */}
+            <div 
+                className="lg:w-[45%] bg-gradient-to-br from-[#E52D27] to-[#EC4899] bg-cover bg-center p-10 lg:p-24 relative flex flex-col justify-center overflow-hidden min-h-[450px] lg:min-h-screen"
+                style={{ backgroundImage: 'url("/pink_abstract_bg.png")' }}
+            >
+                {/* Dark overlay to ensure text readability */}
+                <div className="absolute inset-0 bg-black/10 mix-blend-overlay"></div>
+
+                {/* Content Container */}
+                <div className="relative z-10 w-full max-w-md mx-auto lg:mx-0">
+                    {/* Logo Section */}
+                    <div className="mb-20">
+                        <Image
+                            src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png"
+                            alt="Vidflyy Logo"
+                            width={140}
+                            height={42}
+                            className="h-9 w-auto brightness-0 invert"
+                            priority
+                        />
                     </div>
 
-                    {/* Main Card */}
-                    <CampaignCard className="max-w-2xl mx-auto">
-                        <div className="mb-6 pb-4 border-b border-slate-200">
-                            <h2 className="text-xl font-bold text-slate-900 mb-1">
-                                Email Verification
-                            </h2>
-                            <p className="text-sm text-slate-500">
-                                We'll send a 6-digit code to verify your email address
-                            </p>
+                    {/* Testimonial Section */}
+                    <div className="space-y-8">
+                        <div className="text-white opacity-40">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V12C14.017 12.5523 13.5693 13 13.017 13H11.017V6C11.017 5.44772 11.4647 5 12.017 5H19.017C20.6738 5 22.017 6.34315 22.017 8V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM3.0166 21L3.0166 18C3.0166 16.8954 3.91203 16 5.0166 16H8.0166C8.56889 16 9.0166 15.5523 9.0166 15V9C9.0166 8.44772 8.56889 8 8.0166 8H4.0166C3.46432 8 3.0166 8.44772 3.0166 9V12C3.0166 12.5523 2.56889 13 2.0166 13H0.0166016V6C0.0166016 5.44772 0.464317 5 1.0166 5H8.0166C9.67346 5 11.0166 6.34315 11.0166 8V15C11.0166 18.3137 8.3303 21 5.0166 21H3.0166Z" />
+                            </svg>
                         </div>
+                        <p className="text-xl lg:text-2xl text-white font-medium leading-[1.5] font-founders">
+                            Vidflyy helped me grow my YouTube channel from 500 to 50K subscribers. The promotion is real and effective!
+                        </p>
 
-                        <div className="space-y-6 mt-6">
-                            {/* Email Input */}
-                            <div className="space-y-2">
-                                <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                                    <Mail className="h-4 w-4 text-red-600" />
-                                    Email Address
-                                </label>
-                                <Input
-                                    type="email"
-                                    placeholder="you@example.com"
-                                    value={email}
-                                    onChange={(e) => {
-                                        setEmail(e.target.value);
-                                        resetState();
-                                    }}
-                                    required
-                                    className="h-12 text-base rounded-xl border-2 border-slate-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all"
-                                    disabled={emailVerified || otpSent}
-                                />
+                        {/* Features List */}
+                        <div className="space-y-4 pt-10">
+                            {[
+                                "Google Ads Powered Promotions",
+                                "58K+ Channels Promoted",
+                                "6.9B+ Real Views Delivered"
+                            ].map((feature, idx) => (
+                                <div key={idx} className="flex items-center gap-4">
+                                    <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center border border-white/30 backdrop-blur-sm">
+                                        <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                                    </div>
+                                    <span className="text-[15px] font-semibold text-white/95">{feature}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* ── Right Side: White Panel (Login Form) ─────────────────────── */}
+            <div className="flex-1 bg-white flex flex-col justify-center px-8 sm:px-16 lg:px-28 py-16 relative font-montserrat tracking-tight">
+                
+                <div className="max-w-[420px] w-full mx-auto lg:ml-0 lg:mr-auto">
+                    {/* Header Section */}
+                    <div className="mb-8 text-left">
+                        <h1 className="text-[32px] font-bold text-[#111827] leading-tight mb-2">Get Started</h1>
+                        <p className="text-[#6B7280] text-[15px] font-medium leading-relaxed">Sign in or create an account to start promoting.</p>
+                    </div>
+
+                    {!otpSent ? (
+                        <div className="space-y-6">
+                            {/* Google Sign In */}
+                            <button
+                                onClick={() => window.location.href = `${API_BASE_URL}/api/auth/google`}
+                                className="w-full h-12 border border-[#E5E7EB] bg-white rounded text-[#374151] font-semibold flex items-center justify-center gap-3 hover:bg-gray-50 transition-colors shadow-sm text-sm"
+                            >
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M22.56 12.25C22.56 11.47 22.49 10.72 22.36 10H12V14.26H17.92C17.66 15.63 16.88 16.79 15.71 17.57V20.34H19.28C21.37 18.41 22.56 15.6 22.56 12.25Z" fill="#4285F4"/>
+                                    <path d="M12 23C14.97 23 17.46 22.02 19.28 20.34L15.71 17.57C14.73 18.23 13.48 18.63 12 18.63C9.13999 18.63 6.70999 16.7 5.83999 14.12H2.17999V16.96C3.98999 20.56 7.69999 23 12 23Z" fill="#34A853"/>
+                                    <path d="M5.83999 14.12C5.60999 13.46 5.47999 12.75 5.47999 12C5.47999 11.25 5.60999 10.54 5.83999 9.88V7.04H2.17999C1.42999 8.53 0.999992 10.22 0.999992 12C0.999992 13.78 1.42999 15.47 2.17999 16.96L5.83999 14.12Z" fill="#FBBC05"/>
+                                    <path d="M12 5.38C13.62 5.38 15.06 5.94 16.21 7.03L19.35 3.89C17.45 2.11 14.97 1 12 1C7.69999 1 3.98999 3.44 2.17999 7.04L5.83999 9.88C6.70999 7.3 9.13999 5.38 12 5.38Z" fill="#EA4335"/>
+                                </svg>
+                                Sign in with Google
+                            </button>
+
+                            {/* Divider */}
+                            <div className="relative flex items-center py-1">
+                                <div className="flex-grow border-t border-gray-100"></div>
+                                <span className="flex-shrink mx-4 text-[#9CA3AF] text-[13px] font-medium">or continue with email</span>
+                                <div className="flex-grow border-t border-gray-100"></div>
                             </div>
 
-                            {/* Action Buttons */}
-                            <div className="flex flex-col sm:flex-row gap-3">
-                                <Button
-                                    onClick={sendOtp}
-                                    disabled={sendingOtp || emailVerified || !email || (otpSent && resendCooldown > 0)}
-                                    className="flex-1 h-12 rounded-xl bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                                >
-                                    {emailVerified ? (
-                                        <>
-                                            <CheckCircle2 className="h-4 w-4 mr-2" />
-                                            EMAIL VERIFIED
-                                        </>
-                                    ) : sendingOtp ? (
-                                        <>
-                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                            SENDING OTP...
-                                        </>
-                                    ) : otpSent ? (
-                                        resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "RESEND OTP"
-                                    ) : (
-                                        <>
-                                            <Mail className="h-4 w-4 mr-2" />
-                                            Continue
-                                        </>
-                                    )}
-                                </Button>
-                                {otpSent && !emailVerified && (
-                                    <Button
-                                        variant="outline"
-                                        onClick={resetState}
-                                        className="h-12 font-semibold rounded-xl border-2 hover:bg-slate-50 transition-all"
-                                    >
-                                        Change Email
-                                    </Button>
-                                )}
-                            </div>
-
-                            {/* OTP Input Section */}
-                            {otpSent && !emailVerified && (
-                                <div className="space-y-4 p-6 bg-gradient-to-br from-slate-50 to-red-50 rounded-2xl border-2 border-red-100 animate-fade-in">
-                                    <label className="block text-sm font-semibold text-slate-800 text-center flex items-center justify-center gap-2">
-                                        <Shield className="h-4 w-4 text-red-600" />
-                                        Enter 6-digit OTP
+                            {/* Email Login Section */}
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="text-[#374151] font-medium mb-2 block text-[13px]">
+                                        Email Address:
                                     </label>
                                     <Input
-                                        type="text"
-                                        inputMode="numeric"
-                                        maxLength={6}
-                                        value={otp}
-                                        onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-                                        placeholder="000000"
-                                        className="text-center tracking-[0.5em] text-2xl font-mono h-14 rounded-xl border-2 border-slate-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 bg-white shadow-inner"
+                                        type="email"
+                                        placeholder="example@email.com"
+                                        value={email}
+                                        onChange={(e) => { setEmail(e.target.value); setError(""); }}
+                                        className="h-11 border-gray-200 rounded text-[15px] px-4 focus:ring-0 focus:border-red-500 bg-white transition-all text-gray-900 placeholder:text-gray-400 shadow-sm"
                                     />
-                                    <Button
-                                        onClick={verifyOtp}
-                                        disabled={verifyingOtp || otp.length !== 6}
-                                        className="rounded-xl w-full h-12 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
-                                    >
-                                        {verifyingOtp ? (
-                                            <>
-                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                                                Verifying...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <CheckCircle2 className="h-4 w-4" />
-                                                Verify
-                                            </>
-                                        )}
-                                    </Button>
                                 </div>
-                            )}
-
-                            {/* Success Message */}
-                            {message && (
-                                <div className="p-4 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 text-green-800 text-sm font-semibold border-2 border-green-200 shadow-sm flex items-center gap-3 animate-fade-in">
-                                    <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
-                                    <span>{message}</span>
-                                </div>
-                            )}
-
-                            {/* Error Message */}
-                            {error && (
-                                <div className="p-4 rounded-xl bg-gradient-to-r from-red-50 to-pink-50 text-red-800 text-sm font-semibold border-2 border-red-200 shadow-sm flex items-center gap-3 animate-fade-in">
-                                    <span className="text-lg">⚠️</span>
-                                    <span>{error}</span>
-                                </div>
-                            )}
-
-                            {/* Referral Code Banner */}
-                            {referralCode && !emailVerified && (
-                                <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-50 via-green-50 to-teal-50 text-emerald-800 text-sm font-medium border-2 border-emerald-200 shadow-sm animate-fade-in">
-                                    <div className="flex items-start gap-3">
-                                        <Sparkles className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                                        <div className="flex-1">
-                                            <p className="font-semibold text-sm mb-1">Referral Code Detected!</p>
-                                            <p className="text-sm mb-2">You'll receive <strong className="text-emerald-700">500 free views</strong> when you verify your email and create your first campaign!</p>
-                                            <p className="text-xs mt-2 opacity-75 bg-white/50 px-3 py-1.5 rounded-lg inline-block">
-                                                Code: <span className="font-mono font-bold">{referralCode}</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Benefits Section */}
-                            <div className="mt-8 pt-6 border-t border-slate-200">
-                                <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-4">
-                                    What You Get
-                                </h3>
-                                <div className="grid md:grid-cols-2 gap-3">
-                                    <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors">
-                                        <div className="h-8 w-8 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                            <CheckCircle2 className="h-4 w-4 text-red-600" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-semibold text-slate-900 mb-0.5">Instant Access</p>
-                                            <p className="text-xs text-slate-600">Start promoting immediately after verification</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors">
-                                        <div className="h-8 w-8 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                            <Shield className="h-4 w-4 text-red-600" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-semibold text-slate-900 mb-0.5">Secure & Safe</p>
-                                            <p className="text-xs text-slate-600">Your data is protected with industry standards</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors">
-                                        <div className="h-8 w-8 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                            <Sparkles className="h-4 w-4 text-red-600" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-semibold text-slate-900 mb-0.5">Free Views</p>
-                                            <p className="text-xs text-slate-600">Earn free views through referrals</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors">
-                                        <div className="h-8 w-8 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                            <ArrowRight className="h-4 w-4 text-red-600" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-semibold text-slate-900 mb-0.5">Quick Setup</p>
-                                            <p className="text-xs text-slate-600">Get started in under 2 minutes</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <Button
+                                    onClick={sendOtp}
+                                    disabled={sendingOtp || !email}
+                                    className="w-full h-11 bg-[#D32F2F] hover:bg-[#B71C1C] text-white rounded font-bold text-[14px] tracking-wide uppercase transition-colors shadow-sm"
+                                >
+                                    {sendingOtp ? "SENDING..." : "CONTINUE"}
+                                </Button>
                             </div>
                         </div>
-                    </CampaignCard>
+                    ) : (
+                        /* Verification UI */
+                        <div className="space-y-6 animate-fade-in">
+                             <div>
+                                <label className="text-[#374151] font-medium mb-2 block text-[13px]">
+                                    Enter 6-digit Code:
+                                </label>
+                                <Input
+                                    type="text"
+                                    maxLength={6}
+                                    value={otp}
+                                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                                    placeholder="000000"
+                                    className="h-14 text-center text-3xl font-bold tracking-[0.3em] border-gray-200 rounded bg-white shadow-sm"
+                                    autoFocus
+                                />
+                            </div>
+                            <Button
+                                onClick={verifyOtp}
+                                disabled={verifyingOtp || otp.length !== 6}
+                                className="w-full h-11 bg-[#D32F2F] hover:bg-[#B71C1C] text-white rounded font-bold text-[14px] tracking-wide uppercase shadow-sm"
+                            >
+                                {verifyingOtp ? "VERIFYING..." : "VERIFY CODE"}
+                            </Button>
+                            <div className="flex items-center justify-between text-[13px] font-medium">
+                                <button onClick={() => setOtpSent(false)} className="text-[#6B7280] hover:text-gray-900 transition-colors">
+                                    Change email
+                                </button>
+                                <button 
+                                    onClick={sendOtp} 
+                                    disabled={resendCooldown > 0} 
+                                    className="text-[#D32F2F] disabled:text-gray-300 transition-colors"
+                                >
+                                    {resendCooldown > 0 ? `Resend code in ${resendCooldown}s` : "Resend code"}
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {error && (
+                        <p className="mt-4 text-left text-red-500 font-medium text-[13px]">
+                            {error}
+                        </p>
+                    )}
+
+                    {/* Policy Footer */}
+                    <div className="mt-12 text-left">
+                         <p className="text-[#9CA3AF] text-[12px] font-medium">
+                            By continuing, you agree to our Terms of Service and Privacy Policy
+                        </p>
+                    </div>
                 </div>
-            </section>
+            </div>
         </div>
     );
 }
 
 export default function GetStarted() {
     return (
-        <Suspense fallback={
-            <div className="min-h-screen bg-gradient-to-br from-red-50 to-white font-founders flex items-center justify-center">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
-                    <p className="text-slate-600">Loading...</p>
-                </div>
-            </div>
-        }>
+        <Suspense fallback={null}>
             <GetStartedContent />
         </Suspense>
     );
