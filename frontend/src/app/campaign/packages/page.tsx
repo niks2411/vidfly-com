@@ -31,7 +31,7 @@ type ChannelInfo = {
 
 export default function CampaignPackages() {
     const router = useRouter();
-    const verifiedEmail = getVerifiedEmail();
+    const [verifiedEmail, setVerifiedEmail] = useState<string | undefined>(undefined);
 
     const [storedVideos, setStoredVideos] = useState<StoredVideo[]>([]);
     const [channelInfo, setChannelInfo] = useState<ChannelInfo | null>(null);
@@ -40,7 +40,10 @@ export default function CampaignPackages() {
     const [loadingInitial, setLoadingInitial] = useState(true);
 
     useEffect(() => {
-        if (!verifiedEmail) {
+        const email = getVerifiedEmail();
+        setVerifiedEmail(email);
+
+        if (!email) {
             router.replace("/get-started");
             return;
         }

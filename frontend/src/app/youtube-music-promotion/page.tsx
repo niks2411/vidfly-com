@@ -7,6 +7,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Youtube, Music, Play, CheckCircle } from "lucide-react";
 import { Animated } from "@/components/Animated";
+import GoogleAdsSection from "@/components/GoogleAdsSection";
+import YouTubeGrowthCampaigns from "@/components/YouTubeGrowthCampaigns";
+import PromotionBanner from "@/components/PromotionBanner";
 
 export default function YoutubeMusicPromotion() {
     const router = useRouter();
@@ -21,15 +24,13 @@ export default function YoutubeMusicPromotion() {
     };
 
     const handlePromoteClick = () => {
-        if (isValidUrl) {
-            if (videoUrl && typeof window !== 'undefined') {
-                sessionStorage.setItem("vidfly_promoted_video", JSON.stringify({
-                    link: videoUrl,
-                    timestamp: Date.now()
-                }));
-            }
-            router.push('/campaign');
+        if (isValidUrl && videoUrl && typeof window !== 'undefined') {
+            sessionStorage.setItem("vidfly_promoted_video", JSON.stringify({
+                link: videoUrl,
+                timestamp: Date.now()
+            }));
         }
+        router.push('/campaign');
     };
 
     const handleWhatsApp = (preset?: string) => {
@@ -40,190 +41,209 @@ export default function YoutubeMusicPromotion() {
     return (
         <div className="min-h-screen bg-white font-founders">
             {/* HERO */}
-            <header className="relative w-full min-h-[600px] flex items-center bg-[#1a1a2e]">
-                {/* Background Image Setup */}
-                <div className="absolute inset-0 z-0 overflow-hidden">
-                    <Image
-                        src="/music-bg.png"
-                        alt="Music Promotion Background"
-                        fill
-                        className="object-cover opacity-60 mix-blend-overlay"
-                        priority
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent"></div>
-                </div>
+            <div className="px-2 lg:px-4">
+                <header className="relative w-full min-h-[600px] flex items-center bg-[#1a1a2e] overflow-hidden">
+                    {/* Background Image Setup */}
+                    <div className="absolute inset-0 z-0 overflow-hidden ">
+                        <Image
+                            src="/musicbg.png"
+                            alt="Music Promotion Background"
+                            fill
+                            className="object-cover opacity-80 mix-blend-overlay"
+                            priority
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent"></div>
+                    </div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-20 lg:py-28">
-                    <div className="max-w-xl space-y-6">
-                        <Animated delay={50}>
-                            {/* Official Google Partner Badge */}
-                            <div className="flex items-center mb-8">
-                                <div className="bg-white/90 backdrop-blur-sm px-4 py-2 flex items-center gap-3 rounded-sm shadow-sm">
-                                    <svg viewBox="0 0 272 92" className="h-5 w-auto">
-                                        <path fill="#EA4335" d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" />
-                                        <path fill="#FBBC05" d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" />
-                                        <path fill="#4285F4" d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z" />
-                                        <path fill="#34A853" d="M225 3v65h-9.5V3h9.5z" />
-                                        <path fill="#EA4335" d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" />
-                                        <path fill="#4285F4" d="M35.29 41.41V32H67c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z" />
-                                    </svg>
-                                    <span className="text-gray-600 font-bold text-sm sm:text-[16px] pl-3 border-l-2 border-gray-300">Official <span className="text-[#4285F4]">Google</span> partner</span>
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full pt-10 pb-20 lg:pt-14 lg:pb-28">
+                        <div className="max-w-3xl space-y-6">
+                            <Animated delay={50}>
+                                {/* Official Google Partner Badge */}
+                                <div className="flex items-center mb-8">
+                                    <div className="bg-white/90 backdrop-blur-sm px-4 py-2 flex items-center gap-3 rounded-sm shadow-sm">
+                                        <svg viewBox="0 0 272 92" className="h-5 w-auto">
+                                            <path fill="#EA4335" d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" />
+                                            <path fill="#FBBC05" d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" />
+                                            <path fill="#4285F4" d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z" />
+                                            <path fill="#34A853" d="M225 3v65h-9.5V3h9.5z" />
+                                            <path fill="#EA4335" d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" />
+                                            <path fill="#4285F4" d="M35.29 41.41V32H67c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z" />
+                                        </svg>
+                                        <span className="text-gray-600 font-bold text-sm sm:text-[16px] pl-3 border-l-2 border-gray-300">Official Premier partner</span>
+                                    </div>
+                                </div>
+
+                                <h1
+                                    className="section-heading !text-left !mb-8"
+                                    style={{
+                                        background: "linear-gradient(90deg, #43d9df 0%, #a8e06e 35%, #fdf2b1 60%, #43d9df 100%)",
+                                        WebkitBackgroundClip: "text",
+                                        WebkitTextFillColor: "transparent",
+                                        backgroundClip: "text",
+                                    }}
+                                >
+                                    Grow Your Music Channel with<br />Real Listeners & Subscribers
+                                </h1>
+
+                                <p className="section-desc music-hero-desc !mx-0 !text-left max-w-3xl mb-10">
+                                    Reach thousands of real music lovers and potential subscribers with Vidflyy&apos;s advanced YouTube ad targeting. Boost your music videos, live performances, and covers with smart promotion.
+                                </p>
+
+                                <ul className="space-y-4 mb-10">
+                                    {[
+                                        "Real Views from Music Audience",
+                                        "Increase Watch Time & Engagement",
+                                        "Safe & YouTube-Compliant Promotion"
+                                    ].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-3">
+                                            <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 stroke-[3px]" />
+                                            <span className="text-white font-bold">{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+
+                                <button
+                                    onClick={handlePromoteClick}
+                                    className="bg-gradient-to-r from-[#9061f9] to-[#06d6a0] text-white font-black text-[18px] px-10 py-5 rounded-[4px] shadow-2xl hover:scale-[1.03] transition-all duration-300 transform uppercase tracking-tight"
+                                >
+                                    Promote My Music Video
+                                </button>
+                            </Animated>
+                        </div>
+                    </div>
+                </header>
+            </div>
+            <GoogleAdsSection showBadge={false} bgColor="rgb(247,246,246)" />
+
+            {/* WHY ARTISTS CHOOSE VIDFLYY */}
+            <section className="py-20 bg-white font-founders">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-12 lg:mb-16">
+                        <Animated delay={100}>
+                            <div className="flex justify-center mb-6">
+                                <span className="bg-gradient-to-r from-[#9061f9] to-[#06d6a0] text-white text-[12px] font-extrabold px-5 py-2 tracking-wide uppercase shadow-lg shadow-purple-500/20">
+                                    Music Promotion Services
+                                </span>
+                            </div>
+                            <h2 className="section-heading !mb-4">
+                                Why <span className="bg-gradient-to-r from-[#9061f9] to-[#06d6a0] bg-clip-text text-transparent">Artists</span> choose Vidflyy to Grow.
+                            </h2>
+                            <p className="section-desc max-w-3xl mx-auto">
+                                Built for musicians who want real reach, real listeners, and real growth — without fake promotion.
+                            </p>
+                        </Animated>
+                    </div>
+
+                    <div className="space-y-8">
+                        {/* Card 1 */}
+                        <Animated delay={200}>
+                            <div className="bg-[#F3F4F6] overflow-hidden flex flex-col md:flex-row items-stretch border border-gray-100 shadow-sm transition-all duration-500 hover:shadow-md group">
+                                <div className="p-6 lg:p-10 md:w-[60%] flex flex-col justify-center">
+                                    <h3 className="text-[24px] lg:text-[32px] font-bold text-[#0E172B] mb-4 leading-tight">
+                                        No Bots, Just Real Music Fans.<br />Reach New Fans for Your Music Channel.
+                                    </h3>
+                                    <p className="text-[#475569] text-[16px] lg:text-[18px] leading-relaxed font-medium">
+                                        Your music is promoted to audiences who actually listen to your genre — not random traffic.
+                                    </p>
+                                </div>
+                                <div className="md:w-[40%] relative min-h-[250px] md:min-h-full overflow-hidden">
+                                    <Image
+                                        src="/r1.png"
+                                        alt="Real Music Fans"
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
                                 </div>
                             </div>
+                        </Animated>
 
-                            <h1 className="section-heading text-[32px] sm:text-[40px] md:text-[48px] lg:text-[56px] xl:text-[64px] !text-white !mb-8">
-                                <span className="text-[#43d9df]">VidFlyy</span>{" "}
-                                <span className="text-[#fdf2b1]">Youtube Music</span>
-                                <br />
-                                <span className="text-[#43d9df]">Promotion</span>
-                            </h1>
+                        {/* Card 2 */}
+                        <Animated delay={300}>
+                            <div className="bg-[#F3F4F6] overflow-hidden flex flex-col md:flex-row items-stretch border border-gray-100 shadow-sm transition-all duration-500 hover:shadow-md group">
+                                <div className="p-6 lg:p-10 md:w-[60%] flex flex-col justify-center">
+                                    <h3 className="text-[24px] lg:text-[32px] font-bold text-[#0E172B] mb-4 leading-tight">
+                                        Trusted by Growing Creators Worldwide
+                                    </h3>
+                                    <p className="text-[#475569] text-[16px] lg:text-[18px] leading-relaxed font-medium">
+                                        Thousands of creators use VIDFLLY to promote their content and reach new audiences through real YouTube campaigns.
+                                    </p>
+                                </div>
+                                <div className="md:w-[40%] relative min-h-[250px] md:min-h-full overflow-hidden">
+                                    <Image
+                                        src="/r2.png"
+                                        alt="Trusted by Creators"
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                </div>
+                            </div>
+                        </Animated>
 
-                            <p className="section-desc !text-white !mx-0 !text-left max-w-2xl mb-10 !opacity-100">
-                                Reach real listeners, increase engagement, and build momentum for your music with targeted campaigns powered by VIDFLLY.
+                        {/* Card 3 */}
+                        <Animated delay={400}>
+                            <div className="bg-[#F3F4F6] overflow-hidden flex flex-col md:flex-row items-stretch border border-gray-100 shadow-sm transition-all duration-500 hover:shadow-md group">
+                                <div className="p-6 lg:p-10 md:w-[60%] flex flex-col justify-center">
+                                    <h3 className="text-[24px] lg:text-[32px] font-bold text-[#0E172B] mb-4 leading-tight">
+                                        Launch Music Campaigns in Seconds
+                                    </h3>
+                                    <p className="text-[#475569] text-[16px] lg:text-[18px] leading-relaxed font-medium mb-6">
+                                        Launch your music campaign in seconds and start reaching real listeners without delays or complex setup.
+                                    </p>
+                                    <p className="text-[#0E172B] font-bold text-[16px] lg:text-[18px] tracking-tight">
+                                        From upload to live campaign, everything is built for speed and simplicity.
+                                    </p>
+                                </div>
+                                <div className="md:w-[40%] relative min-h-[250px] md:min-h-full overflow-hidden">
+                                    <Image
+                                        src="/r3.png"
+                                        alt="Launch Music Campaigns"
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                </div>
+                            </div>
+                        </Animated>
+                    </div>
+                </div>
+            </section>
+
+            {/* READY TO PROMOTE CTA */}
+            <section className="bg-[#ECECEC] font-founders">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+                        <div>
+                            <h3 className="text-[28px] lg:text-[36px] font-black text-[#0E172B] leading-tight mb-3">
+                                Ready to Promote Your Next Track?
+                            </h3>
+                            <p className="text-[#475569] text-[16px] lg:text-[18px] font-medium">
+                                Add your video, set your budget, and go live all from one simple dashboard.
                             </p>
-
-                            <ul className="space-y-4 mb-12">
-                                {[
-                                    "Smart audience targeting",
-                                    "Real views & engagement — no bots",
-                                    "Launch campaigns in seconds",
-                                    "Full control & transparent tracking"
-                                ].map((item, i) => (
-                                    <li key={i} className="flex items-center gap-4">
-                                        <CheckCircle className="w-5 h-5 text-[#4ade80] flex-shrink-0 stroke-[3px]" />
-                                        <span className="text-white text-[17px] font-bold">{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
-
+                        </div>
+                        <div className="flex flex-col items-center gap-3">
                             <button
                                 onClick={handlePromoteClick}
-                                className="bg-gradient-to-r from-[#9061f9] to-[#06d6a0] text-white font-black text-[18px] px-10 py-5 rounded-[4px] shadow-2xl hover:scale-[1.03] transition-all duration-300 transform uppercase tracking-tight"
+                                className="bg-[#E52D27] hover:bg-[#D42621] text-white font-extrabold text-[18px] px-10 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
                             >
-                                Promote Youtube music video
+                                Promote My Music Now
                             </button>
-                        </Animated>
-                    </div>
-                </div>
-            </header>
-
-            {/* WHAT IS YOUTUBE MUSIC PROMOTION */}
-            <section className="py-20 bg-white">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                        <Animated delay={100}>
-                            <div className="flex justify-center">
-                                <div className="relative w-72 h-72 xs:w-80 xs:h-80 sm:w-96 sm:h-96 lg:w-[500px] lg:h-[500px]">
-                                    <svg className="absolute inset-0 w-full h-full animate-spin-slow" viewBox="0 0 300 300">
-                                        <defs>
-                                            <path id="circlePath" d="M 150, 150 m -120, 0 a 120,120 0 1,1 240,0 a 120,120 0 1,1 -240,0" />
-                                        </defs>
-                                        <text fill="#9333ea" fontWeight="600" fontSize="15">
-                                            <textPath href="#circlePath" startOffset="0%">
-                                                promote your music videos to millions of people • promote your music videos to millions of people •
-                                            </textPath>
-                                        </text>
-                                    </svg>
-                                    <div className="absolute inset-16 xs:inset-20 sm:inset-24 lg:inset-28 bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 flex flex-col">
-                                        <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 border-b border-gray-200">
-                                            <div className="flex gap-1">
-                                                <div className="w-2 h-2 rounded-full bg-red-400"></div>
-                                                <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
-                                                <div className="w-2 h-2 rounded-full bg-green-400"></div>
-                                            </div>
-                                            <Youtube className="h-3 w-3 text-red-600 ml-1" />
-                                            <span className="text-[10px] text-gray-500 font-medium">YouTube</span>
-                                        </div>
-                                        <div className="flex-1 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center relative">
-                                            <Image
-                                                src="/lovable-uploads/music-thumbnail.png"
-                                                alt="Music video thumbnail"
-                                                fill
-                                                className="object-cover"
-                                                sizes="(max-width: 1024px) 300px, 500px"
-                                            />
-                                            <div className="absolute inset-0 flex items-center justify-center">
-                                                <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center shadow-lg">
-                                                    <Play className="h-5 w-5 text-white fill-white ml-0.5" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </Animated>
-
-                        <Animated delay={200}>
-                            <div className="space-y-5">
-                                <h2 className="section-heading !text-left !mb-5">
-                                    What is a YouTube music<br />video promotion
-                                </h2>
-                                <p className="section-desc !text-left !mx-0 mb-6">
-                                    The Music industry has changed tremendously over the years. In order to remain competitive in today's market, you must grow visibility on YouTube. That's where we come in! Vidflyy helps music artists from any genre promote their music. We help major and indie artists focus on presenting their content to audiences who may be interested. We help you run structured campaigns for your music videos.
-                                </p>
-                                <div>
-                                    <Link href="/get-started">
-                                        <Button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-full text-sm font-semibold">
-                                            Start your promotion now
-                                        </Button>
-                                    </Link>
-                                </div>
-                                <div className="flex flex-wrap gap-6 pt-2">
-                                    <div className="flex items-center gap-2">
-                                        <CheckCircle className="h-4 w-4 text-red-500" />
-                                        <span className="text-xs text-gray-600">We only use YouTube Ads</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <CheckCircle className="h-4 w-4 text-red-500" />
-                                        <span className="text-xs text-gray-600">Start as low as ₹999</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <CheckCircle className="h-4 w-4 text-red-500" />
-                                        <span className="text-xs text-gray-600">Relevant audiences</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </Animated>
+                            <button
+                                onClick={handlePromoteClick}
+                                className="text-[#2563EB] font-semibold text-[15px] hover:underline transition-all"
+                            >
+                                Try with ₹499 →
+                            </button>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* WHY IT WORKS */}
-            <section className="py-16">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <Animated delay={60}>
-                        <h2 className="section-heading text-center !mb-6">Why Music Promotion Works</h2>
-                        <p className="section-desc text-center max-w-2xl mx-auto mb-10">We combine YouTube ad placements with music-focused targeting to reach listeners that convert into subscribers and playlist followers.</p>
-                    </Animated>
-
-                    <div className="grid md:grid-cols-3 gap-8">
-                        <Animated delay={120}>
-                            <div className="p-6 bg-gradient-to-br from-red-50 to-white rounded-2xl shadow-sm transform transition hover:-translate-y-2">
-                                <div className="flex items-center gap-3 mb-4"><Music className="h-6 w-6 text-red-600" /><h3 className="text-lg font-semibold">Genre & Mood Targeting</h3></div>
-                                <p className="text-gray-600 text-sm">Reach listeners by genre (EDM, Indie, Hip-hop) and mood (chill, workout, study).</p>
-                            </div>
-                        </Animated>
-                        <Animated delay={180}>
-                            <div className="p-6 bg-gradient-to-br from-red-50 to-white rounded-2xl shadow-sm transform transition hover:-translate-y-2">
-                                <div className="flex items-center gap-3 mb-4"><Play className="h-6 w-6 text-red-600" /><h3 className="text-lg font-semibold">Smart Placements</h3></div>
-                                <p className="text-gray-600 text-sm">In-stream, in-feed, and recommended placements tuned to music listeners increase discovery & saves.</p>
-                            </div>
-                        </Animated>
-                        <Animated delay={240}>
-                            <div className="p-6 bg-gradient-to-br from-red-50 to-white rounded-2xl shadow-sm transform transition hover:-translate-y-2">
-                                <div className="flex items-center gap-3 mb-4"><CheckCircle className="h-6 w-6 text-red-600" /><h3 className="text-lg font-semibold">Fan Conversion</h3></div>
-                                <p className="text-gray-600 text-sm">Focus on long-term subscribers and playlist adds — not just one-time views.</p>
-                            </div>
-                        </Animated>
-                    </div>
-                </div>
-            </section>
+            <YouTubeGrowthCampaigns />
 
             {/* HOW IT WORKS */}
             <section className="py-20 bg-[#1a1a2e]">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Animated delay={60}>
-                        <h3 className="section-heading text-center !text-white !mb-16">
+                        <h3 className="section-heading text-center !mb-16 music-white-heading">
                             How Vidflyy music promotion works
                         </h3>
                     </Animated>
@@ -294,19 +314,17 @@ export default function YoutubeMusicPromotion() {
                 </div>
             </section>
 
-            {/* FINAL CTA */}
-            <section className="py-16 bg-gradient-to-br from-red-600 to-red-700 text-white">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 rounded-3xl p-8 lg:p-12 flex flex-col lg:flex-row items-center justify-between gap-6">
-                    <div>
-                        <h3 className="text-2xl font-bold">Ready to get real listeners for your music?</h3>
-                        <p className="text-sm text-red-100 mt-2">Start a campaign optimized for streams, playlist adds & long-term subscribers.</p>
-                    </div>
-                    <div className="flex gap-4">
-                        <Button onClick={() => handleWhatsApp("Start music campaign")} className="bg-white text-red-600 px-6 py-4 rounded-full font-semibold">Start Promotion</Button>
-                        <Link href="/pricing" className="inline-flex items-center justify-center px-6 py-4 rounded-full border border-white/30">View Plans</Link>
-                    </div>
-                </div>
-            </section>
+            <PromotionBanner
+                badgeText="Start with just ₹499"
+                heading={
+                    <>
+                        Start promoting your music <br className="hidden lg:block" />
+                        today and reach listeners who <br className="hidden lg:block" />
+                        truly vibe with your sound.
+                    </>
+                }
+                description="Launch your campaign in seconds, get real listeners, track performance live, and grow your fanbase with full control."
+            />
 
             <style jsx global>{`
         @keyframes blob {
@@ -321,6 +339,8 @@ export default function YoutubeMusicPromotion() {
           to { transform: rotate(360deg); }
         }
         .animate-spin-slow { animation: spin-slow 15s linear infinite; }
+        .music-hero-desc { color: rgba(255,255,255,0.9) !important; }
+        .music-white-heading { color: #ffffff !important; }
       `}</style>
         </div>
     );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CampaignLayout from "@/components/CampaignLayout";
 import CampaignHeader from "@/components/CampaignHeader";
@@ -61,13 +61,15 @@ const bulkPackages = [
 
 export default function CampaignBulkViews() {
     const router = useRouter();
-    const verifiedEmail = getVerifiedEmail();
+    const [verifiedEmail, setVerifiedEmail] = useState<string | undefined>(undefined);
 
     useEffect(() => {
-        if (!verifiedEmail) {
+        const email = getVerifiedEmail();
+        setVerifiedEmail(email);
+        if (!email) {
             router.replace("/get-started");
         }
-    }, [verifiedEmail, router]);
+    }, [router]);
 
     const handleSelectPackage = (pkg: (typeof bulkPackages)[number]) => {
         if (!verifiedEmail) return;

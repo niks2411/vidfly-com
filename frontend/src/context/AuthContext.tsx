@@ -69,7 +69,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     useEffect(() => {
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === "logged_user_email" && !e.newValue) {
+                // User logged out in another tab
+                setUser(null);
+                sessionStorage.removeItem("vidfly_verified_email");
+                window.location.href = "/"; // Redirect all tabs to home on logout
+            }
+        };
+
+        window.addEventListener("storage", handleStorageChange);
         fetchMe();
+
+        return () => window.removeEventListener("storage", handleStorageChange);
     }, []);
 
     return (

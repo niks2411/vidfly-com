@@ -57,7 +57,7 @@ const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, i
     }
   };
 
-  const isActive = (item: typeof sections[0]["items"][0]) => {
+  const checkIsActive = (item: typeof sections[0]["items"][0]) => {
     if (item.key && item.key === active) return true;
     if (!item.key && item.path === pathname) return true;
     return false;
@@ -65,7 +65,7 @@ const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, i
 
   return (
     <aside className={cn(
-      "lg:w-64 bg-white h-full lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto",
+      "lg:w-64 bg-white h-full lg:sticky lg:top-[108px] lg:h-[calc(100vh-108px)] lg:overflow-y-auto custom-scrollbar",
       isMobile ? "w-full" : "p-6"
     )}>
       {sections.map((section, sectionIndex) => (
@@ -86,7 +86,7 @@ const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, i
           </div>
           <ul className="space-y-1">
             {section.items.map((item) => {
-              const active = isActive(item);
+              const isItemSelected = checkIsActive(item);
               const Icon = item.icon;
               return (
                 <li key={item.label}>
@@ -97,7 +97,7 @@ const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, i
                     className={cn(
                       "w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors flex items-center gap-3",
                       item.path
-                        ? active
+                        ? isItemSelected
                           ? "bg-red-100 text-red-700 border border-red-200"
                           : "hover:bg-slate-50 text-slate-600"
                         : "text-slate-300 cursor-not-allowed",
@@ -105,7 +105,7 @@ const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, i
                   >
                     <Icon className={cn(
                       "h-5 w-5 flex-shrink-0",
-                      active ? "text-red-700" : "text-slate-500"
+                      isItemSelected ? "text-red-700" : "text-slate-500"
                     )} />
                     <span className="flex-1">{item.label}</span>
                   </button>

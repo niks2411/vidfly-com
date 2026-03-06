@@ -9,7 +9,7 @@ import { Check, Users, Eye, Heart, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useTrackEvent } from "@/hooks/use-track-event";
-import { promotionPackages } from "./CampaignPackages";
+import { promotionPackages } from "@/lib/constants";
 
 const PricingPage = () => {
   const router = useRouter();

@@ -61,9 +61,9 @@ const CampaignLayout = ({
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row min-h-[calc(100vh-72px)]">
+      <div className="flex flex-col lg:flex-row min-h-[calc(100vh-72px)] pt-[108px]">
         {/* Desktop Sidebar - Only visible on desktop, touching left edge */}
-        <div className="hidden lg:block border-r border-slate-200 flex-shrink-0">
+        <div className="hidden lg:block border-r border-slate-200 flex-shrink-0 sticky top-[108px] h-[calc(100vh-108px)]">
           <CampaignSidebar active={activeSidebar} />
         </div>
         {/* Main content - Full width on mobile and desktop */}

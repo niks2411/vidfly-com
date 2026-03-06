@@ -26,14 +26,20 @@ const STORAGE_KEY = "vidfly_channel_videos";
 
 export default function CampaignDashboard() {
     const router = useRouter();
-    const verifiedEmail = getVerifiedEmail();
-    const displayEmail = verifiedEmail || "Email not verified";
+    const [verifiedEmail, setVerifiedEmail] = useState<string | undefined>(undefined);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        if (!verifiedEmail) {
+        setMounted(true);
+        const email = getVerifiedEmail();
+        setVerifiedEmail(email);
+
+        if (!email) {
             router.replace("/get-started");
         }
-    }, [verifiedEmail, router]);
+    }, [router]);
+
+    const displayEmail = verifiedEmail || "Email not verified";
 
     const [youtubeLink, setYoutubeLink] = useState("");
 
@@ -175,7 +181,7 @@ export default function CampaignDashboard() {
                     <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-xl border border-slate-200 min-w-0 max-w-full order-2 sm:order-1">
                         <span className="text-xs font-semibold text-slate-500 uppercase whitespace-nowrap flex-shrink-0">Verified Email</span>
                         <span className="text-sm font-semibold text-slate-900 truncate min-w-0 block">
-                            {displayEmail}
+                            {mounted ? displayEmail : "Loading..."}
                         </span>
                     </div>
                     <div className="order-1 sm:order-2">

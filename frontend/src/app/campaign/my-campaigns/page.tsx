@@ -72,25 +72,28 @@ const statusConfig: Record<string, { label: string; color: string; icon: any }> 
 
 export default function MyCampaigns() {
     const router = useRouter();
-    const verifiedEmail = getVerifiedEmail();
+    const [verifiedEmail, setVerifiedEmail] = useState<string | undefined>(undefined);
+    const [mounted, setMounted] = useState(false);
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!verifiedEmail) {
+        setMounted(true);
+        const email = getVerifiedEmail();
+        setVerifiedEmail(email);
+        if (!email) {
             router.replace("/get-started");
             return;
         }
-        fetchCampaigns();
-    }, [verifiedEmail, router]);
+        fetchCampaigns(email);
+    }, [router]);
 
-    const fetchCampaigns = async () => {
-        if (!verifiedEmail) return;
+    const fetchCampaigns = async (email: string) => {
         setLoading(true);
         setError(null);
         try {
-            const normalizedEmail = verifiedEmail.trim().toLowerCase();
+            const normalizedEmail = email.trim().toLowerCase();
             const response = await fetch(
                 `${API_BASE_URL}/api/orders/user?email=${encodeURIComponent(normalizedEmail)}`,
                 { credentials: "include" }
@@ -123,7 +126,7 @@ export default function MyCampaigns() {
         return progressMap[status] || 0;
     };
 
-    if (!verifiedEmail) return null;
+    if (!mounted || !verifiedEmail) return null;
 
     const activeCampaigns = orders.filter(o => o.status === 'in_progress' || o.status === 'promotion_scheduled').length;
     const totalViews = orders.reduce((sum, o) => sum + (o.plan?.quantity || 0), 0);

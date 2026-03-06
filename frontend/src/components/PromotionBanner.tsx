@@ -3,7 +3,17 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-const PromotionBanner = () => {
+interface PromotionBannerProps {
+    heading?: React.ReactNode;
+    badgeText?: string;
+    description?: string;
+}
+
+const PromotionBanner = ({
+    heading,
+    badgeText = "Start with just ₹499",
+    description = "Launch your first campaign in seconds. Reach real viewers, track performance live, and scale when you see results.",
+}: PromotionBannerProps) => {
     const router = useRouter();
 
     const thumbnails = [
@@ -42,19 +52,23 @@ const PromotionBanner = () => {
             <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-8">
 
                 {/* Left Side Content */}
-                <div className="w-full lg:w-[50%] z-20 space-y-6 lg:pl-10">
+                <div className="w-full lg:w-[50%] z-20 space-y-6 lg:pl-4">
                     <div className="inline-block bg-[#111827] text-white px-3 py-1.5 text-[14px] font-bold uppercase tracking-wider">
-                        Start with just ₹499
+                        {badgeText}
                     </div>
 
-                    <h2 className="text-white text-[32px] md:text-[42px] lg:text-[46px] font-extrabold leading-[1.1] tracking-tight">
-                        Run your YouTube growth <br className="hidden lg:block" />
-                        campaign today and reach <br className="hidden lg:block" />
-                        audience your content deserves.
+                    <h2 className="text-white font-extrabold leading-[1.1] tracking-tight !text-left" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>
+                        {heading || (
+                            <>
+                                Run your YouTube growth <br className="hidden lg:block" />
+                                campaign today and reach <br className="hidden lg:block" />
+                                audience your content deserves.
+                            </>
+                        )}
                     </h2>
 
-                    <p className="text-white text-[16px] md:text-[18px] font-bold leading-relaxed opacity-95 max-w-xl">
-                        Launch your first campaign in seconds. Reach real viewers, track performance live, and scale when you see results.
+                    <p className="text-white font-bold leading-relaxed opacity-95 max-w-xl" style={{ fontSize: 'clamp(16px, 1.5vw, 18px)' }}>
+                        {description}
                     </p>
 
                     <button

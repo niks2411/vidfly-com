@@ -9,7 +9,7 @@ const YouTubeGrowthCampaigns = () => {
                 <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 lg:pt-24 pb-12 lg:pb-16">
                     {/* Badge */}
                     <div className="flex justify-center mb-6">
-                        <span className="bg-[#1E293B] text-white text-[12px] font-semibold px-5 py-2 rounded-full tracking-wide">
+                        <span className="bg-[#1E293B] text-white text-[12px] font-semibold px-5 py-2 tracking-wide">
                             YouTube Growth Campaigns
                         </span>
                     </div>
