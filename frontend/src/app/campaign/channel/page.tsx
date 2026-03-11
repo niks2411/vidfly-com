@@ -3,12 +3,15 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import CampaignLayout from "@/components/CampaignLayout";
-import CampaignCard from "@/components/CampaignCard";
-import ChannelSelector from "@/components/ChannelSelector";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { 
+    Search, ArrowLeft, ArrowRight, Eye, 
+    ThumbsUp, MessageSquare, CheckCircle2, Check, X,
+    Loader2, Sparkles
+} from "lucide-react";
 import { getVerifiedEmail, getSelectedChannelKey } from "@/lib/verifiedEmail";
+import Image from "next/image";
 
 type StoredVideo = {
     title: string;
@@ -17,11 +20,59 @@ type StoredVideo = {
     thumbnail: string;
     link: string;
     channelId?: string | null;
+    publishedAt?: string | null;
+    duration?: string | null;
+    viewCount?: string | number | null;
+    likeCount?: string | number | null;
+    commentCount?: string | number | null;
+    avatarUrl?: string | null;
 };
 
 const STORAGE_KEY = "vidfly_channel_videos";
 const CHANNEL_INFO_STORAGE_KEY = "vidfly_channel_info";
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
+
+const formatNumber = (num: string | number | null | undefined) => {
+    if (!num) return "0";
+    const n = typeof num === "string" ? parseInt(num) : num;
+    if (isNaN(n)) return "0";
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + "M";
+    if (n >= 1000) return (n / 1000).toFixed(1) + "K";
+    return n.toLocaleString();
+};
+
+const parseISO8601Duration = (duration: string | null | undefined) => {
+    if (!duration) return "";
+    const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    if (!match) return "";
+    
+    const hours = parseInt(match[1]) || 0;
+    const minutes = parseInt(match[2]) || 0;
+    const seconds = parseInt(match[3]) || 0;
+    
+    if (hours > 0) {
+        return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+};
+
+const formatDate = (dateStr: string | null | undefined) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays >= 365) {
+        const years = Math.floor(diffDays / 365);
+        return `${years} year${years > 1 ? 's' : ''} ago`;
+    }
+    if (diffDays >= 30) {
+        const months = Math.floor(diffDays / 30);
+        return `${months} month${months > 1 ? 's' : ''} ago`;
+    }
+    return `${diffDays} days ago`;
+};
 
 export default function CampaignChannel() {
     const router = useRouter();
@@ -35,19 +86,68 @@ export default function CampaignChannel() {
 
     const [videos, setVideos] = useState<StoredVideo[]>([]);
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
-    const [search, setSearch] = useState("");
     const [tab, setTab] = useState<"recent" | "all">("recent");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
     const [channelVideos, setChannelVideos] = useState<StoredVideo[]>([]);
     const [channelId, setChannelId] = useState<string | null>(null);
+    const [channelName, setChannelName] = useState("");
+    const [subscriberCount, setSubscriberCount] = useState("");
+    const [channelAvatar, setChannelAvatar] = useState("");
     const [loadingChannel, setLoadingChannel] = useState(false);
-    const [channelError, setChannelError] = useState("");
-    const [searchResults, setSearchResults] = useState<StoredVideo[]>([]);
-    const [searchLoading, setSearchLoading] = useState(false);
-    const [searchError, setSearchError] = useState("");
-    const [hasSavedChannel, setHasSavedChannel] = useState(false);
     const [loadingInitialChannel, setLoadingInitialChannel] = useState(true);
+    const [isScanning, setIsScanning] = useState(true);
+    const [cache, setCache] = useState<Record<string, { videos: StoredVideo[], info?: any }>>({});
 
-    // Load channels from backend and sessionStorage on mount
+    // Artificial scanning delay
+    useEffect(() => {
+        const timer = setTimeout(() => setIsScanning(false), 2500);
+        return () => clearTimeout(timer);
+    }, []);
+
+    // Debounce search query
+    useEffect(() => {
+        if (!searchQuery.trim()) {
+            setDebouncedSearchQuery("");
+            return;
+        }
+        const timer = setTimeout(() => {
+            setDebouncedSearchQuery(searchQuery);
+        }, 500); // 500ms delay
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
+
+    // Fetch channel header info separately (cache it)
+    useEffect(() => {
+        const fetchChannelHeader = async () => {
+            if (!channelId) return;
+            const cacheKey = `info-${channelId}`;
+            const cachedData = cache[cacheKey]?.info;
+            
+            // If fully cached (has subscriberCount), just use it
+            if (cachedData && cachedData.subscriberCount) {
+                if (cachedData.name) setChannelName(cachedData.name);
+                if (cachedData.avatar) setChannelAvatar(cachedData.avatar);
+                setSubscriberCount(cachedData.subscriberCount);
+                return;
+            }
+
+            // If we have name/avatar from backend but need subscriberCount from YouTube
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/youtube/channel-info?channelId=${encodeURIComponent(channelId)}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    // Only update name/avatar if they weren't already set from backend
+                    if (!channelName && data.name) setChannelName(data.name);
+                    if (!channelAvatar && data.avatar) setChannelAvatar(data.avatar);
+                    setSubscriberCount(data.subscriberCount || "0");
+                    setCache(prev => ({ ...prev, [cacheKey]: { ...(prev[cacheKey] || {videos: []}), info: { ...cachedData, ...data } } }));
+                }
+            } catch (err) { console.error(err); }
+        };
+        fetchChannelHeader();
+    }, [channelId, cache]);
+
     const loadSavedChannels = useCallback(async () => {
         if (typeof window === "undefined" || !verifiedEmail) {
             setLoadingInitialChannel(false);
@@ -60,512 +160,378 @@ export default function CampaignChannel() {
                 try {
                     const parsedInfo = JSON.parse(cachedChannelInfo);
                     if (parsedInfo && parsedInfo.length > 0) {
-                        setHasSavedChannel(true);
                         const channelKey = getSelectedChannelKey();
                         const savedChannelId = localStorage.getItem(channelKey);
                         if (!savedChannelId && parsedInfo[0]?.channelId) {
                             setChannelId(parsedInfo[0].channelId);
-                            localStorage.setItem(channelKey, parsedInfo[0].channelId);
                         } else if (savedChannelId) {
                             setChannelId(savedChannelId);
+                            // Use cached info for instant avatar display
+                            const cachedCh = parsedInfo.find((c: any) => c.channelId === savedChannelId);
+                            if (cachedCh) {
+                                if (cachedCh.name) setChannelName(cachedCh.name);
+                                if (cachedCh.avatar) setChannelAvatar(cachedCh.avatar);
+                            }
                         }
                     }
-                } catch (err) {
-                    console.error("Failed to parse cached channel info", err);
-                }
+                } catch (err) { console.error(err); }
             }
 
-            try {
-                const response = await fetch(
-                    `${API_BASE_URL}/api/user-preferences/channels?email=${encodeURIComponent(verifiedEmail)}`,
-                    { credentials: "include" }
-                );
+            const response = await fetch(
+                `${API_BASE_URL}/api/user-preferences/channels?email=${encodeURIComponent(verifiedEmail)}`,
+                { credentials: "include" }
+            );
 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.channels && data.channels.length > 0) {
-                        setHasSavedChannel(true);
-                        const channelKey = getSelectedChannelKey();
-                        if (data.selectedChannelId) {
-                            setChannelId(data.selectedChannelId);
-                            localStorage.setItem(channelKey, data.selectedChannelId);
-                        } else if (!localStorage.getItem(channelKey)) {
-                            const firstChannel = data.channels[0];
-                            setChannelId(firstChannel.channelId);
-                            localStorage.setItem(channelKey, firstChannel.channelId);
-                        }
+            if (response.ok) {
+                const data = await response.json();
+                if (data.channels && data.channels.length > 0) {
+                    const channelKey = getSelectedChannelKey();
+                    let targetChannelId = data.selectedChannelId || localStorage.getItem(channelKey) || data.channels[0].channelId;
+                    
+                    setChannelId(targetChannelId);
+
+                    // Instantly set channel name & avatar from backend data (no extra YouTube API call needed)
+                    const matchedChannel = data.channels.find((ch: any) => ch.channelId === targetChannelId);
+                    if (matchedChannel) {
+                        if (matchedChannel.channelName) setChannelName(matchedChannel.channelName);
+                        if (matchedChannel.channelAvatar) setChannelAvatar(matchedChannel.channelAvatar);
+                        
+                        // Pre-populate cache so the fetchChannelHeader useEffect skips the API call
+                        const infoCacheKey = `info-${targetChannelId}`;
+                        setCache(prev => ({
+                            ...prev,
+                            [infoCacheKey]: {
+                                ...(prev[infoCacheKey] || { videos: [] }),
+                                info: {
+                                    name: matchedChannel.channelName,
+                                    avatar: matchedChannel.channelAvatar,
+                                }
+                            }
+                        }));
                     }
                 }
-            } catch (err) {
-                console.warn("Failed to load channels from backend:", err);
             }
         } catch (err) {
-            console.error("Failed to load saved channels", err);
+            console.warn("Failed to load channels:", err);
         } finally {
             setLoadingInitialChannel(false);
         }
     }, [verifiedEmail]);
 
-    useEffect(() => {
-        loadSavedChannels();
-    }, [loadSavedChannels]);
+    useEffect(() => { loadSavedChannels(); }, [loadSavedChannels]);
 
     useEffect(() => {
         if (typeof window === "undefined") return;
         try {
-            const parsed: StoredVideo[] = JSON.parse(
-                sessionStorage.getItem(STORAGE_KEY) || "[]"
-            );
+            const parsed: StoredVideo[] = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "[]");
             setVideos(parsed);
-            setSelectedIds(parsed.slice(0, 5).map((video) => video.videoId));
-
-            const channelKey = getSelectedChannelKey();
-            const savedChannelId = localStorage.getItem(channelKey);
-            if (savedChannelId) {
-                setChannelId(savedChannelId);
-            } else {
-                const withChannel = parsed.find((video) => !!video.channelId);
-                if (withChannel?.channelId) {
-                    setChannelId(withChannel.channelId);
-                    localStorage.setItem(channelKey, withChannel.channelId);
-                }
+            if (parsed.length > 0) {
+                setSelectedIds(parsed.slice(0, 5).map(v => v.videoId));
             }
-        } catch (err) {
-            console.error("Failed to load stored videos", err);
-        }
+        } catch (err) { console.error(err); }
     }, []);
 
     useEffect(() => {
-        const handleChannelChange = (event: any) => {
-            const { channelId: newChannelId } = event.detail;
-            if (newChannelId) {
-                setChannelId(newChannelId);
-                const channelKey = getSelectedChannelKey();
-                localStorage.setItem(channelKey, newChannelId);
-            }
-        };
-
-        window.addEventListener('channelChanged', handleChannelChange as EventListener);
-        return () => {
-            window.removeEventListener('channelChanged', handleChannelChange as EventListener);
-        };
-    }, []);
-
-    useEffect(() => {
-        const fetchChannelVideos = async () => {
+        const fetchVideos = async () => {
             if (!channelId) return;
-            try {
-                setLoadingChannel(true);
-                setChannelError("");
-                const params = new URLSearchParams({
-                    channelId,
-                    maxResults: "15",
-                    order: "date",
-                });
-                const response = await fetch(
-                    `${API_BASE_URL}/api/youtube/channel-videos?${params.toString()}`
-                );
-                if (!response.ok) {
-                    const data = await response.json().catch(() => ({}));
-                    throw new Error(data?.message || "Unable to load channel videos");
-                }
-                const data = await response.json();
-                const mapped: StoredVideo[] = (data.videos || []).map((video: any) => ({
-                    title: video.title,
-                    author: video.author,
-                    videoId: video.videoId,
-                    thumbnail: video.thumbnail,
-                    link: `https://www.youtube.com/watch?v=${video.videoId}`,
-                    channelId,
-                }));
-                setChannelVideos(mapped);
+            
+            const normalizedQuery = tab === 'all' ? debouncedSearchQuery.trim().toLowerCase() : "";
+            const cacheKey = `videos-${channelId}-${tab}-${normalizedQuery}`;
 
-                if (mapped.length > 0 && mapped[0].author) {
-                    try {
-                        const userEmail = verifiedEmail;
-                        if (userEmail) {
-                            let channelAvatar = "";
-                            try {
-                                const channelInfoResponse = await fetch(
-                                    `${API_BASE_URL}/api/youtube/channel-info?channelId=${encodeURIComponent(channelId)}`
-                                );
-                                if (channelInfoResponse.ok) {
-                                    const channelInfoData = await channelInfoResponse.json();
-                                    channelAvatar = channelInfoData.avatar || "";
-                                }
-                            } catch (infoErr) {
-                                console.warn("Failed to fetch channel avatar:", infoErr);
-                            }
-
-                            await fetch(`${API_BASE_URL}/api/user-preferences/channels`, {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({
-                                    email: userEmail,
-                                    channelId: channelId,
-                                    channelName: mapped[0].author,
-                                    channelAvatar: channelAvatar,
-                                }),
-                                credentials: "include",
-                            });
-
-                            window.dispatchEvent(new CustomEvent('channelChanged', {
-                                detail: { channelId, channelName: mapped[0].author }
-                            }));
-                        }
-                    } catch (err) {
-                        console.warn("Failed to save channel to backend:", err);
-                    }
-                }
-            } catch (err) {
-                setChannelError(
-                    err instanceof Error ? err.message : "Unable to load channel videos"
-                );
-            } finally {
-                setLoadingChannel(false);
-            }
-        };
-        fetchChannelVideos();
-    }, [channelId, verifiedEmail]);
-
-    const mergedVideos = useMemo(() => {
-        if (channelVideos.length) return channelVideos;
-        if (channelId) return videos.filter((video) => video.channelId === channelId);
-        return videos;
-    }, [channelVideos, videos, channelId]);
-
-    useEffect(() => {
-        if (channelVideos.length > 0 && selectedIds.length === 0) {
-            const availableIds = channelVideos.slice(0, 5).map((v) => v.videoId);
-            setSelectedIds(availableIds);
-        }
-    }, [channelVideos, selectedIds.length]);
-
-    useEffect(() => {
-        const fetchSearch = async () => {
-            if (!channelId || !search.trim() || tab !== "all") {
-                setSearchResults([]);
-                setSearchError("");
+            if (cache[cacheKey]) {
+                setChannelVideos(cache[cacheKey].videos);
                 return;
             }
+
             try {
-                setSearchLoading(true);
-                setSearchError("");
+                setLoadingChannel(true);
                 const params = new URLSearchParams({
                     channelId,
                     maxResults: "5",
-                    query: search,
-                    order: "relevance",
+                    order: tab === 'recent' ? 'date' : 'relevance'
                 });
-                const response = await fetch(
-                    `${API_BASE_URL}/api/youtube/channel-videos?${params.toString()}`
-                );
-                if (!response.ok) {
-                    const data = await response.json().catch(() => ({}));
-                    throw new Error(data?.message || "Unable to search channel videos");
+                
+                if (tab === 'all' && normalizedQuery) {
+                    params.append('query', normalizedQuery);
                 }
-                const data = await response.json();
-                const mapped: StoredVideo[] = (data.videos || []).slice(0, 5).map((video: any) => ({
-                    title: video.title,
-                    author: video.author,
-                    videoId: video.videoId,
-                    thumbnail: video.thumbnail,
-                    link: `https://www.youtube.com/watch?v=${video.videoId}`,
-                    channelId,
-                }));
-                setSearchResults(mapped);
-            } catch (err) {
-                setSearchError(
-                    err instanceof Error ? err.message : "Unable to search channel videos"
-                );
-            } finally {
-                setSearchLoading(false);
-            }
-        };
-        fetchSearch();
-    }, [channelId, search, tab]);
 
-    const filteredVideos = useMemo(() => {
-        if (tab === "all" && search.trim()) return searchResults.slice(0, 5);
-        if (channelVideos.length) return channelVideos.slice(0, 5);
-        return mergedVideos.slice(0, 5);
-    }, [tab, channelVideos, mergedVideos, search, searchResults]);
+                const videosResponse = await fetch(`${API_BASE_URL}/api/youtube/channel-videos?${params.toString()}`);
+                if (videosResponse.ok) {
+                    const data = await videosResponse.json();
+                    const mapped = (data.videos || []).map((v: any) => ({
+                        ...v,
+                        videoId: v.videoId,
+                        author: v.author,
+                        thumbnail: v.thumbnail,
+                        duration: v.duration,
+                        publishedAt: v.publishedAt,
+                        viewCount: v.viewCount,
+                        likeCount: v.likeCount,
+                        commentCount: v.commentCount
+                    }));
+                    setChannelVideos(mapped);
+                    setCache(prev => ({ ...prev, [cacheKey]: { videos: mapped } }));
+                    
+                    if (selectedIds.length === 0 && mapped.length > 0) {
+                        setSelectedIds(mapped.slice(0, 5).map((v: any) => v.videoId));
+                    }
+                }
+            } catch (err) { console.error(err); } finally { setLoadingChannel(false); }
+        };
+        fetchVideos();
+    }, [channelId, tab, debouncedSearchQuery, cache, selectedIds.length]);
 
     const toggleVideo = (videoId: string) => {
-        const video = mergedVideos.find((v) => v.videoId === videoId);
-        if (video?.channelId && video.channelId !== channelId) {
-            setChannelId(video.channelId);
-            const channelKey = getSelectedChannelKey();
-            localStorage.setItem(channelKey, video.channelId);
-            window.dispatchEvent(
-                new CustomEvent("channelChanged", {
-                    detail: { channelId: video.channelId, channelName: video.author || "Channel" },
-                })
-            );
-        }
-
-        setSelectedIds((prev) => {
-            if (prev.includes(videoId)) return prev.filter((id) => id !== videoId);
-            if (prev.length >= 5) return prev;
-            return [...prev, videoId];
-        });
+        setSelectedIds(prev => prev.includes(videoId) ? prev.filter(id => id !== videoId) : prev.length >= 5 ? prev : [...prev, videoId]);
     };
 
     const handleNext = () => {
         if (!selectedIds.length) return;
-        const videoMap = new Map(mergedVideos.map((video) => [video.videoId, video]));
-        const selectedVideos = selectedIds
-            .map((id) => videoMap.get(id))
-            .filter(Boolean) as StoredVideo[];
-        if (!selectedVideos.length) return;
-        const primary = selectedVideos[0];
-
-        if (primary.channelId) {
-            const channelKey = getSelectedChannelKey();
-            localStorage.setItem(channelKey, primary.channelId);
-            window.dispatchEvent(
-                new CustomEvent("channelChanged", {
-                    detail: { channelId: primary.channelId, channelName: primary.author || "Channel" },
-                })
-            );
-        }
-
-        sessionStorage.setItem("vidfly_current_campaign_video", JSON.stringify(primary));
+        const videoMap = new Map(channelVideos.map(v => [v.videoId, v]));
+        const selectedVideos = selectedIds.map(id => {
+            const video = videoMap.get(id);
+            if (video) {
+                return { ...video, avatarUrl: channelAvatar };
+            }
+            return null;
+        }).filter(Boolean);
+        
+        sessionStorage.setItem("vidfly_current_campaign_video", JSON.stringify(selectedVideos[0]));
         sessionStorage.setItem("vidfly_current_campaign_videos", JSON.stringify(selectedVideos));
         router.push("/campaign/budget");
     };
 
-    if (loadingInitialChannel) {
-        return (
-            <CampaignLayout activeSidebar="promote">
-                <CampaignCard className="text-center space-y-6">
-                    <div className="flex items-center justify-center">
-                        <div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin" />
-                    </div>
-                    <p className="text-slate-500">Loading your channels...</p>
-                </CampaignCard>
-            </CampaignLayout>
-        );
-    }
-
-    if (!videos.length && !hasSavedChannel && !channelId) {
-        return (
-            <CampaignLayout activeSidebar="promote">
-                <CampaignCard className="text-center space-y-6">
-                    <h1 className="text-3xl font-bold text-slate-900">Add a Channel First</h1>
-                    <p className="text-slate-500">
-                        We couldn't find any stored videos yet. Add a video link on the "Promote
-                        Video / Short" step to populate your channel library.
-                    </p>
-                    <Button
-                        onClick={() => router.replace("/campaign")}
-                        className="bg-red-600 hover:bg-red-700 rounded-2xl px-6"
-                    >
-                        Go to Promote Video
-                    </Button>
-                </CampaignCard>
-            </CampaignLayout>
-        );
-    }
-
     return (
-        <CampaignLayout activeSidebar="channel">
-            <div className="w-full space-y-6">
-                <div className="bg-white rounded-xl border border-slate-200 p-4">
-                    <div className="flex flex-col sm:flex-row items-center justify-between mb-2">
-                        <span className="text-xs font-semibold text-slate-600 uppercase">STEP 2 - SELECT VIDEOS</span>
-                        <ChannelSelector
-                            onChannelSelect={(newChannelId) => {
-                                setChannelId(newChannelId);
-                                setChannelVideos([]);
-                                setSelectedIds([]);
-                                const channelKey = getSelectedChannelKey();
-                                localStorage.setItem(channelKey, newChannelId);
-                            }}
-                        />
-                    </div>
-                    <div className="flex items-center gap-2">
-                        {["ENTER LINK", "SELECT VIDEOS", "BUDGET & TARGETING", "PAYMENT"].map(
-                            (step, index) => (
-                                <div key={step} className="flex-1 flex items-center">
-                                    <div className="flex-1 flex items-center gap-2">
-                                        <div className={`h-2 flex-1 rounded-full ${index <= 1 ? "bg-red-600" : "bg-slate-200"}`} />
-                                        {index < 3 && (
-                                            <div className={`h-2 w-2 rounded-full ${index <= 1 ? "bg-red-600" : "bg-slate-200"}`} />
-                                        )}
-                                    </div>
+        <CampaignLayout activeSidebar="channel" hideSidebar={true}>
+            <div className="w-full max-w-4xl mx-auto px-4 lg:px-6 space-y-4 pb-8 pt-4">
+                {/* Header & Progress */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <button onClick={() => router.back()} className="flex items-center gap-2 group">
+                        <div className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-all">
+                            <ArrowLeft className="w-5 h-5 text-slate-900" />
+                        </div>
+                        <span className="font-bold text-slate-800">Go Back</span>
+                    </button>
+
+                    <div className="flex-1 max-w-xl pt-0.5 ml-16">
+                        <div className="flex items-center gap-4">
+                            {[
+                                { label: "Enter Link", active: true, color: "bg-gradient-to-r from-blue-400 to-emerald-300" },
+                                { label: "Select Videos", active: true, color: "bg-gradient-to-r from-blue-400 to-emerald-300" },
+                                { label: "Budget & Targeting", active: false, color: "bg-slate-200" }
+                            ].map((step, index) => (
+                                <div key={index} className="flex-1 flex flex-col items-start gap-2.5">
+                                    <div className={`h-[5px] w-full rounded-full ${step.color}`} />
+                                    <span className="text-[11px] font-bold text-slate-900 tracking-tight">{step.label}</span>
                                 </div>
-                            )
-                        )}
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                <CampaignCard className="space-y-6">
-                    <div>
-                        <p className="text-xs text-slate-500 uppercase font-semibold mb-2">Step 2</p>
-                        <h1 className="text-3xl font-bold text-slate-900 mb-3">
-                            Select videos to promote
-                        </h1>
-                        <p className="text-slate-600 text-base leading-relaxed">
-                            You can select up to five videos from your stored channel links.
+                {!loadingInitialChannel && !channelId ? (
+                    <div className="flex flex-col items-center justify-center py-20 text-center max-w-md mx-auto">
+                        <div className="w-20 h-20 rounded-full bg-slate-50 border-2 border-dashed border-slate-200 flex items-center justify-center mb-6">
+                            <svg className="w-10 h-10 text-slate-300" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                            </svg>
+                        </div>
+                        <h3 className="text-xl font-extrabold text-slate-800 mb-2">No Channel Found</h3>
+                        <p className="text-slate-500 text-sm mb-6 leading-relaxed">
+                            To promote your channel, please first <span className="font-bold text-slate-700">promote a video</span>. This will automatically add your channel to the selector.
                         </p>
-                        {!channelId && (
-                            <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2 mt-3 inline-block">
-                                💡 Tip: paste a video link from the same channel on the previous step to unlock
-                                channel-wide recommendations.
-                            </p>
-                        )}
+                        <button
+                            onClick={() => router.push("/campaign")}
+                            className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl px-8 py-3 flex items-center gap-2 font-bold transition-all text-[14px] shadow-lg shadow-slate-200"
+                        >
+                            Promote a Video First <ArrowRight className="w-4 h-4" />
+                        </button>
                     </div>
-
-                    <div className="flex flex-wrap items-center gap-3">
-                        {[
-                            { label: "Recent videos", value: "recent" },
-                            { label: "All Videos", value: "all" },
-                        ].map((option) => (
-                            <button
-                                key={option.value}
-                                type="button"
-                                onClick={() => setTab(option.value as typeof tab)}
-                                className={`px-5 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all duration-300 ${tab === option.value
-                                    ? "bg-red-600 text-white border-red-600 shadow-lg"
-                                    : "border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50"
+                ) : loadingInitialChannel ? (
+                    <div className="flex flex-col items-center justify-center py-20">
+                        <Loader2 className="w-8 h-8 text-slate-400 animate-spin mb-3" />
+                        <p className="text-slate-400 text-sm font-medium">Loading your channels...</p>
+                    </div>
+                ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    {/* Left Column: Video Selection */}
+                    <div className="lg:col-span-8 space-y-6">
+                        <div className="flex flex-wrap items-center gap-4">
+                            {[
+                                { label: "Latest Upload", value: "recent" },
+                                { label: "All Videos", value: "all" }
+                            ].map(opt => (
+                                <button
+                                    key={opt.value}
+                                    onClick={() => setTab(opt.value as any)}
+                                    className={`px-5 py-2 rounded-lg text-xs font-bold transition-all ${
+                                        tab === opt.value 
+                                        ? "bg-slate-900 text-white shadow-sm" 
+                                        : "bg-slate-50 text-slate-600 hover:bg-slate-100"
                                     }`}
-                            >
-                                {option.label}
-                            </button>
-                        ))}
-                        <span className="text-xs font-semibold text-amber-700 bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 px-4 py-2 rounded-xl shadow-sm">
-                            Max 5 videos
-                        </span>
-                        {filteredVideos.length > 0 && (
-                            <div className="flex gap-2 ml-auto">
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    className="text-xs rounded-xl border-red-300 text-red-600 hover:bg-red-50"
-                                    onClick={() => {
-                                        const availableIds = filteredVideos
-                                            .slice(0, 5)
-                                            .map((v) => v.videoId);
-                                        setSelectedIds(availableIds);
-                                    }}
-                                    disabled={selectedIds.length >= 5}
                                 >
-                                    Select All
-                                </Button>
-                                {selectedIds.length > 0 && (
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        size="sm"
-                                        className="text-xs rounded-xl border-slate-300 text-slate-600 hover:bg-slate-50"
-                                        onClick={() => setSelectedIds([])}
+                                    {opt.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        {tab === 'all' && (
+                            <div className="relative">
+                                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                <Input 
+                                    placeholder="Search specific video from this channel..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="pl-10 pr-10 py-5 bg-slate-50 border-slate-100 rounded-xl focus-visible:ring-purple-500/20 focus-visible:border-purple-500 transition-all text-sm"
+                                />
+                                {searchQuery && (
+                                    <button 
+                                        onClick={() => setSearchQuery("")}
+                                        className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-200 rounded-full transition-colors"
                                     >
-                                        Deselect All
-                                    </Button>
+                                        <X className="w-3 h-3 text-slate-500" />
+                                    </button>
                                 )}
                             </div>
                         )}
-                    </div>
 
-                    {channelError && (
-                        <div className="mt-4 p-3 rounded-2xl bg-red-50 border border-red-100 text-sm text-red-600">
-                            {channelError}
+                        <div className="text-[14px] font-bold text-purple-600">
+                            {selectedIds.length} Videos Selected
                         </div>
-                    )}
 
-                    {tab === "all" && (
-                        <div>
-                            <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 bg-slate-50">
-                                <Search className="text-slate-500" />
-                                <Input
-                                    placeholder="Search using your YouTube video title"
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                    className="border-0 shadow-none focus-visible:ring-0 bg-transparent"
-                                />
-                                <Button
-                                    type="button"
-                                    variant="ghost"
-                                    className="text-slate-600"
-                                    onClick={() => setSearch("")}
-                                >
-                                    Clear
-                                </Button>
-                            </div>
-                            {searchError && (
-                                <div className="mt-3 p-3 rounded-xl bg-red-50 border border-red-100 text-sm text-red-600">
-                                    {searchError}
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    <div className="space-y-4">
-                        {loadingChannel && (
-                            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-sm">
-                                {searchLoading ? "Searching..." : "Loading channel videos..."}
-                            </div>
-                        )}
-                        {filteredVideos.map((video) => {
-                            const isSelected = selectedIds.includes(video.videoId);
-                            return (
-                                <div
-                                    key={video.videoId}
-                                    className={`flex flex-col md:flex-row items-center gap-4 border rounded-xl p-4 ${isSelected ? "bg-red-50 border-red-200" : "bg-white border-slate-200"
-                                        }`}
-                                >
-                                    <div className="flex items-center gap-4 flex-1">
-                                        <img
-                                            src={video.thumbnail}
-                                            alt={video.title}
-                                            className="w-32 h-20 rounded-xl object-cover"
-                                        />
-                                        <div>
-                                            <p className="text-sm font-semibold text-slate-900">
-                                                {video.title}
-                                            </p>
-                                            <p className="text-xs text-slate-500 mt-1">{video.author}</p>
-                                        </div>
-                                    </div>
-                                    <button
-                                        type="button"
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {loadingChannel ? (
+                                Array(4).fill(0).map((_, i) => (
+                                    <div key={i} className="h-[120px] bg-slate-50 rounded-2xl animate-pulse border border-slate-100" />
+                                ))
+                            ) : channelVideos.map(video => {
+                                const selected = selectedIds.includes(video.videoId);
+                                return (
+                                    <div
+                                        key={video.videoId}
                                         onClick={() => toggleVideo(video.videoId)}
-                                        className={`w-10 h-10 rounded-full flex items-center justify-center border ${isSelected
-                                            ? "bg-red-600 text-white border-red-600"
-                                            : "border-slate-300 text-slate-400"
-                                            }`}
+                                        className={`relative group cursor-pointer border-2 rounded-xl p-2.5 flex gap-3 transition-all duration-300 ${
+                                            selected ? "border-purple-500 bg-white shadow-md" : "border-slate-100 bg-white hover:border-slate-200"
+                                        }`}
                                     >
-                                        {isSelected ? "✓" : ""}
-                                    </button>
-                                </div>
-                            );
-                        })}
+                                        <div className="relative w-32 h-16 flex-shrink-0 rounded-lg overflow-hidden">
+                                            <img src={video.thumbnail} className="w-full h-full object-cover" alt="" />
+                                            <div className="absolute bottom-1 right-1 bg-black/80 text-[9px] text-white px-1 rounded font-bold">
+                                                {parseISO8601Duration(video.duration)}
+                                            </div>
+                                        </div>
+                                        <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                                            <div>
+                                                <h4 className="text-[12px] font-bold text-slate-800 line-clamp-2 leading-tight">
+                                                    {video.title}
+                                                </h4>
+                                                <p className="text-[10px] text-slate-500 mt-1">
+                                                    {formatNumber(video.viewCount)} Views • {formatDate(video.publishedAt)}
+                                                </p>
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-2.5 text-slate-400">
+                                                    <span className="flex items-center gap-1 text-[10px]">
+                                                        <ThumbsUp className="w-2.5 h-2.5" /> {formatNumber(video.likeCount)}
+                                                    </span>
+                                                    <span className="flex items-center gap-1 text-[10px]">
+                                                        <MessageSquare className="w-2.5 h-2.5" /> {formatNumber(video.commentCount)}
+                                                    </span>
+                                                </div>
+                                                <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        {selected && (
+                                            <div className="absolute bottom-2 right-2 flex items-center justify-center w-5 h-5 bg-purple-500 rounded-[4px]">
+                                                <Check className="w-3.5 h-3.5 text-white stroke-[3px]" />
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-slate-200">
-                        <div className="text-sm text-slate-500">
-                            {selectedIds.length} / 5 videos selected
-                        </div>
-                        <div className="flex gap-3">
-                            <Button
-                                variant="outline"
-                                className="rounded-xl border-slate-300 text-slate-600 px-6"
-                                onClick={() => router.push("/campaign")}
-                            >
-                                Back
-                            </Button>
-                            <Button
-                                className="rounded-xl bg-red-600 hover:bg-red-700 px-6"
-                                disabled={!selectedIds.length}
+                    {/* Right Column: CTA Sidebar */}
+                    <div className="lg:col-span-4 space-y-6 sticky top-24">
+                        <div className="bg-white rounded-[24px] p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
+                            {/* Channel Header */}
+                            <div className="flex items-center gap-2.5 self-start mb-6 text-left border-b border-slate-50 pb-4 w-full">
+                                <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-slate-50 border border-slate-100">
+                                    {channelAvatar ? (
+                                        <img src={channelAvatar} className="w-full h-full object-cover" alt="" />
+                                    ) : (
+                                        <div className="w-full h-full bg-slate-50 animate-pulse" />
+                                    )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-1">
+                                        <h3 className="font-extrabold text-slate-800 truncate text-[14px]">
+                                            {channelName || (loadingChannel ? "Updating..." : "Channel Name")}
+                                        </h3>
+                                        <svg className="w-3.5 h-3.5 text-red-600 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                                        </svg>
+                                    </div>
+                                    <p className="text-[10px] font-bold text-slate-400 leading-none mt-0.5">
+                                        {formatNumber(subscriberCount)} Subscribers
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="my-2 relative">
+                                {isScanning ? (
+                                    <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center relative overflow-hidden">
+                                        <div className="absolute inset-0 border-2 border-dashed border-purple-200 rounded-full animate-[spin_4s_linear_infinite]" />
+                                        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+                                        <div className="absolute inset-0 bg-purple-500/5 animate-pulse" />
+                                    </div>
+                                ) : (
+                                    <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center animate-in zoom-in duration-500">
+                                        <CheckCircle2 className="w-10 h-10 text-emerald-500 stroke-[1.5px]" />
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="mb-6 mt-4">
+                                {isScanning ? (
+                                    <>
+                                        <p className="text-slate-600 font-extrabold text-[15px] animate-pulse">Scanning channel...</p>
+                                        <p className="text-slate-400 text-[11px] font-medium italic">Finding best videos for you</p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <p className="text-slate-800 font-extrabold text-[15px] animate-in slide-in-from-bottom-2 duration-500">Ready to boost!</p>
+                                        <p className="text-slate-400 text-[11px] font-medium">Step 2 of 3 completed</p>
+                                    </>
+                                )}
+                            </div>
+
+                            {/* Pro Tip Bubble */}
+                            <div className="bg-slate-50/80 rounded-2xl p-4 flex gap-3 text-left mb-6 border border-slate-100/50">
+                                <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 bg-white border border-slate-100 shadow-sm">
+                                    <Image src="/avatars/girl.png" width={32} height={32} alt="Tip" />
+                                </div>
+                                <p className="text-[11px] text-slate-600 leading-relaxed">
+                                    <span className="font-extrabold text-slate-800">Pro Tip:</span> Promoting <span className="font-extrabold text-purple-600 text-sm">multiple videos</span> helps the algorithm learn faster and delivers <span className="text-slate-900 font-bold underline decoration-emerald-400">stronger results</span>.
+                                </p>
+                            </div>
+
+                            <button
                                 onClick={handleNext}
+                                disabled={selectedIds.length === 0}
+                                className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-xl py-3.5 flex items-center justify-center gap-2 font-bold transition-all disabled:opacity-50 text-[13px] shadow-lg shadow-slate-200"
                             >
-                                Continue
-                            </Button>
+                                Continue to Budget <ArrowRight className="w-4 h-4" />
+                            </button>
                         </div>
+                        
+
                     </div>
-                </CampaignCard>
+                </div>
+                )}
             </div>
         </CampaignLayout>
     );

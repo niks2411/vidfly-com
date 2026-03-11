@@ -1,8 +1,12 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Play, Users, Grid3x3, Package, ShoppingCart, Gift, ChevronRight } from "lucide-react";
+import { 
+    Play, Users, Package, Eye, LayoutGrid, 
+    Gift, Settings, HelpCircle, LogOut, MessageCircle, Headphones
+} from "lucide-react";
 
 export type CampaignSidebarKey =
   | "promote"
@@ -28,30 +32,25 @@ const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, i
     {
       title: "PROMOTION",
       items: [
-        { label: "Promote Video / Short", path: "/campaign", key: "promote", icon: Play },
+        { label: "Promote Video", path: "/campaign", key: "promote", icon: Play },
         { label: "Promote Channel", path: "/campaign/channel", key: "channel", icon: Users },
-        { label: "My Campaigns", path: "/campaign/my-campaigns", key: "campaigns", icon: Grid3x3 },
+        { label: "My Campaigns", path: "/campaign/my-campaigns", key: "campaigns", icon: LayoutGrid },
         { label: "Buy Packages", path: "/campaign/packages", key: "packages", icon: Package },
-        { label: "Buy Bulk Views", path: "/campaign/bulk-views", key: "bulk", icon: ShoppingCart },
-        { label: "Free Views", path: "/campaign/free-views", key: "free", icon: Gift },
+        { label: "Buy Bulk Views", path: "/campaign/bulk-views", key: "bulk", icon: Eye },
       ],
     },
     {
-      title: "STRATEGY PATH",
-      description: "Jump between critical campaign steps.",
+      title: "ACCOUNT",
       items: [
-        { label: "Enter Link", path: "/campaign", icon: ChevronRight },
-        { label: "Select Videos", path: "/campaign", icon: ChevronRight },
-        { label: "Budget & Targeting", path: "/campaign/budget", key: "budget", icon: ChevronRight },
-        { label: "Payment", path: "/campaign/payment", icon: ChevronRight },
-      ],
-    },
+        { label: "Settings", path: "/campaign/settings", key: "settings", icon: Settings },
+        { label: "Help & Support", path: "/campaign/support", key: "support", icon: HelpCircle },
+      ]
+    }
   ];
 
   const handleNavigate = (path?: string) => {
     if (!path) return;
     router.push(path);
-    // Call the callback to close mobile menu if provided
     if (onNavigateCallback) {
       onNavigateCallback();
     }
@@ -65,60 +64,55 @@ const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, i
 
   return (
     <aside className={cn(
-      "lg:w-64 bg-white h-full lg:sticky lg:top-[108px] lg:h-[calc(100vh-108px)] lg:overflow-y-auto custom-scrollbar",
-      isMobile ? "w-full" : "p-6"
+      "flex flex-col z-10 font-founders w-full",
+      !isMobile && "h-full pt-0 pb-4"
     )}>
-      {sections.map((section, sectionIndex) => (
-        <div
-          key={section.title}
-          className={cn(
-            sectionIndex === 0 ? "mb-6" : "mb-8",
-            section.title === "STRATEGY PATH" && "hidden lg:block"
-          )}
-        >
-          <div className="mb-4">
-            <p className="text-xs text-slate-500 uppercase tracking-wide font-semibold">
-              {section.title}
-            </p>
-            {section.description && (
-              <p className="text-xs text-slate-400 mt-1">{section.description}</p>
-            )}
+      <div className="flex-1 mt-0">
+        {sections.map((section, sectionIndex) => (
+          <div
+            key={typeof section.title === 'string' ? section.title : sectionIndex}
+            className="mb-8"
+          >
+            <div className="mb-5 px-6">
+              <h3 className="text-[11px] text-[#8fa3b7] font-bold uppercase tracking-[0.08em]">
+                {section.title}
+              </h3>
+            </div>
+            <ul className="space-y-1">
+              {section.items.map((item) => {
+                const isItemSelected = checkIsActive(item);
+                const Icon = item.icon;
+                return (
+                  <li key={item.label}>
+                    <button
+                      type="button"
+                      onClick={() => handleNavigate(item.path)}
+                      disabled={!item.path}
+                      className={cn(
+                        "w-[calc(100%-16px)] ml-3 text-left px-4 py-3 rounded-[14px] text-[14px] font-medium transition-all flex items-center gap-3.5 group relative mb-1",
+                        item.path
+                          ? isItemSelected
+                            ? "text-[#c22143] font-bold bg-[#fae6e6] shadow-[inset_4.5px_0_0_0_#c22143]"
+                            : "text-[#64748b] hover:text-[#0f172a] hover:bg-slate-50/80"
+                          : "text-slate-300 cursor-not-allowed",
+                      )}
+                    >
+                      <Icon className={cn(
+                        "h-[19px] w-[19px] flex-shrink-0 transition-all duration-200",
+                        isItemSelected ? "text-[#c22143]" : "text-[#94a3b8] group-hover:text-[#64748b]"
+                      )} strokeWidth={isItemSelected ? 2.5 : 2} />
+                      <span className="flex-1 tracking-tight">{item.label}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-          <ul className="space-y-1">
-            {section.items.map((item) => {
-              const isItemSelected = checkIsActive(item);
-              const Icon = item.icon;
-              return (
-                <li key={item.label}>
-                  <button
-                    type="button"
-                    onClick={() => handleNavigate(item.path)}
-                    disabled={!item.path}
-                    className={cn(
-                      "w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors flex items-center gap-3",
-                      item.path
-                        ? isItemSelected
-                          ? "bg-red-100 text-red-700 border border-red-200"
-                          : "hover:bg-slate-50 text-slate-600"
-                        : "text-slate-300 cursor-not-allowed",
-                    )}
-                  >
-                    <Icon className={cn(
-                      "h-5 w-5 flex-shrink-0",
-                      isItemSelected ? "text-red-700" : "text-slate-500"
-                    )} />
-                    <span className="flex-1">{item.label}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-          {sectionIndex === 0 && (
-            <div className="border-t border-slate-200 mt-6 pt-6"></div>
-          )}
-        </div>
-      ))}
+        ))}
+      </div>
     </aside>
+
+
   );
 };
 

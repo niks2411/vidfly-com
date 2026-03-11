@@ -87,13 +87,13 @@ export default function PaymentCheckout() {
 
     if (loading) return <CampaignLayout><CampaignCard className="flex flex-col items-center py-12"><Loader2 className="animate-spin h-8 w-8 text-red-600 mb-2" /><p>Loading order...</p></CampaignCard></CampaignLayout>;
 
-    if (error && !order) return <CampaignLayout><CampaignCard className="text-center py-12"><AlertCircle className="h-12 w-12 text-red-600 mx-auto mb-4" /><h2 className="text-xl font-bold mb-4">{error}</h2><Button onClick={() => router.push("/campaign/my-campaigns")}>My Campaigns</Button></CampaignCard></CampaignLayout>;
+    if (error && !order) return <CampaignLayout hideSidebar={true}><CampaignCard className="text-center py-12"><AlertCircle className="h-12 w-12 text-red-600 mx-auto mb-4" /><h2 className="text-xl font-bold mb-4">{error}</h2><Button onClick={() => router.push("/campaign/my-campaigns")}>My Campaigns</Button></CampaignCard></CampaignLayout>;
 
     const amount = order?.paymentId?.amount || order?.plan?.price || order?.packageInfo?.price || 0;
     const currency = order?.paymentId?.currency || order?.plan?.currency || order?.packageInfo?.currency || "INR";
 
     return (
-        <CampaignLayout activeSidebar="payment">
+        <CampaignLayout activeSidebar="payment" hideSidebar={true}>
             <Script
                 src="https://sdk.cashfree.com/js/v3/cashfree.js"
                 onLoad={() => setSdkLoaded(true)}

@@ -13,7 +13,8 @@ import {
   LogOut,
   ChevronDown,
   Settings,
-  LayoutDashboard
+  LayoutDashboard,
+  Gift
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -64,6 +65,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const isCampaignPage = pathname?.startsWith('/campaign') || false;
   const { user, logout } = useAuth();
   const [avatar, setAvatar] = useState<string>("boy");
 
@@ -84,10 +86,7 @@ const Navbar = () => {
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
-  if (pathname === "/get-started") return null;
-
-  // Check if we're on a campaign page
-  const isCampaignPage = pathname?.startsWith('/campaign');
+  if (pathname === "/get-started" || pathname?.startsWith('/campaign') || pathname?.startsWith('/payment') || pathname?.startsWith('/admin')) return null;
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -137,9 +136,7 @@ const Navbar = () => {
               <button onClick={() => handleNavClick("/features")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap">
                 Features
               </button>
-              <button onClick={() => handleNavClick("/success-stories")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap">
-                Success Stories
-              </button>
+
               <button onClick={() => handleNavClick("/faq")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap">
                 FAQ
               </button>
@@ -163,7 +160,7 @@ const Navbar = () => {
                         </Avatar>
                         <div className="flex flex-col items-start">
                           <span className="text-[14px] font-bold text-[#0E172B] leading-none">
-                            {user.name || "My Account"}
+                            {user.email ? user.email.split('@')[0] : (user.name || "My Account")}
                           </span>
                           <span className="text-[11px] text-gray-500 flex items-center gap-1 mt-0.5">
                             Account <ChevronDown className="h-3 w-3" />
@@ -188,6 +185,13 @@ const Navbar = () => {
                       >
                         <Settings className="h-4 w-4 text-gray-500" />
                         <span className="font-semibold text-[14px]">Settings</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleNavClick("/campaign/free-views")}
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer hover:bg-gray-50 focus:bg-gray-50 transition-colors"
+                      >
+                        <Gift className="h-4 w-4 text-gray-500" />
+                        <span className="font-semibold text-[14px]">Free Views</span>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator className="my-2 bg-gray-50" />
                       <DropdownMenuItem
@@ -237,7 +241,7 @@ const Navbar = () => {
                   { label: "How Vidflyy Works", path: "/how-it-works" },
                   { label: "Pricing", path: "/pricing" },
                   { label: "Features", path: "/features" },
-                  { label: "Success Stories", path: "/success-stories" },
+
                   { label: "FAQ", path: "/faq" },
                   { label: "Contact Us", path: "/contact" },
                 ].map((link) => (
@@ -260,7 +264,7 @@ const Navbar = () => {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-bold text-[#0E172B]">{user.name || "My Account"}</p>
+                          <p className="font-bold text-[#0E172B]">{user.email ? user.email.split('@')[0] : (user.name || "My Account")}</p>
                           <p className="text-sm text-gray-500">{user.email}</p>
                         </div>
                       </div>

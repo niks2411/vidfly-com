@@ -15,6 +15,8 @@ import {
     RefreshCw,
     Inbox,
     ArrowLeft,
+    Play,
+    PlayCircle,
     X
 } from "lucide-react";
 
@@ -29,10 +31,12 @@ type Order = {
     plan?: { name?: string; price?: number; currency?: string; quantity?: number; type?: string };
     budget?: number;
     channel?: { name?: string; link?: string };
-    videos?: Array<{ videoId?: string; title?: string; link?: string; viewsRequested?: number; }>;
+    videos?: Array<{ videoId?: string; title?: string; link?: string; thumb?: string; thumbnail?: string; viewsRequested?: number; }>;
+    youtubeLink?: string;
     userId?: { name?: string; email?: string };
     paymentId?: { status?: string };
-    targeting?: { country?: string; goal?: string; duration?: string; autoTargeting?: boolean; gender?: string; ages?: string[]; interests?: string[]; };
+    targeting?: { country?: string; goal?: string; duration?: string; autoTargeting?: boolean; gender?: string; ages?: string[]; interests?: string[]; keywords?: string[]; };
+    isRead?: boolean;
 };
 
 const statusColors: Record<string, string> = {
@@ -152,9 +156,24 @@ export default function AdminPanel() {
         }
     };
 
+    const handleSelectOrder = async (order: Order) => {
+        setSelectedOrder(order);
+        if (!order.isRead && token) {
+            try {
+                await fetch(`${API_BASE_URL}/api/admin/orders/${order.orderId}/read`, {
+                    method: "PUT",
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setOrders(prev => prev.map(o => o._id === order._id ? { ...o, isRead: true } : o));
+            } catch (err) {
+                console.error("Failed to mark as read");
+            }
+        }
+    };
+
     if (!token) {
         return (
-            <div className="min-h-[80vh] flex items-center justify-center p-6 mt-16">
+            <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">
                 <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 space-y-6">
                     <h1 className="text-3xl font-black text-center text-slate-900 italic tracking-tighter">VIDFLY ADMIN</h1>
                     <form onSubmit={handleLogin} className="space-y-4">
@@ -169,8 +188,8 @@ export default function AdminPanel() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 pt-20 pb-12 px-6 mt-16">
-            <div className="max-w-[1400px] mx-auto bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col h-[85vh]">
+        <div className="min-h-screen bg-slate-50 py-12 px-6">
+            <div className="max-w-[1400px] mx-auto bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col">
                 <div className="border-b px-8 py-6 flex items-center justify-between bg-white sticky top-0 z-10">
                     <div className="flex items-center gap-4">
                         <h1 className="text-2xl font-black tracking-tight flex items-center gap-2">
@@ -192,18 +211,38 @@ export default function AdminPanel() {
                     </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto">
+                <div className="flex-1">
                     {!selectedOrder ? (
                         <div className="divide-y">
                             {filteredOrders.length === 0 ? (
                                 <div className="py-20 text-center text-slate-400 font-medium">No orders found</div>
                             ) : (
                                 filteredOrders.map(o => (
-                                    <div key={o._id} onClick={() => setSelectedOrder(o)} className="flex items-center px-8 py-4 cursor-pointer hover:bg-slate-50 transition-all border-l-4 border-transparent hover:border-red-600">
-                                        <div className="w-1/4 font-bold text-slate-900">{o.userId?.name || "Anonymous"} <span className="block text-[10px] font-normal text-slate-500">{o.userId?.email}</span></div>
-                                        <div className="flex-1 text-slate-600 text-sm truncate">{o.orderId} • <span className="font-bold">{o.plan?.name || "Custom"}</span> • {o.channel?.name}</div>
-                                        <div className={`text-[10px] font-black uppercase px-2 py-1 rounded-full ${statusColors[o.status]}`}>{o.status}</div>
-                                        <div className="w-24 text-right text-xs text-slate-400">{new Date(o.createdAt).toLocaleDateString()}</div>
+                                    <div 
+                                        key={o._id} 
+                                        onClick={() => handleSelectOrder(o)} 
+                                        className={`flex items-center px-8 py-4 cursor-pointer transition-all border-l-4 ${o.isRead ? 'bg-white border-transparent' : 'bg-slate-50/80 border-red-600'} hover:bg-slate-50 hover:border-red-600`}
+                                    >
+                                        <div className="w-1/4">
+                                            <div className="flex items-center gap-2">
+                                                {!o.isRead && <span className="w-2 h-2 bg-red-600 rounded-full animate-pulse flex-shrink-0" />}
+                                                <p className={`font-bold ${o.isRead ? 'text-slate-600' : 'text-slate-900'} truncate`}>{o.userId?.name || "Anonymous"}</p>
+                                            </div>
+                                            <span className="block text-[10px] font-normal text-slate-500">{o.userId?.email}</span>
+                                        </div>
+                                        <div className="flex-1 min-w-0 pr-4">
+                                            <div className={`text-sm truncate ${o.isRead ? 'text-slate-500' : 'text-slate-900 font-bold'}`}>
+                                                {o.orderId} • <span className="text-red-600">{o.plan?.name || "Custom"}</span>
+                                            </div>
+                                            <div className="text-[11px] text-slate-400 truncate flex items-center gap-1.5 mt-0.5">
+                                                <Play className="w-2.5 h-2.5" /> 
+                                                {o.videos && o.videos[0] ? (o.videos[0].link || (o.videos[0].videoId ? `https://www.youtube.com/watch?v=${o.videos[0].videoId}` : "No link")) : (o.youtubeLink || "No link")}
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                            <div className={`text-[10px] font-black uppercase px-2 py-1 rounded-full ${statusColors[o.status]}`}>{o.status}</div>
+                                            <div className="w-24 text-right text-xs text-slate-400 font-medium">{new Date(o.createdAt).toLocaleDateString()}</div>
+                                        </div>
                                     </div>
                                 ))
                             )}
@@ -215,39 +254,128 @@ export default function AdminPanel() {
                                 <h2 className="text-2xl font-black">{selectedOrder.orderId}</h2>
                             </div>
 
-                            <div className="grid lg:grid-cols-3 gap-8">
-                                <div className="lg:col-span-2 space-y-6">
-                                    <Section title="Client Details">
-                                        <p className="font-bold text-lg">{selectedOrder.userId?.name}</p>
-                                        <p className="text-slate-500 text-sm italic">{selectedOrder.userId?.email}</p>
-                                    </Section>
+                            <div className="grid lg:grid-cols-12 gap-5">
+                                <div className="lg:col-span-8 space-y-4">
+                                    <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div className="space-y-1">
+                                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Client</h3>
+                                            <p className="font-bold text-base leading-tight">{selectedOrder.userId?.name}</p>
+                                            <p className="text-slate-500 text-xs italic truncate">{selectedOrder.userId?.email}</p>
+                                        </div>
+                                        <div className="space-y-1 md:border-l md:border-slate-100 md:pl-6">
+                                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Campaign</h3>
+                                            <p className="font-bold text-sm">{selectedOrder.plan?.name}</p>
+                                            <div className="flex items-baseline gap-1">
+                                                <span className="text-[10px] text-slate-400 font-bold uppercase">Budget</span>
+                                                <p className="font-black text-lg text-red-600">₹{selectedOrder.budget}</p>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-1 md:border-l md:border-slate-100 md:pl-6 text-left">
+                                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Source</h3>
+                                            <p className="font-bold text-sm truncate">{selectedOrder.channel?.name || "ProfessorChess"}</p>
+                                            <a href={selectedOrder.channel?.link} target="_blank" className="text-blue-500 text-[10px] font-bold hover:underline">CHANNEL LINK</a>
+                                        </div>
+                                    </div>
 
-                                    <Section title="Campaign Details">
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div><p className="text-[10px] font-bold text-slate-400 uppercase">Plan</p><p className="font-bold">{selectedOrder.plan?.name}</p></div>
-                                            <div><p className="text-[10px] font-bold text-slate-400 uppercase">Budget</p><p className="font-black text-xl">₹{selectedOrder.budget}</p></div>
+                                    <Section title="Targeting & Preferences">
+                                        <div className="grid grid-cols-3 gap-y-3 gap-x-4">
+                                            <div>
+                                                <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Country</p>
+                                                <p className="text-sm font-bold">{selectedOrder.targeting?.country || "Any"}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Duration</p>
+                                                <p className="text-sm font-bold">{selectedOrder.targeting?.duration || "Default"}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Strategy</p>
+                                                <div className="flex items-center gap-1.5 mt-1">
+                                                    {selectedOrder.targeting?.autoTargeting !== false ? (
+                                                        <span className="flex items-center gap-1 text-[11px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                                                            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                                                            AI ASSISTANT
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-[11px] font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100 uppercase">Manual</span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            {selectedOrder.targeting?.autoTargeting === false && (
+                                                <>
+                                                    <div>
+                                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Gender</p>
+                                                        <p className="text-sm font-bold capitalize">{selectedOrder.targeting.gender || "All"}</p>
+                                                    </div>
+                                                    <div className="col-span-2">
+                                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Age Ranges</p>
+                                                        <div className="flex flex-wrap gap-1.5 mt-1">
+                                                            {(selectedOrder.targeting.ages || ["All Ages"]).map((age, i) => (
+                                                                <span key={i} className="text-[11px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-lg border border-slate-200">{age}</span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-span-2">
+                                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Interests</p>
+                                                        <div className="flex flex-wrap gap-1.5 mt-1">
+                                                            {(selectedOrder.targeting.interests || ["All Interests"]).map((interest, i) => (
+                                                                <span key={i} className="text-[11px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-lg border border-slate-200 capitalize">{interest}</span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                        <p className="text-[9px] font-bold text-slate-400 uppercase mb-1">Keywords & Phrases</p>
+                                                        <div className="flex flex-wrap gap-2 p-2 bg-slate-50 rounded-xl border border-slate-100 min-h-[36px]">
+                                                            {(selectedOrder.targeting.keywords && selectedOrder.targeting.keywords.length > 0) ? (
+                                                                selectedOrder.targeting.keywords.map((kw, i) => (
+                                                                    <span key={i} className="text-[12px] font-bold bg-white text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm">{kw}</span>
+                                                                ))
+                                                            ) : (
+                                                                <span className="text-[11px] font-bold text-slate-400 italic">No keywords specified</span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
                                     </Section>
 
-                                    <Section title="Source">
-                                        <p className="font-bold">{selectedOrder.channel?.name}</p>
-                                        <a href={selectedOrder.channel?.link} target="_blank" className="text-red-600 text-sm truncate block">{selectedOrder.channel?.link}</a>
-                                    </Section>
-
-                                    <Section title="Videos">
-                                        <div className="space-y-4">
-                                            {(selectedOrder.videos || []).map((v, i) => (
-                                                <div key={i} className="p-4 bg-slate-50 rounded-2xl border">
-                                                    <p className="font-bold">{v.title}</p>
-                                                    <a href={v.link} target="_blank" className="text-red-600 text-xs">{v.link}</a>
+                                    <Section title="Videos & Content">
+                                        <div className="space-y-2">
+                                            {selectedOrder.videos && selectedOrder.videos.length > 0 ? (
+                                                selectedOrder.videos.map((v, i) => (
+                                                    <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 group transition-all hover:bg-white hover:shadow-sm">
+                                                        <div className="flex-1 min-w-0">
+                                                            <a href={v.link || (v.videoId ? `https://www.youtube.com/watch?v=${v.videoId}` : "#")} target="_blank" className="text-red-600 font-bold hover:underline flex items-center gap-2 break-all text-sm">
+                                                                <PlayCircle className="w-4 h-4 flex-shrink-0" /> {v.link || (v.videoId ? `https://www.youtube.com/watch?v=${v.videoId}` : "No link")}
+                                                            </a>
+                                                        </div>
+                                                        {v.viewsRequested && (
+                                                            <div className="flex-shrink-0 ml-4">
+                                                                <span className="text-[10px] font-black bg-slate-900 text-white px-2.5 py-1 rounded-full uppercase tracking-tighter">
+                                                                    {v.viewsRequested.toLocaleString()} VIEWS
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))
+                                            ) : selectedOrder.youtubeLink ? (
+                                                <div className="p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-300">
+                                                    <p className="text-[10px] font-black text-slate-400 uppercase mb-2">Legacy Link</p>
+                                                    <a href={selectedOrder.youtubeLink} target="_blank" className="text-red-600 font-bold flex items-center gap-2 break-all hover:underline">
+                                                        <PlayCircle className="w-4 h-4" /> {selectedOrder.youtubeLink}
+                                                    </a>
                                                 </div>
-                                            ))}
+                                            ) : (
+                                                <div className="p-8 text-center bg-slate-50 rounded-2xl border border-dashed text-slate-400 italic text-sm">
+                                                    No videos linked to this order
+                                                </div>
+                                            )}
                                         </div>
                                     </Section>
                                 </div>
 
-                                <div className="space-y-6">
-                                    <div className="bg-slate-900 text-white rounded-3xl p-8 space-y-6 shadow-2xl">
+                                <div className="lg:col-span-4 space-y-4">
+                                    <div className="bg-slate-900 text-white rounded-2xl p-6 space-y-5 shadow-xl h-fit">
                                         <h3 className="font-black italic text-red-500">ADMIN ACTIONS</h3>
                                         <div className="space-y-2">
                                             <p className="text-[10px] font-bold text-slate-400 uppercase">Change Status</p>
@@ -293,8 +421,8 @@ export default function AdminPanel() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
     return (
-        <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-3">
-            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{title}</h3>
+        <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm space-y-2.5">
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">{title}</h3>
             {children}
         </div>
     );

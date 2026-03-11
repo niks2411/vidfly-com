@@ -9,7 +9,10 @@ import {
     Search,
     RefreshCw,
     Inbox,
-    ArrowLeft
+    ArrowLeft,
+    Play,
+    PlayCircle,
+    ExternalLink
 } from "lucide-react";
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
@@ -22,8 +25,10 @@ type Order = {
     plan?: { name?: string; price?: number; currency?: string; quantity?: number; type?: string };
     budget?: number;
     channel?: { name?: string; link?: string };
-    videos?: Array<{ videoId?: string; title?: string; link?: string; viewsRequested?: number; }>;
+    videos?: Array<{ videoId?: string; title?: string; link?: string; thumb?: string; thumbnail?: string; viewsRequested?: number; }>;
+    youtubeLink?: string;
     userId?: { name?: string; email?: string };
+    targeting?: { country?: string; goal?: string; duration?: string; autoTargeting?: boolean; gender?: string; ages?: string[]; interests?: string[]; keywords?: string[]; };
 };
 
 export default function AdminCompleted() {
@@ -72,8 +77,8 @@ export default function AdminCompleted() {
     if (!token) return null;
 
     return (
-        <div className="min-h-screen bg-slate-50 pt-20 pb-12 px-6 mt-16">
-            <div className="max-w-[1400px] mx-auto bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col h-[85vh]">
+        <div className="min-h-screen bg-slate-50 py-12 px-6">
+            <div className="max-w-[1400px] mx-auto bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col">
                 <div className="border-b px-8 py-6 flex items-center justify-between bg-white sticky top-0 z-10">
                     <div className="flex items-center gap-4">
                         <Button variant="ghost" size="icon" onClick={() => router.push("/admin")}><ArrowLeft className="h-5 w-5" /></Button>
@@ -93,17 +98,35 @@ export default function AdminCompleted() {
                     <Button variant="ghost" size="icon" onClick={fetchOrders} disabled={loading}><RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} /></Button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto">
+                <div className="flex-1">
                     {!selectedOrder ? (
                         <div className="divide-y text-sm">
                             {filteredOrders.length === 0 ? (
                                 <div className="py-20 text-center text-slate-400 font-medium">No completed orders found</div>
                             ) : (
                                 filteredOrders.map(o => (
-                                    <div key={o._id} onClick={() => setSelectedOrder(o)} className="flex items-center px-8 py-4 cursor-pointer hover:bg-green-50/30 transition-all border-l-4 border-transparent hover:border-green-600">
-                                        <div className="w-1/4 font-bold text-slate-900">{o.userId?.name} <span className="block text-[10px] font-normal text-slate-500">{o.userId?.email}</span></div>
-                                        <div className="flex-1 text-slate-600 truncate">{o.orderId} • <span className="font-bold">{o.plan?.name}</span> • {o.channel?.name}</div>
-                                        <div className="w-24 text-right text-xs text-slate-400 font-bold">{new Date(o.createdAt).toLocaleDateString()}</div>
+                                    <div 
+                                        key={o._id} 
+                                        onClick={() => setSelectedOrder(o)} 
+                                        className="flex items-center px-8 py-4 cursor-pointer hover:bg-green-50/30 transition-all border-l-4 border-transparent hover:border-green-600"
+                                    >
+                                        <div className="w-1/4">
+                                            <p className="font-bold text-slate-900 truncate pr-4">{o.userId?.name || "Anonymous"}</p>
+                                            <span className="block text-[10px] font-normal text-slate-500">{o.userId?.email}</span>
+                                        </div>
+                                        <div className="flex-1 min-w-0 pr-4">
+                                            <div className="text-sm truncate text-slate-500">
+                                                {o.orderId} • <span className="text-green-600">{o.plan?.name || "Custom"}</span>
+                                            </div>
+                                            <div className="text-[11px] text-slate-400 truncate flex items-center gap-1.5 mt-0.5">
+                                                <Play className="w-2.5 h-2.5" /> 
+                                                {o.videos && o.videos[0] ? (o.videos[0].link || (o.videos[0].videoId ? `https://www.youtube.com/watch?v=${o.videos[0].videoId}` : "No link")) : (o.youtubeLink || "No link")}
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                            <div className="text-[10px] font-black uppercase px-2 py-1 rounded-full bg-green-100 text-green-800">Completed</div>
+                                            <div className="w-24 text-right text-xs text-slate-400 font-medium">{new Date(o.createdAt).toLocaleDateString()}</div>
+                                        </div>
                                     </div>
                                 ))
                             )}
@@ -118,30 +141,123 @@ export default function AdminCompleted() {
                                 </div>
                             </div>
 
-                            <div className="grid lg:grid-cols-3 gap-8">
-                                <div className="lg:col-span-2 space-y-6">
-                                    <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-3">
-                                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Client Details</h3>
-                                        <p className="font-bold text-lg">{selectedOrder.userId?.name}</p>
-                                        <p className="text-slate-500 text-sm italic">{selectedOrder.userId?.email}</p>
-                                    </div>
-
-                                    <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-3">
-                                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Campaign Metrics</h3>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div><p className="text-[10px] font-bold text-slate-400 uppercase">Final Plan</p><p className="font-bold">{selectedOrder.plan?.name}</p></div>
-                                            <div><p className="text-[10px] font-bold text-slate-400 uppercase">Revenue</p><p className="font-black text-xl text-green-600">₹{selectedOrder.budget}</p></div>
+                            <div className="grid lg:grid-cols-3 gap-4">
+                                <div className="lg:col-span-2 space-y-4">
+                                    <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div className="space-y-1">
+                                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Client</h3>
+                                            <p className="font-bold text-base leading-tight">{selectedOrder.userId?.name}</p>
+                                            <p className="text-slate-500 text-xs italic truncate">{selectedOrder.userId?.email}</p>
+                                        </div>
+                                        <div className="space-y-1 md:border-l md:border-slate-100 md:pl-6">
+                                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Campaign</h3>
+                                            <p className="font-bold text-sm">{selectedOrder.plan?.name}</p>
+                                            <p className="font-black text-lg text-green-600">₹{selectedOrder.budget}</p>
+                                        </div>
+                                        <div className="space-y-1 md:border-l md:border-slate-100 md:pl-6 text-left">
+                                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Source</h3>
+                                            <p className="font-bold text-sm truncate">{selectedOrder.channel?.name || "ProfessorChess"}</p>
+                                            <a href={selectedOrder.channel?.link} target="_blank" className="text-red-500 text-[10px] font-bold hover:underline">CHANNEL LINK</a>
                                         </div>
                                     </div>
 
-                                    <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-3">
-                                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Target</h3>
-                                        <p className="font-bold">{selectedOrder.channel?.name}</p>
-                                        <a href={selectedOrder.channel?.link} target="_blank" className="text-red-600 text-sm truncate block">{selectedOrder.channel?.link}</a>
+                                    <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm space-y-4">
+                                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Targeting & Preferences</h3>
+                                        <div className="grid grid-cols-3 gap-y-4 gap-x-4">
+                                            <div>
+                                                <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Country</p>
+                                                <p className="text-sm font-bold">{selectedOrder.targeting?.country || "Any"}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Duration</p>
+                                                <p className="text-sm font-bold">{selectedOrder.targeting?.duration || "Default"}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Strategy</p>
+                                                <div className="flex items-center gap-1.5 mt-1">
+                                                    {selectedOrder.targeting?.autoTargeting !== false ? (
+                                                        <span className="text-[11px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">AI ASSISTANT</span>
+                                                    ) : (
+                                                        <span className="text-[11px] font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100 uppercase">Manual</span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            {selectedOrder.targeting?.autoTargeting === false && (
+                                                <>
+                                                    <div>
+                                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Gender</p>
+                                                        <p className="text-sm font-bold capitalize">{selectedOrder.targeting.gender || "All"}</p>
+                                                    </div>
+                                                    <div className="col-span-2">
+                                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Age Ranges</p>
+                                                        <div className="flex flex-wrap gap-1.5 mt-1">
+                                                            {(selectedOrder.targeting.ages || ["All Ages"]).map((age, i) => (
+                                                                <span key={i} className="text-[11px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-lg border border-slate-200">{age}</span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-span-2">
+                                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Interests</p>
+                                                        <div className="flex flex-wrap gap-1.5 mt-1">
+                                                            {(selectedOrder.targeting.interests || ["All Interests"]).map((interest, i) => (
+                                                                <span key={i} className="text-[11px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-lg border border-slate-200 capitalize">{interest}</span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-span-2">
+                                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-2">Keywords & Phrases</p>
+                                                        <div className="flex flex-wrap gap-2 p-3 bg-slate-50 rounded-2xl border border-slate-100 min-h-[44px]">
+                                                            {(selectedOrder.targeting.keywords && selectedOrder.targeting.keywords.length > 0) ? (
+                                                                selectedOrder.targeting.keywords.map((kw, i) => (
+                                                                    <span key={i} className="text-[12px] font-bold bg-white text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm">{kw}</span>
+                                                                ))
+                                                            ) : (
+                                                                <span className="text-[11px] font-bold text-slate-400 italic">No keywords specified</span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm space-y-3">
+                                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Videos & Content</h3>
+                                        <div className="space-y-2">
+                                            {selectedOrder.videos && selectedOrder.videos.length > 0 ? (
+                                                selectedOrder.videos.map((v, i) => (
+                                                    <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 group transition-all hover:bg-white hover:shadow-sm">
+                                                        <div className="flex-1 min-w-0">
+                                                            <a href={v.link || (v.videoId ? `https://www.youtube.com/watch?v=${v.videoId}` : "#")} target="_blank" className="text-red-600 font-bold hover:underline flex items-center gap-2 break-all text-sm">
+                                                                <PlayCircle className="w-4 h-4 flex-shrink-0" /> {v.link || (v.videoId ? `https://www.youtube.com/watch?v=${v.videoId}` : "No link")}
+                                                            </a>
+                                                        </div>
+                                                        {v.viewsRequested && (
+                                                            <div className="flex-shrink-0 ml-4">
+                                                                <span className="text-[10px] font-black bg-slate-900 text-white px-2.5 py-1 rounded-full uppercase tracking-tighter">
+                                                                    {v.viewsRequested.toLocaleString()} VIEWS
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))
+                                            ) : selectedOrder.youtubeLink ? (
+                                                <div className="p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-300">
+                                                    <p className="text-[10px] font-black text-slate-400 uppercase mb-2">Legacy Link</p>
+                                                    <a href={selectedOrder.youtubeLink} target="_blank" className="text-red-600 font-bold flex items-center gap-2 break-all hover:underline">
+                                                        <PlayCircle className="w-4 h-4" /> {selectedOrder.youtubeLink}
+                                                    </a>
+                                                </div>
+                                            ) : (
+                                                <div className="p-8 text-center bg-slate-50 rounded-2xl border border-dashed text-slate-400 italic text-sm">
+                                                    No videos linked to this order
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="bg-slate-900 text-white rounded-3xl p-8 space-y-6 shadow-2xl h-fit">
+                                <div className="bg-slate-900 text-white rounded-2xl p-6 space-y-4 shadow-xl h-fit">
                                     <h3 className="font-black italic text-green-500">SUMMARY</h3>
                                     <div className="space-y-4">
                                         <div className="flex justify-between items-center text-sm border-b border-slate-700 pb-3">

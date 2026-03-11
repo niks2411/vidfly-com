@@ -17,6 +17,7 @@ type StoredVideo = {
   thumbnail: string;
   link: string;
   channelId?: string | null;
+  avatarUrl?: string | null;
 };
 
 type ChannelInfo = {
@@ -148,7 +149,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
   // Listen for channelChanged events (when channel is updated from other components)
   useEffect(() => {
     const handleChannelChanged = (event: CustomEvent) => {
-      const { channelId, channelName } = event.detail;
+      const { channelId, channelName, channelAvatar } = event.detail;
       if (channelId) {
         setSelectedChannelId(channelId);
         // Save to localStorage for fast UI
@@ -165,7 +166,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
             newMap.set(channelId, {
               channelId,
               name: channelName,
-              avatar: "",
+              avatar: channelAvatar || "",
             });
             return newMap;
           });
@@ -264,7 +265,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
           channelMap.set(video.channelId, {
             channelId: video.channelId,
             name: cachedInfo?.name || video.author,
-            avatar: cachedInfo?.avatar || "",
+            avatar: cachedInfo?.avatar || video.avatarUrl || "",
           });
         }
       }

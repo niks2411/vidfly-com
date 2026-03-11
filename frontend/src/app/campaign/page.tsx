@@ -4,439 +4,285 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import CampaignLayout from "@/components/CampaignLayout";
-import CampaignCard from "@/components/CampaignCard";
-import ChannelSelector from "@/components/ChannelSelector";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Play, Layers, Settings, CreditCard } from "lucide-react";
-import { getVerifiedEmail } from "@/lib/verifiedEmail";
+import { useAuth } from "@/context/AuthContext";
+import { Play, Youtube, Video, Hash, Loader2, Users } from "lucide-react";
+import Image from "next/image";
+import ChannelSelector from "@/components/ChannelSelector";
+import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
 
-type StoredVideo = {
-    title: string;
-    author?: string;
-    videoId: string;
-    thumbnail: string;
-    link: string;
-    channelId?: string | null;
-};
-
-const STORAGE_KEY = "vidfly_channel_videos";
-
 export default function CampaignDashboard() {
     const router = useRouter();
-    const [verifiedEmail, setVerifiedEmail] = useState<string | undefined>(undefined);
+    const { user } = useAuth();
+    const [youtubeLink, setYoutubeLink] = useState("");
     const [mounted, setMounted] = useState(false);
+    
+    // YouTube API State
+    const [videoInfo, setVideoInfo] = useState<any>(null);
+    const [channelInfo, setChannelInfo] = useState<any>(null);
+    const [isFetchingPreview, setIsFetchingPreview] = useState(false);
 
     useEffect(() => {
         setMounted(true);
-        const email = getVerifiedEmail();
-        setVerifiedEmail(email);
+    }, []);
 
-        if (!email) {
-            router.replace("/get-started");
-        }
-    }, [router]);
-
-    const displayEmail = verifiedEmail || "Email not verified";
-
-    const [youtubeLink, setYoutubeLink] = useState("");
-
-    // Pre-fill YouTube link from session storage
+    // Live fetching of YouTube details
     useEffect(() => {
+        const fetchPreview = async () => {
+            const url = youtubeLink.trim();
+            if (!url || !url.match(/(youtube\.com|youtu\.be)/)) {
+                setVideoInfo(null);
+                setChannelInfo(null);
+                return;
+            }
+            
+            setIsFetchingPreview(true);
+            try {
+                const isVid = /\/(watch|shorts|embed)\/|\?v=|youtu\.be\//.test(url);
+                let vInfo = null;
+                let cInfo = null;
+                
+                if (isVid) {
+                    try {
+                        const res = await fetch(`${API_BASE_URL}/api/youtube/info`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ url })
+                        });
+                        if (res.ok) vInfo = await res.json();
+                    } catch(e) {}
+                } else {
+                    // Try to fetch channel info directly if it's not a video
+                    try {
+                        const res = await fetch(`${API_BASE_URL}/api/youtube/channel-info?videoUrl=${encodeURIComponent(url)}`);
+                        if (res.ok) cInfo = await res.json();
+                    } catch(e) {}
+                }
+
+                setVideoInfo(vInfo);
+                setChannelInfo(cInfo);
+
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setIsFetchingPreview(false);
+            }
+        };
+
+        const timer = setTimeout(() => {
+            fetchPreview();
+        }, 800);
+
+        return () => clearTimeout(timer);
+    }, [youtubeLink]);
+
+    const handleLaunchCampaign = async (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
+        if (!youtubeLink) return;
+        
         try {
-            const promotedVideo = sessionStorage.getItem("vidfly_promoted_video");
-            if (promotedVideo) {
-                const { link, timestamp } = JSON.parse(promotedVideo);
-                if (Date.now() - timestamp < 3600000) {
-                    setYoutubeLink(link);
-                    sessionStorage.removeItem("vidfly_promoted_video");
-                    return;
+            const channelId = videoInfo?.channelId || channelInfo?.channelId;
+            const channelName = videoInfo?.author || channelInfo?.name;
+            const channelAvatar = channelInfo?.avatar || videoInfo?.channelAvatar || videoInfo?.thumbnail;
+
+            // Automatically add this channel to the user's saved channels list
+            if (user?.email && channelId) {
+                try {
+                    await fetch(`${API_BASE_URL}/api/user-preferences/channels`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            email: user.email,
+                            channelId: channelId,
+                            channelName: channelName || "YouTube Channel",
+                            channelAvatar: channelAvatar || "",
+                        }),
+                        credentials: "include",
+                    });
+                    
+                    // Dispatch event so ChannelSelector updates immediately
+                    window.dispatchEvent(new CustomEvent('channelChanged', { 
+                        detail: { 
+                            channelId, 
+                            channelName: channelName || "YouTube Channel",
+                            channelAvatar: channelAvatar || ""
+                        } 
+                    }));
+                } catch (apiErr) {
+                    console.warn("Failed to sync channel to preferences:", apiErr);
                 }
             }
 
-            const heroInput = sessionStorage.getItem("vidfly_hero_channel_input");
-            if (heroInput) {
-                setYoutubeLink(heroInput);
-                sessionStorage.removeItem("vidfly_hero_channel_input");
-            }
-        } catch { }
-    }, []);
-
-    const [videoInfo, setVideoInfo] = useState<StoredVideo | null>(null);
-    const [videoError, setVideoError] = useState("");
-    const [loadingVideo, setLoadingVideo] = useState(false);
-
-    useEffect(() => {
-        if (!youtubeLink) {
-            setVideoInfo(null);
-            setVideoError("");
-            return;
-        }
-        if (
-            !youtubeLink.includes("youtube.com") &&
-            !youtubeLink.includes("youtu.be")
-        ) {
-            setVideoInfo(null);
-            setVideoError("");
-            return;
-        }
-
-        const timeoutId = setTimeout(() => {
-            fetchVideoInfo(youtubeLink);
-        }, 700);
-
-        return () => clearTimeout(timeoutId);
-    }, [youtubeLink]);
-
-    const fetchVideoInfo = async (url: string) => {
-        try {
-            setLoadingVideo(true);
-            setVideoError("");
-            const response = await fetch(`${API_BASE_URL}/api/youtube/info`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ url }),
-            });
-
-            if (!response.ok) {
-                const data = await response.json().catch(() => ({}));
-                throw new Error(data?.message || "Could not fetch video info");
-            }
-
-            const data = await response.json();
-            const payload: StoredVideo = {
-                title: data.title,
-                author: data.author,
-                videoId: data.videoId,
-                thumbnail: data.thumbnail,
-                link: url,
-                channelId: data.channelId || null,
+            // Create the video data object that the budget page expects
+            const videoData = {
+                title: videoInfo?.title || (channelInfo ? `${channelInfo.name}'s Channel` : "YouTube Video"),
+                author: videoInfo?.author || channelInfo?.name || "YouTube Creator",
+                videoId: videoInfo?.videoId || "",
+                thumbnail: videoInfo?.thumbnail || channelInfo?.avatar || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=400&auto=format&fit=crop",
+                link: youtubeLink.trim(),
+                channelId: videoInfo?.channelId || channelInfo?.channelId || null,
+                avatarUrl: channelAvatar || null,
+                publishedAt: videoInfo?.publishedAt || null,
+                duration: videoInfo?.duration || null,
+                viewCount: videoInfo?.viewCount || null,
+                likeCount: videoInfo?.likeCount || null,
+                commentCount: videoInfo?.commentCount || null,
             };
-            setVideoInfo(payload);
-            persistVideo(payload);
+
+            // Budget page expects these in sessionStorage
+            sessionStorage.setItem("vidfly_current_campaign_video", JSON.stringify(videoData));
+            sessionStorage.setItem("vidfly_current_campaign_videos", JSON.stringify([videoData]));
+            
+            // Persistent storage for recovery
+            localStorage.setItem("campaign_link", youtubeLink.trim());
+            
+            router.push("/campaign/budget");
         } catch (err) {
-            setVideoInfo(null);
-            const message =
-                err instanceof Error ? err.message : "Could not fetch video info";
-            setVideoError(message);
-            const videoIdMatch = url.match(
-                /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/
-            );
-            if (videoIdMatch && videoIdMatch[1]) {
-                const fallback: StoredVideo = {
-                    title: "YouTube Video",
-                    author: "YouTube",
-                    videoId: videoIdMatch[1],
-                    thumbnail: `https://img.youtube.com/vi/${videoIdMatch[1]}/hqdefault.jpg`,
-                    link: url,
-                    channelId: null,
-                };
-                setVideoInfo(fallback);
-                persistVideo(fallback);
-            }
-        } finally {
-            setLoadingVideo(false);
+            console.error("Launch error:", err);
+            window.location.href = "/campaign/budget";
         }
     };
 
-    const persistVideo = (video: StoredVideo) => {
-        if (typeof window === "undefined") return;
-        try {
-            const existing: StoredVideo[] = JSON.parse(
-                sessionStorage.getItem(STORAGE_KEY) || "[]"
-            );
-            const filtered = existing.filter((item) => item.videoId !== video.videoId);
-            filtered.unshift(video);
-            const limited = filtered.slice(0, 10);
-            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(limited));
-        } catch (err) {
-            console.error("Failed to persist video", err);
-        }
-    };
-
-    const handleLaunchCampaign = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!verifiedEmail) {
-            setVideoError("Missing verified email. Please verify your email first.");
-            return;
-        }
-        if (!videoInfo) {
-            setVideoError("Please enter a valid YouTube link to continue.");
-            return;
-        }
-
-        // In Next.js, we should use session storage or a state manager instead of router state if possible for persistent data across refreshes, 
-        // but for immediate redirection, we can use sessionStorage to pass complex objects if needed, OR just redirect.
-        sessionStorage.setItem("vidfly_current_campaign_video", JSON.stringify(videoInfo));
-        router.push("/campaign/budget");
-    };
+    if (!mounted) return null;
 
     return (
-        <CampaignLayout activeSidebar="promote">
-            <CampaignCard>
-                {/* Top Section - Verified Email and Channel Selector */}
-                <div className="flex flex-col sm:flex-row items-center justify-end gap-3 mb-6">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-xl border border-slate-200 min-w-0 max-w-full order-2 sm:order-1">
-                        <span className="text-xs font-semibold text-slate-500 uppercase whitespace-nowrap flex-shrink-0">Verified Email</span>
-                        <span className="text-sm font-semibold text-slate-900 truncate min-w-0 block">
-                            {mounted ? displayEmail : "Loading..."}
-                        </span>
-                    </div>
-                    <div className="order-1 sm:order-2">
-                        <ChannelSelector />
-                    </div>
-                </div>
+        <CampaignLayout activeSidebar="promote" className="max-w-none p-0 !p-0 flex-1 flex flex-col font-founders relative">
+            
+            {/* Main Hero Section with Image background matching */}
+            <div className="relative flex-1 flex flex-col items-center justify-center px-4 py-12">
+                
+                {/* Background Gradient matching the Pink/White blend in image */}
+                <div 
+                    className="absolute inset-0 z-0 pointer-events-none"
+                    style={{
+                        background: 'radial-gradient(ellipse at 0% 0%, rgba(255, 120, 120, 0.4) 0%, rgba(255, 255, 255, 0) 70%)',
+                    }}
+                />
 
-                {/* Main Content */}
-                <div className="mb-8">
-                    <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-6">
-                        <div className="flex-1">
-                            <h1 className="text-3xl md:text-4xl font-bold text-red-600 mb-3">
-                                Promote videos with just ₹999
-                            </h1>
-                            <p className="text-slate-600 text-base leading-relaxed max-w-2xl">
-                                Enter your YouTube channel name, video URL, or Shorts link. Our team
-                                will review it, set up the campaign, and share tracking details
-                                with you.
-                            </p>
+                <div className="w-full max-w-4xl relative z-10 flex flex-col items-center text-center animate-fade-in">
+                    
+                    {/* Main Headline aligned with Home Page section-heading */}
+                    <h1 className="section-heading !mb-6 !leading-[1.1] text-center">
+                        <span className="bg-gradient-to-r from-[#fc5c65] via-[#e056fd] to-[#8b5cf6] bg-clip-text text-transparent">Promote Your YouTube Videos</span>
+                        <span className="text-[#3f3f46]"> to the <br className="hidden md:block"/></span>
+                        <span className="text-[#3f3f46]">Right Audience</span>
+                    </h1>
+
+                    {/* Description aligned with Home Page section-desc */}
+                    <p className="section-desc max-w-2xl mb-12 !mx-auto">
+                        Grow faster with <span className="font-bold text-slate-900">Vidflyy's</span> smart YouTube promotion system. Reach real viewers and track your promotion results in real time.
+                    </p>
+
+                    {/* Hand Drawn Arrow - Absolute positioned */}
+                    <div className="absolute right-[5%] top-[55%] hidden xl:block pointer-events-none">
+                        <svg width="220" height="140" viewBox="0 0 220 140" fill="none" className="rotate-[15deg] opacity-70">
+                            <path d="M10 20C40 10 90 20 110 50C130 80 100 110 80 110C60 110 50 90 70 70C90 50 140 40 200 110" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="10 5" />
+                            <path d="M185 110L205 115L195 95" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </div>
+
+                    {/* Price Hint & Main Action Area */}
+                    <p className="text-[#3b82f6] font-semibold text-[16px] mb-4">
+                        Plans start at just ₹499 /-
+                    </p>
+                    <div className="w-full max-w-2xl flex flex-col items-center gap-6">
+                        <div className="w-full relative group p-[2.5px] rounded-full bg-gradient-to-r from-[#dec9ff] via-[#f7d5ff] to-[#d1ffef] shadow-[0_0_30px_rgba(192,132,252,0.15)] transition-all duration-300">
+                            <PlaceholdersAndVanishInput
+                                placeholders={[
+                                    "Paste your YouTube Video Link or Channel URL",
+                                    "Enter your YouTube video link...",
+                                    "Paste your channel URL here...",
+                                    "Search for your channel name...",
+                                ]}
+                                showIcon={true}
+                                hideSubmit={false}
+                                className="h-16 bg-white !max-w-none border-none"
+                                onChange={(e) => setYoutubeLink(e.target.value)}
+                                onSubmit={handleLaunchCampaign}
+                            />
                         </div>
-                        <Button
-                            variant="outline"
-                            className="rounded-xl border-red-600 text-red-600 hover:bg-red-50 whitespace-nowrap"
-                            onClick={() => router.push("/campaign/channel")}
-                        >
-                            PROMOTE ENTIRE CHANNEL
-                        </Button>
-                    </div>
-
-                    <form onSubmit={handleLaunchCampaign} className="space-y-4">
-                        <div className="flex flex-col sm:flex-row gap-3 items-stretch">
-                            <div className="flex items-center gap-3 flex-1 bg-white border-2 border-slate-200 rounded-xl px-4 py-3">
-                                <Play className="h-5 w-5 text-red-600 flex-shrink-0" />
-                                <Input
-                                    type="text"
-                                    placeholder="Enter your YouTube video URL, or Shorts link"
-                                    className="border-0 shadow-none focus-visible:ring-0 text-base bg-transparent p-0"
-                                    value={youtubeLink}
-                                    onChange={(e) => setYoutubeLink(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <Button
-                                type="submit"
-                                className="bg-red-600 hover:bg-red-700 text-white rounded-xl px-6 py-6 whitespace-nowrap"
-                            >
-                                LAUNCH CAMPAIGN
-                            </Button>
-                        </div>
-
-                        <div className="space-y-3">
-                            {loadingVideo && (
-                                <div className="border border-red-100 rounded-xl p-4 bg-red-50 text-red-700 text-sm">
-                                    Fetching video details...
+                        {/* Preview Section placed exactly below the input box */}
+                        <div className="w-full">
+                            {isFetchingPreview && (
+                                <div className="w-full flex items-center justify-center py-6 bg-white/50 backdrop-blur-sm rounded-2xl border border-dashed border-slate-200 animate-pulse mb-8 overflow-hidden h-[120px]">
+                                    <Loader2 className="w-6 h-6 animate-spin text-[#E52D27]" />
+                                    <span className="ml-3 text-[15px] font-medium text-slate-500 font-founders">Fetching YouTube Details...</span>
                                 </div>
                             )}
-                            {videoError && !videoInfo && (
-                                <div className="border border-red-100 rounded-xl p-4 bg-red-50 text-red-600 text-sm">
-                                    {videoError}
-                                </div>
-                            )}
-                            {videoInfo && (
-                                <div className="border-2 border-red-200 rounded-xl p-4 flex gap-4 bg-white">
-                                    <img
-                                        src={videoInfo.thumbnail}
-                                        alt={videoInfo.title}
-                                        className="w-32 h-20 object-cover rounded-lg"
-                                    />
-                                    <div className="flex-1">
-                                        <p className="text-base font-semibold text-slate-900 line-clamp-2 mb-1">
-                                            {videoInfo.title}
-                                        </p>
-                                        {videoInfo.author && (
-                                            <p className="text-sm text-slate-600">
-                                                by {videoInfo.author}
-                                            </p>
-                                        )}
+
+                            {(!isFetchingPreview && (videoInfo || channelInfo)) && (
+                                <div className="w-full bg-white border border-slate-100 rounded-xl p-3 flex flex-col relative overflow-hidden text-left shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500 mb-8 mx-auto xl:max-w-md">
+                                    <div className="flex gap-4">
+                                        <div className="shrink-0 w-[140px] aspect-video bg-black rounded-lg overflow-hidden relative shadow-md">
+                                            <img 
+                                                src={videoInfo?.thumbnail || channelInfo?.avatar || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=400&auto=format&fit=crop"} 
+                                                alt="Preview" 
+                                                className={videoInfo ? "w-full h-full object-cover" : "h-full w-auto mx-auto object-cover"}
+                                            />
+                                            {videoInfo && (
+                                                <div className="absolute top-1.5 right-1.5 bg-black/70 backdrop-blur-sm text-white px-1.5 py-0.5 rounded text-[10px] font-bold">
+                                                    {videoInfo.duration}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="flex flex-col flex-1 min-w-0 justify-center">
+                                            <h3 className="font-bold text-slate-800 text-[14px] leading-tight line-clamp-2 pr-2">
+                                                {videoInfo?.title || channelInfo?.title || "Fetching details..."}
+                                            </h3>
+                                            <div className="flex items-center gap-2 mt-2 text-slate-500">
+                                                {(channelInfo?.avatar || videoInfo?.channelAvatar) && (
+                                                    <img src={channelInfo?.avatar || videoInfo?.channelAvatar} alt="Avatar" className="w-4 h-4 rounded-full" />
+                                                )}
+                                                <span className="text-[13px] font-medium line-clamp-1">{videoInfo?.author || channelInfo?.name || channelInfo?.title || "Unknown Channel"}</span>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#ff5a5f] to-[#c22143]" />
                                 </div>
                             )}
                         </div>
-                    </form>
-                </div>
 
-                {/* Professional Animated Flow with Curly Arrows */}
-                <div className="mt-12 mb-8">
-                    <div className="relative max-w-5xl mx-auto">
-                        <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-0 relative">
-                            {/* Step 1 */}
-                            <motion.div
-                                className="flex flex-col items-center text-center z-10"
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: 0.1 }}
-                            >
-                                <motion.div
-                                    className="relative mb-3 w-16 h-16"
-                                    initial={{ scale: 0 }}
-                                    whileInView={{ scale: 1 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: 0.3, type: "spring", stiffness: 200 }}
-                                >
-                                    <motion.div
-                                        className="absolute inset-0 bg-gradient-to-tr from-red-500 to-pink-500 rounded-full"
-                                        animate={{
-                                            boxShadow: [
-                                                "0 0 20px rgba(239, 68, 68, 0.5)",
-                                                "0 0 35px rgba(239, 68, 68, 0.8)",
-                                                "0 0 20px rgba(239, 68, 68, 0.5)",
-                                            ],
-                                        }}
-                                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                                    />
-                                    <div className="relative z-10 w-full h-full flex items-center justify-center">
-                                        <Layers className="h-8 w-8 text-white" />
-                                    </div>
-                                </motion.div>
-                                <h3 className="text-base font-semibold text-slate-900 mb-1 max-w-[140px]">
-                                    Enter Video Link
-                                </h3>
-                                <p className="text-xs text-slate-500 max-w-[140px]">
-                                    Choose your video to promote
-                                </p>
-                            </motion.div>
-
-                            {/* Curly Arrow 1 */}
-                            <div className="hidden md:block relative w-64 h-32 pointer-events-none">
-                                <svg className="w-full h-full" viewBox="0 0 300 120" fill="none" preserveAspectRatio="none">
-                                    <defs>
-                                        <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
-                                            <stop offset="0%" stopColor="#ef4444" />
-                                            <stop offset="50%" stopColor="#ec4899" />
-                                            <stop offset="100%" stopColor="#a855f7" />
-                                        </linearGradient>
-                                    </defs>
-                                    <motion.path
-                                        d="M 20 60 Q 80 20, 150 50 Q 220 80, 280 60"
-                                        stroke="url(#gradient1)"
-                                        strokeWidth="4"
-                                        fill="none"
-                                        strokeLinecap="round"
-                                        strokeDasharray="1"
-                                        initial={{ pathLength: 0, opacity: 0 }}
-                                        whileInView={{ pathLength: 1, opacity: 1 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 1, delay: 0.5, ease: "easeInOut" }}
-                                    />
-                                </svg>
+                        {/* Format indicators indicators */}
+                        <div className="flex flex-col items-center gap-6 relative z-10 w-full">
+                            {/* Format Indicators */}
+                            <div className="flex items-center justify-center gap-8 text-[14px] font-semibold text-slate-500 mt-2">
+                                 <div className="flex items-center gap-2">
+                                     <div className="w-5 h-5 bg-[#E52D27] rounded-sm flex items-center justify-center">
+                                         <Play className="h-3 w-3 text-white fill-current" />
+                                     </div>
+                                     Video
+                                 </div>
+                                 <div className="flex items-center gap-2">
+                                     <div className="w-5 h-5 bg-[#E52D27] rounded-sm flex items-center justify-center">
+                                         <svg viewBox="0 0 24 24" className="w-4 h-4 text-white fill-current">
+                                             <path d="M17.712 9.329c.14-.543.167-1.121.085-1.701-.137-.962-.577-1.853-1.238-2.514-.66-.66-1.551-1.1-2.512-1.236-.61-.086-1.206-.05-1.761.112l-1.547-1.442L2.513 11.232l1.642 1.541c-.42.505-.724 1.107-.866 1.773-.137.962.302 1.854.963 2.515.66.661 1.551 1.101 2.512 1.237.611.086 1.207.051 1.762-.112l1.547 1.443 8.226-8.683-1.642-1.541l2.055-2.186z"/>
+                                         </svg>
+                                     </div>
+                                     Shorts
+                                 </div>
+                                 <div className="flex items-center gap-2">
+                                     <div className="w-5 h-5 bg-slate-400 rounded-sm flex items-center justify-center">
+                                         <Users className="h-3 w-3 text-white" />
+                                     </div>
+                                     Channel
+                                 </div>
                             </div>
-
-                            {/* Step 2 */}
-                            <motion.div
-                                className="flex flex-col items-center text-center z-10"
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: 0.8 }}
-                            >
-                                <motion.div
-                                    className="relative mb-3 w-16 h-16"
-                                    initial={{ scale: 0 }}
-                                    whileInView={{ scale: 1 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: 1, type: "spring", stiffness: 200 }}
-                                >
-                                    <motion.div
-                                        className="absolute inset-0 bg-gradient-to-tr from-purple-500 to-indigo-500 rounded-full"
-                                        animate={{
-                                            boxShadow: [
-                                                "0 0 20px rgba(168, 85, 247, 0.5)",
-                                                "0 0 35px rgba(168, 85, 247, 0.8)",
-                                                "0 0 20px rgba(168, 85, 247, 0.5)",
-                                            ],
-                                        }}
-                                        transition={{ duration: 2, repeat: Infinity, delay: 0.5, ease: "easeInOut" }}
-                                    />
-                                    <div className="relative z-10 w-full h-full flex items-center justify-center">
-                                        <Settings className="h-8 w-8 text-white" />
-                                    </div>
-                                </motion.div>
-                                <h3 className="text-base font-semibold text-slate-900 mb-1 max-w-[140px]">
-                                    Set Up Campaign
-                                </h3>
-                                <p className="text-xs text-slate-500 max-w-[140px]">
-                                    Choose audience & budget
-                                </p>
-                            </motion.div>
-
-                            {/* Curly Arrow 2 */}
-                            <div className="hidden md:block relative w-64 h-32 pointer-events-none">
-                                <svg className="w-full h-full" viewBox="0 0 300 120" fill="none" preserveAspectRatio="none">
-                                    <defs>
-                                        <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-                                            <stop offset="0%" stopColor="#a855f7" />
-                                            <stop offset="50%" stopColor="#8b5cf6" />
-                                            <stop offset="100%" stopColor="#3b82f6" />
-                                        </linearGradient>
-                                    </defs>
-                                    <motion.path
-                                        d="M 20 60 Q 80 20, 150 50 Q 220 80, 280 60"
-                                        stroke="url(#gradient2)"
-                                        strokeWidth="4"
-                                        fill="none"
-                                        strokeLinecap="round"
-                                        strokeDasharray="1"
-                                        initial={{ pathLength: 0, opacity: 0 }}
-                                        whileInView={{ pathLength: 1, opacity: 1 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 1, delay: 2, ease: "easeInOut" }}
-                                    />
-                                </svg>
-                            </div>
-
-                            {/* Step 3 */}
-                            <motion.div
-                                className="flex flex-col items-center text-center z-10"
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: 1.5 }}
-                            >
-                                <motion.div
-                                    className="relative mb-3 w-16 h-16"
-                                    initial={{ scale: 0 }}
-                                    whileInView={{ scale: 1 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: 1.7, type: "spring", stiffness: 200 }}
-                                >
-                                    <motion.div
-                                        className="absolute inset-0 bg-gradient-to-tr from-blue-500 to-cyan-500 rounded-full"
-                                        animate={{
-                                            boxShadow: [
-                                                "0 0 20px rgba(59, 130, 246, 0.5)",
-                                                "0 0 35px rgba(59, 130, 246, 0.8)",
-                                                "0 0 20px rgba(59, 130, 246, 0.5)",
-                                            ],
-                                        }}
-                                        transition={{ duration: 2, repeat: Infinity, delay: 1, ease: "easeInOut" }}
-                                    />
-                                    <div className="relative z-10 w-full h-full flex items-center justify-center">
-                                        <CreditCard className="h-8 w-8 text-white" />
-                                    </div>
-                                </motion.div>
-                                <h3 className="text-base font-semibold text-slate-900 mb-1 max-w-[140px]">
-                                    Make Payment
-                                </h3>
-                                <p className="text-xs text-slate-500 max-w-[140px]">
-                                    Approve ad delivery
-                                </p>
-                            </motion.div>
                         </div>
+
                     </div>
                 </div>
-            </CampaignCard>
+            </div>
+            
         </CampaignLayout>
     );
 }

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 const Footer = () => {
   const pathname = usePathname();
-  if (pathname === "/get-started") return null;
+  if (pathname === "/get-started" || pathname?.startsWith('/campaign') || pathname?.startsWith('/payment') || pathname?.startsWith('/admin')) return null;
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
