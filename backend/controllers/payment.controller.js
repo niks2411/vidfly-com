@@ -287,11 +287,9 @@ const createCashfreePayment = async (req, res, next, order) => {
       || response.data.url
       || response.data.data?.url;
 
-    // If no payment_url in response, construct it from payment_session_id
+    // If no payment_url in response, we primarily rely on paymentSessionId with the SDK
     if (!paymentUrl && paymentSessionId) {
-      // Cashfree Payment Gateway payment URL format
-      paymentUrl = `https://payments.cashfree.com/forms/webforms/pay/${paymentSessionId}`;
-      console.log('Constructed payment URL from payment_session_id');
+      console.log('Relying on paymentSessionId for frontend SDK checkout');
     }
 
     if (!paymentSessionId) {
@@ -309,21 +307,9 @@ const createCashfreePayment = async (req, res, next, order) => {
       });
     }
 
-    if (!paymentUrl) {
-      console.error('Could not construct payment URL:', {
-        hasPaymentSessionId: !!paymentSessionId,
-        paymentSessionId: paymentSessionId?.substring(0, 20) + '...'
-      });
-      return res.status(500).json({
-        message: 'Failed to construct payment URL',
-        details: 'Payment session ID received but could not create payment URL'
-      });
-    }
-
     console.log('Successfully extracted payment data:', {
       paymentSessionId: paymentSessionId.substring(0, 20) + '...',
-      hasPaymentUrl: !!paymentUrl,
-      paymentUrlLength: paymentUrl.length
+      hasPaymentUrl: !!paymentUrl
     });
 
     // Update payment record

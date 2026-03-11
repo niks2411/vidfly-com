@@ -66,13 +66,13 @@ function calculateViewsFromPrice(price) {
 exports.calculateViews = async (req, res, next) => {
   try {
     const schema = Joi.object({
-      price: Joi.number().min(800).max(10000).required()
+      price: Joi.number().min(499).max(100000).required()
     });
 
     const { error, value } = schema.validate(req.body);
     if (error) {
       return res.status(400).json({
-        message: error.details[0].message || 'Invalid price. Price must be between ₹800 and ₹10,000.'
+        message: error.details[0].message || 'Invalid price. Price must be between ₹499 and ₹100,000.'
       });
     }
 

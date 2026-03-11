@@ -80,6 +80,7 @@ const OrderSchema = new mongoose.Schema(
           gender: String,
           ages: [String],
           interests: [String],
+          keywords: [String],
         },
         { _id: false }
       ),
@@ -88,6 +89,7 @@ const OrderSchema = new mongoose.Schema(
     // Reminder email tracking for payment_pending orders
     reminderCount: { type: Number, default: 0 }, // 0 = none, 1 = first (24h), 2 = second (72h)
     lastReminderAt: { type: Date },
+    isRead: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

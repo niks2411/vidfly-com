@@ -37,3 +37,15 @@ exports.getOrder = async (req, res, next) => {
     return res.json(order);
   } catch (err) { return next(err); }
 };
+
+exports.markRead = async (req, res, next) => {
+  try {
+    const order = await Order.findOneAndUpdate(
+      { orderId: req.params.orderId },
+      { isRead: true },
+      { new: true }
+    );
+    if (!order) return res.status(404).json({ message: 'Order not found' });
+    return res.json({ success: true });
+  } catch (err) { return next(err); }
+};

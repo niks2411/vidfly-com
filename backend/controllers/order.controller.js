@@ -57,13 +57,16 @@ const createCampaignOrderSchema = Joi.object({
   }).required(),
   targeting: Joi.object({
     country: Joi.string().allow('', null),
+    countries: Joi.array().items(Joi.string()).allow(null).optional(),
     goal: Joi.string().allow('', null),
     duration: Joi.string().allow('', null),
+    customDurationDays: Joi.number().allow(null).optional(),
     autoTargeting: Joi.boolean(),
     notes: Joi.string().allow('', null),
     gender: Joi.string().allow('', null).optional(),
     ages: Joi.array().items(Joi.string()).allow(null).optional(),
     interests: Joi.array().items(Joi.string()).allow(null).optional(),
+    keywords: Joi.array().items(Joi.string()).allow(null).optional(),
   }).default({}),
   budget: Joi.number().required(),
   source: Joi.string()
@@ -229,18 +232,24 @@ exports.createCampaignOrder = async (req, res, next) => {
       currency: value.package.currency || 'INR',
     };
 
+    // Ensure all videos have links constructed from videoId if missing
+    const sanitizedVideos = value.videos.map(v => ({
+      ...v,
+      link: v.link || (v.videoId ? `https://www.youtube.com/watch?v=${v.videoId}` : null)
+    }));
+
     const order = await Order.create({
       orderId,
       userId: user._id,
       paymentId: payment._id,
-      youtubeLink: value.videos[0]?.link,
+      youtubeLink: sanitizedVideos[0]?.link,
       plan,
       status: 'payment_pending',
       campaignType: value.source,
       source: value.source,
       budget: value.budget,
       channel: value.channel,
-      videos: value.videos,
+      videos: sanitizedVideos,
       packageInfo: {
         id: value.package.id,
         name: value.package.name,

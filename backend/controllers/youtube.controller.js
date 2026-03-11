@@ -73,7 +73,7 @@ async function getUploadsPlaylistId(channelId, apiKey) {
     `https://www.googleapis.com/youtube/v3/channels`,
     {
       params: {
-        part: 'contentDetails,snippet',
+        part: 'contentDetails,snippet,statistics',
         id: channelId,
         key: apiKey
       },
@@ -99,6 +99,7 @@ async function getUploadsPlaylistId(channelId, apiKey) {
     avatar: channel.snippet.thumbnails?.high?.url ||
       channel.snippet.thumbnails?.medium?.url ||
       channel.snippet.thumbnails?.default?.url,
+    subscriberCount: channel.statistics?.subscriberCount || '0',
     uploadsPlaylistId
   };
 
@@ -106,6 +107,101 @@ async function getUploadsPlaylistId(channelId, apiKey) {
   setCachedChannelData(channelId, channelData);
 
   return channelData;
+}
+
+// QUOTA-OPTIMIZED: Fetch real statistics, duration and channel avatar for a list of video IDs (1-2 units)
+async function fetchVideoDetails(videoIdArray, apiKey) {
+  if (!videoIdArray || videoIdArray.length === 0) return [];
+  
+  const videoIds = videoIdArray.join(',');
+  console.log(`📊 Fetching details for ${videoIdArray.length} videos`);
+
+  // Fetch statistics and duration (1 unit)
+  const statsResponse = await axios.get(
+    `https://www.googleapis.com/youtube/v3/videos`,
+    {
+      params: {
+        part: 'snippet,statistics,contentDetails',
+        id: videoIds,
+        key: apiKey
+      },
+      timeout: 10000
+    }
+  );
+
+  const videoDetails = statsResponse.data.items || [];
+  const detailsMap = new Map(videoDetails.map(item => [item.id, item]));
+
+  // Fetch channel avatar (1 unit)
+  let channelAvatar = null;
+  if (videoDetails.length > 0) {
+    const channelId = videoDetails[0].snippet.channelId;
+    try {
+      const chRes = await axios.get(
+        `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${channelId}&key=${apiKey}`,
+        { timeout: 3000 }
+      );
+      if (chRes.data.items && chRes.data.items.length > 0) {
+        channelAvatar = chRes.data.items[0].snippet.thumbnails?.default?.url || 
+                        chRes.data.items[0].snippet.thumbnails?.medium?.url;
+      }
+    } catch (chErr) {
+      console.warn('Could not fetch channel avatar for video details');
+    }
+  }
+
+  return videoIdArray.map(id => {
+    const details = detailsMap.get(id);
+    if (!details) return null;
+    
+    return {
+      videoId: id,
+      link: `https://www.youtube.com/watch?v=${id}`,
+      title: details.snippet.title,
+      thumbnail: details.snippet.thumbnails?.maxres?.url ||
+        details.snippet.thumbnails?.high?.url ||
+        details.snippet.thumbnails?.medium?.url ||
+        details.snippet.thumbnails?.default?.url,
+      author: details.snippet.channelTitle,
+      channelId: details.snippet.channelId,
+      publishedAt: details.snippet.publishedAt,
+      description: details.snippet.description,
+      channelAvatar: channelAvatar,
+      duration: details.contentDetails?.duration || null,
+      viewCount: details.statistics?.viewCount || null,
+      likeCount: details.statistics?.likeCount || null,
+      commentCount: details.statistics?.commentCount || null,
+    };
+  }).filter(Boolean);
+}
+
+// Get videos from search query (100 units - use sparingly!)
+async function getVideosBySearch(channelId, query, apiKey, maxResults = 10, order = 'relevance') {
+  console.log(`🔍 Searching channel ${channelId} for: "${query}" (max: ${maxResults})`);
+
+  const response = await axios.get(
+    `https://www.googleapis.com/youtube/v3/search`,
+    {
+      params: {
+        part: 'snippet',
+        channelId: channelId,
+        q: query,
+        type: 'video',
+        maxResults: Math.min(maxResults, 50),
+        order: order,
+        key: apiKey
+      },
+      timeout: 10000
+    }
+  );
+
+  const searchItems = response.data.items || [];
+  if (searchItems.length === 0) return [];
+
+  const videoIds = searchItems.map(item => item.id.videoId).filter(Boolean);
+  
+  // Fetch full details (stats, duration) for these search results
+  return await fetchVideoDetails(videoIds, apiKey);
 }
 
 // QUOTA-OPTIMIZED: Get videos from uploads playlist (1 unit instead of 100!)
@@ -118,27 +214,20 @@ async function getVideosFromPlaylist(playlistId, apiKey, maxResults = 10) {
       params: {
         part: 'snippet',
         playlistId: playlistId,
-        maxResults: Math.min(maxResults, 50), // API limit is 50
+        maxResults: Math.min(maxResults, 50),
         key: apiKey
       },
       timeout: 10000
     }
   );
 
-  const items = response.data.items || [];
+  const playlistItems = response.data.items || [];
+  if (playlistItems.length === 0) return [];
 
-  return items.map(item => ({
-    videoId: item.snippet.resourceId?.videoId,
-    title: item.snippet.title,
-    thumbnail: item.snippet.thumbnails?.maxres?.url ||
-      item.snippet.thumbnails?.high?.url ||
-      item.snippet.thumbnails?.medium?.url ||
-      item.snippet.thumbnails?.default?.url,
-    author: item.snippet.channelTitle,
-    channelId: item.snippet.channelId,
-    publishedAt: item.snippet.publishedAt,
-    description: item.snippet.description
-  })).filter(video => video.videoId); // Filter out deleted videos
+  const videoIds = playlistItems.map(item => item.snippet.resourceId?.videoId).filter(Boolean);
+  
+  // Use the common fetch detailed helper
+  return await fetchVideoDetails(videoIds, apiKey);
 }
 
 // Get video info - uses oEmbed first (FREE), then API as fallback
@@ -171,24 +260,51 @@ exports.getVideoInfo = async (req, res, next) => {
 
       // oEmbed doesn't give us channelId, so we need to get it from API if available
       let channelId = null;
+      let stats = null;
+      let publishedAt = null;
+      let duration = null;
+      let channelAvatar = null;
       if (process.env.YOUTUBE_API_KEY) {
         try {
-          const apiUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${process.env.YOUTUBE_API_KEY}&part=snippet`;
+          const apiUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${process.env.YOUTUBE_API_KEY}&part=snippet,statistics,contentDetails`;
           const apiResponse = await axios.get(apiUrl, { timeout: 5000 });
           if (apiResponse.data.items && apiResponse.data.items.length > 0) {
-            channelId = apiResponse.data.items[0].snippet.channelId;
+            const item = apiResponse.data.items[0];
+            channelId = item.snippet.channelId;
+            publishedAt = item.snippet.publishedAt;
+            stats = item.statistics;
+            duration = item.contentDetails?.duration;
+
+            // Also fetch channel avatar while we are at it
+            try {
+              const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${channelId}&key=${process.env.YOUTUBE_API_KEY}`;
+              const channelResponse = await axios.get(channelUrl, { timeout: 3000 });
+              if (channelResponse.data.items && channelResponse.data.items.length > 0) {
+                channelAvatar = channelResponse.data.items[0].snippet.thumbnails?.default?.url || 
+                                channelResponse.data.items[0].snippet.thumbnails?.medium?.url;
+              }
+            } catch (chErr) {
+              console.warn('Could not fetch channel avatar');
+            }
           }
         } catch (apiErr) {
-          console.warn('Could not fetch channelId from API, continuing without it');
+          console.warn('Could not fetch extra details from API, continuing without it');
         }
       }
 
       return res.json({
         videoId: videoId,
+        link: `https://www.youtube.com/watch?v=${videoId}`,
         title: response.data.title,
         thumbnail: response.data.thumbnail_url || thumbnail,
         author: response.data.author_name,
         channelId: channelId,
+        channelAvatar: channelAvatar,
+        publishedAt: publishedAt,
+        duration: duration,
+        viewCount: stats?.viewCount || null,
+        likeCount: stats?.likeCount || null,
+        commentCount: stats?.commentCount || null,
         html: response.data.html
       });
     } catch (oEmbedErr) {
@@ -199,19 +315,40 @@ exports.getVideoInfo = async (req, res, next) => {
     if (process.env.YOUTUBE_API_KEY) {
       console.log('Using YouTube Data API v3 as fallback');
       try {
-        const apiUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${process.env.YOUTUBE_API_KEY}&part=snippet`;
+        const apiUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${process.env.YOUTUBE_API_KEY}&part=snippet,statistics,contentDetails`;
         console.log('Fetching from YouTube API:', apiUrl.replace(process.env.YOUTUBE_API_KEY, 'API_KEY_HIDDEN'));
         const apiResponse = await axios.get(apiUrl, { timeout: 10000 });
 
         if (apiResponse.data.items && apiResponse.data.items.length > 0) {
-          const snippet = apiResponse.data.items[0].snippet;
+          const item = apiResponse.data.items[0];
+          const snippet = item.snippet;
+          const stats = item.statistics;
+          const contentDetails = item.contentDetails;
           console.log('Successfully fetched video:', snippet.title);
+
+          let channelAvatar = null;
+          try {
+            const chUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${snippet.channelId}&key=${process.env.YOUTUBE_API_KEY}`;
+            const chRes = await axios.get(chUrl, { timeout: 3000 });
+            if (chRes.data.items?.length > 0) {
+              channelAvatar = chRes.data.items[0].snippet.thumbnails?.default?.url || 
+                              chRes.data.items[0].snippet.thumbnails?.medium?.url;
+            }
+          } catch (e) {}
+
           return res.json({
             videoId: videoId,
+            link: `https://www.youtube.com/watch?v=${videoId}`,
             title: snippet.title,
             thumbnail: snippet.thumbnails.maxres?.url || snippet.thumbnails.standard?.url || snippet.thumbnails.high?.url || thumbnail,
             author: snippet.channelTitle,
             channelId: snippet.channelId,
+            channelAvatar: channelAvatar,
+            publishedAt: snippet.publishedAt,
+            duration: contentDetails?.duration || null,
+            viewCount: stats?.viewCount || null,
+            likeCount: stats?.likeCount || null,
+            commentCount: stats?.commentCount || null,
             description: snippet.description
           });
         }
@@ -223,6 +360,7 @@ exports.getVideoInfo = async (req, res, next) => {
     // Final fallback: return basic info with video ID and thumbnail
     return res.json({
       videoId: videoId,
+      link: `https://www.youtube.com/watch?v=${videoId}`,
       title: `YouTube Video (ID: ${videoId})`,
       thumbnail: thumbnail,
       author: 'YouTube',
@@ -259,7 +397,25 @@ exports.getChannelVideos = async (req, res) => {
 
     const apiKey = process.env.YOUTUBE_API_KEY;
 
-    // Step 1: Get uploads playlist ID (cached, 1 unit if not cached)
+    // Step 1: If query is provided, use search API (100 units)
+    if (value.query && value.query.trim()) {
+      try {
+        const videos = await getVideosBySearch(
+          value.channelId,
+          value.query,
+          apiKey,
+          value.maxResults,
+          value.order
+        );
+        console.log(`✅ Successfully searched channel for "${value.query}" (expensive units used)`);
+        return res.json({ videos });
+      } catch (err) {
+        console.error('Search error:', err.message);
+        // Continue to playlist fallback if search fails
+      }
+    }
+
+    // Step 2: Use PlaylistItems API for normal library browsing (1 unit!)
     let channelData;
     try {
       channelData = await getUploadsPlaylistId(value.channelId, apiKey);
@@ -267,45 +423,15 @@ exports.getChannelVideos = async (req, res) => {
       console.error('Error getting uploads playlist:', err.message);
       return res.status(500).json({
         message: 'Failed to fetch channel data.',
-        details: err.message,
-        hint: 'The channel may not exist or the API quota may be exceeded.'
+        details: err.message
       });
     }
 
-    // Step 2: Get videos from uploads playlist (1 unit!)
-    let videos;
-    try {
-      videos = await getVideosFromPlaylist(
-        channelData.uploadsPlaylistId,
-        apiKey,
-        value.maxResults
-      );
-    } catch (err) {
-      console.error('Error getting playlist videos:', err.message);
-
-      // Handle specific errors
-      if (err.response?.status === 403) {
-        return res.status(500).json({
-          message: 'YouTube API quota exceeded or access denied.',
-          details: 'Your daily quota may be exceeded. Try again tomorrow or contact support.',
-          hint: 'You can still create campaigns by pasting video URLs directly.'
-        });
-      }
-
-      return res.status(500).json({
-        message: 'Failed to load channel videos.',
-        details: err.message,
-        hint: 'You can still create campaigns by pasting video URLs directly.'
-      });
-    }
-
-    // If query is provided, filter results (no API call needed!)
-    if (value.query && value.query.trim()) {
-      const query = value.query.toLowerCase().trim();
-      videos = videos.filter(video =>
-        video.title.toLowerCase().includes(query)
-      );
-    }
+    let videos = await getVideosFromPlaylist(
+      channelData.uploadsPlaylistId,
+      apiKey,
+      value.maxResults
+    );
 
     console.log(`✅ Successfully fetched ${videos.length} videos from channel (quota-optimized)`);
     return res.json({ videos });
@@ -314,8 +440,7 @@ exports.getChannelVideos = async (req, res) => {
     console.error('getChannelVideos error:', err.message);
     return res.status(500).json({
       message: 'Failed to load channel videos.',
-      details: err.message,
-      hint: 'You can still create campaigns by pasting video URLs directly.'
+      details: err.message
     });
   }
 };
@@ -407,6 +532,7 @@ exports.getChannelInfo = async (req, res, next) => {
           name: channelData.name,
           description: channelData.description,
           avatar: channelData.avatar,
+          subscriberCount: channelData.subscriberCount,
           uploadsPlaylistId: channelData.uploadsPlaylistId
         });
       } catch (err) {

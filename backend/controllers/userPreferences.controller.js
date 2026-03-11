@@ -111,7 +111,29 @@ exports.getAllChannels = async (req, res, next) => {
     }
 
     const user = await User.findOne({ email: normalizedEmail });
-    if (!user || !user.preferences || !user.preferences.channels || user.preferences.channels.length === 0) {
+    if (!user || !user.preferences) {
+      return res.json({
+        channels: [],
+        selectedChannelId: null,
+        selectedChannelName: null
+      });
+    }
+
+    // Auto-migrate: if channels array is empty but selectedChannelId exists, populate it
+    if ((!user.preferences.channels || user.preferences.channels.length === 0) && user.preferences.selectedChannelId) {
+      if (!user.preferences.channels) {
+        user.preferences.channels = [];
+      }
+      user.preferences.channels.push({
+        channelId: user.preferences.selectedChannelId,
+        channelName: user.preferences.selectedChannelName || '',
+        channelAvatar: user.preferences.selectedChannelAvatar || '',
+        addedAt: new Date(),
+      });
+      await user.save();
+    }
+
+    if (!user.preferences.channels || user.preferences.channels.length === 0) {
       return res.json({
         channels: [],
         selectedChannelId: null,
