@@ -160,9 +160,9 @@ export default function CampaignBulkViewsSelect() {
     if (!bulkViewsPackage) return null;
 
     return (
-        <CampaignLayout activeSidebar="bulk">
+        <CampaignLayout activeSidebar="bulk" showChannelSelector={false}>
             <CampaignCard>
-                <CampaignHeader>
+                <CampaignHeader showChannelSelector={false}>
                     <div className="flex gap-2">
                         {["Enter Link", "Select Videos", "Budget", "Payment"].map((s, i) => (
                             <div key={s} className="flex-1">

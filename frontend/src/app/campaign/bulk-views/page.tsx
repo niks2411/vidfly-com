@@ -86,9 +86,9 @@ export default function CampaignBulkViews() {
     };
 
     return (
-        <CampaignLayout activeSidebar="bulk">
+        <CampaignLayout activeSidebar="bulk" showChannelSelector={false}>
             <CampaignCard>
-                <CampaignHeader>
+                <CampaignHeader showChannelSelector={false}>
                     <div>
                         <h1 className="text-3xl font-bold text-slate-900 mb-2">Select Bulk Package</h1>
                         <p className="text-slate-600">Pick a bulk views package that fits your goals. You'll select the videos on the next step.</p>

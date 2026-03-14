@@ -715,7 +715,7 @@ export default function CampaignBudget() {
     };
 
     return (
-        <CampaignLayout activeSidebar="budget" hideSidebar={true}>
+        <CampaignLayout activeSidebar="budget" hideSidebar={true} showChannelSelector={!isBulkViews}>
             <Script
                 src="https://sdk.cashfree.com/js/v3/cashfree.js"
                 onLoad={() => setSdkLoaded(true)}

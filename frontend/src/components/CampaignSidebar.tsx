@@ -3,9 +3,9 @@
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { 
-    Play, Users, Package, Eye, LayoutGrid, 
-    Gift, Settings, HelpCircle, LogOut, MessageCircle, Headphones
+import {
+  Play, Users, Package, Eye, LayoutGrid,
+  Gift, Settings, HelpCircle, LogOut, MessageCircle, Headphones
 } from "lucide-react";
 
 export type CampaignSidebarKey =
@@ -16,7 +16,9 @@ export type CampaignSidebarKey =
   | "free"
   | "budget"
   | "payment"
-  | "campaigns";
+  | "campaigns"
+  | "settings"
+  | "support";
 
 type SidebarProps = {
   active?: CampaignSidebarKey;
@@ -42,8 +44,8 @@ const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, i
     {
       title: "ACCOUNT",
       items: [
-        { label: "Settings", path: "/campaign/settings", key: "settings", icon: Settings },
-        { label: "Help & Support", path: "/campaign/support", key: "support", icon: HelpCircle },
+        { label: "Settings", path: "/profile", key: "settings", icon: Settings },
+        { label: "Help & Support", path: "/contact", key: "support", icon: HelpCircle },
       ]
     }
   ];

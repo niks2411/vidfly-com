@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const HowItWorks = () => {
     const steps = [
         {
@@ -6,7 +8,7 @@ const HowItWorks = () => {
             description: "Paste your YouTube link and get started instantly.",
             height: "h-[320px] lg:h-[380px]",
             imgHeight: "h-[200px] lg:h-[240px]",
-            hasTopBar: true
+            image: "/img1card.jpg"
         },
         {
             number: "2",
@@ -19,6 +21,7 @@ const HowItWorks = () => {
             ),
             height: "h-[360px] lg:h-[440px]",
             imgHeight: "h-[240px] lg:h-[300px]",
+            image: "/img2card.jpg"
         },
         {
             number: "3",
@@ -26,6 +29,7 @@ const HowItWorks = () => {
             description: "Go live instantly and monitor your campaign in real time.",
             height: "h-[400px] lg:h-[500px]",
             imgHeight: "h-[280px] lg:h-[360px]",
+            image: "/img3card.jpg"
         },
     ];
 
@@ -53,19 +57,17 @@ const HowItWorks = () => {
                             {/* Card Container */}
                             <div className={`w-full bg-white rounded-sm shadow-md border border-gray-100 flex flex-col p-4 relative overflow-hidden transition-all duration-300 hover:shadow-xl ${step.height} z-10`}>
 
-                                {/* Top UI for first card */}
-                                {step.hasTopBar && (
-                                    <div className="flex items-center justify-between mb-3 px-1">
-                                        <div className="flex items-center gap-1">
-                                            <div className="w-3 h-3 bg-red-600 rounded-sm"></div>
-                                            <div className="w-10 h-1.5 bg-gray-200 rounded-full"></div>
-                                        </div>
-                                        <div className="w-3.5 h-3.5 bg-gray-300 rounded-full"></div>
-                                    </div>
-                                )}
-
                                 {/* Placeholder Image Area */}
-                                <div className={`w-full ${step.imgHeight} bg-[#E5E7EB] rounded-sm mb-6`}></div>
+                                <div className={`w-full ${step.imgHeight} rounded-sm mb-6 ${step.image ? 'relative overflow-hidden' : 'bg-[#E5E7EB]'}`}>
+                                    {step.image && (
+                                        <Image
+                                            src={step.image}
+                                            alt={step.title}
+                                            fill
+                                            className="object-contain p-2"
+                                        />
+                                    )}
+                                </div>
 
                                 {/* Text Content */}
                                 <div className="relative z-10 pr-4">
@@ -78,7 +80,7 @@ const HowItWorks = () => {
                                 </div>
 
                                 {/* Large Faint Number */}
-                                <span className="absolute bottom-[-10px] right-2 text-[100px] lg:text-[140px] font-black text-gray-50 select-none leading-none z-0">
+                                <span className="absolute bottom-[-10px] right-2 text-[100px] lg:text-[140px] font-black text-[rgb(208,212,221)] select-none leading-none z-0">
                                     {step.number}
                                 </span>
                             </div>
@@ -87,9 +89,8 @@ const HowItWorks = () => {
                             {index < steps.length - 1 && (
                                 <div className="hidden md:block absolute -right-12 top-1/2 -translate-y-1/2 w-24 h-16 z-20 pointer-events-none">
                                     <svg width="100%" height="100%" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M5 30 C 20 10, 40 10, 60 25 C 80 40, 90 20, 95 15" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" fill="none" />
-                                        <path d="M85 18 L 95 15 L 94 25" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                                        <circle cx="15" cy="45" r="8" stroke="#94A3B8" strokeWidth="1.5" fill="none" />
+                                        <path d="M5 30 C 20 10, 40 10, 60 25 C 80 40, 90 20, 95 15" stroke="#94A3B8" strokeWidth="3" strokeLinecap="round" fill="none" />
+                                        <path d="M85 18 L 95 15 L 94 25" stroke="#94A3B8" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                                     </svg>
                                 </div>
                             )}

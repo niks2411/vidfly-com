@@ -7,9 +7,17 @@ type CampaignHeaderProps = {
   videoTitle?: string;
   stepNumber?: number;
   stepLabel?: string;
+  showChannelSelector?: boolean;
 };
 
-const CampaignHeader = ({ children, verifiedEmail, videoTitle, stepNumber, stepLabel }: CampaignHeaderProps) => {
+const CampaignHeader = ({ 
+  children, 
+  verifiedEmail, 
+  videoTitle, 
+  stepNumber, 
+  stepLabel,
+  showChannelSelector = true 
+}: CampaignHeaderProps) => {
   return (
     <div className="sticky top-0 z-10 bg-slate-50/80 backdrop-blur-sm -mx-4 px-4 lg:-mx-8 lg:px-8 pb-2">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between py-2">
@@ -46,7 +54,7 @@ const CampaignHeader = ({ children, verifiedEmail, videoTitle, stepNumber, stepL
           </div>
         </div>
         <div className="flex-shrink-0">
-          <ChannelSelector />
+          {showChannelSelector && <ChannelSelector />}
         </div>
       </div>
     </div>

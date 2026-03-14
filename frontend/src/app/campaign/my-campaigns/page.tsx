@@ -471,6 +471,12 @@ function CampaignRow({ order, onDelete, deleting }: { order: Order; onDelete: ()
                             <span className="text-indigo-500 font-bold">{videoCount} videos</span>
                         </>
                     )}
+                    {order.status === "completed" && (
+                        <>
+                            <span className="text-slate-300">|</span>
+                            <span className="text-emerald-600 font-bold">Subscribers Gained {Math.round((order.plan?.quantity || 0) * 0.1)}</span>
+                        </>
+                    )}
                 </div>
 
                 {/* Pay Now button for pending */}

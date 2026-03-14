@@ -12,11 +12,11 @@ import Image from "next/image";
 import ChannelSelector from "@/components/ChannelSelector";
 import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
@@ -26,7 +26,7 @@ export default function CampaignDashboard() {
     const { user } = useAuth();
     const [youtubeLink, setYoutubeLink] = useState("");
     const [mounted, setMounted] = useState(false);
-    
+
     // YouTube API State
     const [videoInfo, setVideoInfo] = useState<any>(null);
     const [channelInfo, setChannelInfo] = useState<any>(null);
@@ -45,13 +45,13 @@ export default function CampaignDashboard() {
                 setChannelInfo(null);
                 return;
             }
-            
+
             setIsFetchingPreview(true);
             try {
                 const isVid = /\/(watch|shorts|embed)\/|\?v=|youtu\.be\//.test(url);
                 let vInfo = null;
                 let cInfo = null;
-                
+
                 if (isVid) {
                     try {
                         const res = await fetch(`${API_BASE_URL}/api/youtube/info`, {
@@ -60,13 +60,13 @@ export default function CampaignDashboard() {
                             body: JSON.stringify({ url })
                         });
                         if (res.ok) vInfo = await res.json();
-                    } catch(e) {}
+                    } catch (e) { }
                 } else {
                     // Try to fetch channel info directly if it's not a video
                     try {
                         const res = await fetch(`${API_BASE_URL}/api/youtube/channel-info?videoUrl=${encodeURIComponent(url)}`);
                         if (res.ok) cInfo = await res.json();
-                    } catch(e) {}
+                    } catch (e) { }
                 }
 
                 setVideoInfo(vInfo);
@@ -89,7 +89,7 @@ export default function CampaignDashboard() {
     const handleLaunchCampaign = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
         if (!youtubeLink) return;
-        
+
         try {
             const channelId = videoInfo?.channelId || channelInfo?.channelId;
             const channelName = videoInfo?.author || channelInfo?.name;
@@ -109,14 +109,14 @@ export default function CampaignDashboard() {
                         }),
                         credentials: "include",
                     });
-                    
+
                     // Dispatch event so ChannelSelector updates immediately
-                    window.dispatchEvent(new CustomEvent('channelChanged', { 
-                        detail: { 
-                            channelId, 
+                    window.dispatchEvent(new CustomEvent('channelChanged', {
+                        detail: {
+                            channelId,
                             channelName: channelName || "YouTube Channel",
                             channelAvatar: channelAvatar || ""
-                        } 
+                        }
                     }));
                 } catch (apiErr) {
                     console.warn("Failed to sync channel to preferences:", apiErr);
@@ -142,10 +142,10 @@ export default function CampaignDashboard() {
             // Budget page expects these in sessionStorage
             sessionStorage.setItem("vidfly_current_campaign_video", JSON.stringify(videoData));
             sessionStorage.setItem("vidfly_current_campaign_videos", JSON.stringify([videoData]));
-            
+
             // Persistent storage for recovery
             localStorage.setItem("campaign_link", youtubeLink.trim());
-            
+
             router.push("/campaign/budget");
         } catch (err) {
             console.error("Launch error:", err);
@@ -157,12 +157,12 @@ export default function CampaignDashboard() {
 
     return (
         <CampaignLayout activeSidebar="promote" className="max-w-none p-0 !p-0 flex-1 flex flex-col font-founders relative">
-            
+
             {/* Main Hero Section with Image background matching */}
             <div className="relative flex-1 flex flex-col items-center justify-center px-4 py-12">
-                
+
                 {/* Background Gradient matching the Pink/White blend in image */}
-                <div 
+                <div
                     className="absolute inset-0 z-0 pointer-events-none"
                     style={{
                         background: 'radial-gradient(ellipse at 0% 0%, rgba(255, 120, 120, 0.4) 0%, rgba(255, 255, 255, 0) 70%)',
@@ -170,24 +170,44 @@ export default function CampaignDashboard() {
                 />
 
                 <div className="w-full max-w-4xl relative z-10 flex flex-col items-center text-center animate-fade-in">
-                    
+
                     {/* Main Headline aligned with Home Page section-heading */}
                     <h1 className="section-heading !mb-6 !leading-[1.1] text-center">
                         <span className="bg-gradient-to-r from-[#fc5c65] via-[#e056fd] to-[#8b5cf6] bg-clip-text text-transparent">Promote Your YouTube Videos</span>
-                        <span className="text-[#3f3f46]"> to the <br className="hidden md:block"/></span>
+                        <span className="text-[#3f3f46]"> to the <br className="hidden md:block" /></span>
                         <span className="text-[#3f3f46]">Right Audience</span>
                     </h1>
 
                     {/* Description aligned with Home Page section-desc */}
                     <p className="section-desc max-w-2xl mb-12 !mx-auto">
-                        Grow faster with <span className="font-bold text-slate-900">Vidflyy's</span> smart YouTube promotion system. Reach real viewers and track your promotion results in real time.
+                        Grow faster with <span className="font-bold text-slate-900">Vidflyy's</span> smart YouTube promotion system.<br></br> Reach real viewers and track your promotion results in real time.
                     </p>
 
                     {/* Hand Drawn Arrow - Absolute positioned */}
-                    <div className="absolute right-[5%] top-[55%] hidden xl:block pointer-events-none">
-                        <svg width="220" height="140" viewBox="0 0 220 140" fill="none" className="rotate-[15deg] opacity-70">
-                            <path d="M10 20C40 10 90 20 110 50C130 80 100 110 80 110C60 110 50 90 70 70C90 50 140 40 200 110" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="10 5" />
-                            <path d="M185 110L205 115L195 95" stroke="#475569" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <div className="absolute right-[10%] top-[15%] hidden xl:block pointer-events-none z-20">
+                        <svg width="220" height="260" viewBox="0 0 220 260" fill="none" className="opacity-80">
+
+                            <path
+                                d="
+      M150 10
+      C 200 60, 180 120, 120 140
+      C 60 160, 60 100, 120 110
+      C 180 120, 160 200, 80 230
+      "
+                                stroke="#475569"
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+
+                            <path
+                                d="M90 215 L80 230 L100 235"
+                                stroke="#475569"
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+
                         </svg>
                     </div>
 
@@ -224,9 +244,9 @@ export default function CampaignDashboard() {
                                 <div className="w-full bg-white border border-slate-100 rounded-xl p-3 flex flex-col relative overflow-hidden text-left shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500 mb-8 mx-auto xl:max-w-md">
                                     <div className="flex gap-4">
                                         <div className="shrink-0 w-[140px] aspect-video bg-black rounded-lg overflow-hidden relative shadow-md">
-                                            <img 
-                                                src={videoInfo?.thumbnail || channelInfo?.avatar || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=400&auto=format&fit=crop"} 
-                                                alt="Preview" 
+                                            <img
+                                                src={videoInfo?.thumbnail || channelInfo?.avatar || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=400&auto=format&fit=crop"}
+                                                alt="Preview"
                                                 className={videoInfo ? "w-full h-full object-cover" : "h-full w-auto mx-auto object-cover"}
                                             />
                                             {videoInfo && (
@@ -256,33 +276,33 @@ export default function CampaignDashboard() {
                         <div className="flex flex-col items-center gap-6 relative z-10 w-full">
                             {/* Format Indicators */}
                             <div className="flex items-center justify-center gap-8 text-[14px] font-semibold text-slate-500 mt-2">
-                                 <div className="flex items-center gap-2">
-                                     <div className="w-5 h-5 bg-[#E52D27] rounded-sm flex items-center justify-center">
-                                         <Play className="h-3 w-3 text-white fill-current" />
-                                     </div>
-                                     Video
-                                 </div>
-                                 <div className="flex items-center gap-2">
-                                     <div className="w-5 h-5 bg-[#E52D27] rounded-sm flex items-center justify-center">
-                                         <svg viewBox="0 0 24 24" className="w-4 h-4 text-white fill-current">
-                                             <path d="M17.712 9.329c.14-.543.167-1.121.085-1.701-.137-.962-.577-1.853-1.238-2.514-.66-.66-1.551-1.1-2.512-1.236-.61-.086-1.206-.05-1.761.112l-1.547-1.442L2.513 11.232l1.642 1.541c-.42.505-.724 1.107-.866 1.773-.137.962.302 1.854.963 2.515.66.661 1.551 1.101 2.512 1.237.611.086 1.207.051 1.762-.112l1.547 1.443 8.226-8.683-1.642-1.541l2.055-2.186z"/>
-                                         </svg>
-                                     </div>
-                                     Shorts
-                                 </div>
-                                 <div className="flex items-center gap-2">
-                                     <div className="w-5 h-5 bg-slate-400 rounded-sm flex items-center justify-center">
-                                         <Users className="h-3 w-3 text-white" />
-                                     </div>
-                                     Channel
-                                 </div>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-5 h-5 bg-[#E52D27] rounded-sm flex items-center justify-center">
+                                        <Play className="h-3 w-3 text-white fill-current" />
+                                    </div>
+                                    Video
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-5 h-5 bg-[#E52D27] rounded-sm flex items-center justify-center">
+                                        <svg viewBox="0 0 24 24" className="w-4 h-4 text-white fill-current">
+                                            <path d="M17.712 9.329c.14-.543.167-1.121.085-1.701-.137-.962-.577-1.853-1.238-2.514-.66-.66-1.551-1.1-2.512-1.236-.61-.086-1.206-.05-1.761.112l-1.547-1.442L2.513 11.232l1.642 1.541c-.42.505-.724 1.107-.866 1.773-.137.962.302 1.854.963 2.515.66.661 1.551 1.101 2.512 1.237.611.086 1.207.051 1.762-.112l1.547 1.443 8.226-8.683-1.642-1.541l2.055-2.186z" />
+                                        </svg>
+                                    </div>
+                                    Shorts
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-5 h-5 bg-slate-400 rounded-sm flex items-center justify-center">
+                                        <Users className="h-3 w-3 text-white" />
+                                    </div>
+                                    Channel
+                                </div>
                             </div>
                         </div>
 
                     </div>
                 </div>
             </div>
-            
+
         </CampaignLayout>
     );
 }

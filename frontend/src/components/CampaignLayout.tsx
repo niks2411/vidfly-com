@@ -26,6 +26,7 @@ type CampaignLayoutProps = {
   activeSidebar?: CampaignSidebarKey;
   className?: string;
   hideSidebar?: boolean;
+  showChannelSelector?: boolean;
 };
 
 const CampaignLayout = ({
@@ -33,6 +34,7 @@ const CampaignLayout = ({
   activeSidebar = "promote",
   className,
   hideSidebar = false,
+  showChannelSelector = true,
 }: CampaignLayoutProps) => {
   const sidebarContext = useCampaignSidebar();
   const isSidebarOpen = sidebarContext?.isSidebarOpen || false;
@@ -112,9 +114,11 @@ const CampaignLayout = ({
               <Menu className="w-5 h-5 lg:w-6 lg:h-6" strokeWidth={2} />
             </button>
           )}
-          <div className="flex items-center ml-16 lg:ml-36">
-            <ChannelSelector />
-          </div>
+          {showChannelSelector && (
+            <div className="flex items-center ml-16 lg:ml-36">
+              <ChannelSelector />
+            </div>
+          )}
         </div>
 
         {/* Right Side: User Profile */}

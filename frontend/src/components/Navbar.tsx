@@ -86,7 +86,7 @@ const Navbar = () => {
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
-  if (pathname === "/get-started" || pathname?.startsWith('/campaign') || pathname?.startsWith('/payment') || pathname?.startsWith('/admin')) return null;
+  if (pathname === "/get-started" || pathname === "/profile" || pathname?.startsWith('/campaign') || pathname?.startsWith('/payment') || pathname?.startsWith('/admin')) return null;
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
