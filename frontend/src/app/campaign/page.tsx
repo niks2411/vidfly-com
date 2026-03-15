@@ -156,146 +156,146 @@ export default function CampaignDashboard() {
     if (!mounted) return null;
 
     return (
-        <CampaignLayout activeSidebar="promote" className="max-w-none p-0 !p-0 flex-1 flex flex-col font-founders relative">
+        <CampaignLayout activeSidebar="promote" className="max-w-none p-0 !p-0 flex-1 flex flex-col font-founders relative overflow-x-hidden">
 
-            {/* Main Hero Section with Image background matching */}
-            <div className="relative flex-1 flex flex-col items-center justify-center px-4 py-12">
+            {/* Main Hero Section */}
+            <div className="relative flex-1 flex flex-col items-center pt-5 px-4">
 
-                {/* Background Gradient matching the Pink/White blend in image */}
+                {/* Subtle Background Gradient */}
                 <div
-                    className="absolute inset-0 z-0 pointer-events-none"
+                    className="absolute inset-0 z-0 pointer-events-none opacity-40"
                     style={{
-                        background: 'radial-gradient(ellipse at 0% 0%, rgba(255, 120, 120, 0.4) 0%, rgba(255, 255, 255, 0) 70%)',
+                        background: 'radial-gradient(circle at 50% 0%, rgba(221, 214, 254, 0.5) 0%, rgba(255, 255, 255, 0) 70%)',
                     }}
                 />
 
-                <div className="w-full max-w-4xl relative z-10 flex flex-col items-center text-center animate-fade-in">
+                <div className="w-full max-w-5xl relative z-10 flex flex-col items-center text-center">
 
-                    {/* Main Headline aligned with Home Page section-heading */}
-                    <h1 className="section-heading !mb-6 !leading-[1.1] text-center">
-                        <span className="bg-gradient-to-r from-[#fc5c65] via-[#e056fd] to-[#8b5cf6] bg-clip-text text-transparent">Promote Your YouTube Videos</span>
-                        <span className="text-[#3f3f46]"> to the <br className="hidden md:block" /></span>
-                        <span className="text-[#3f3f46]">Right Audience</span>
+                    {/* Main Headline */}
+                    <h1 className="section-heading !text-[#1e293b] !mb-0">
+                        Join <span className="font-bold">50,000+</span> <span className="italic font-serif">Creators</span> who scaled<br className="hidden md:block" />
+                        faster with <span className="font-bold">Vidfly!</span>
                     </h1>
 
-                    {/* Description aligned with Home Page section-desc */}
-                    <p className="section-desc max-w-2xl mb-12 !mx-auto">
-                        Grow faster with <span className="font-bold text-slate-900">Vidflyy's</span> smart YouTube promotion system.<br></br> Reach real viewers and track your promotion results in real time.
-                    </p>
+                    {/* Stacked Creator Images */}
+                    <div className="relative w-full max-w-sm h-[200px] md:h-[260px] mb-12 flex items-center justify-center">
+                        {/* Center Card */}
+                        <div className="absolute z-20 w-[220px] md:w-[260px] aspect-square bg-white rounded-3xl p-1 shadow-2xl overflow-hidden border-[6px] border-white">
+                            <div className="w-full h-full rounded-2xl overflow-hidden relative">
+                                <Image
+                                    src="/creator_main.png"
+                                    alt="YouTube Creator"
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                        </div>
 
-                    {/* Hand Drawn Arrow - Absolute positioned */}
-                    <div className="absolute right-[10%] top-[15%] hidden xl:block pointer-events-none z-20">
-                        <svg width="220" height="260" viewBox="0 0 220 260" fill="none" className="opacity-80">
+                        {/* Left Card (Behind) */}
+                        <div className="absolute z-10 w-[200px] md:w-[240px] aspect-square bg-white rounded-3xl p-1 shadow-xl overflow-hidden border-[6px] border-white left-1/2 -translate-x-[90%] rotate-[-15deg] brightness-75">
+                            <div className="w-full h-full rounded-2xl overflow-hidden relative">
+                                <Image
+                                    src="/creator_side1.png"
+                                    alt="YouTube Creator"
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                        </div>
 
-                            <path
-                                d="
-      M150 10
-      C 200 60, 180 120, 120 140
-      C 60 160, 60 100, 120 110
-      C 180 120, 160 200, 80 230
-      "
-                                stroke="#475569"
-                                strokeWidth="3"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
+                        {/* Right Card (Behind) */}
+                        <div className="absolute z-10 w-[200px] md:w-[240px] aspect-square bg-white rounded-3xl p-1 shadow-xl overflow-hidden border-[6px] border-white left-1/2 translate-x-[-10%] rotate-[15deg] brightness-75">
+                            <div className="w-full h-full rounded-2xl overflow-hidden relative">
+                                <Image
+                                    src="/creator_side2.png"
+                                    alt="YouTube Creator"
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                        </div>
 
-                            <path
-                                d="M90 215 L80 230 L100 235"
-                                stroke="#475569"
-                                strokeWidth="3"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-
-                        </svg>
+                        {/* Pagination Dots */}
+                        <div className="absolute -bottom-10 flex items-center gap-2">
+                            <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+                            <div className="w-5 h-2.5 rounded-full bg-slate-800" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />
+                        </div>
                     </div>
 
-                    {/* Price Hint & Main Action Area */}
-                    <p className="text-[#3b82f6] font-semibold text-[16px] mb-4">
-                        Plans start at just ₹499 /-
+                    {/* Description/Price Line */}
+                    <p className="text-[#334155] text-[17px] font-medium mb-6">
+                        Promote your YouTube videos starting at <span className="font-bold">just $10!</span>
                     </p>
-                    <div className="w-full max-w-2xl flex flex-col items-center gap-6">
-                        <div className="w-full relative group p-[2.5px] rounded-full bg-gradient-to-r from-[#dec9ff] via-[#f7d5ff] to-[#d1ffef] shadow-[0_0_30px_rgba(192,132,252,0.15)] transition-all duration-300">
+
+                    {/* Main Interaction Area */}
+                    <div className="w-full max-w-3xl flex flex-col items-center gap-6">
+                        {/* URL Input with Vanish Effect */}
+                        <div className="w-full relative px-4">
                             <PlaceholdersAndVanishInput
                                 placeholders={[
-                                    "Paste your YouTube Video Link or Channel URL",
-                                    "Enter your YouTube video link...",
+                                    "Enter your Channel Name, Channel Link, or Video Link",
+                                    "Paste your YouTube video link...",
                                     "Paste your channel URL here...",
                                     "Search for your channel name...",
                                 ]}
+                                value={youtubeLink}
                                 showIcon={true}
                                 hideSubmit={false}
-                                className="h-16 bg-white !max-w-none border-none"
+                                className="max-w-none"
                                 onChange={(e) => setYoutubeLink(e.target.value)}
                                 onSubmit={handleLaunchCampaign}
                             />
                         </div>
-                        {/* Preview Section placed exactly below the input box */}
+
+                        {/* Preview Logic (matching new style) */}
                         <div className="w-full">
                             {isFetchingPreview && (
-                                <div className="w-full flex items-center justify-center py-6 bg-white/50 backdrop-blur-sm rounded-2xl border border-dashed border-slate-200 animate-pulse mb-8 overflow-hidden h-[120px]">
-                                    <Loader2 className="w-6 h-6 animate-spin text-[#E52D27]" />
-                                    <span className="ml-3 text-[15px] font-medium text-slate-500 font-founders">Fetching YouTube Details...</span>
+                                <div className="w-full flex items-center justify-center py-4 bg-white/50 backdrop-blur-sm rounded-2xl border border-dashed border-slate-200 animate-pulse transition-all">
+                                    <Loader2 className="w-5 h-5 animate-spin text-indigo-600" />
+                                    <span className="ml-3 text-sm font-medium text-slate-500">Fetching Details...</span>
                                 </div>
                             )}
 
                             {(!isFetchingPreview && (videoInfo || channelInfo)) && (
-                                <div className="w-full bg-white border border-slate-100 rounded-xl p-3 flex flex-col relative overflow-hidden text-left shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500 mb-8 mx-auto xl:max-w-md">
+                                <div className="w-full max-w-md mx-auto bg-white border border-slate-100 rounded-2xl p-3 flex flex-col relative overflow-hidden text-left shadow-lg animate-in slide-in-from-top-2 duration-300">
                                     <div className="flex gap-4">
-                                        <div className="shrink-0 w-[140px] aspect-video bg-black rounded-lg overflow-hidden relative shadow-md">
+                                        <div className="shrink-0 w-[120px] aspect-video bg-black rounded-xl overflow-hidden relative">
                                             <img
                                                 src={videoInfo?.thumbnail || channelInfo?.avatar || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=400&auto=format&fit=crop"}
                                                 alt="Preview"
-                                                className={videoInfo ? "w-full h-full object-cover" : "h-full w-auto mx-auto object-cover"}
+                                                className="w-full h-full object-cover"
                                             />
-                                            {videoInfo && (
-                                                <div className="absolute top-1.5 right-1.5 bg-black/70 backdrop-blur-sm text-white px-1.5 py-0.5 rounded text-[10px] font-bold">
-                                                    {videoInfo.duration}
-                                                </div>
-                                            )}
                                         </div>
                                         <div className="flex flex-col flex-1 min-w-0 justify-center">
-                                            <h3 className="font-bold text-slate-800 text-[14px] leading-tight line-clamp-2 pr-2">
+                                            <h3 className="font-bold text-slate-800 text-sm line-clamp-1">
                                                 {videoInfo?.title || channelInfo?.title || "Fetching details..."}
                                             </h3>
-                                            <div className="flex items-center gap-2 mt-2 text-slate-500">
-                                                {(channelInfo?.avatar || videoInfo?.channelAvatar) && (
-                                                    <img src={channelInfo?.avatar || videoInfo?.channelAvatar} alt="Avatar" className="w-4 h-4 rounded-full" />
-                                                )}
-                                                <span className="text-[13px] font-medium line-clamp-1">{videoInfo?.author || channelInfo?.name || channelInfo?.title || "Unknown Channel"}</span>
+                                            <div className="flex items-center gap-2 mt-1 text-slate-500">
+                                                <span className="text-xs font-medium line-clamp-1">{videoInfo?.author || channelInfo?.name || "Unknown Channel"}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#ff5a5f] to-[#c22143]" />
+                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500" />
                                 </div>
                             )}
                         </div>
 
-                        {/* Format indicators indicators */}
-                        <div className="flex flex-col items-center gap-6 relative z-10 w-full">
-                            {/* Format Indicators */}
-                            <div className="flex items-center justify-center gap-8 text-[14px] font-semibold text-slate-500 mt-2">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-5 h-5 bg-[#E52D27] rounded-sm flex items-center justify-center">
-                                        <Play className="h-3 w-3 text-white fill-current" />
-                                    </div>
-                                    Video
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <div className="w-5 h-5 bg-[#E52D27] rounded-sm flex items-center justify-center">
-                                        <svg viewBox="0 0 24 24" className="w-4 h-4 text-white fill-current">
-                                            <path d="M17.712 9.329c.14-.543.167-1.121.085-1.701-.137-.962-.577-1.853-1.238-2.514-.66-.66-1.551-1.1-2.512-1.236-.61-.086-1.206-.05-1.761.112l-1.547-1.442L2.513 11.232l1.642 1.541c-.42.505-.724 1.107-.866 1.773-.137.962.302 1.854.963 2.515.66.661 1.551 1.101 2.512 1.237.611.086 1.207.051 1.762-.112l1.547 1.443 8.226-8.683-1.642-1.541l2.055-2.186z" />
-                                        </svg>
-                                    </div>
-                                    Shorts
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <div className="w-5 h-5 bg-slate-400 rounded-sm flex items-center justify-center">
-                                        <Users className="h-3 w-3 text-white" />
-                                    </div>
-                                    Channel
-                                </div>
+                        {/* Format indicators */}
+                        <div className="flex items-center justify-center gap-6 mt-2 text-[13px] md:text-[15px] font-bold text-slate-400">
+                            <div className="flex items-center gap-2">
+                                <Play className="w-4 h-4 text-slate-300 fill-current" />
+                                Video
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <svg width="10" height="13" viewBox="0 0 10 13" fill="none" className="w-4 h-4">
+                                    <path d="M8.60407 5.19462L7.85473 4.88209L8.74759 4.40732C9.01997 4.26468 9.26141 4.06953 9.45801 3.83313C9.6546 3.59673 9.80245 3.32375 9.89305 3.02994C9.98364 2.73612 10.0152 2.42728 9.98583 2.12122C9.95649 1.81516 9.86686 1.51793 9.72209 1.24668C9.43132 0.697543 8.93434 0.286386 8.34045 0.103637C7.74657 -0.0791124 7.10441 -0.0184888 6.55522 0.272174L1.25161 3.08284C0.857603 3.28987 0.530811 3.60497 0.309572 3.99117C0.0883326 4.37737 -0.0181779 4.81866 0.00253621 5.26326C0.0237211 5.69664 0.164454 6.1157 0.409146 6.47401C0.653839 6.83233 0.992941 7.11593 1.38889 7.29339C1.40761 7.29963 2.13875 7.60539 2.13875 7.60539L1.25161 8.07393C0.879324 8.27473 0.568277 8.57247 0.351408 8.93563C0.13454 9.29878 0.0199227 9.71383 0.0196966 10.1368C0.0229763 10.7573 0.27097 11.3515 0.709805 11.7903C1.14864 12.229 1.74287 12.4769 2.36339 12.48C2.7404 12.48 3.11065 12.3895 3.44502 12.2158L8.75435 9.40464C9.14752 9.19728 9.47334 8.88199 9.6935 8.49584C9.91365 8.10969 10.019 7.66871 9.99718 7.22475C9.97485 6.79084 9.83296 6.37157 9.58719 6.01328C9.34142 5.655 9.00083 5.37167 8.60407 5.19462Z" fill="#94a3b8" />
+                                </svg>
+                                Shorts
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Users className="w-4 h-4 text-slate-300" />
+                                Channel
                             </div>
                         </div>
 

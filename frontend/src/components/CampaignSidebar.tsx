@@ -91,7 +91,7 @@ const CampaignSidebar = ({ active = "promote", onNavigate: onNavigateCallback, i
                       onClick={() => handleNavigate(item.path)}
                       disabled={!item.path}
                       className={cn(
-                        "w-[calc(100%-16px)] ml-3 text-left px-4 py-3 rounded-[14px] text-[14px] font-medium transition-all flex items-center gap-3.5 group relative mb-1",
+                        "w-[calc(100%-16px)] ml-3 text-left px-4 py-3 rounded-[14px] text-[16px] md:text-[17px] font-medium transition-all flex items-center gap-3.5 group relative mb-1",
                         item.path
                           ? isItemSelected
                             ? "text-[#c22143] font-bold bg-[#fae6e6] shadow-[inset_4.5px_0_0_0_#c22143]"

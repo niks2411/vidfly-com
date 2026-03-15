@@ -3,9 +3,11 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { Youtube } from "lucide-react";
 
 export function PlaceholdersAndVanishInput({
   placeholders,
+  value,
   onChange,
   onSubmit,
   showIcon = false,
@@ -13,6 +15,7 @@ export function PlaceholdersAndVanishInput({
   className
 }: {
   placeholders: string[];
+  value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   showIcon?: boolean;
@@ -51,7 +54,6 @@ export function PlaceholdersAndVanishInput({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const newDataRef = useRef<any[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [value, setValue] = useState("");
   const [animating, setAnimating] = useState(false);
 
   const draw = useCallback(() => {
@@ -147,8 +149,8 @@ export function PlaceholdersAndVanishInput({
         if (newDataRef.current.length > 0) {
           animateFrame(pos - 12);
         } else {
-          setValue("");
           setAnimating(false);
+          onChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>);
           if (callback) callback();
         }
       });
@@ -188,7 +190,7 @@ export function PlaceholdersAndVanishInput({
   return (
     <form
       className={cn(
-        "w-full relative max-w-xl mx-auto bg-white dark:bg-zinc-800 h-14 rounded-full overflow-hidden shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-200",
+        "w-full relative max-w-xl mx-auto bg-white dark:bg-zinc-800 h-16 md:h-20 rounded-full overflow-hidden transition duration-200 border-[2.5px] border-[#c084fc]",
         value && "bg-gray-50",
         className
       )}
@@ -196,15 +198,16 @@ export function PlaceholdersAndVanishInput({
     >
       <canvas
         className={cn(
-          "absolute pointer-events-none text-base transform scale-50 top-[20%] left-2 sm:left-12 origin-top-left filter invert dark:invert-0 pr-20",
+          "absolute pointer-events-none text-base transform scale-50 top-[32%] origin-top-left filter invert dark:invert-0 pr-20",
+          showIcon ? "left-24 md:left-32" : "left-2 sm:left-12",
           !animating ? "opacity-0" : "opacity-100"
         )}
         ref={canvasRef}
       />
-      
+
       {showIcon && (
-        <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none z-50">
-          <svg width="24" height="24" viewBox="0 0 48 48" fill="none">
+        <div className="absolute inset-y-0 left-0 px-4 md:px-6 py-2 border-r border-gray-100 flex items-center justify-center z-50">
+          <svg width="32" height="32" viewBox="0 0 48 48" fill="none" className="md:w-10 md:h-10">
             <path d="M43.2 14.4C42.7 12.5 41.2 11 39.3 10.5C35.8 9.6 24 9.6 24 9.6C24 9.6 12.2 9.6 8.7 10.5C6.8 11 5.3 12.5 4.8 14.4C3.9 17.9 3.9 24 3.9 24C3.9 24 3.9 30.1 4.8 33.6C5.3 35.5 6.8 37 8.7 37.5C12.2 38.4 24 38.4 24 38.4C24 38.4 35.8 38.4 39.3 37.5C41.2 37 42.7 35.5 43.2 33.6C44.1 30.1 44.1 24 44.1 24C44.1 24 44.1 17.9 43.2 14.4Z" fill="#E52D27" />
             <path d="M19.8 30.6L31.2 24L19.8 17.4V30.6Z" fill="white" />
           </svg>
@@ -214,7 +217,6 @@ export function PlaceholdersAndVanishInput({
       <input
         onChange={(e) => {
           if (!animating) {
-            setValue(e.target.value);
             onChange && onChange(e);
           }
         }}
@@ -223,8 +225,8 @@ export function PlaceholdersAndVanishInput({
         value={value}
         type="text"
         className={cn(
-          "w-full relative text-sm sm:text-lg z-50 border-none dark:text-white bg-transparent text-slate-700 h-full rounded-full focus:outline-none focus:ring-0 pr-20",
-          showIcon ? "pl-12" : "pl-6 sm:pl-10",
+          "w-full relative text-[15px] md:text-lg z-50 border-none dark:text-white bg-transparent text-slate-700 h-full rounded-full focus:outline-none focus:ring-0 pr-32 md:pr-40",
+          showIcon ? "pl-28 md:pl-36" : "pl-6 sm:pl-10",
           animating && "text-transparent dark:text-transparent"
         )}
       />
@@ -233,23 +235,10 @@ export function PlaceholdersAndVanishInput({
         <button
           disabled={!value}
           type="submit"
-          className="absolute right-1.5 top-1/2 z-50 -translate-y-1/2 h-[52px] w-[52px] rounded-full disabled:bg-slate-200 bg-gradient-to-b from-[#d1d5db] to-[#9ca3af] hover:from-[#9ca3af] hover:to-[#6b7280] transition-all duration-300 flex items-center justify-center shadow-md border-2 border-white"
+          className="absolute right-2 top-1/2 z-50 -translate-y-1/2 h-[42px] md:h-[52px] px-6 md:px-8 rounded-full disabled:bg-slate-200 bg-[#c084fc] hover:bg-[#a855f7] transition-all duration-300 flex items-center justify-center shadow-lg text-white font-bold text-sm md:text-base"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="white"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="transition-transform group-hover:translate-x-1"
-          >
-            <path d="M5 12h14" />
-            <path d="M12 5l7 7-7 7" />
-          </svg>
+          Let's Go!
+
         </button>
       )}
 
@@ -276,7 +265,7 @@ export function PlaceholdersAndVanishInput({
               }}
               className={cn(
                 "dark:text-zinc-500 text-sm sm:text-base font-normal text-neutral-500 text-left w-[calc(100%-2rem)] truncate",
-                showIcon ? "pl-12" : "pl-4 sm:pl-12"
+                showIcon ? "pl-28 md:pl-36" : "pl-4 sm:pl-12"
               )}
             >
               {placeholders[currentPlaceholder]}
