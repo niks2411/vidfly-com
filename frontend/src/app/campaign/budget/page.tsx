@@ -37,6 +37,7 @@ type SelectedVideo = {
     likeCount?: string | number | null;
     commentCount?: string | number | null;
     viewsRequested?: number | null;
+    tags?: string[];
 };
 
 type CampaignState = {
@@ -1258,7 +1259,7 @@ export default function CampaignBudget() {
                                                     <button 
                                                         className="px-4 py-1.5 bg-indigo-600 text-white text-[11px] font-bold rounded-full hover:bg-indigo-700 transition-colors flex items-center gap-1.5"
                                                         onClick={() => {
-                                                            const tags = primaryVideo.tags || [];
+                                                            const tags = primaryVideo?.tags || [];
                                                             if (tags.length > 0) setKeywords(prev => Array.from(new Set([...prev, ...tags])));
                                                         }}
                                                     >
