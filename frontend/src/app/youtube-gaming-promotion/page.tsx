@@ -351,7 +351,7 @@ export default function YoutubeGamingPromotion() {
                         {/* Right Image */}
                         <div className="flex-1 flex justify-center lg:justify-end">
                             <Animated delay={200}>
-                                <div className="relative w-[350px] h-[350px] lg:w-[450px] lg:h-[400px]">
+                                <div className="relative w-[350px] h-[350px] lg:w-[550px] lg:h-[450px]">
                                     <Image
                                         src="/megaphone.png"
                                         alt="Promote Your Gaming Channel"

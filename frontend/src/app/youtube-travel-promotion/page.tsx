@@ -435,7 +435,7 @@ export default function YoutubeTravelPromotion() {
                             <Animated delay={200}>
                                 <div className="relative w-[300px] h-[350px] lg:w-[450px] lg:h-[450px]">
                                     <Image
-                                        src="/rightgaming.png"
+                                        src="/righttravel.png"
                                         alt="Who Should Use Travel Video Promotion"
                                         fill
                                         className="object-contain"
