@@ -12,6 +12,7 @@ export function PlaceholdersAndVanishInput({
   onSubmit,
   showIcon = false,
   hideSubmit = false,
+  disabled = false,
   className
 }: {
   placeholders: string[];
@@ -20,6 +21,7 @@ export function PlaceholdersAndVanishInput({
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   showIcon?: boolean;
   hideSubmit?: boolean;
+  disabled?: boolean;
   className?: string;
 }) {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
@@ -233,7 +235,7 @@ export function PlaceholdersAndVanishInput({
 
       {!hideSubmit && (
         <button
-          disabled={!value}
+          disabled={disabled || !value}
           type="submit"
           className="absolute right-2 top-1/2 z-50 -translate-y-1/2 h-[42px] md:h-[52px] px-6 md:px-8 rounded-full disabled:bg-slate-200 bg-[#c084fc] hover:bg-[#a855f7] transition-all duration-300 flex items-center justify-center shadow-lg text-white font-bold text-sm md:text-base"
         >

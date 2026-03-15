@@ -1422,7 +1422,7 @@ export default function CampaignBudget() {
                                     className={`w-full h-[52px] rounded-[100px] flex items-center justify-center gap-2 text-[17px] font-black shadow-lg transition-all ${
                                         creating 
                                         ? "bg-slate-300 cursor-not-allowed text-slate-500" 
-                                        : "bg-[#8b5cf6] hover:bg-[#7c3aed] text-white shadow-indigo-100"
+                                        : "bg-[rgb(51,136,244)] hover:bg-[rgb(40,120,220)] text-white shadow-blue-100"
                                     }`}
                                 >
                                     {creating ? "Launching..." : "Next: Pay & Launch"}

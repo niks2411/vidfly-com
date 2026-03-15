@@ -225,11 +225,15 @@ export default function CampaignChannel() {
         try {
             const parsed: StoredVideo[] = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "[]");
             setVideos(parsed);
-            if (parsed.length > 0) {
-                setSelectedIds(parsed.slice(0, 5).map(v => v.videoId));
-            }
         } catch (err) { console.error(err); }
     }, []);
+
+    // Reset selection when channel changes to prevent "ghost" selections from previous channels
+    useEffect(() => {
+        if (channelId) {
+            setSelectedIds([]);
+        }
+    }, [channelId]);
 
     useEffect(() => {
         const fetchVideos = async () => {

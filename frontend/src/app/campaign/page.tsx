@@ -270,6 +270,7 @@ export default function CampaignDashboard() {
                                 showIcon={true}
                                 hideSubmit={false}
                                 className="max-w-none"
+                                disabled={isFetchingPreview || (!videoInfo && !channelInfo)}
                                 onChange={(e) => setYoutubeLink(e.target.value)}
                                 onSubmit={handleLaunchCampaign}
                             />
