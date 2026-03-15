@@ -1,9 +1,34 @@
 const Joi = require('joi');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const {
   EMAIL_COOKIE_NAME,
   verifyEmailCookieValue,
 } = require('../utils/emailVerification');
+
+// Helper to verify if request is from a verified email owner
+const isVerified = (req, email) => {
+  const normalizedEmail = email.toLowerCase().trim();
+  
+  // 1. Check verified email cookie (from OTP)
+  const cookieValue = req.cookies[EMAIL_COOKIE_NAME];
+  if (cookieValue && verifyEmailCookieValue(cookieValue, normalizedEmail)) {
+    return true;
+  }
+
+  // 2. Check if logged in via JWT
+  const token = req.cookies?.vidfly_token;
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (decoded.email && decoded.email.toLowerCase() === normalizedEmail) {
+        return true;
+      }
+    } catch (e) {}
+  }
+
+  return false;
+};
 
 // Add channel to user's channel list
 exports.addChannel = async (req, res, next) => {
@@ -17,11 +42,7 @@ exports.addChannel = async (req, res, next) => {
     const { error, value } = schema.validate(req.body);
     if (error) return res.status(400).json({ message: error.message });
 
-    const normalizedEmail = value.email.toLowerCase().trim();
-
-    // Verify email cookie
-    const cookieValue = req.cookies[EMAIL_COOKIE_NAME];
-    if (!cookieValue || !verifyEmailCookieValue(cookieValue, normalizedEmail)) {
+    if (!isVerified(req, value.email)) {
       return res.status(401).json({ message: 'Email verification required' });
     }
 
@@ -199,9 +220,7 @@ exports.removeChannel = async (req, res, next) => {
 
     const normalizedEmail = value.email.toLowerCase().trim();
 
-    // Verify email cookie
-    const cookieValue = req.cookies[EMAIL_COOKIE_NAME];
-    if (!cookieValue || !verifyEmailCookieValue(cookieValue, normalizedEmail)) {
+    if (!isVerified(req, normalizedEmail)) {
       return res.status(401).json({ message: 'Email verification required' });
     }
 

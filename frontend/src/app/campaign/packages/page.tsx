@@ -29,6 +29,8 @@ export default function CampaignPackages() {
     const [channelError, setChannelError] = useState("");
     const [loadingInitial, setLoadingInitial] = useState(true);
     const [hasChannel, setHasChannel] = useState(false);
+    const [processingPkg, setProcessingPkg] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const email = getVerifiedEmail();
@@ -62,7 +64,7 @@ export default function CampaignPackages() {
         init();
     }, [router]);
 
-    const handleBuyNow = (pkgId: string) => {
+    const handleBuyNow = async (pkg: any) => {
         const channelKey = getSelectedChannelKey();
         const selectedChannelId = localStorage.getItem(channelKey);
 
@@ -71,7 +73,92 @@ export default function CampaignPackages() {
             return;
         }
 
-        router.push(`/campaign/packages/${pkgId}`);
+        if (!selectedChannelId) {
+            // If we know they have channels but none is "selected", send them to detail page to pick
+            router.push(`/campaign/packages/${pkg.id}`);
+            return;
+        }
+
+        try {
+            setProcessingPkg(pkg.id);
+            setError(null);
+            setChannelError("");
+
+            // 1. Get channel info from cache
+            let channelInfo = null;
+            const cached = sessionStorage.getItem("vidfly_channel_info");
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                channelInfo = parsed.find((i: any) => i.channelId === selectedChannelId);
+            }
+
+            // 2. If not in cache, we need to fetch it to be safe (or at least have a name)
+            if (!channelInfo) {
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/youtube/channel-info?channelId=${encodeURIComponent(selectedChannelId)}`, { credentials: "include" });
+                    if (res.ok) channelInfo = await res.json();
+                } catch (e) { }
+            }
+
+            const activeChannel = channelInfo || { channelId: selectedChannelId, name: "YouTube Channel" };
+
+            // 3. Create the order
+            const price = parseFloat(pkg.price.replace(/[₹,]/g, ''));
+            const viewsMatch = pkg.views.match(/(\d+(?:,\d+)*)/);
+            const quantity = viewsMatch ? parseInt(viewsMatch[1].replace(/,/g, '')) : 0;
+
+            const payload = {
+                email: verifiedEmail,
+                channel: {
+                    name: activeChannel.name,
+                    channelId: activeChannel.channelId,
+                    link: `https://www.youtube.com/channel/${activeChannel.channelId}`,
+                    avatar: activeChannel.avatar || activeChannel.channelAvatar || null,
+                },
+                videos: [{
+                    videoId: `channel_${activeChannel.channelId}_${Date.now()}`,
+                    title: `${activeChannel.name} - Channel Promotion`,
+                    link: `https://www.youtube.com/channel/${activeChannel.channelId}`,
+                    thumbnail: activeChannel.avatar || activeChannel.channelAvatar || null,
+                    viewsRequested: quantity,
+                }],
+                package: {
+                    id: pkg.id,
+                    name: pkg.name,
+                    price: price,
+                    currency: "INR",
+                    quantity: quantity,
+                    type: "package",
+                    description: pkg.description || `${pkg.views} Views Boost`,
+                },
+                targeting: {
+                    autoTargeting: pkg.ai,
+                },
+                budget: price,
+                source: "packages",
+            };
+
+            const response = await fetch(`${API_BASE_URL}/api/orders/campaign`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+                credentials: "include",
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data?.message || "Failed to create order");
+
+            if (data.paymentCheckoutUrl) {
+                window.location.href = data.paymentCheckoutUrl;
+                return;
+            }
+
+            router.push(`/campaign/my-campaigns`);
+        } catch (err) {
+            console.error(err);
+            setError(err instanceof Error ? err.message : "Failed to proceed to payment");
+            setProcessingPkg(null);
+        }
     };
 
     if (loadingInitial) {
@@ -101,7 +188,7 @@ export default function CampaignPackages() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-6xl mx-auto justify-items-center">
                     {PACKAGES.row1.map(pkg => (
                         <div key={pkg.id} className="w-full max-w-[380px]">
-                            <OfferCard pkg={pkg} onAction={() => handleBuyNow(pkg.id)} />
+                            <OfferCard pkg={pkg} onAction={() => handleBuyNow(pkg)} processing={processingPkg === pkg.id} />
                         </div>
                     ))}
                 </div>
@@ -110,20 +197,20 @@ export default function CampaignPackages() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12 justify-items-center">
                     {PACKAGES.row2.map(pkg => (
                         <div key={pkg.id} className="w-full max-w-[380px]">
-                            <OfferCard pkg={pkg} onAction={() => handleBuyNow(pkg.id)} />
+                            <OfferCard pkg={pkg} onAction={() => handleBuyNow(pkg)} processing={processingPkg === pkg.id} />
                         </div>
                     ))}
                 </div>
 
                 {/* Row 3: Ultra Plan */}
                 <div className="max-w-[380px] mx-auto">
-                    <OfferCard pkg={PACKAGES.row3} onAction={() => handleBuyNow(PACKAGES.row3.id)} />
+                    <OfferCard pkg={PACKAGES.row3} onAction={() => handleBuyNow(PACKAGES.row3)} processing={processingPkg === PACKAGES.row3.id} />
                 </div>
 
-                {/* Channel Error */}
-                {channelError && (
+                {/* Errors */}
+                {(channelError || error) && (
                     <p className="mt-8 text-sm text-red-600 text-center font-medium bg-red-50 p-3 rounded-xl max-w-md mx-auto border border-red-200">
-                        {channelError}
+                        {channelError || error}
                     </p>
                 )}
             </div>
@@ -132,7 +219,7 @@ export default function CampaignPackages() {
 }
 
 // ─── Offer Card (same as pricing page) ───────────────────────
-function OfferCard({ pkg, onAction }: { pkg: any; onAction: () => void }) {
+function OfferCard({ pkg, onAction, processing }: { pkg: any; onAction: () => void; processing: boolean }) {
     return (
         <div className={`relative bg-white rounded-xl p-8 shadow-sm flex flex-col h-full border-[1.5px] transition-all hover:shadow-md ${pkg.popular ? 'border-[#8B5CF6]/50' : 'border-gray-100'}`}>
             {pkg.popular && (
@@ -195,9 +282,15 @@ function OfferCard({ pkg, onAction }: { pkg: any; onAction: () => void }) {
 
             <button
                 onClick={onAction}
-                className={`w-full py-4 text-white font-black text-[15px] rounded-[4px] transition-all hover:scale-[1.02] active:scale-95 shadow-sm tracking-wide bg-gradient-to-r ${pkg.btnGradient || 'from-[#8B5CF6] to-[#10B981]'}`}
+                disabled={processing}
+                className={`w-full py-4 text-white font-black text-[15px] rounded-[4px] transition-all hover:scale-[1.02] active:scale-95 shadow-sm tracking-wide bg-gradient-to-r ${pkg.btnGradient || 'from-[#8B5CF6] to-[#10B981]'} ${processing ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-                Get started now
+                {processing ? (
+                    <div className="flex items-center justify-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Please wait...
+                    </div>
+                ) : "Get started now"}
             </button>
         </div>
     );

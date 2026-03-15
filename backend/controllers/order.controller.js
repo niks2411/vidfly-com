@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const Joi = require('joi');
+const jwt = require('jsonwebtoken');
 const Order = require('../models/Order');
 const User = require('../models/User');
 const Payment = require('../models/Payment');
@@ -75,17 +76,37 @@ const createCampaignOrderSchema = Joi.object({
 });
 
 const ensureVerifiedEmail = async (req, email) => {
+  const normalizedEmail = email.toLowerCase().trim();
+  console.log(`[DEBUG] Verifying email: ${normalizedEmail}`);
+
   const cookieValue = req.cookies?.[EMAIL_COOKIE_NAME];
-  if (cookieValue && verifyEmailCookieValue(cookieValue, email)) {
+  if (cookieValue && verifyEmailCookieValue(cookieValue, normalizedEmail)) {
+    console.log(`[DEBUG] Verified via OTP cookie for: ${normalizedEmail}`);
     return null;
   }
 
+  // Check if user is logged in (trusted session)
+  const token = req.cookies?.vidfly_token;
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log(`[DEBUG] Found auth token for: ${decoded.email}`);
+      if (decoded.email && decoded.email.toLowerCase() === normalizedEmail) {
+        console.log(`[DEBUG] Verified via Auth Token for: ${normalizedEmail}`);
+        return null; // Email matched logged in user, consider verified
+      }
+    } catch (e) {
+      console.warn(`[DEBUG] Invalid auth token: ${e.message}`);
+    }
+  }
+
   const verifiedOtp = await OtpToken.findOne({
-    email: email.toLowerCase(),
+    email: normalizedEmail,
     verified: true,
   });
 
   if (!verifiedOtp) {
+    console.warn(`[DEBUG] Verification failed for: ${normalizedEmail}`);
     const err = new Error(
       'Email verification required. Please verify your email before submitting the order.'
     );
@@ -94,6 +115,7 @@ const ensureVerifiedEmail = async (req, email) => {
     throw err;
   }
 
+  console.log(`[DEBUG] Verified via OtpToken record for: ${normalizedEmail}`);
   return verifiedOtp;
 };
 

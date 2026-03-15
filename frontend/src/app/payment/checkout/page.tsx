@@ -17,7 +17,7 @@ type Order = {
     status: string;
     plan?: { name?: string; price?: number; currency?: string; quantity?: number; };
     packageInfo?: { name?: string; price?: number; currency?: string; };
-    channel?: { name?: string; };
+    channel?: { name?: string; avatar?: string; };
     videos?: Array<{ title?: string; }>;
     paymentId?: { amount?: number; currency?: string; status?: string; };
 };
@@ -110,6 +110,19 @@ function PaymentCheckoutContent() {
                         <h2 className="font-bold text-lg text-slate-800 border-b pb-3">Order Summary</h2>
                         <div className="space-y-3 text-sm">
                             <div className="flex justify-between"><span>Order ID</span><span className="font-bold">{order?.orderId}</span></div>
+                            <div className="flex justify-between items-center">
+                                <span>Channel</span>
+                                <div className="flex items-center gap-2">
+                                    {order?.channel?.avatar && (
+                                        <img 
+                                            src={order.channel.avatar} 
+                                            alt="" 
+                                            className="w-5 h-5 rounded-full object-cover border border-slate-200"
+                                        />
+                                    )}
+                                    <span className="font-bold">{order?.channel?.name || "N/A"}</span>
+                                </div>
+                            </div>
                             <div className="flex justify-between"><span>Campaign</span><span className="font-bold">{order?.plan?.name || order?.packageInfo?.name}</span></div>
                             <div className="flex justify-between text-lg font-bold pt-4 border-t"><span>Total</span><span className="text-red-600">{currency === "USD" ? "$" : "₹"} {amount.toLocaleString()}</span></div>
                         </div>

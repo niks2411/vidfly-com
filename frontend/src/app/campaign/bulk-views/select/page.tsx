@@ -163,11 +163,15 @@ export default function CampaignBulkViewsSelect() {
         <CampaignLayout activeSidebar="bulk" showChannelSelector={false}>
             <CampaignCard>
                 <CampaignHeader showChannelSelector={false}>
-                    <div className="flex gap-2">
-                        {["Enter Link", "Select Videos", "Budget", "Payment"].map((s, i) => (
-                            <div key={s} className="flex-1">
-                                <div className={`h-1.5 rounded-full ${i <= 1 ? "bg-red-600" : "bg-slate-200"}`} />
-                                <p className="text-[10px] text-slate-500 mt-1 uppercase text-center">{s}</p>
+                    <div className="flex items-center gap-4 flex-1 max-w-xl">
+                        {[
+                            { label: "Enter Link", active: true, color: "bg-gradient-to-r from-blue-400 to-emerald-300" },
+                            { label: "Select Videos", active: true, color: "bg-gradient-to-r from-blue-400 to-emerald-300" },
+                            { label: "Budget & Targeting", active: false, color: "bg-slate-200" }
+                        ].map((step, index) => (
+                            <div key={index} className="flex-1 flex flex-col items-start gap-2.5">
+                                <div className={`h-[5px] w-full rounded-full ${step.color}`} />
+                                <span className="text-[11px] font-bold text-slate-900 tracking-tight">{step.label}</span>
                             </div>
                         ))}
                     </div>
@@ -200,14 +204,14 @@ export default function CampaignBulkViewsSelect() {
                             <div
                                 key={v.videoId}
                                 onClick={() => setSelectedIds([v.videoId])}
-                                className={`flex items-center gap-4 p-3 rounded-2xl border cursor-pointer transition-all ${selectedIds.includes(v.videoId) ? "bg-red-50 border-red-200" : "bg-white border-slate-200 hover:border-red-100"}`}
+                                className={`flex items-center gap-4 p-3 rounded-2xl border cursor-pointer transition-all ${selectedIds.includes(v.videoId) ? "bg-purple-50 border-purple-200 shadow-sm" : "bg-white border-slate-200 hover:border-purple-100"}`}
                             >
                                 <img src={v.thumbnail} alt="" className="w-24 h-16 rounded-lg object-cover" />
                                 <div className="flex-1">
                                     <p className="text-sm font-bold text-slate-900 line-clamp-1">{v.title}</p>
                                     <p className="text-xs text-slate-500">{v.author}</p>
                                 </div>
-                                <div className={`w-6 h-6 rounded-full border flex items-center justify-center ${selectedIds.includes(v.videoId) ? "bg-red-600 border-red-600" : "border-slate-300"}`}>
+                                <div className={`w-6 h-6 rounded-full border flex items-center justify-center ${selectedIds.includes(v.videoId) ? "bg-purple-600 border-purple-600 shadow-sm shadow-purple-200" : "border-slate-300"}`}>
                                     {selectedIds.includes(v.videoId) && <span className="text-white text-xs">✓</span>}
                                 </div>
                             </div>
@@ -215,9 +219,9 @@ export default function CampaignBulkViewsSelect() {
                     </div>
 
                     <div className="flex gap-4 justify-end pt-6 border-t border-slate-100">
-                        <Button variant="outline" className="rounded-xl h-12 px-8" onClick={() => router.back()}>BACK</Button>
-                        <Button className="rounded-xl bg-red-600 hover:bg-red-700 h-12 px-8 font-bold" disabled={!selectedIds.length} onClick={handleNext}>
-                            CONTINUE
+                        <Button variant="outline" className="rounded-xl h-12 px-8 text-slate-600 font-bold" onClick={() => router.back()}>BACK</Button>
+                        <Button className="rounded-xl bg-slate-900 hover:bg-slate-800 h-12 px-8 font-bold" disabled={!selectedIds.length} onClick={handleNext}>
+                            CONTINUE TO BUDGET
                         </Button>
                     </div>
                 </div>
