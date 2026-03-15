@@ -139,6 +139,33 @@ export default function CampaignDashboard() {
                 commentCount: videoInfo?.commentCount || null,
             };
 
+            // Sync with ChannelSelector storage keys
+            const STORAGE_KEY = "vidfly_channel_videos";
+            try {
+                const existingVideosJSON = sessionStorage.getItem(STORAGE_KEY);
+                let existingVideos = [];
+                try {
+                    existingVideos = JSON.parse(existingVideosJSON || "[]");
+                } catch (e) {
+                    existingVideos = [];
+                }
+                
+                // Add new video to the list if not already there
+                const videoExists = existingVideos.some((v: any) => v.videoId === videoData.videoId);
+                if (!videoExists) {
+                    const updatedVideos = [videoData, ...existingVideos];
+                    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(updatedVideos));
+                }
+
+                // Update selected channel for the current user
+                if (channelId && (user?.email || localStorage.getItem("logged_user_email"))) {
+                    const email = user?.email || localStorage.getItem("logged_user_email");
+                    localStorage.setItem(`channel_${email}`, channelId);
+                }
+            } catch (err) {
+                console.warn("Failed to update channel videos in storage:", err);
+            }
+
             // Budget page expects these in sessionStorage
             sessionStorage.setItem("vidfly_current_campaign_video", JSON.stringify(videoData));
             sessionStorage.setItem("vidfly_current_campaign_videos", JSON.stringify([videoData]));

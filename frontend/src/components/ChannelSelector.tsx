@@ -54,6 +54,18 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
       const savedChannelId = localStorage.getItem(channelKey);
       if (savedChannelId) {
         setSelectedChannelId(savedChannelId);
+      } else {
+        // Fallback: Use the channel from the current campaign video if available
+        const currentVideoJSON = sessionStorage.getItem("vidfly_current_campaign_video");
+        if (currentVideoJSON) {
+          try {
+            const currentVideo = JSON.parse(currentVideoJSON);
+            if (currentVideo.channelId) {
+              setSelectedChannelId(currentVideo.channelId);
+              localStorage.setItem(channelKey, currentVideo.channelId);
+            }
+          } catch (e) { }
+        }
       }
 
       // Step 2: Load ALL channels from backend (PRIMARY SOURCE - cross-device)
@@ -120,6 +132,19 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
       const parsed: StoredVideo[] = JSON.parse(
         sessionStorage.getItem(STORAGE_KEY) || "[]"
       );
+      // Also check the current campaign video (from the budget page)
+      const currentVideoJSON = sessionStorage.getItem("vidfly_current_campaign_video");
+      if (currentVideoJSON) {
+        try {
+          const currentVideo: StoredVideo = JSON.parse(currentVideoJSON);
+          if (currentVideo.channelId && !parsed.some(v => v.videoId === currentVideo.videoId)) {
+            parsed.unshift(currentVideo);
+          }
+        } catch (err) {
+          console.error("Failed to parse current campaign video", err);
+        }
+      }
+
       setStoredVideos(parsed);
 
       // Load cached channel info
