@@ -461,68 +461,6 @@ export default function CampaignChannel() {
                     {/* Right Column: CTA Sidebar */}
                     <div className="lg:col-span-4 space-y-6 sticky top-24">
                         <div className="bg-white rounded-[24px] p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
-                            {/* Channel Header */}
-                            <div className="flex items-center gap-2.5 self-start mb-6 text-left border-b border-slate-50 pb-4 w-full">
-                                <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-slate-50 border border-slate-100">
-                                    {channelAvatar ? (
-                                        <img src={channelAvatar} className="w-full h-full object-cover" alt="" />
-                                    ) : (
-                                        <div className="w-full h-full bg-slate-50 animate-pulse" />
-                                    )}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-1">
-                                        <h3 className="font-extrabold text-slate-800 truncate text-[14px]">
-                                            {channelName || (loadingChannel ? "Updating..." : "Channel Name")}
-                                        </h3>
-                                        <svg className="w-3.5 h-3.5 text-red-600 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
-                                        </svg>
-                                    </div>
-                                    <p className="text-[10px] font-bold text-slate-400 leading-none mt-0.5">
-                                        {formatNumber(subscriberCount)} Subscribers
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="my-2 relative">
-                                {isScanning ? (
-                                    <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center relative overflow-hidden">
-                                        <div className="absolute inset-0 border-2 border-dashed border-purple-200 rounded-full animate-[spin_4s_linear_infinite]" />
-                                        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
-                                        <div className="absolute inset-0 bg-purple-500/5 animate-pulse" />
-                                    </div>
-                                ) : (
-                                    <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center animate-in zoom-in duration-500">
-                                        <CheckCircle2 className="w-10 h-10 text-emerald-500 stroke-[1.5px]" />
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="mb-6 mt-4">
-                                {isScanning ? (
-                                    <>
-                                        <p className="text-slate-600 font-extrabold text-[15px] animate-pulse">Scanning channel...</p>
-                                        <p className="text-slate-400 text-[11px] font-medium italic">Finding best videos for you</p>
-                                    </>
-                                ) : (
-                                    <>
-                                        <p className="text-slate-800 font-extrabold text-[15px] animate-in slide-in-from-bottom-2 duration-500">Ready to boost!</p>
-                                        <p className="text-slate-400 text-[11px] font-medium">Step 2 of 3 completed</p>
-                                    </>
-                                )}
-                            </div>
-
-                            {/* Pro Tip Bubble */}
-                            <div className="bg-slate-50/80 rounded-2xl p-4 flex gap-3 text-left mb-6 border border-slate-100/50">
-                                <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 bg-white border border-slate-100 shadow-sm">
-                                    <Image src="/avatars/girl.png" width={32} height={32} alt="Tip" />
-                                </div>
-                                <p className="text-[11px] text-slate-600 leading-relaxed">
-                                    <span className="font-extrabold text-slate-800">Pro Tip:</span> Promoting <span className="font-extrabold text-purple-600 text-sm">multiple videos</span> helps the algorithm learn faster and delivers <span className="text-slate-900 font-bold underline decoration-emerald-400">stronger results</span>.
-                                </p>
-                            </div>
-
                             <button
                                 onClick={handleNext}
                                 disabled={selectedIds.length === 0}

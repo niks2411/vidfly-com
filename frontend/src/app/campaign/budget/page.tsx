@@ -379,6 +379,7 @@ export default function CampaignBudget() {
     }, [router]);
 
     const [selectedVideos, setSelectedVideos] = useState<SelectedVideo[]>([]);
+    const [showAllVideos, setShowAllVideos] = useState(false);
     useEffect(() => {
         if (state?.videos) setSelectedVideos(state.videos);
         else if (state?.videoInfo) setSelectedVideos([state.videoInfo]);
@@ -722,8 +723,16 @@ export default function CampaignBudget() {
                 onLoad={() => setSdkLoaded(true)}
             />
             <div className="w-full max-w-4xl mx-auto px-4 lg:px-6 space-y-4 pb-8 pt-4">
-                {/* Header Section with Go Back and Multi-step Progress */}
-                <div className="flex items-center gap-6">
+                {/* Header Section - Mobile */}
+                <div className="md:hidden flex items-center gap-3 mb-6 px-1 pb-4 border-b border-slate-50 sticky top-0 bg-white/95 backdrop-blur-md z-[110] shadow-sm">
+                    <button onClick={() => router.back()} className="p-1 hover:bg-slate-50 rounded-full transition-colors">
+                        <ArrowLeft className="w-6 h-6 text-slate-900" />
+                    </button>
+                    <h1 className="text-[26px] font-bold text-slate-900 tracking-tight">Budget & Targeting</h1>
+                </div>
+
+                {/* Header Section - Desktop */}
+                <div className="hidden md:flex items-center gap-6">
                     <button
                         onClick={() => router.back()}
                         className="flex items-center gap-2 text-[14px] font-bold text-slate-800 hover:text-indigo-600 transition-colors group whitespace-nowrap"
@@ -751,13 +760,88 @@ export default function CampaignBudget() {
                     </div>
                 </div>
 
-                <div className="grid lg:grid-cols-12 gap-4 items-start">
+                {/* Progress Bar - Mobile */}
+                <div className="md:hidden flex gap-2 mb-6 px-1">
+                    <div className="flex-1 h-1.5 rounded-full bg-cyan-400"></div>
+                    <div className="flex-1 h-1.5 rounded-full bg-emerald-400"></div>
+                    <div className="flex-1 h-1.5 rounded-full bg-slate-100"></div>
+                </div>
+
+                <div className="grid lg:grid-cols-12 gap-4 items-start pb-[180px] md:pb-8">
                     {/* Left Side: Budget and Targeting Cards */}
-                    <div className="lg:col-span-8 space-y-3">
+                    <div className="lg:col-span-8 space-y-3 order-2 lg:order-1">
+                        {/* Mobile Channel Info Card */}
+                        <div className="md:hidden bg-white rounded-2xl border border-slate-100 p-4 shadow-sm mb-4">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-slate-50">
+                                    {primaryVideo.avatarUrl ? (
+                                        <img src={primaryVideo.avatarUrl} alt="" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full bg-slate-100 flex items-center justify-center"><Users className="w-6 h-6 text-slate-400" /></div>
+                                    )}
+                                </div>
+                                <div>
+                                    <h4 className="text-[17px] font-bold text-slate-900">{channelName}</h4>
+                                    <p className="text-[14px] text-slate-500">{selectedVideos.length} videos selected</p>
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-3">
+                                {selectedVideos.length > 1 && !showAllVideos ? (
+                                    <div className="relative pt-3 cursor-pointer" onClick={() => setShowAllVideos(true)}>
+                                        {/* Stack Effect Layers */}
+                                        <div className="absolute top-0 left-4 right-4 h-full bg-slate-50 border border-slate-100 rounded-xl -translate-y-2 z-0" />
+                                        <div className="absolute top-0 left-2 right-2 h-full bg-slate-50 border border-slate-100 rounded-xl -translate-y-1 z-[1]" />
+                                        
+                                        {/* Top Card */}
+                                        <div className="relative z-[2] bg-white rounded-xl p-3 flex gap-3 border border-slate-100 shadow-sm">
+                                            <div className="shrink-0 w-24 aspect-video rounded-lg overflow-hidden relative border border-slate-50">
+                                                <img src={primaryVideo.thumbnail} alt="" className="w-full h-full object-cover" />
+                                            </div>
+                                            <div className="min-w-0 flex flex-col justify-center">
+                                                <h5 className="text-[13px] font-bold text-slate-800 line-clamp-1 mb-1">{primaryVideo.title}</h5>
+                                                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-slate-400 font-bold uppercase tracking-tight">
+                                                    <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {formatNumber(primaryVideo.viewCount)}</span>
+                                                    <span>{getRelativeTime(primaryVideo.publishedAt)}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-300">
+                                        {selectedVideos.map((video, idx) => (
+                                            <div key={video.videoId} className="bg-slate-50/50 rounded-xl p-3 flex gap-4 border border-slate-100/50">
+                                                <div className="shrink-0 w-28 aspect-video rounded-lg overflow-hidden relative border border-slate-100">
+                                                    <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />
+                                                </div>
+                                                <div className="min-w-0 flex flex-col justify-center">
+                                                    <h5 className="text-[14px] font-bold text-slate-800 line-clamp-2 leading-tight mb-1">{video.title}</h5>
+                                                    <div className="flex items-center gap-2 text-[12px] text-slate-500 font-bold">
+                                                        <span className="flex items-center gap-0.5"><Eye className="w-3 h-3" /> {formatNumber(video.viewCount)}</span>
+                                                        <span>•</span>
+                                                        <span>{getRelativeTime(video.publishedAt)}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {selectedVideos.length > 1 && (
+                                    <button 
+                                        onClick={() => setShowAllVideos(!showAllVideos)}
+                                        className="w-full py-2 text-[14px] font-bold text-slate-400 hover:text-indigo-600 transition-colors flex items-center justify-center gap-1.5"
+                                    >
+                                        {showAllVideos ? "Show Less" : "Show All"}
+                                        <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${showAllVideos ? 'rotate-180' : ''}`} />
+                                    </button>
+                                )}
+                            </div>
+                        </div>
                         {/* Enter Budget Card */}
-                        <div className="bg-white rounded-[12px] border border-slate-100 p-4 shadow-sm">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-[17px] font-bold text-slate-900">Enter Your Budget</h3>
+                        <div className="bg-white rounded-[12px] border border-slate-100 p-5 shadow-sm">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                                <h3 className="text-[20px] font-bold text-slate-900">Enter Your Budget</h3>
                                 <div className="flex items-center gap-4">
                                     {budget >= 1000 && (
                                         <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#f5f3ff] text-[#7c3aed] rounded-[8px] border border-indigo-100 shadow-sm animate-pulse-subtle">
@@ -780,11 +864,11 @@ export default function CampaignBudget() {
                                                     const val = Number(e.target.value.replace(/,/g, ""));
                                                     if (!isNaN(val)) setBudget(val);
                                                 }}
-                                                className="h-[42px] w-[100px] rounded-l-[8px] border-2 border-slate-100 bg-white text-[16px] font-bold text-slate-900 px-3 focus:border-indigo-500 focus:ring-0 transition-all text-center border-r-0"
+                                                className="h-[52px] w-[110px] rounded-l-[10px] border-2 border-slate-100 bg-white text-[18px] font-bold text-slate-900 px-4 focus:border-indigo-500 focus:ring-0 transition-all text-center border-r-0"
                                             />
                                         </div>
-                                        <div className="h-[42px] w-[32px] bg-slate-50 flex items-center justify-center rounded-r-[8px] border-2 border-slate-100 border-l-0">
-                                            <span className="text-[16px] font-bold text-slate-400 italic">₹</span>
+                                        <div className="h-[52px] w-[36px] bg-slate-50 flex items-center justify-center rounded-r-[10px] border-2 border-slate-100 border-l-0">
+                                            <span className="text-[18px] font-bold text-slate-400 italic">₹</span>
                                         </div>
                                     </div>
                                 </div>
@@ -832,21 +916,21 @@ export default function CampaignBudget() {
                                     <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-0 pointer-events-none">
                                         {/* Milestone: Starter (Plant) - ₹1,000 */}
                                         <div
-                                            className={`absolute -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-white rounded-full border-2 shadow-sm flex items-center justify-center text-[13px] z-10 transition-all duration-500 ${budget >= 1000 ? 'border-indigo-500 scale-125 shadow-indigo-100' : 'border-slate-100'}`}
+                                            className={`absolute -translate-x-1/2 -translate-y-1/2 w-7 h-7 bg-white rounded-full border-2 shadow-sm flex items-center justify-center text-[14px] z-10 transition-all duration-500 ${budget >= 1000 ? 'border-indigo-500 scale-125 shadow-indigo-100' : 'border-slate-100'}`}
                                             style={{ left: `${((1000 - 499) / (sliderMax - 499)) * 100}%` }}
                                         >
                                             🌱
                                         </div>
                                         {/* Milestone: Smart (Star) - ₹4,000 */}
                                         <div
-                                            className={`absolute -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-white rounded-full border-2 shadow-sm flex items-center justify-center text-[13px] z-10 transition-all duration-500 ${budget >= 4000 ? 'border-indigo-500 scale-125 shadow-indigo-100' : 'border-slate-100'}`}
+                                            className={`absolute -translate-x-1/2 -translate-y-1/2 w-7 h-7 bg-white rounded-full border-2 shadow-sm flex items-center justify-center text-[14px] z-10 transition-all duration-500 ${budget >= 4000 ? 'border-indigo-500 scale-125 shadow-indigo-100' : 'border-slate-100'}`}
                                             style={{ left: `${((4000 - 499) / (sliderMax - 499)) * 100}%` }}
                                         >
                                             ⭐
                                         </div>
                                         {/* Milestone: Success (Rocket) - ₹7,000 */}
                                         <div
-                                            className={`absolute -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-white rounded-full border-2 shadow-sm flex items-center justify-center text-[13px] z-10 transition-all duration-500 ${budget >= 7000 ? 'border-indigo-500 scale-125 shadow-indigo-100' : 'border-slate-100'}`}
+                                            className={`absolute -translate-x-1/2 -translate-y-1/2 w-7 h-7 bg-white rounded-full border-2 shadow-sm flex items-center justify-center text-[14px] z-10 transition-all duration-500 ${budget >= 7000 ? 'border-indigo-500 scale-125 shadow-indigo-100' : 'border-slate-100'}`}
                                             style={{ left: `${((7000 - 499) / (sliderMax - 499)) * 100}%` }}
                                         >
                                             🚀
@@ -854,7 +938,7 @@ export default function CampaignBudget() {
                                     </div>
                                 </div>
 
-                                <div className="flex justify-between items-center text-[12px] font-bold text-slate-400 mt-2 px-1">
+                                <div className="flex justify-between items-center text-[14px] font-bold text-slate-400 mt-4 px-1">
                                     {[0, 0.25, 0.5, 0.75, 1].map((p) => {
                                         const val = 499 + (sliderMax - 499) * p;
                                         return <span key={p}>₹ {Math.round(val / 50) * 50 > 1000 ? (Math.round(val / 100) / 10).toFixed(1) + 'K' : Math.round(val)}</span>;
@@ -863,33 +947,33 @@ export default function CampaignBudget() {
                             </div>
 
                             {/* Offers dropdown */}
-                            <div className="mt-5 pt-3 flex items-center justify-between group cursor-pointer border-t border-slate-50">
-                                <span className="text-[15px] font-bold text-slate-900">Offers</span>
-                                <div className="flex items-center gap-2 text-[13px] font-bold text-slate-400 group-hover:text-indigo-600">
-                                    View all Offers <ChevronDown className="w-4 h-4" />
+                            <div className="mt-8 pt-4 flex items-center justify-between group cursor-pointer border-t border-slate-100">
+                                <span className="text-[17px] font-bold text-slate-900">Offers</span>
+                                <div className="flex items-center gap-2 text-[15px] font-bold text-slate-400 group-hover:text-indigo-600">
+                                    View all Offers <ChevronDown className="w-5 h-5" />
                                 </div>
                             </div>
                         </div>
 
                         {/* Target Country Card */}
-                        <div className="bg-white rounded-[12px] border border-slate-100 p-4 shadow-sm">
-                            <h3 className="text-[16px] font-bold text-slate-900 mb-4">Target by Country <span className="text-slate-400 font-medium">(Optional)</span></h3>
+                        <div className="bg-white rounded-[12px] border border-slate-100 p-5 shadow-sm">
+                            <h3 className="text-[19px] font-bold text-slate-900 mb-5">Target by Country <span className="text-slate-400 font-medium">(Optional)</span></h3>
                             <div className="relative group searchable-country-selector">
                                 <div 
-                                    className={`w-full h-[48px] border-2 bg-white rounded-[10px] px-4 flex items-center justify-between cursor-pointer transition-all ${
+                                    className={`w-full h-[54px] border-2 bg-white rounded-[12px] px-5 flex items-center justify-between cursor-pointer transition-all ${
                                         isCountryDropdownOpen ? "border-indigo-500 ring-4 ring-indigo-50/50" : "border-slate-100 hover:border-slate-200"
                                     }`}
                                     onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
                                 >
                                      <div className="flex items-center gap-3 overflow-hidden">
-                                         <Globe className={`w-4 h-4 ${targetCountries.length > 0 ? "text-indigo-500" : "text-slate-300"}`} />
-                                         <span className={`text-[14px] font-bold truncate ${targetCountries.length > 0 ? "text-slate-800" : "text-slate-400"}`}>
+                                         <Globe className={`w-5 h-5 ${targetCountries.length > 0 ? "text-indigo-500" : "text-slate-300"}`} />
+                                         <span className={`text-[16px] font-bold truncate ${targetCountries.length > 0 ? "text-slate-800" : "text-slate-400"}`}>
                                              {targetCountries.length > 0 
                                                  ? targetCountries.map(code => COUNTRIES.find(c => c.code === code)?.name).filter(Boolean).join(', ')
                                                  : "Choose a Country"}
                                          </span>
                                      </div>
-                                     <ChevronDown className={`w-4 h-4 text-slate-300 transition-transform duration-300 ${isCountryDropdownOpen ? "rotate-180" : ""}`} strokeWidth={3} />
+                                     <ChevronDown className={`w-5 h-5 text-slate-300 transition-transform duration-300 ${isCountryDropdownOpen ? "rotate-180" : ""}`} strokeWidth={3} />
                                 </div>
 
                                 {isCountryDropdownOpen && (
@@ -901,7 +985,7 @@ export default function CampaignBudget() {
                                                     type="text"
                                                     autoFocus
                                                     placeholder="Search country..."
-                                                    className="w-full h-[36px] bg-slate-50 border-none rounded-[7px] pl-9 pr-4 text-[13px] font-bold text-slate-800 focus:ring-2 focus:ring-indigo-100 outline-none placeholder:text-slate-400"
+                                                    className="w-full h-[44px] bg-slate-50 border-none rounded-[10px] pl-10 pr-4 text-[15px] font-bold text-slate-800 focus:ring-2 focus:ring-indigo-100 outline-none placeholder:text-slate-400"
                                                     value={countrySearch}
                                                     onChange={(e) => setCountrySearch(e.target.value)}
                                                     onClick={(e) => e.stopPropagation()}
@@ -913,7 +997,7 @@ export default function CampaignBudget() {
                                                 COUNTRIES.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).map((c) => (
                                                      <div 
                                                          key={c.code}
-                                                         className={`px-4 py-2.5 text-[13px] font-bold cursor-pointer transition-colors flex items-center justify-between ${
+                                                         className={`px-4 py-3 text-[14px] font-bold cursor-pointer transition-colors flex items-center justify-between ${
                                                              targetCountries.includes(c.code) ? "bg-indigo-50 text-indigo-700" : "text-slate-600 hover:bg-slate-50"
                                                          }`}
                                                          onClick={(e) => {
@@ -940,19 +1024,19 @@ export default function CampaignBudget() {
                             </div>
                             <p className="mt-3 text-[12px] text-slate-400 font-medium leading-relaxed">Targeting reduces views because your video is shown only to a specific audience.</p>
 
-                             <div className="mt-6 flex items-center gap-2.5">
-                                 <div className="w-4 h-4 rounded-[4px] bg-[#0ea5e9] flex items-center justify-center">
-                                     <div className="w-[9px] h-[5px] border-l-2 border-b-2 border-white -rotate-45 mb-0.5" />
+                             <div className="mt-8 flex items-center gap-3">
+                                 <div className="w-6 h-6 rounded-[7px] bg-[#7c3aed] flex items-center justify-center shadow-md">
+                                     <svg viewBox="0 0 24 24" className="w-4 h-4 fill-none stroke-current stroke-[4] text-white"><path d="M20 6L9 17l-5-5" /></svg>
                                  </div>
-                                 <label className="text-[14px] font-bold text-slate-700">Campaign Duration</label>
+                                 <label className="text-[16px] font-extrabold text-slate-700">Campaign Duration</label>
                              </div>
 
-                             <div className="mt-4 flex items-center gap-2.5">
+                             <div className="mt-5 flex items-center gap-3">
                                  {["1-2 Days", "3-7 Days", "7-10 Days", "Custom End Date"].map((d) => (
-                                     <div key={d} className="relative group flex-1 max-w-[140px]">
+                                     <div key={d} className="relative group flex-1 max-w-[150px]">
                                          {d === "Custom End Date" && (
-                                             <div className="absolute -top-2 left-1/2 -translate-x-1/2 px-1 py-[1px] bg-[#ecfdf5] border border-emerald-400/50 rounded-[2px] z-10 whitespace-nowrap pointer-events-none">
-                                                 <span className="text-[6.5px] text-emerald-600 font-extrabold uppercase tracking-wider block leading-none">Recommended</span>
+                                             <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-2 py-[2px] bg-[#ecfdf5] border border-emerald-400/50 rounded-[4px] z-10 whitespace-nowrap pointer-events-none">
+                                                 <span className="text-[8px] text-emerald-600 font-extrabold uppercase tracking-wider block leading-none">Recommended</span>
                                              </div>
                                          )}
                                          <button
@@ -964,9 +1048,9 @@ export default function CampaignBudget() {
                                                      setIsDatePickerOpen(false);
                                                  }
                                              }}
-                                             className={`w-full py-2.5 rounded-[6px] text-[13px] font-extrabold transition-all date-picker-trigger ${campaignDuration === d || (d === "Custom End Date" && !["1-2 Days", "3-7 Days", "7-10 Days"].includes(campaignDuration))
-                                                 ? "bg-[#1f2937] text-white shadow-md"
-                                                 : "bg-slate-200/60 text-slate-600 hover:bg-slate-200"
+                                             className={`w-full py-3.5 rounded-[10px] text-[15px] font-extrabold transition-all date-picker-trigger shadow-sm ${campaignDuration === d || (d === "Custom End Date" && !["1-2 Days", "3-7 Days", "7-10 Days"].includes(campaignDuration))
+                                                 ? "bg-[#1f2937] text-white shadow-lg"
+                                                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                                                  }`}
                                          >
                                              {d === "Custom End Date" && !["1-2 Days", "3-7 Days", "7-10 Days"].includes(campaignDuration) 
@@ -1080,7 +1164,7 @@ export default function CampaignBudget() {
                                 >
                                     <div className="flex items-center justify-between mb-3">
                                          <div className="flex items-center gap-2">
-                                             <h3 className="text-[16px] font-bold text-slate-900">Automatic Targeting</h3>
+                                             <h3 className="text-[19px] font-bold text-slate-900">Automatic Targeting</h3>
                                              <div className="px-1.5 py-0.5 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-sm text-[8px] font-black uppercase tracking-wider">Recommended</div>
                                          </div>
                                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
@@ -1134,7 +1218,7 @@ export default function CampaignBudget() {
                                          <div className="mt-8 space-y-8 animate-in fade-in slide-in-from-top-4 duration-300" onClick={(e) => e.stopPropagation()}>
                                              {/* Gender */}
                                              <div className="space-y-4">
-                                                 <h4 className="text-[16px] font-bold text-slate-800">Gender</h4>
+                                                 <h4 className="text-[18px] font-bold text-slate-800">Gender</h4>
                                                  <div className="flex items-center gap-6">
                                                      {[
                                                          { id: 'all', label: 'All genders' },
@@ -1150,10 +1234,10 @@ export default function CampaignBudget() {
                                                                      checked={selectedGender === g.id}
                                                                      onChange={() => setSelectedGender(g.id)}
                                                                  />
-                                                                 <div className={`w-5 h-5 rounded-full border-2 transition-all ${selectedGender === g.id ? 'border-indigo-600' : 'border-slate-300 group-hover:border-slate-400'}`} />
-                                                                 {selectedGender === g.id && <div className="absolute w-2.5 h-2.5 rounded-full bg-indigo-600" />}
+                                                                 <div className={`w-6 h-6 rounded-full border-2 transition-all ${selectedGender === g.id ? 'border-indigo-600' : 'border-slate-300 group-hover:border-slate-400'}`} />
+                                                                 {selectedGender === g.id && <div className="absolute w-3 h-3 rounded-full bg-indigo-600" />}
                                                              </div>
-                                                             <span className={`text-[15px] font-bold transition-colors ${selectedGender === g.id ? 'text-slate-800' : 'text-slate-500'}`}>{g.label}</span>
+                                                             <span className={`text-[16px] font-bold transition-colors ${selectedGender === g.id ? 'text-slate-800' : 'text-slate-500'}`}>{g.label}</span>
                                                          </label>
                                                      ))}
                                                  </div>
@@ -1161,7 +1245,7 @@ export default function CampaignBudget() {
 
                                              {/* Age */}
                                              <div className="space-y-4">
-                                                 <h4 className="text-[16px] font-bold text-slate-800">Age</h4>
+                                                 <h4 className="text-[18px] font-bold text-slate-800">Age</h4>
                                                  <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
                                                      {[
                                                          { id: 'all', label: 'All Ages' },
@@ -1192,11 +1276,11 @@ export default function CampaignBudget() {
                                                                          }
                                                                      }}
                                                                  />
-                                                                 <div className={`w-5 h-5 rounded-[4px] border-2 transition-all flex items-center justify-center ${selectedAges.includes(a.id) ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-slate-300 group-hover:border-slate-400'}`}>
-                                                                     {selectedAges.includes(a.id) && <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-none stroke-current stroke-[4] text-white"><path d="M20 6L9 17l-5-5" /></svg>}
+                                                                 <div className={`w-6 h-6 rounded-[5px] border-2 transition-all flex items-center justify-center ${selectedAges.includes(a.id) ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-slate-300 group-hover:border-slate-400'}`}>
+                                                                     {selectedAges.includes(a.id) && <svg viewBox="0 0 24 24" className="w-4 h-4 fill-none stroke-current stroke-[4] text-white"><path d="M20 6L9 17l-5-5" /></svg>}
                                                                  </div>
                                                              </div>
-                                                             <span className={`text-[15px] font-bold transition-colors ${selectedAges.includes(a.id) ? 'text-slate-800' : 'text-slate-500'}`}>{a.label}</span>
+                                                             <span className={`text-[16px] font-bold transition-colors ${selectedAges.includes(a.id) ? 'text-slate-800' : 'text-slate-500'}`}>{a.label}</span>
                                                          </label>
                                                      ))}
                                                  </div>
@@ -1204,7 +1288,7 @@ export default function CampaignBudget() {
 
                                              {/* Interests */}
                                              <div className="space-y-4">
-                                                 <h4 className="text-[16px] font-bold text-slate-800">Interests (Max 3)</h4>
+                                                 <h4 className="text-[18px] font-bold text-slate-800">Interests (Max 3)</h4>
                                                  <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                                                      {[
                                                          { id: 'all', label: 'All interest' },
@@ -1242,11 +1326,11 @@ export default function CampaignBudget() {
                                                                          }
                                                                      }}
                                                                  />
-                                                                 <div className={`w-5 h-5 rounded-[4px] border-2 transition-all flex items-center justify-center ${selectedInterests.includes(i.id) ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-slate-300 group-hover:border-slate-400'}`}>
-                                                                     {selectedInterests.includes(i.id) && <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-none stroke-current stroke-[4] text-white"><path d="M20 6L9 17l-5-5" /></svg>}
+                                                                 <div className={`w-6 h-6 rounded-[5px] border-2 transition-all flex items-center justify-center ${selectedInterests.includes(i.id) ? 'bg-indigo-600 border-indigo-600' : 'bg-white border-slate-300 group-hover:border-slate-400'}`}>
+                                                                     {selectedInterests.includes(i.id) && <svg viewBox="0 0 24 24" className="w-4 h-4 fill-none stroke-current stroke-[4] text-white"><path d="M20 6L9 17l-5-5" /></svg>}
                                                                  </div>
                                                              </div>
-                                                             <span className={`text-[15px] font-bold transition-colors ${selectedInterests.includes(i.id) ? 'text-slate-800' : 'text-slate-500'}`}>{i.label}</span>
+                                                             <span className={`text-[16px] font-bold transition-colors ${selectedInterests.includes(i.id) ? 'text-slate-800' : 'text-slate-500'}`}>{i.label}</span>
                                                          </label>
                                                      ))}
                                                  </div>
@@ -1255,7 +1339,7 @@ export default function CampaignBudget() {
                                              {/* Keywords */}
                                              <div className="space-y-4">
                                                  <div className="flex items-center gap-3">
-                                                    <h4 className="text-[14px] font-bold text-slate-800">Describe your Video using Keywords and Phrases.</h4>
+                                                    <h4 className="text-[16px] font-bold text-slate-800">Describe your Video using Keywords and Phrases.</h4>
                                                     <button 
                                                         className="px-4 py-1.5 bg-indigo-600 text-white text-[11px] font-bold rounded-full hover:bg-indigo-700 transition-colors flex items-center gap-1.5"
                                                         onClick={() => {
@@ -1269,7 +1353,7 @@ export default function CampaignBudget() {
                                                  
                                                  <div className="w-full bg-slate-50 rounded-xl border border-slate-100 p-3 min-h-[50px] flex flex-wrap gap-2 focus-within:ring-2 focus-within:ring-indigo-100 focus-within:border-indigo-200 transition-all">
                                                      {keywords.map((kw, idx) => (
-                                                         <div key={idx} className="bg-white border border-slate-200 px-2.5 py-1 rounded-lg text-[13px] font-bold text-slate-700 flex items-center gap-1.5 shadow-sm group">
+                                                         <div key={idx} className="bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-[14px] font-bold text-slate-700 flex items-center gap-1.5 shadow-sm group">
                                                              {kw}
                                                              <button onClick={() => setKeywords(keywords.filter((_, i) => i !== idx))} className="hover:text-red-500 transition-colors">
                                                                  <X className="w-3 h-3" />
@@ -1279,7 +1363,7 @@ export default function CampaignBudget() {
                                                      <input 
                                                          type="text"
                                                          placeholder="Enter new tags separated by Enter or SpaceBar"
-                                                         className="bg-transparent border-none outline-none flex-1 min-w-[200px] text-[13px] font-bold text-slate-700 placeholder:text-slate-400"
+                                                         className="bg-transparent border-none outline-none flex-1 min-w-[200px] text-[15px] font-bold text-slate-700 placeholder:text-slate-400"
                                                          value={keywordInput}
                                                          onChange={(e) => setKeywordInput(e.target.value)}
                                                          onKeyDown={(e) => {
@@ -1303,7 +1387,7 @@ export default function CampaignBudget() {
                     </div>
 
                     {/* Right Side Sidebar */}
-                    <div className="lg:col-span-4 space-y-4 sticky top-[100px] self-start">
+                    <div className="lg:col-span-4 space-y-4 sticky top-[100px] self-start order-1 lg:order-2 hidden md:block">
                         {/* Channel Block */}
                         <div className="bg-white rounded-[16px] border border-slate-100 p-3.5 flex items-center gap-3.5 shadow-sm">
                             <div className="shrink-0 w-11 h-11 rounded-full overflow-hidden border-2 border-white shadow-md bg-slate-50 flex items-center justify-center">
@@ -1475,6 +1559,55 @@ export default function CampaignBudget() {
                                 </p>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                {/* Mobile Sticky Bottom Section */}
+                <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-purple-100 p-5 z-[100] shadow-[0_-12px_40px_rgb(0,0,0,0.12)] animate-in slide-in-from-bottom duration-300">
+                    <div className="max-w-md mx-auto">
+                        {/* Summary Line */}
+                        <div className="flex items-center justify-between mb-6 px-1">
+                             <div className="flex flex-col">
+                                 <div className="flex items-center gap-2 text-[13px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                                     Views <Info className="w-4 h-4" />
+                                 </div>
+                                 <div className="text-[19px] font-black text-slate-900 tracking-tight">
+                                    {loadingPricing ? "..." : pricingData ? `${(pricingData.totalViews.min).toLocaleString()} - ${(pricingData.totalViews.max).toLocaleString()}` : "3,600 - 4,400"}
+                                 </div>
+                             </div>
+                             <div className="flex flex-col items-end">
+                                 <div className="flex items-center gap-2 text-[13px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                                     Subscribers <ShieldCheck className="w-4 h-4" />
+                                 </div>
+                                 <div className="text-[19px] font-black text-slate-900 tracking-tight">
+                                     {loadingPricing ? "..." : pricingData?.totalSubscribers ? `${pricingData.totalSubscribers.min} - ${pricingData.totalSubscribers.max}` : pricingData ? `${Math.floor(pricingData.totalViews.min * 0.01)} - ${Math.floor(pricingData.totalViews.max * 0.012)}` : "36 - 45"}
+                                 </div>
+                             </div>
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                            <button 
+                                onClick={() => setShowPreview(true)}
+                                className="flex-1 text-[17px] font-extrabold text-purple-600 hover:text-purple-700 transition-colors"
+                            >
+                                Preview Ad
+                            </button>
+                            <button
+                                onClick={handleCreateCampaign}
+                                disabled={creating}
+                                className={`h-[58px] px-4 rounded-full flex items-center justify-center gap-2 text-[16px] font-black shadow-xl shadow-purple-100 transition-all whitespace-nowrap ${
+                                    creating 
+                                    ? "bg-slate-300 text-slate-500" 
+                                    : "bg-[rgb(124,58,237)] text-white flex-[1.5]"
+                                }`}
+                            >
+                                {creating ? "Wait..." : "Next: Pay & Launch"}
+                                <ChevronRight className="w-5 h-5 stroke-[3.5]" />
+                            </button>
+                        </div>
+                        
+                        {/* Pull Indicator Tab */}
+                        <div className="absolute top-1 left-1/2 -translate-x-1/2 w-8 h-1 bg-slate-100 rounded-full" />
                     </div>
                 </div>
             </div>
