@@ -1,10 +1,20 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { ChevronDown, Plus, Settings } from "lucide-react";
+import { ChevronDown, Plus, Settings, Check, ExternalLink, Youtube } from "lucide-react";
 import { useRouter } from "next/navigation";
 import AddChannelModal from "./AddChannelModal";
 import ManageChannelsModal from "./ManageChannelsModal";
 import { getVerifiedEmail, getSelectedChannelKey } from "@/lib/verifiedEmail";
 import { useAuth } from "@/context/AuthContext";
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 const STORAGE_KEY = "vidfly_channel_videos";
 const CHANNEL_INFO_STORAGE_KEY = "vidfly_channel_info";
@@ -33,6 +43,7 @@ type ChannelSelectorProps = {
 
 const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
   const router = useRouter();
+  const isMobile = useIsMobile();
   const { user } = useAuth();
   const [storedVideos, setStoredVideos] = useState<StoredVideo[]>([]);
   const [channelInfoMap, setChannelInfoMap] = useState<Map<string, ChannelInfo>>(new Map());
@@ -41,6 +52,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
   const [loadingChannels, setLoadingChannels] = useState<Set<string>>(new Set());
   const [showAddModal, setShowAddModal] = useState(false);
   const [showManageModal, setShowManageModal] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Load all channels from backend (PRIMARY SOURCE - cross-device sync)
   const loadAllChannels = useCallback(async () => {
@@ -100,8 +112,6 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
 
             // Update channelInfoMap with all backend channels at once
             setChannelInfoMap(newChannelMap);
-
-
           }
         } else if (response.status === 401) {
           console.warn("Channel fetch returned 401 - user may need to re-verify email");
@@ -126,7 +136,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
     } catch (err) {
       console.error("Failed to load channels", err);
     }
-  }, [user?.email]); // Add user?.email to dependencies to reload when login state changes
+  }, [user?.email]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -168,25 +178,22 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
     }
   }, []);
 
-  // Load all channels from backend/localStorage on mount and when email changes
   useEffect(() => {
     loadAllChannels();
   }, [loadAllChannels]);
 
-  // Listen for channelChanged events (when channel is updated from other components)
+  // Listen for channelChanged events
   useEffect(() => {
     const handleChannelChanged = (event: CustomEvent) => {
       const { channelId, channelName, channelAvatar } = event.detail;
       if (channelId) {
         setSelectedChannelId(channelId);
-        // Save to localStorage for fast UI
         const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
         if (userEmail) {
           const channelKey = `channel_${userEmail}`;
           localStorage.setItem(channelKey, channelId);
         }
 
-        // If channel not in map, add it immediately for instant UI feedback
         if (!channelInfoMap.has(channelId) && channelName) {
           setChannelInfoMap((prev) => {
             const newMap = new Map(prev);
@@ -198,8 +205,6 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
             return newMap;
           });
         }
-
-        // Then reload all channels from backend to get full data
         loadAllChannels();
       }
     };
@@ -211,10 +216,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
   }, [channelInfoMap, loadAllChannels]);
 
   const fetchChannelInfo = useCallback(async (channelId: string, channelName: string) => {
-    // Skip if already loading or already cached
-    if (loadingChannels.has(channelId) || channelInfoMap.has(channelId)) {
-      return;
-    }
+    if (loadingChannels.has(channelId) || channelInfoMap.has(channelId)) return;
 
     setLoadingChannels((prev) => new Set(prev).add(channelId));
 
@@ -224,9 +226,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
         { credentials: "include" }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch channel info");
-      }
+      if (!response.ok) throw new Error("Failed to fetch channel info");
 
       const data = await response.json();
       const channelInfo: ChannelInfo = {
@@ -238,15 +238,12 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
       setChannelInfoMap((prev) => {
         const newMap = new Map(prev);
         newMap.set(channelId, channelInfo);
-
-        // Cache in sessionStorage
         try {
           const cached = Array.from(newMap.values());
           sessionStorage.setItem(CHANNEL_INFO_STORAGE_KEY, JSON.stringify(cached));
         } catch (err) {
           console.error("Failed to cache channel info", err);
         }
-
         return newMap;
       });
     } catch (err) {
@@ -260,10 +257,8 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
     }
   }, [loadingChannels, channelInfoMap]);
 
-  // Fetch channel info for channels that don't have cached info
   useEffect(() => {
     if (storedVideos.length === 0) return;
-
     const channelIdsToFetch = new Set<string>();
     storedVideos.forEach((video) => {
       if (video.channelId && video.author) {
@@ -282,9 +277,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
   }, [storedVideos, channelInfoMap, loadingChannels, fetchChannelInfo]);
 
   const availableChannels = useMemo(() => {
-    const channelMap = new Map<string, { channelId: string; name: string; avatar: string }>();
-
-    // Add channels from stored videos
+    const channelMap = new Map<string, ChannelInfo>();
     storedVideos.forEach((video) => {
       if (video.channelId && video.author) {
         if (!channelMap.has(video.channelId)) {
@@ -298,7 +291,6 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
       }
     });
 
-    // Also include channels from channelInfoMap (saved channels from backend that may not be in storedVideos)
     channelInfoMap.forEach((info, channelId) => {
       if (!channelMap.has(channelId)) {
         channelMap.set(channelId, {
@@ -316,21 +308,14 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
     return availableChannels.find((ch) => ch.channelId === selectedChannelId);
   }, [availableChannels, selectedChannelId]);
 
-  // Listen for storage changes (when channel is changed in another tab) - GPT suggestion
-  // This must be after availableChannels is defined
   useEffect(() => {
     if (typeof window === "undefined") return;
-
     const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
     if (!userEmail) return;
-
     const channelKey = `channel_${userEmail}`;
-
     const handleStorageChange = (e: StorageEvent) => {
-      // Check if the changed key is for the current email's selected channel
       if (e.key === channelKey && e.newValue) {
         setSelectedChannelId(e.newValue);
-        // Trigger channel change event for other components
         const channel = availableChannels.find(ch => ch.channelId === e.newValue);
         if (channel) {
           window.dispatchEvent(new CustomEvent('channelChanged', {
@@ -339,7 +324,6 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
         }
       }
     };
-
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [availableChannels]);
@@ -351,7 +335,6 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
         setShowDropdown(false);
       }
     };
-
     if (showDropdown) {
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -360,19 +343,12 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
 
   const handleChannelClick = async (channelId: string, channelName: string) => {
     setSelectedChannelId(channelId);
-
-    // Get email from localStorage (stored after login)
     const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
     if (userEmail) {
-      // Save to localStorage with email in key (fast, instant UI)
       const channelKey = `channel_${userEmail}`;
       localStorage.setItem(channelKey, channelId);
-
-      // Save to backend (adds to channels list and sets as selected)
       try {
-        // Get avatar from channelInfoMap if available
         const channelAvatar = channelInfoMap.get(channelId)?.avatar || '';
-
         await fetch(`${API_BASE_URL}/api/user-preferences/channels`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -386,52 +362,40 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
         });
       } catch (err) {
         console.warn("Failed to save channel to backend:", err);
-        // Don't block the user if backend save fails
       }
     }
 
     setShowDropdown(false);
+    setIsDrawerOpen(false);
     if (onChannelSelect) {
       onChannelSelect(channelId, channelName);
     }
-    // Trigger a custom event to notify other components
     window.dispatchEvent(new CustomEvent('channelChanged', { detail: { channelId, channelName } }));
   };
 
   const handleChannelAdded = async (channelInfo: ChannelInfo) => {
-    // Add to channel info map
     setChannelInfoMap((prev) => {
       const newMap = new Map(prev);
       newMap.set(channelInfo.channelId, channelInfo);
-
-      // Cache in sessionStorage
       try {
         const cached = Array.from(newMap.values());
         sessionStorage.setItem(CHANNEL_INFO_STORAGE_KEY, JSON.stringify(cached));
       } catch (err) {
         console.error("Failed to cache channel info", err);
       }
-
       return newMap;
     });
 
-    // Reload stored videos to include the new channel
     try {
       const parsed: StoredVideo[] = JSON.parse(
         sessionStorage.getItem(STORAGE_KEY) || "[]"
       );
       setStoredVideos(parsed);
-
-      // Auto-select the newly added channel
       setSelectedChannelId(channelInfo.channelId);
-
-      // Save to localStorage with email in key (fast, instant UI)
       const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
       if (userEmail) {
         const channelKey = `channel_${userEmail}`;
         localStorage.setItem(channelKey, channelInfo.channelId);
-
-        // Save to backend (adds to channels list and sets as selected)
         try {
           await fetch(`${API_BASE_URL}/api/user-preferences/channels`, {
             method: "POST",
@@ -446,161 +410,279 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
           });
         } catch (err) {
           console.warn("Failed to save channel to backend:", err);
-          // Don't block the user if backend save fails
         }
       }
-
       if (onChannelSelect) {
         onChannelSelect(channelInfo.channelId, channelInfo.name);
       }
-      // Trigger channel change event
       window.dispatchEvent(new CustomEvent('channelChanged', { detail: { channelId: channelInfo.channelId, channelName: channelInfo.name } }));
     } catch (err) {
       console.error("Failed to reload stored videos", err);
     }
   };
 
-  return (
-    <div className="channel-selector-container relative">
-      <button
-        type="button"
-        onClick={() => {
-          if (availableChannels.length === 0) {
-            setShowAddModal(true);
-          } else {
-            setShowDropdown(!showDropdown);
-          }
-        }}
-        className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-xl hover:border-red-300 hover:bg-red-50 transition-all duration-200 min-w-0 max-w-full"
-      >
-        {selectedChannel ? (
-          <>
-            {selectedChannel.avatar ? (
-              <img
-                src={selectedChannel.avatar}
-                alt={selectedChannel.name}
-                className="w-8 h-8 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-xs">
-                {selectedChannel.name.charAt(0).toUpperCase()}
-              </div>
-            )}
-            <span className="text-sm font-semibold text-slate-900 truncate min-w-0">
-              {selectedChannel.name}
-            </span>
-            <a
-              href={`https://www.youtube.com/channel/${selectedChannel.channelId}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="hover:opacity-80 transition-opacity"
+  const ChannelList = () => (
+    <div className="p-3 sm:p-4 space-y-2">
+      <div className="grid gap-1.5">
+        {availableChannels.map((channel) => {
+          const isLoading = loadingChannels.has(channel.channelId);
+          const isSelected = selectedChannelId === channel.channelId;
+
+          return (
+            <button
+              key={channel.channelId}
+              type="button"
+              onClick={() => handleChannelClick(channel.channelId, channel.name)}
+              className={cn(
+                "w-full flex items-center gap-3 p-3 sm:p-3.5 rounded-2xl transition-all duration-300 group relative overflow-hidden",
+                isSelected
+                  ? "bg-red-50/80 border-2 border-red-200 shadow-sm"
+                  : "hover:bg-slate-50 border-2 border-transparent hover:border-slate-100"
+              )}
             >
-              <img
-                src="https://www.youtube.com/img/desktop/yt_1200.png"
-                alt="YouTube"
-                className="w-4 h-4"
-              />
-            </a>
-            {availableChannels.length > 0 && (
-              <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
-            )}
-          </>
-        ) : (
-          <>
-            <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-xs">
-              {availableChannels.length === 0 ? <Plus className="h-4 w-4" /> : "?"}
-            </div>
-            <span className="text-sm text-slate-500">
-              {availableChannels.length === 0 ? "Add channel" : "Select channel"}
-            </span>
-            {availableChannels.length > 0 && (
-              <ChevronDown className="w-4 h-4 text-slate-400" />
-            )}
-          </>
-        )}
-      </button>
+              {isSelected && (
+                <motion.div
+                  layoutId="active-bg"
+                  className="absolute inset-0 bg-gradient-to-r from-red-50/50 to-transparent z-0"
+                />
+              )}
 
-      {showDropdown && (
-        <div className="absolute z-20 right-0 sm:right-0 mt-2 bg-white border-2 border-red-200 rounded-2xl shadow-2xl max-h-80 overflow-y-auto w-[calc(100vw-32px)] sm:min-w-[380px] sm:w-max animate-fade-in backdrop-blur-sm">
-          <div className="p-3">
-            {availableChannels.map((channel) => {
-              const channelVideos = storedVideos.filter((v) => v.channelId === channel.channelId);
-              const isLoading = loadingChannels.has(channel.channelId);
-
-              return (
-                <button
-                  key={channel.channelId}
-                  type="button"
-                  onClick={() => handleChannelClick(channel.channelId, channel.name)}
-                  className={`w-full flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 transition-all duration-200 text-left mb-1 ${selectedChannelId === channel.channelId ? 'bg-gradient-to-r from-red-50 to-red-100 border border-red-200' : ''
-                    }`}
-                >
+              <div className="relative z-10 flex items-center gap-3 w-full">
+                <div className="relative">
                   {channel.avatar ? (
                     <img
                       src={channel.avatar}
                       alt={channel.name}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-red-200 shadow-sm"
+                      className={cn(
+                        "w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover border-2 shadow-sm transition-transform duration-300 group-hover:scale-105",
+                        isSelected ? "border-red-500" : "border-slate-100"
+                      )}
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white font-bold text-base flex-shrink-0 shadow-md">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white font-bold text-base flex-shrink-0 shadow-md">
                       {isLoading ? (
-                        <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       ) : (
                         channel.name.charAt(0).toUpperCase()
                       )}
                     </div>
                   )}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-slate-900 truncate">{channel.name}</p>
-                  </div>
-                  {selectedChannelId === channel.channelId && (
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center shadow-md flex-shrink-0">
-                      <span className="text-white text-xs font-bold">✓</span>
+                  {isSelected && (
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-red-600 border-2 border-white flex items-center justify-center text-white shadow-sm">
+                      <Check className="w-3 h-3 stroke-[3]" />
                     </div>
                   )}
-                </button>
-              );
-            })}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowDropdown(false);
-                setTimeout(() => setShowAddModal(true), 100);
-              }}
-              className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 transition-all duration-200 text-left border-2 border-dashed border-red-200 bg-red-50/30 mt-2"
-            >
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center text-white flex-shrink-0 shadow-lg">
-                <Plus className="h-6 w-6" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-red-600">Add another channel</p>
-                <p className="text-xs text-slate-500">Add a new YouTube channel</p>
+                </div>
+
+                <div className="flex-1 min-w-0 text-left">
+                  <p className={cn(
+                    "text-sm sm:text-[15px] font-bold truncate transition-colors",
+                    isSelected ? "text-red-700" : "text-slate-900"
+                  )}>
+                    {channel.name}
+                  </p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="text-[11px] text-slate-400 font-medium">YouTube Channel</span>
+                    <a
+                      href={`https://www.youtube.com/channel/${channel.channelId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-slate-300 hover:text-red-500 transition-colors"
+                    >
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                </div>
+
+                {isSelected && (
+                    <div className="hidden sm:flex w-6 h-6 rounded-full bg-red-100 items-center justify-center">
+                        <Check className="w-3.5 h-3.5 text-red-600" />
+                    </div>
+                )}
               </div>
             </button>
+          );
+        })}
+      </div>
 
-            {availableChannels.length > 0 && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowDropdown(false);
-                  setTimeout(() => setShowManageModal(true), 100);
-                }}
-                className="w-full flex items-center gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-slate-50 hover:to-slate-100 transition-all duration-200 text-left border-t-2 border-slate-200 mt-2"
-              >
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-500 to-slate-600 flex items-center justify-center text-white flex-shrink-0 shadow-lg">
-                  <Settings className="h-6 w-6" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-bold text-slate-700">Manage Channels</p>
-                  <p className="text-xs text-slate-500">Remove channels you no longer need</p>
-                </div>
-              </button>
-            )}
+      <div className="space-y-2 mt-4 pt-4 border-t border-slate-100/60">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowDropdown(false);
+            setIsDrawerOpen(false);
+            setTimeout(() => setShowAddModal(true), 100);
+          }}
+          className="w-full flex items-center gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 hover:border-red-200 hover:bg-red-50/50 transition-all duration-300 group"
+        >
+          <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm border border-slate-100 group-hover:scale-110 transition-transform">
+            <Plus className="h-5 w-5 text-red-600" />
           </div>
-        </div>
+          <div className="text-left">
+            <p className="text-[14px] font-bold text-slate-700">Add Channel</p>
+            <p className="text-[11px] text-slate-500">Promote another business</p>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowDropdown(false);
+            setIsDrawerOpen(false);
+            setTimeout(() => setShowManageModal(true), 100);
+          }}
+          className="w-full flex items-center gap-3 p-3.5 rounded-2xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all duration-300 group"
+        >
+          <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 group-hover:scale-110 transition-transform">
+            <Settings className="h-5 w-5" />
+          </div>
+          <div className="text-left">
+            <p className="text-[14px] font-bold text-slate-700">Manage Channels</p>
+            <p className="text-[11px] text-slate-500">View or remove connections</p>
+          </div>
+        </button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="channel-selector-container relative">
+      {isMobile ? (
+        <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+          <DrawerTrigger asChild>
+            <button
+              type="button"
+              className="group flex items-center gap-2 p-1.5 pr-3 bg-white hover:bg-red-50 border border-slate-200 hover:border-red-200 rounded-full transition-all duration-300 shadow-sm hover:shadow-md max-w-[160px] sm:max-w-none animate-fade-in"
+            >
+              {selectedChannel ? (
+                <>
+                  <div className="relative">
+                    {selectedChannel.avatar ? (
+                      <img
+                        src={selectedChannel.avatar}
+                        alt={selectedChannel.name}
+                        className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-slate-100 group-hover:scale-105 transition-transform"
+                      />
+                    ) : (
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-red-100 flex items-center justify-center shadow-sm">
+                        <Youtube className="w-4 h-4 text-red-600" />
+                      </div>
+                    )}
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-red-600 border border-white flex items-center justify-center">
+                        <div className="w-1 h-1 bg-white rounded-full animate-pulse" />
+                    </div>
+                  </div>
+                  <span className="text-[13px] font-bold text-slate-800 truncate mr-1">
+                    {selectedChannel.name}
+                  </span>
+                  <ChevronDown className={cn("w-3.5 h-3.5 text-slate-400 transition-transform", isDrawerOpen && "rotate-180")} />
+                </>
+              ) : (
+                <>
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-red-50 flex items-center justify-center border border-red-100 group-hover:scale-110 transition-transform">
+                    <Plus className="h-3.5 w-3.5 text-red-600" />
+                  </div>
+                  <span className="text-[13px] font-bold text-red-600">Add channel</span>
+                </>
+              )}
+            </button>
+          </DrawerTrigger>
+          <DrawerContent className="max-h-[85vh] rounded-t-[32px] border-t-2 border-red-100 bg-white/95 backdrop-blur-xl">
+            <DrawerHeader className="pb-2">
+              <div className="flex items-center justify-center mb-1">
+                <div className="w-10 h-10 rounded-2xl bg-red-50 flex items-center justify-center">
+                    <Youtube className="w-6 h-6 text-red-600" />
+                </div>
+              </div>
+              <DrawerTitle className="text-xl font-bold font-founders text-slate-900 text-center tracking-tight">
+                Switch Channels
+              </DrawerTitle>
+              <p className="text-xs text-slate-500 text-center -mt-0.5">Manage your active YouTube accounts</p>
+            </DrawerHeader>
+            <div className="overflow-y-auto pb-8">
+                <ChannelList />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        <>
+          <button
+            type="button"
+            onClick={() => {
+              if (availableChannels.length === 0) {
+                setShowAddModal(true);
+              } else {
+                setShowDropdown(!showDropdown);
+              }
+            }}
+            className={cn(
+                "group flex items-center gap-2.5 px-3.5 py-2 bg-white/70 backdrop-blur-md border border-slate-200 rounded-2xl hover:border-red-200 hover:bg-white transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-0.5 min-w-0",
+                showDropdown && "ring-2 ring-red-100 border-red-300 shadow-xl -translate-y-0.5"
+            )}
+          >
+            {selectedChannel ? (
+              <>
+                <div className="relative">
+                  {selectedChannel.avatar ? (
+                    <img
+                      src={selectedChannel.avatar}
+                      alt={selectedChannel.name}
+                      className="w-8 h-8 rounded-full object-cover border-2 border-white shadow-sm ring-1 ring-slate-100 group-hover:scale-110 transition-transform"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center text-red-600 font-bold text-xs border border-red-200 shadow-sm">
+                      {selectedChannel.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-red-600 border-2 border-white flex items-center justify-center shadow-md">
+                      <div className="w-1 h-1 bg-white rounded-full animate-pulse" />
+                  </div>
+                </div>
+                <div className="flex flex-col items-start leading-tight pr-1">
+                    <span className="text-[13px] font-bold text-slate-900 truncate max-w-[120px]">
+                    {selectedChannel.name}
+                    </span>
+                    <span className="text-[10px] text-slate-500 font-medium">Verified Channel</span>
+                </div>
+                <ChevronDown className={cn("w-4 h-4 text-slate-400 transition-transform duration-300", showDropdown ? 'rotate-180' : 'group-hover:translate-y-0.5')} />
+              </>
+            ) : (
+              <>
+                <div className="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center text-red-600 ring-1 ring-red-200/50 group-hover:scale-110 transition-transform shadow-inner">
+                  <Plus className="h-4 w-4 stroke-[3]" />
+                </div>
+                <span className="text-[14px] font-bold text-red-600 pr-2">Add YouTube</span>
+                <ChevronDown className="w-4 h-4 text-slate-400 group-hover:translate-y-0.5 transition-transform" />
+              </>
+            )}
+          </button>
+
+          <AnimatePresence>
+            {showDropdown && (
+              <motion.div
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="absolute z-50 right-0 mt-3 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-[28px] shadow-[0_20px_50px_rgba(0,0,0,0.12)] max-h-[500px] overflow-hidden w-[400px]"
+              >
+                <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-white">
+                    <h3 className="font-founders text-lg font-bold text-slate-900 tracking-tight">Switch Account</h3>
+                    <div className="flex items-center gap-1">
+                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                        <span className="text-[10px] uppercase tracking-widest font-black text-slate-400">Sync Active</span>
+                    </div>
+                </div>
+                <div className="overflow-y-auto max-h-[380px] custom-scrollbar">
+                    <ChannelList />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </>
       )}
 
       <AddChannelModal
@@ -613,13 +695,11 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
         isOpen={showManageModal}
         onClose={() => setShowManageModal(false)}
         onChannelRemoved={() => {
-          // Reload channels and videos
           try {
             const parsed: StoredVideo[] = JSON.parse(
               sessionStorage.getItem(STORAGE_KEY) || "[]"
             );
             setStoredVideos(parsed);
-
             const cachedChannelInfo = sessionStorage.getItem(CHANNEL_INFO_STORAGE_KEY);
             if (cachedChannelInfo) {
               const parsedInfo: ChannelInfo[] = JSON.parse(cachedChannelInfo);
@@ -629,17 +709,14 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
               });
               setChannelInfoMap(infoMap);
             }
-
-            // Check if selected channel still exists
             const channelKey = getSelectedChannelKey();
             const currentSelected = localStorage.getItem(channelKey);
             if (currentSelected) {
-              const stillExists = parsed.some((v) => v.channelId === currentSelected);
+              const stillExists = availableChannels.some((v) => v.channelId === currentSelected);
               if (!stillExists) {
                 localStorage.removeItem(channelKey);
                 setSelectedChannelId(null);
-                // Select first available channel
-                const firstChannel = parsed.find((v) => v.channelId);
+                const firstChannel = availableChannels.find((v) => v.channelId);
                 if (firstChannel?.channelId) {
                   setSelectedChannelId(firstChannel.channelId);
                   localStorage.setItem(channelKey, firstChannel.channelId);

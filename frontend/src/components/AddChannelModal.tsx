@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { X, ArrowRight } from "lucide-react";
+import { X, ArrowRight, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
 
 const API_BASE_URL =
   (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
@@ -245,74 +246,96 @@ const AddChannelModal = ({ isOpen, onClose, onChannelAdded }: AddChannelModalPro
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md mx-4 animate-scale-in">
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <img
-                src="https://www.youtube.com/img/desktop/yt_1200.png"
-                alt="YouTube"
-                className="w-8 h-8"
-              />
-              <h2 className="text-2xl font-bold text-slate-900">Add YouTube Channel</h2>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-md animate-fade-in px-4">
+      <div className="bg-white rounded-[32px] shadow-2xl w-full max-w-md overflow-hidden animate-scale-in">
+        <div className="bg-gradient-to-br from-red-600 to-red-700 p-8 text-white relative overflow-hidden text-center">
+            {/* Background pattern */}
+            <div className="absolute inset-0 opacity-10 pointer-events-none">
+                <div className="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-1/2 -translate-y-1/2" />
+                <div className="absolute bottom-0 right-0 w-48 h-48 bg-white rounded-full translate-x-1/3 translate-y-1/3" />
             </div>
+            
+            <div className="relative z-10 flex flex-col items-center gap-3">
+              <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner border border-white/30">
+                <Youtube className="w-10 h-10 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold font-founders tracking-tight">Add YouTube Channel</h2>
+                <p className="text-red-100 text-sm font-medium opacity-90">Enter details to connect your channel</p>
+              </div>
+            </div>
+            
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-600 transition-colors"
+              className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-all"
             >
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5" />
             </button>
-          </div>
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="relative">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2">
-                <img
-                  src="https://www.youtube.com/img/desktop/yt_1200.png"
-                  alt="YouTube"
-                  className="w-5 h-5"
-                />
-              </div>
-              <Input
-                type="text"
-                placeholder="Search With Your Channel Name or Paste Channel Link"
-                value={channelInput}
-                onChange={(e) => {
-                  setChannelInput(e.target.value);
-                  setError("");
-                }}
-                className="pl-12 pr-12 py-6 border-2 border-purple-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 rounded-2xl text-base"
-                disabled={loading}
-              />
-              <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                <ArrowRight className="h-5 w-5 text-slate-400" />
-              </div>
+        <div className="p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400 pl-1">
+                    Channel Search
+                </label>
+                <div className="relative group">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-red-500 transition-colors">
+                    <Youtube className="w-5 h-5" />
+                  </div>
+                  <Input
+                    type="text"
+                    placeholder="Channel Name, @handle or Link"
+                    value={channelInput}
+                    onChange={(e) => {
+                      setChannelInput(e.target.value);
+                      setError("");
+                    }}
+                    className="pl-12 pr-12 py-7 border-2 border-slate-100 focus:border-red-500 focus:ring-4 focus:ring-red-500/10 rounded-[20px] text-[15px] font-semibold transition-all shadow-sm"
+                    disabled={loading}
+                    autoFocus
+                  />
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                    {loading ? (
+                        <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                        <ArrowRight className="h-5 w-5 text-slate-300" />
+                    )}
+                  </div>
+                </div>
+                <p className="text-[10px] text-slate-400 pl-4">Example: @MrBeast or youtube.com/c/vidfly</p>
             </div>
 
             {error && (
-              <div className="p-4 rounded-xl bg-red-50 border-2 border-red-200 text-sm text-red-600">
-                <p className="font-semibold mb-1">Unable to add channel</p>
-                <p className="whitespace-pre-line">{error}</p>
-              </div>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="p-4 rounded-2xl bg-red-50 border border-red-100 text-[13px] text-red-600 flex gap-3"
+              >
+                <div className="shrink-0 pt-0.5">⚠️</div>
+                <div className="space-y-1">
+                    <p className="font-bold underline">Error adding channel</p>
+                    <p className="leading-relaxed opacity-90">{error}</p>
+                </div>
+              </motion.div>
             )}
 
-            <div className="flex gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 onClick={onClose}
-                className="flex-1 rounded-2xl border-slate-200 hover:bg-slate-50"
+                className="flex-1 rounded-2xl py-6 hover:bg-slate-50 text-slate-500 font-bold"
                 disabled={loading}
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                className="flex-1 rounded-2xl bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold shadow-lg hover:shadow-xl disabled:opacity-50"
+                className="flex-[1.5] rounded-2xl py-6 bg-red-600 hover:bg-red-700 text-white font-bold shadow-xl shadow-red-500/20 active:scale-95 transition-all disabled:opacity-50"
                 disabled={loading}
               >
-                {loading ? "Adding..." : "Add Channel"}
+                {loading ? "Discovering..." : "Connect Channel"}
               </Button>
             </div>
           </form>

@@ -99,14 +99,14 @@ const CampaignLayout = ({
       )}
 
       {/* Full Width Shared Top Bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100/50 px-4 lg:px-8 h-20 lg:h-24 flex items-center justify-between">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100/50 px-4 lg:px-8 h-24 flex items-center justify-between">
         {/* Left Side: Logo & Mobile Menu Toggle & Channel Selector */}
-        <div className="flex items-center gap-3 lg:gap-6 text-slate-600">
-          <Link href="/" className="lg:mr-2">
-            <img src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png" alt="Vidflyy" className="h-11 lg:h-14 w-auto cursor-pointer object-contain" />
+        <div className="flex items-center gap-3 md:gap-6 text-slate-600">
+          <Link href="/" className="flex-shrink-0">
+            <img src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png" alt="Vidflyy" className="h-11 lg:h-9 w-auto cursor-pointer object-contain" />
           </Link>
           {showChannelSelector && (
-            <div className="flex items-center ml-16 lg:ml-36">
+            <div className="flex items-center ml-2 sm:ml-12 lg:ml-24">
               <ChannelSelector />
             </div>
           )}
@@ -188,17 +188,17 @@ const CampaignLayout = ({
         </div>
       </header>
 
-      <div className="flex flex-1 pt-20 lg:pt-24">
+      <div className="flex flex-1 pt-24">
         {/* Desktop Sidebar */}
         {!hideSidebar && (
-          <div className="hidden lg:block z-30 fixed left-0 top-20 lg:top-24 bottom-0 w-[260px] border-r border-gray-100 bg-white overflow-y-auto">
+          <div className="hidden lg:block z-30 fixed left-0 top-24 bottom-0 w-[260px] border-r border-gray-100 bg-white overflow-y-auto">
             <CampaignSidebar active={activeSidebar} />
           </div>
         )}
 
         {/* Main content area */}
         <div className={cn(
-          "flex-1 w-full bg-white flex flex-col min-h-[calc(100vh-80px)] lg:min-h-[calc(100vh-96px)]",
+          "flex-1 w-full bg-white flex flex-col min-h-[calc(100vh-96px)]",
           !hideSidebar && "lg:pl-[260px]"
         )}>
           <main className={cn("flex-1 w-full", className)}>{children}</main>
