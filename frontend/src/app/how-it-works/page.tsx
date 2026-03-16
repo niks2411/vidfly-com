@@ -10,7 +10,7 @@ export default function HowItWorksPage() {
             {/* Hero Image Section */}
             <section className="relative w-full pt-8 px-4 sm:px-6 lg:px-12 bg-white">
                 <div className="max-w-[1400px] mx-auto">
-                    <div className="relative rounded-[32px] overflow-hidden shadow-xl h-[160px] sm:h-[220px] md:h-[260px] lg:h-[300px] animate-fade-in mb-12 max-w-6xl mx-auto">
+                    <div className="relative rounded-b-[7px] overflow-hidden shadow-xl h-[160px] sm:h-[220px] md:h-[260px] lg:h-[300px] animate-fade-in mb-12 max-w-6xl mx-auto">
                         <Image
                             src="/featuresbg.png"
                             alt="Vidflyy How It Works Studio"

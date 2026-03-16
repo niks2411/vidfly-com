@@ -54,7 +54,7 @@ export default function PricingPage() {
             <section className="bg-white pt-8 px-4 sm:px-6 lg:px-12 w-full">
                 <div className="max-w-[1400px] mx-auto">
                     {/* Top Banner Image - Using featuresbg.png as requested */}
-                    <div className="relative rounded-[32px] overflow-hidden shadow-xl h-[160px] sm:h-[220px] md:h-[260px] lg:h-[300px] animate-fade-in mb-12 max-w-6xl mx-auto">
+                    <div className="relative rounded-b-[7px] overflow-hidden shadow-xl h-[160px] sm:h-[220px] md:h-[260px] lg:h-[300px] animate-fade-in mb-12 max-w-6xl mx-auto">
                         <Image
                             src="/featuresbg.png"
                             alt="Vidflyy Pricing Studio"
