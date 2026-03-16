@@ -723,13 +723,7 @@ export default function CampaignBudget() {
                 onLoad={() => setSdkLoaded(true)}
             />
             <div className="w-full max-w-4xl mx-auto px-4 lg:px-6 space-y-4 pb-8 pt-4">
-                {/* Header Section - Mobile */}
-                <div className="md:hidden flex items-center gap-3 mb-6 px-1 pb-4 border-b border-slate-50 sticky top-0 bg-white/95 backdrop-blur-md z-[110] shadow-sm">
-                    <button onClick={() => router.back()} className="p-1 hover:bg-slate-50 rounded-full transition-colors">
-                        <ArrowLeft className="w-6 h-6 text-slate-900" />
-                    </button>
-                    <h1 className="text-[26px] font-bold text-slate-900 tracking-tight">Budget & Targeting</h1>
-                </div>
+
 
                 {/* Header Section - Desktop */}
                 <div className="hidden md:flex items-center gap-6">
@@ -743,17 +737,17 @@ export default function CampaignBudget() {
                         Go Back
                     </button>
 
-                    {/* Progress Stepper - Compact Gaps */}
-                    <div className="flex-1 max-w-xl pt-0.5 ml-16">
-                        <div className="flex items-center gap-4">
+                    {/* Progress Stepper - Responsive layout fix */}
+                    <div className="flex-1 max-w-xl pt-0.5 ml-4 md:ml-12 lg:ml-16">
+                        <div className="flex items-center gap-2 md:gap-4 flex-wrap md:flex-nowrap">
                             {[
                                 { label: "Enter Link", active: true, color: "bg-gradient-to-r from-blue-400 to-emerald-300" },
                                 { label: "Select Videos", active: true, color: "bg-gradient-to-r from-blue-400 to-emerald-300" },
                                 { label: "Budget & Targeting", active: false, color: "bg-slate-200" }
                             ].map((step, index) => (
-                                <div key={index} className="flex-1 flex flex-col items-start gap-2.5">
+                                <div key={index} className="flex-1 min-w-[80px] flex flex-col items-start gap-2.5">
                                     <div className={`h-[5px] w-full rounded-full ${step.color}`} />
-                                    <span className="text-[11px] font-bold text-slate-900 tracking-tight">{step.label}</span>
+                                    <span className="text-[10px] md:text-[11px] font-bold text-slate-900 tracking-tight whitespace-nowrap">{step.label}</span>
                                 </div>
                             ))}
                         </div>

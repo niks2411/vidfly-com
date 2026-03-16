@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import AddChannelModal from "./AddChannelModal";
 import ManageChannelsModal from "./ManageChannelsModal";
 import { getVerifiedEmail, getSelectedChannelKey } from "@/lib/verifiedEmail";
+import { useAuth } from "@/context/AuthContext";
 
 const STORAGE_KEY = "vidfly_channel_videos";
 const CHANNEL_INFO_STORAGE_KEY = "vidfly_channel_info";
@@ -32,6 +33,7 @@ type ChannelSelectorProps = {
 
 const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
   const router = useRouter();
+  const { user } = useAuth();
   const [storedVideos, setStoredVideos] = useState<StoredVideo[]>([]);
   const [channelInfoMap, setChannelInfoMap] = useState<Map<string, ChannelInfo>>(new Map());
   const [selectedChannelId, setSelectedChannelId] = useState<string | null>(null);
@@ -124,7 +126,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
     } catch (err) {
       console.error("Failed to load channels", err);
     }
-  }, []); // Remove channelInfoMap dependency to prevent infinite loops
+  }, [user?.email]); // Add user?.email to dependencies to reload when login state changes
 
   useEffect(() => {
     if (typeof window === "undefined") return;

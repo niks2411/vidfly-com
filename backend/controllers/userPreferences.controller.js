@@ -46,6 +46,8 @@ exports.addChannel = async (req, res, next) => {
       return res.status(401).json({ message: 'Email verification required' });
     }
 
+    const normalizedEmail = value.email.toLowerCase().trim();
+
     // Find or create user
     let user = await User.findOne({ email: normalizedEmail });
     if (!user) {

@@ -186,7 +186,7 @@ export default function CampaignDashboard() {
         <CampaignLayout activeSidebar="promote" className="max-w-none p-0 !p-0 flex-1 flex flex-col font-founders relative overflow-x-hidden">
 
             {/* Main Hero Section */}
-            <div className="relative flex-1 flex flex-col items-center pt-5 px-4">
+            <div className="relative flex-1 flex flex-col items-center justify-center py-8 md:py-12 px-4">
 
                 {/* Subtle Background Gradient */}
                 <div

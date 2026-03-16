@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { 
     Search, ArrowLeft, ArrowRight, Eye, 
     ThumbsUp, MessageSquare, CheckCircle2, Check, X,
-    Loader2, Sparkles
+    Loader2, Sparkles, Play
 } from "lucide-react";
 import { getVerifiedEmail, getSelectedChannelKey } from "@/lib/verifiedEmail";
 import Image from "next/image";
@@ -307,26 +307,35 @@ export default function CampaignChannel() {
 
     return (
         <CampaignLayout activeSidebar="channel" hideSidebar={true}>
-            <div className="w-full max-w-4xl mx-auto px-4 lg:px-6 space-y-4 pb-8 pt-4">
+            <div className="w-full max-w-4xl mx-auto px-4 lg:px-6 space-y-4 pb-[180px] lg:pb-12 pt-4">
                 {/* Header & Progress */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <button onClick={() => router.back()} className="flex items-center gap-2 group">
-                        <div className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-all">
+                {/* Header & Progress */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-4">
+                    {/* Go Back - Desktop Only */}
+                    <button onClick={() => router.back()} className="hidden md:flex items-center gap-3 group">
+                        <div className="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-all bg-white shadow-sm">
                             <ArrowLeft className="w-5 h-5 text-slate-900" />
                         </div>
-                        <span className="font-bold text-slate-800">Go Back</span>
+                        <span className="font-extrabold text-[19px] text-slate-900 tracking-tight">Select Videos to Promote</span>
                     </button>
 
-                    <div className="flex-1 max-w-xl pt-0.5 ml-16">
-                        <div className="flex items-center gap-4">
+                    {/* Mobile Title - No Back Button */}
+                    <div className="md:hidden flex flex-col gap-1 px-1">
+                        <h1 className="font-black text-[28px] text-slate-900 tracking-tight leading-tight">Select Videos</h1>
+                        <p className="text-[14px] font-bold text-slate-400">Choose up to 5 videos to promote</p>
+                    </div>
+
+                    {/* Progress Stepper - Desktop Only */}
+                    <div className="hidden md:block flex-1 max-w-xl pt-0.5 md:ml-12 lg:ml-16">
+                        <div className="flex items-center gap-2 md:gap-4 flex-wrap md:flex-nowrap">
                             {[
                                 { label: "Enter Link", active: true, color: "bg-gradient-to-r from-blue-400 to-emerald-300" },
                                 { label: "Select Videos", active: true, color: "bg-gradient-to-r from-blue-400 to-emerald-300" },
                                 { label: "Budget & Targeting", active: false, color: "bg-slate-200" }
                             ].map((step, index) => (
-                                <div key={index} className="flex-1 flex flex-col items-start gap-2.5">
+                                <div key={index} className="flex-1 min-w-[80px] flex flex-col items-start gap-2.5">
                                     <div className={`h-[5px] w-full rounded-full ${step.color}`} />
-                                    <span className="text-[11px] font-bold text-slate-900 tracking-tight">{step.label}</span>
+                                    <span className="text-[10px] md:text-[11px] font-bold text-slate-900 tracking-tight whitespace-nowrap">{step.label}</span>
                                 </div>
                             ))}
                         </div>
@@ -399,7 +408,7 @@ export default function CampaignChannel() {
                             </div>
                         )}
 
-                        <div className="text-[14px] font-bold text-purple-600">
+                        <div className="hidden lg:block text-[14px] font-bold text-purple-600">
                             {selectedIds.length} Videos Selected
                         </div>
 
@@ -458,21 +467,49 @@ export default function CampaignChannel() {
                         </div>
                     </div>
 
-                    {/* Right Column: CTA Sidebar */}
-                    <div className="lg:col-span-4 space-y-6 sticky top-24">
+                    {/* Right Column: CTA Sidebar - Hidden on Mobile */}
+                    <div className="hidden lg:block lg:col-span-4 space-y-6 sticky top-24">
                         <div className="bg-white rounded-[24px] p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
                             <button
                                 onClick={handleNext}
                                 disabled={selectedIds.length === 0}
-                                className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-xl py-3.5 flex items-center justify-center gap-2 font-bold transition-all disabled:opacity-50 text-[13px] shadow-lg shadow-slate-200"
+                                className="w-full h-[52px] bg-[rgb(51,136,244)] hover:bg-[rgb(40,120,220)] text-white rounded-[100px] flex items-center justify-center gap-2 text-[17px] font-black transition-all disabled:opacity-50 shadow-lg shadow-blue-100"
                             >
-                                Continue to Budget <ArrowRight className="w-4 h-4" />
+                                Continue to Budget <ArrowRight className="w-5 h-5 stroke-[3px]" />
                             </button>
                         </div>
-                        
-
                     </div>
                 </div>
+                )}
+
+                {/* Mobile Sticky Footer */}
+                {channelId && !loadingInitialChannel && (
+                    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 shadow-[0_-8px_30px_rgb(0,0,0,0.06)] p-6 z-[100] rounded-t-[32px] animate-in slide-in-from-bottom-full duration-500">
+                        <div className="max-w-md mx-auto space-y-4">
+                            <div className="flex items-center justify-between px-2">
+                                <div className="flex items-center gap-2.5">
+                                    <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center">
+                                        <Play className="w-4 h-4 text-purple-600 fill-current" />
+                                    </div>
+                                    <div>
+                                        <p className="text-[15px] font-black text-slate-800 leading-tight">
+                                            {selectedIds.length} Videos Selected
+                                        </p>
+                                        <p className="text-[11px] font-bold text-slate-400">Targeting up to 5 videos</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={handleNext}
+                                disabled={selectedIds.length === 0}
+                                className="w-full h-[52px] bg-[rgb(51,136,244)] hover:bg-[rgb(40,120,220)] text-white rounded-[100px] flex items-center justify-center gap-2 text-[17px] font-black shadow-lg shadow-blue-100 transition-all active:scale-[0.98] disabled:opacity-50 disabled:bg-slate-200 disabled:shadow-none"
+                            >
+                                Next: Budget & Audience
+                                <ArrowRight className="w-5 h-5 stroke-[3px]" />
+                            </button>
+                        </div>
+                    </div>
                 )}
             </div>
         </CampaignLayout>
