@@ -128,8 +128,8 @@ exports.getAllChannels = async (req, res, next) => {
     const normalizedEmail = email.toLowerCase().trim();
 
     // Verify email cookie
-    const cookieValue = req.cookies[EMAIL_COOKIE_NAME];
-    if (!cookieValue || !verifyEmailCookieValue(cookieValue, normalizedEmail)) {
+    // Verify email (via cookie or JWT)
+    if (!isVerified(req, normalizedEmail)) {
       return res.status(401).json({ message: 'Email verification required' });
     }
 
@@ -191,8 +191,8 @@ exports.getSelectedChannel = async (req, res, next) => {
     const normalizedEmail = email.toLowerCase().trim();
 
     // Verify email cookie
-    const cookieValue = req.cookies[EMAIL_COOKIE_NAME];
-    if (!cookieValue || !verifyEmailCookieValue(cookieValue, normalizedEmail)) {
+    // Verify email (via cookie or JWT)
+    if (!isVerified(req, normalizedEmail)) {
       return res.status(401).json({ message: 'Email verification required' });
     }
 

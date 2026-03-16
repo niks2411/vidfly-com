@@ -149,7 +149,7 @@ export default function CampaignDashboard() {
                 } catch (e) {
                     existingVideos = [];
                 }
-                
+
                 // Add new video to the list if not already there
                 const videoExists = existingVideos.some((v: any) => v.videoId === videoData.videoId);
                 if (!videoExists) {
@@ -252,7 +252,7 @@ export default function CampaignDashboard() {
 
                     {/* Description/Price Line */}
                     <p className="text-[#334155] text-[17px] font-medium mb-6">
-                        Promote your YouTube videos starting at <span className="font-bold">just $10!</span>
+                        Promote your YouTube videos starting at <span className="font-bold">just ₹499!</span>
                     </p>
 
                     {/* Main Interaction Area */}
