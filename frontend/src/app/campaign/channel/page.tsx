@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { 
     Search, ArrowLeft, ArrowRight, Eye, 
     ThumbsUp, MessageSquare, CheckCircle2, Check, X,
-    Loader2, Sparkles, Play, Youtube
+    Loader2, Sparkles, Play, Youtube, Users
 } from "lucide-react";
 import { getVerifiedEmail, getSelectedChannelKey } from "@/lib/verifiedEmail";
 import Image from "next/image";
