@@ -186,7 +186,7 @@ export default function CampaignDashboard() {
         <CampaignLayout activeSidebar="promote" className="max-w-none p-0 !p-0 flex-1 flex flex-col font-founders relative overflow-x-hidden">
 
             {/* Main Hero Section */}
-            <div className="relative flex-1 flex flex-col items-center justify-center pt-2 pb-8 md:pt-4 md:pb-12 px-4">
+            <div className="relative flex-1 flex flex-col items-center justify-center md:justify-start pt-2 pb-8 md:pt-10 lg:pt-16 md:pb-12 px-4">
 
                 {/* Subtle Background Gradient */}
                 <div
@@ -196,16 +196,16 @@ export default function CampaignDashboard() {
                     }}
                 />
 
-                <div className="w-full max-w-5xl relative z-10 flex flex-col items-center text-center -mt-4 md:-mt-8">
+                <div className="w-full max-w-5xl relative z-10 flex flex-col items-center text-center -mt-4 md:mt-0">
 
                     {/* Main Headline */}
-                    <h1 className="section-heading !text-[#1e293b] !mb-12 md:!mb-16">
+                    <h1 className="section-heading !text-[#1e293b] !mb-10 md:!mb-6 pt-2 lg:pt-0">
                         Join <span className="font-bold">50,000+</span> <span className="italic font-serif">Creators</span> who scaled <br className="hidden md:block" />
                         faster with <span className="font-bold">Vidfly!</span>
                     </h1>
 
                     {/* Stacked Creator Images */}
-                    <div className="relative w-full max-w-sm h-[200px] md:h-[260px] mt-6 mb-16 md:mt-12 flex items-center justify-center">
+                    <div className="relative w-full max-w-sm h-[200px] md:h-[260px] mt-8 mb-16 md:mt-2 md:mb-10 flex items-center justify-center">
                         {/* Center Card */}
                         <div className="absolute z-20 w-[220px] md:w-[260px] aspect-square bg-white rounded-3xl p-1 shadow-2xl overflow-hidden border-[6px] border-white">
                             <div className="w-full h-full rounded-2xl overflow-hidden relative">
@@ -286,21 +286,21 @@ export default function CampaignDashboard() {
                             )}
 
                             {(!isFetchingPreview && (videoInfo || channelInfo)) && (
-                                <div className="w-full max-w-md mx-auto bg-white border border-slate-100 rounded-2xl p-3 flex flex-col relative overflow-hidden text-left shadow-lg animate-in slide-in-from-top-2 duration-300">
-                                    <div className="flex gap-4">
-                                        <div className="shrink-0 w-[120px] aspect-video bg-black rounded-xl overflow-hidden relative">
+                                <div className="w-full max-w-md mx-auto bg-white border border-slate-100 rounded-xl md:rounded-2xl p-2 md:p-3 flex flex-col relative overflow-hidden text-left shadow-lg animate-in slide-in-from-top-2 duration-300">
+                                    <div className="flex gap-3 md:gap-4 items-center md:items-stretch">
+                                        <div className="shrink-0 w-[80px] md:w-[120px] aspect-video bg-black rounded-lg md:rounded-xl overflow-hidden relative">
                                             <img
                                                 src={videoInfo?.thumbnail || channelInfo?.avatar || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=400&auto=format&fit=crop"}
                                                 alt="Preview"
                                                 className="w-full h-full object-cover"
                                             />
                                         </div>
-                                        <div className="flex flex-col flex-1 min-w-0 justify-center">
-                                            <h3 className="font-bold text-slate-800 text-sm line-clamp-1">
+                                        <div className="flex flex-col flex-1 min-w-0 justify-center pr-2">
+                                            <h3 className="font-bold text-slate-800 text-[12px] md:text-sm line-clamp-1 leading-tight">
                                                 {videoInfo?.title || channelInfo?.title || "Fetching details..."}
                                             </h3>
-                                            <div className="flex items-center gap-2 mt-1 text-slate-500">
-                                                <span className="text-xs font-medium line-clamp-1">{videoInfo?.author || channelInfo?.name || "Unknown Channel"}</span>
+                                            <div className="flex items-center gap-2 mt-0.5 md:mt-1 text-slate-500">
+                                                <span className="text-[10px] md:text-xs font-medium line-clamp-1">{videoInfo?.author || channelInfo?.name || "Unknown Channel"}</span>
                                             </div>
                                         </div>
                                     </div>
