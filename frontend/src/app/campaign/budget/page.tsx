@@ -833,18 +833,18 @@ export default function CampaignBudget() {
                             </div>
                         </div>
                         {/* Enter Budget Card */}
-                        <div className="bg-white rounded-[12px] border border-slate-100 p-5 shadow-sm">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                                <h3 className="text-[20px] font-bold text-slate-900">Enter Your Budget</h3>
-                                <div className="flex items-center gap-4">
+                        <div className="bg-white rounded-[12px] border border-slate-100 p-4 sm:p-5 shadow-sm">
+                            <div className="flex flex-row items-center justify-between gap-2 sm:gap-4 mb-6">
+                                <h3 className="text-[16px] sm:text-[20px] font-bold text-slate-900 whitespace-nowrap">Enter Your Budget</h3>
+                                <div className="flex items-center gap-2 sm:gap-4 shrink-0">
                                     {budget >= 1000 && (
-                                        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#f5f3ff] text-[#7c3aed] rounded-[8px] border border-indigo-100 shadow-sm animate-pulse-subtle">
+                                        <div className="flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-1.5 bg-[#f5f3ff] text-[#7c3aed] rounded-[8px] border border-indigo-100 shadow-sm animate-pulse-subtle">
                                             <div className="w-4 h-4 rounded-full bg-indigo-100 flex items-center justify-center">
                                                 <span className="text-[10px]">
                                                     {budget >= 7000 ? "🚀" : budget >= 4000 ? "⭐" : "🌱"}
                                                 </span>
                                             </div>
-                                            <span className="text-[12px] font-extrabold uppercase tracking-tight">
+                                            <span className="hidden sm:inline text-[11px] sm:text-[12px] font-extrabold uppercase tracking-tight">
                                                 {budget >= 7000 ? "Impact" : budget >= 4000 ? "Smart" : "Starter"}
                                             </span>
                                         </div>
@@ -858,11 +858,11 @@ export default function CampaignBudget() {
                                                     const val = Number(e.target.value.replace(/,/g, ""));
                                                     if (!isNaN(val)) setBudget(val);
                                                 }}
-                                                className="h-[52px] w-[110px] rounded-l-[10px] border-2 border-slate-100 bg-white text-[18px] font-bold text-slate-900 px-4 focus:border-indigo-500 focus:ring-0 transition-all text-center border-r-0"
+                                                className="h-[44px] sm:h-[52px] w-[90px] sm:w-[110px] rounded-l-[10px] border-2 border-slate-100 bg-white text-[16px] sm:text-[18px] font-bold text-slate-900 px-3 sm:px-4 focus:border-indigo-500 focus:ring-0 transition-all text-center border-r-0"
                                             />
                                         </div>
-                                        <div className="h-[52px] w-[36px] bg-slate-50 flex items-center justify-center rounded-r-[10px] border-2 border-slate-100 border-l-0">
-                                            <span className="text-[18px] font-bold text-slate-400 italic">₹</span>
+                                        <div className="h-[44px] sm:h-[52px] w-[32px] sm:w-[36px] bg-slate-50 flex items-center justify-center rounded-r-[10px] border-2 border-slate-100 border-l-0">
+                                            <span className="text-[16px] sm:text-[18px] font-bold text-slate-400 italic">₹</span>
                                         </div>
                                     </div>
                                 </div>
@@ -950,8 +950,8 @@ export default function CampaignBudget() {
                         </div>
 
                         {/* Target Country Card */}
-                        <div className="bg-white rounded-[12px] border border-slate-100 p-5 shadow-sm">
-                            <h3 className="text-[19px] font-bold text-slate-900 mb-5">Target by Country <span className="text-slate-400 font-medium">(Optional)</span></h3>
+                        <div className="bg-white rounded-[12px] border border-slate-100 p-4 sm:p-5 shadow-sm">
+                            <h3 className="text-[17px] sm:text-[19px] font-bold text-slate-900 mb-5">Target by Country <span className="text-slate-400 font-medium">(Optional)</span></h3>
                             <div className="relative group searchable-country-selector">
                                 <div 
                                     className={`w-full h-[54px] border-2 bg-white rounded-[12px] px-5 flex items-center justify-between cursor-pointer transition-all ${
@@ -1158,7 +1158,7 @@ export default function CampaignBudget() {
                                 >
                                     <div className="flex items-center justify-between mb-3">
                                          <div className="flex items-center gap-2">
-                                             <h3 className="text-[19px] font-bold text-slate-900">Automatic Targeting</h3>
+                                             <h3 className="text-[17px] sm:text-[19px] font-bold text-slate-900">Automatic Targeting</h3>
                                              <div className="px-1.5 py-0.5 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-sm text-[8px] font-black uppercase tracking-wider">Recommended</div>
                                          </div>
                                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
@@ -1198,7 +1198,7 @@ export default function CampaignBudget() {
                                  >
                                      <div className="flex items-center justify-between">
                                          <div>
-                                             <h3 className="text-[15px] font-bold text-slate-800">Manual Targeting</h3>
+                                             <h3 className="text-[17px] sm:text-[19px] font-bold text-slate-900">Manual Targeting</h3>
                                              <p className="text-[12px] text-slate-400 font-medium mt-0.5">Set your targeting preferences manually</p>
                                          </div>
                                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
@@ -1557,51 +1557,51 @@ export default function CampaignBudget() {
                 </div>
 
                 {/* Mobile Sticky Bottom Section */}
-                <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-purple-100 p-5 z-[100] shadow-[0_-12px_40px_rgb(0,0,0,0.12)] animate-in slide-in-from-bottom duration-300">
-                    <div className="max-w-md mx-auto">
+                <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-purple-100 p-3 px-4 z-[100] shadow-[0_-12px_40px_rgb(0,0,0,0.12)] animate-in slide-in-from-bottom duration-300">
+                    <div className="max-w-md mx-auto relative pt-1">
+                        {/* Pull Indicator Tab */}
+                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-slate-100 rounded-full" />
+
                         {/* Summary Line */}
-                        <div className="flex items-center justify-between mb-6 px-1">
+                        <div className="flex items-center justify-between mb-3 px-1">
                              <div className="flex flex-col">
-                                 <div className="flex items-center gap-2 text-[13px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                                     Views <Info className="w-4 h-4" />
+                                 <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">
+                                     Views <Info className="w-3 h-3" />
                                  </div>
-                                 <div className="text-[19px] font-black text-slate-900 tracking-tight">
+                                 <div className="text-[15px] font-black text-slate-900 tracking-tight">
                                     {loadingPricing ? "..." : pricingData ? `${(pricingData.totalViews.min).toLocaleString()} - ${(pricingData.totalViews.max).toLocaleString()}` : "3,600 - 4,400"}
                                  </div>
                              </div>
                              <div className="flex flex-col items-end">
-                                 <div className="flex items-center gap-2 text-[13px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                                     Subscribers <ShieldCheck className="w-4 h-4" />
+                                 <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">
+                                     Subscribers <ShieldCheck className="w-3 h-3" />
                                  </div>
-                                 <div className="text-[19px] font-black text-slate-900 tracking-tight">
+                                 <div className="text-[15px] font-black text-slate-900 tracking-tight">
                                      {loadingPricing ? "..." : pricingData?.totalSubscribers ? `${pricingData.totalSubscribers.min} - ${pricingData.totalSubscribers.max}` : pricingData ? `${Math.floor(pricingData.totalViews.min * 0.01)} - ${Math.floor(pricingData.totalViews.max * 0.012)}` : "36 - 45"}
                                  </div>
                              </div>
                         </div>
 
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3">
                             <button 
                                 onClick={() => setShowPreview(true)}
-                                className="flex-1 text-[17px] font-extrabold text-purple-600 hover:text-purple-700 transition-colors"
+                                className="flex-1 text-[14px] font-extrabold text-purple-600 hover:text-purple-700 transition-colors py-2"
                             >
                                 Preview Ad
                             </button>
                             <button
                                 onClick={handleCreateCampaign}
                                 disabled={creating}
-                                className={`h-[58px] px-4 rounded-full flex items-center justify-center gap-2 text-[16px] font-black shadow-xl shadow-purple-100 transition-all whitespace-nowrap ${
+                                className={`h-[44px] px-4 rounded-full flex items-center justify-center gap-2 text-[14px] font-black shadow-lg shadow-purple-100 transition-all whitespace-nowrap ${
                                     creating 
                                     ? "bg-slate-300 text-slate-500" 
                                     : "bg-[rgb(124,58,237)] text-white flex-[1.5]"
                                 }`}
                             >
                                 {creating ? "Wait..." : "Next: Pay & Launch"}
-                                <ChevronRight className="w-5 h-5 stroke-[3.5]" />
+                                <ChevronRight className="w-4 h-4 stroke-[3]" />
                             </button>
                         </div>
-                        
-                        {/* Pull Indicator Tab */}
-                        <div className="absolute top-1 left-1/2 -translate-x-1/2 w-8 h-1 bg-slate-100 rounded-full" />
                     </div>
                 </div>
             </div>

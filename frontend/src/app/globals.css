@@ -413,6 +413,21 @@ button {
 /* Optimize for mobile performance */
 @media (max-width: 768px) {
 
+  /* ─── Global Mobile Typography ─────────────────────────────────────────
+     Lock heading & description sizes for mobile devices.
+     Reference: https://vidflyy.in/campaign (mobile view)
+     ──────────────────────────────────────────────────────────────────── */
+  .section-heading {
+    font-size: 28px !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  .section-desc {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+  }
+
   .animate-card-float,
   .animate-float,
   .animate-morph {

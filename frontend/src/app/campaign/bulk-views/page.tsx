@@ -102,27 +102,29 @@ export default function CampaignBulkViews() {
                     }, []).map((row, rowIndex) => (
                         <div key={rowIndex} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {row.map((pkg) => (
-                                <div key={pkg.id} className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all">
-                                    <div className="flex items-center gap-4">
-                                        <div className={`h-12 w-16 rounded-xl ${pkg.iconBg} flex items-center justify-center shadow-lg`}>
-                                            <span className="text-white font-bold">▶</span>
+                                <div key={pkg.id} className="flex flex-col xl:flex-row xl:items-center justify-between rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm hover:shadow-md transition-all gap-4 xl:gap-0">
+                                    {/* Left: Icon & Views */}
+                                    <div className="flex items-center gap-3 sm:gap-4">
+                                        <div className={`h-10 w-12 sm:h-12 sm:w-16 rounded-xl ${pkg.iconBg} flex items-center justify-center shadow-md`}>
+                                            <span className="text-white font-bold text-sm sm:text-base">▶</span>
                                         </div>
                                         <div>
-                                            <p className="text-xl font-bold text-slate-900">{pkg.views.toLocaleString()}</p>
-                                            <p className="text-xs text-slate-500 uppercase">Views</p>
+                                            <p className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">{pkg.views.toLocaleString()}</p>
+                                            <p className="text-[10px] sm:text-xs text-slate-500 uppercase font-bold tracking-wider">Views</p>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center gap-4">
-                                        <div className="text-right">
-                                            <p className="text-xl font-bold text-slate-900">{pkg.price}</p>
-                                            <div className="flex items-center justify-end gap-2 text-[10px]">
+                                    {/* Right: Price & Button */}
+                                    <div className="flex items-center justify-between xl:justify-end gap-3 sm:gap-4 w-full xl:w-auto pt-3 xl:pt-0 border-t xl:border-t-0 border-slate-100">
+                                        <div className="text-left xl:text-right">
+                                            <p className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">{pkg.price}</p>
+                                            <div className="flex items-center justify-start xl:justify-end gap-1.5 sm:gap-2 text-[10px] sm:text-xs">
                                                 <span className="text-slate-400 line-through">{pkg.originalPrice}</span>
                                                 <span className="text-red-600 font-bold">{pkg.discountLabel}</span>
                                             </div>
                                         </div>
                                         <Button
-                                            className="rounded-xl bg-red-600 hover:bg-red-700 px-6 py-2 text-xs font-bold"
+                                            className="rounded-xl bg-red-600 hover:bg-red-700 px-5 sm:px-8 py-2 sm:py-6 text-[12px] sm:text-sm font-bold whitespace-nowrap shadow-md shadow-red-200"
                                             onClick={() => handleSelectPackage(pkg)}
                                         >
                                             Buy Now

@@ -186,7 +186,7 @@ export default function CampaignDashboard() {
         <CampaignLayout activeSidebar="promote" className="max-w-none p-0 !p-0 flex-1 flex flex-col font-founders relative overflow-x-hidden">
 
             {/* Main Hero Section */}
-            <div className="relative flex-1 flex flex-col items-center justify-center py-8 md:py-12 px-4">
+            <div className="relative flex-1 flex flex-col items-center justify-center pt-2 pb-8 md:pt-4 md:pb-12 px-4">
 
                 {/* Subtle Background Gradient */}
                 <div
@@ -196,16 +196,16 @@ export default function CampaignDashboard() {
                     }}
                 />
 
-                <div className="w-full max-w-5xl relative z-10 flex flex-col items-center text-center">
+                <div className="w-full max-w-5xl relative z-10 flex flex-col items-center text-center -mt-4 md:-mt-8">
 
                     {/* Main Headline */}
-                    <h1 className="section-heading !text-[#1e293b] !mb-0">
-                        Join <span className="font-bold">50,000+</span> <span className="italic font-serif">Creators</span> who scaled<br className="hidden md:block" />
+                    <h1 className="section-heading !text-[#1e293b] !mb-12 md:!mb-16">
+                        Join <span className="font-bold">50,000+</span> <span className="italic font-serif">Creators</span> who scaled <br className="hidden md:block" />
                         faster with <span className="font-bold">Vidfly!</span>
                     </h1>
 
                     {/* Stacked Creator Images */}
-                    <div className="relative w-full max-w-sm h-[200px] md:h-[260px] mb-12 flex items-center justify-center">
+                    <div className="relative w-full max-w-sm h-[200px] md:h-[260px] mt-6 mb-16 md:mt-12 flex items-center justify-center">
                         {/* Center Card */}
                         <div className="absolute z-20 w-[220px] md:w-[260px] aspect-square bg-white rounded-3xl p-1 shadow-2xl overflow-hidden border-[6px] border-white">
                             <div className="w-full h-full rounded-2xl overflow-hidden relative">

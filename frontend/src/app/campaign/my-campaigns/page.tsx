@@ -209,21 +209,21 @@ export default function MyCampaigns() {
                 <h1 className="section-heading !text-[28px] !mb-6">Campaigns</h1>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-8">
                     <StatCard
-                        label="Videos promoted on Vidflyy"
+                        label="Videos Promoted"
                         value={totalVideosPromoted}
-                        icon={<Monitor className="w-6 h-6 text-indigo-400" />}
+                        icon={<Monitor className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400" />}
                     />
                     <StatCard
-                        label="Views generated through Vidflyy promotion"
+                        label="Views Generated"
                         value={totalViews}
-                        icon={<Eye className="w-6 h-6 text-indigo-400" />}
+                        icon={<Eye className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400" />}
                     />
                     <StatCard
-                        label="Subscribers gained from Vidflyy campaigns"
+                        label="Subscribers Gained"
                         value={Math.round(totalSubscribers)}
-                        icon={<Users className="w-6 h-6 text-indigo-400" />}
+                        icon={<Users className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400" />}
                     />
                 </div>
 
@@ -372,12 +372,16 @@ export default function MyCampaigns() {
 // ─── Stat Card ───────────────────────────────────────────────
 function StatCard({ label, value, icon }: { label: string; value: string | number; icon: React.ReactNode }) {
     return (
-        <div className="flex items-center justify-between rounded-2xl border border-slate-100 bg-white px-5 py-5 shadow-sm hover:shadow-md transition-shadow">
-            <div>
-                <p className="text-[11px] font-semibold text-indigo-400 uppercase tracking-wide mb-2">{label}</p>
-                <p className="text-[28px] font-extrabold text-slate-900 leading-none">{value}</p>
+        <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between rounded-xl sm:rounded-2xl border border-slate-100 bg-white p-3 sm:px-5 sm:py-5 shadow-sm hover:shadow-md transition-shadow text-center sm:text-left">
+            <div className="sm:hidden flex h-8 w-8 items-center justify-center rounded-full bg-slate-50 border border-slate-100 mb-2">
+                {icon}
             </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-50 border border-slate-100">
+            <div className="flex flex-col items-center sm:items-start">
+                <p className="hidden sm:block text-[11px] font-semibold text-indigo-400 uppercase tracking-wide mb-2">{label}</p>
+                <p className="text-[18px] sm:text-[28px] font-extrabold text-slate-900 leading-none mb-1 sm:mb-0">{value}</p>
+                <p className="sm:hidden text-[8px] font-bold text-indigo-400 uppercase tracking-wide leading-tight line-clamp-2">{label}</p>
+            </div>
+            <div className="hidden sm:flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-50 border border-slate-100">
                 {icon}
             </div>
         </div>
