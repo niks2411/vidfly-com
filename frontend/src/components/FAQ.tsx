@@ -39,11 +39,11 @@ const FAQ = () => {
   return (
     <section className="py-20 bg-gray-50 font-founders">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="section-heading text-center !mb-4">
+        <div className="text-left sm:text-center mb-16">
+          <h2 className="section-heading text-left sm:text-center !mb-4">
             Frequently Asked <span className="text-red-600">Questions</span>
           </h2>
-          <p className="section-desc text-center">
+          <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto">
             Got questions? We've got answers to help you get started.
           </p>
         </div>

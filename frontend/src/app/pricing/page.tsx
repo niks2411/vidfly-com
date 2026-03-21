@@ -64,11 +64,11 @@ export default function PricingPage() {
                         />
                     </div>
 
-                    <div className="max-w-4xl mx-auto text-center mb-16">
-                        <h1 className="section-heading !mb-6">
+                    <div className="max-w-4xl mx-auto text-left sm:text-center mb-16">
+                        <h1 className="section-heading text-left sm:text-center !mb-6">
                             Simple Pricing for YouTube Growth
                         </h1>
-                        <p className="section-desc max-w-3xl mx-auto">
+                        <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-3xl">
                             Promote your videos with real ads. Set your budget, reach targeted viewers, and scale your growth with full transparency.
                         </p>
                     </div>
@@ -77,11 +77,11 @@ export default function PricingPage() {
 
             {/* Calculator Section */}
             <section className="py-20 px-4 max-w-5xl mx-auto border-b border-gray-100 mb-10">
-                <div className="mb-14">
-                    <h2 className="section-heading !mb-4">
+                <div className="mb-14 text-left sm:text-center">
+                    <h2 className="section-heading text-left sm:text-center !mb-4">
                         Budget with confidence.
                     </h2>
-                    <p className="section-desc">
+                    <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto">
                         See how many views and reach you can get based on your budget — instantly.
                     </p>
                 </div>
@@ -170,11 +170,11 @@ export default function PricingPage() {
             {/* Special Offers Section */}
             <section className="py-20 px-4 bg-white">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16 px-4">
-                        <h2 className="section-heading !mb-6">
+                    <div className="text-left sm:text-center mb-16 px-4">
+                        <h2 className="section-heading text-left sm:text-center !mb-6">
                             <span className="text-[#FF4D4D]">Special Offers</span> to Boost Your Growth
                         </h2>
-                        <p className="section-desc max-w-2xl mx-auto">
+                        <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-2xl">
                             Choose a budget that fits your goals and scale your campaigns as you grow — no fixed plans, no limitations.
                         </p>
                     </div>

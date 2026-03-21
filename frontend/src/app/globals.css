@@ -442,6 +442,18 @@ button {
   }
 }
 
+/* Marquee Animation */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 20s linear infinite;
+}
+
 /* Reduce motion for accessibility and battery saving */
 @media (prefers-reduced-motion: reduce) {
 

@@ -149,8 +149,8 @@ export default function YoutubeVloggingPromotion() {
             <section className="py-16">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Animated delay={80}>
-                        <h2 className="section-heading text-center !mb-6">Why Vloggers Scale With Our Campaigns</h2>
-                        <p className="section-desc text-center max-w-2xl mx-auto mb-10">We target binge-watchers, niche audiences, and local viewers — the ones who subscribe, comment and share your life.</p>
+                        <h2 className="section-heading text-left sm:text-center !mb-6">Why Vloggers Scale With Our Campaigns</h2>
+                        <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-2xl mb-10">We target binge-watchers, niche audiences, and local viewers — the ones who subscribe, comment and share your life.</p>
                     </Animated>
 
                     <div className="grid md:grid-cols-3 gap-8">
@@ -229,7 +229,7 @@ export default function YoutubeVloggingPromotion() {
             {/* PACKAGES */}
             <section className="py-16">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <Animated delay={80}><h3 className="text-2xl font-bold text-center mb-6">Recommended Packages</h3></Animated>
+                    <Animated delay={80}><h3 className="section-heading text-left sm:text-center !mb-6">Recommended Packages</h3></Animated>
 
                     <div className="flex flex-col items-center gap-6">
                         {viewPlans.length >= 3 && (
@@ -303,7 +303,7 @@ export default function YoutubeVloggingPromotion() {
             {/* TESTIMONIALS */}
             <section className="py-16 bg-gray-50">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <Animated delay={80}><h3 className="text-2xl font-bold mb-6">Creators Who Grew With Us</h3></Animated>
+                    <Animated delay={80}><h3 className="section-heading text-left sm:text-center !mb-6">Creators Who Grew With Us</h3></Animated>
 
                     <div className="grid md:grid-cols-3 gap-6">
                         {[

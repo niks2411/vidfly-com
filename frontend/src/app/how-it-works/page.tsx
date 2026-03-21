@@ -24,12 +24,12 @@ export default function HowItWorksPage() {
             </section>
 
             {/* Heading Section */}
-            <div className="max-w-4xl mx-auto px-4 text-center mt-12 md:mt-24 mb-16 md:mb-24">
-                <h1 className="text-3xl md:text-4xl lg:text-[44px] text-[#101828] mb-6 tracking-tight">
+            <div className="max-w-4xl mx-auto px-4 text-left sm:text-center mt-12 md:mt-24 mb-16 md:mb-24">
+                <h1 className="section-heading text-left sm:text-center !mb-6">
                     How To Promote YouTube Video with <span className="text-red-600">Vidflyy</span>?
                 </h1>
-                <p className="text-base md:text-[18px] text-[rgb(81,41,41)] leading-relaxed max-w-2xl mx-auto">
-                    Promote your video on YouTube and attract viewers that expand your<br className="hidden md:block" /> community and grow your YouTube Channel
+                <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-2xl">
+                    Promote your video on YouTube and attract viewers that expand your community and grow your YouTube Channel
                 </p>
             </div>
 
@@ -48,10 +48,10 @@ export default function HowItWorksPage() {
                             />
                         </div>
                     </div>
-                    <div className="w-full md:w-1/2 space-y-2 text-center md:text-left">
-                        <h2 className="text-[80px] md:text-[110px] font-black text-[#7E7E7E] leading-none tracking-tighter mb-2">01</h2>
-                        <h3 className="text-2xl md:text-3xl font-bold text-[#101828]">Select Your Video URL</h3>
-                        <p className="text-base md:text-[18px] text-[rgb(81,41,41)] leading-relaxed max-w-sm mx-auto md:mx-0">
+                    <div className="w-full md:w-1/2 space-y-2 text-left md:text-left">
+                        <h2 className="text-[64px] md:text-[110px] font-black text-[#7E7E7E] opacity-40 leading-none tracking-tighter mb-2">01</h2>
+                        <h3 className="text-xl md:text-3xl font-bold text-[#101828]">Select Your Video URL</h3>
+                        <p className="section-desc !text-left max-w-sm !mx-0">
                             Paste your YouTube link and instantly prepare your campaign for promotion.
                         </p>
                     </div>
@@ -69,10 +69,10 @@ export default function HowItWorksPage() {
                             />
                         </div>
                     </div>
-                    <div className="w-full md:w-1/2 space-y-2 text-center md:text-left">
-                        <h2 className="text-[80px] md:text-[110px] font-black text-[#7E7E7E] leading-none tracking-tighter mb-2">02</h2>
-                        <h3 className="text-2xl md:text-3xl font-bold text-[#101828]">Set Goal & Budget</h3>
-                        <p className="text-base md:text-[18px] text-[rgb(81,41,41)] leading-relaxed max-w-sm mx-auto md:mx-0">
+                    <div className="w-full md:w-1/2 space-y-2 text-left md:text-left">
+                        <h2 className="text-[64px] md:text-[110px] font-black text-[#7E7E7E] opacity-40 leading-none tracking-tighter mb-2">02</h2>
+                        <h3 className="text-xl md:text-3xl font-bold text-[#101828]">Set Goal & Budget</h3>
+                        <p className="section-desc !text-left max-w-sm !mx-0">
                             Choose your objective — views, subscribers, or engagement — and set your budget based on your growth goals.
                         </p>
                     </div>
@@ -90,10 +90,10 @@ export default function HowItWorksPage() {
                             />
                         </div>
                     </div>
-                    <div className="w-full md:w-1/2 space-y-2 text-center md:text-left">
-                        <h2 className="text-[80px] md:text-[110px] font-black text-[#7E7E7E] leading-none tracking-tighter mb-2">03</h2>
-                        <h3 className="text-2xl md:text-3xl font-bold text-[#101828]">Launch & Track</h3>
-                        <p className="text-base md:text-[18px] text-[rgb(81,41,41)] leading-relaxed max-w-sm mx-auto md:mx-0">
+                    <div className="w-full md:w-1/2 space-y-2 text-left md:text-left">
+                        <h2 className="text-[64px] md:text-[110px] font-black text-[#7E7E7E] opacity-40 leading-none tracking-tighter mb-2">03</h2>
+                        <h3 className="text-xl md:text-3xl font-bold text-[#101828]">Launch & Track</h3>
+                        <p className="section-desc !text-left max-w-sm !mx-0">
                             Go live instantly and track your campaign performance with real-time updates and progress insights.
                         </p>
                     </div>

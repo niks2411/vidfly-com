@@ -13,11 +13,11 @@ export default function About() {
                     <Play className="absolute top-1/2 left-1/4 h-12 w-12 text-red-200 opacity-30 animate-pulse" />
                     <TrendingUp className="absolute top-20 right-1/3 h-18 w-18 text-red-100 opacity-40" />
                 </div>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                    <h1 className="section-heading !mb-6 text-center">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left sm:text-center relative z-10">
+                    <h1 className="section-heading text-left sm:text-center !mb-6">
                         ABOUT US
                     </h1>
-                    <p className="section-desc text-center max-w-3xl mx-auto">
+                    <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-3xl">
                         Your trusted partner in YouTube growth and digital success
                     </p>
                 </div>
@@ -78,11 +78,11 @@ export default function About() {
                     <Play className="absolute bottom-5 left-5 h-20 w-20 text-red-100 opacity-20" />
                 </div>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div className="text-center mb-16">
-                        <h2 className="section-heading text-center !mb-4">
+                    <div className="text-left sm:text-center mb-16">
+                        <h2 className="section-heading text-left sm:text-center !mb-4">
                             Our Core Values
                         </h2>
-                        <p className="section-desc text-center max-w-3xl mx-auto">
+                        <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-3xl">
                             We are a team of experts who provides first class service to customers, satisfaction & promotions to your YouTube channel. We are looking forward to serving to others and promote more content creators to make their goals.
                         </p>
                     </div>
@@ -121,11 +121,11 @@ export default function About() {
 
             {/* Mission Section */}
             <section className="py-20 bg-white">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="section-heading text-center !mb-6">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left sm:text-center">
+                    <h2 className="section-heading text-left sm:text-center !mb-6">
                         Our Mission
                     </h2>
-                    <p className="section-desc text-center max-w-4xl mx-auto">
+                    <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-4xl">
                         Our mission is to provided you the best YouTube services at affordable price so that your channel can reach to millions of users worldwide.
                     </p>
                 </div>

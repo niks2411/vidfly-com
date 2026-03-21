@@ -243,7 +243,7 @@ export default function YoutubeMusicPromotion() {
             <section className="py-20 bg-[#1a1a2e]">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Animated delay={60}>
-                        <h3 className="section-heading text-center !mb-16 music-white-heading">
+                        <h3 className="section-heading text-left sm:text-center !mb-16 music-white-heading">
                             How Vidflyy music promotion works
                         </h3>
                     </Animated>

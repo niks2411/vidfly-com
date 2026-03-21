@@ -61,11 +61,11 @@ export default function ContactPage() {
                     <div className="absolute bottom-20 left-1/3 w-24 h-24 bg-red-50 rounded-full opacity-25 animate-pulse"></div>
                 </div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                    <h1 className="section-heading text-center !mb-6">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left sm:text-center relative z-10">
+                    <h1 className="section-heading text-left sm:text-center !mb-6">
                         Contact <span className="text-red-600">Us</span>
                     </h1>
-                    <p className="section-desc text-center max-w-3xl mx-auto">
+                    <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-3xl">
                         Ready to grow your YouTube channel? Get in touch with our team and let's discuss your promotion strategy.
                     </p>
                 </div>

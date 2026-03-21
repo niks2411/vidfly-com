@@ -14,10 +14,10 @@ const YouTubeAdPlacements = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="section-heading text-center">
+          <h2 className="section-heading text-left sm:text-center">
             What the promotion <span className="text-red-600">looks like</span>
           </h2>
-          <p className="section-desc text-center !max-w-2xl mx-auto mt-4">
+          <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-2xl mt-4">
             See exactly where your video appears to viewers when you launch a campaign. We place your content in the most engaging sections of the YouTube ecosystem.
           </p>
         </motion.div>

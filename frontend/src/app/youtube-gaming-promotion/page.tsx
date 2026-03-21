@@ -139,7 +139,7 @@ export default function YoutubeGamingPromotion() {
             <section className="py-20 bg-white font-founders">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Animated delay={60}>
-                        <h2 className="section-heading text-center !mb-14">
+                        <h2 className="section-heading text-left sm:text-center !mb-14">
                             How <span className="text-[#E52D27]">YouTube Gaming</span> Promotion Works?
                         </h2>
                     </Animated>
@@ -225,10 +225,10 @@ export default function YoutubeGamingPromotion() {
             <section className="py-20 bg-[#F7F6F6] font-founders">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Animated delay={60}>
-                        <h2 className="section-heading text-center !mb-4">
+                        <h2 className="section-heading text-left sm:text-center !mb-4">
                             Types of Gaming Channels <span className="text-[#E52D27]">We Promote</span>
                         </h2>
-                        <p className="section-desc text-center max-w-2xl mx-auto mb-12">
+                        <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-2xl mb-12">
                             Vidflyy supports promotion for a wide range of gaming creators, including:
                         </p>
                     </Animated>

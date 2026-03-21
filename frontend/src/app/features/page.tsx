@@ -23,11 +23,11 @@ export default function FeaturesPage() {
 
             {/* Vidflyy Features Heading */}
             <section className="pt-16 pb-6 bg-white">
-                <div className="max-w-4xl mx-auto text-center px-4">
-                    <h1 className="section-heading text-center">
+                <div className="max-w-4xl mx-auto text-left sm:text-center px-4">
+                    <h1 className="section-heading text-left sm:text-center">
                         Vidflyy Features
                     </h1>
-                    <p className="section-desc text-center !max-w-3xl mx-auto">
+                    <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto !max-w-3xl">
                         Discover how our YouTube Promotion platform saves you time and money while significantly boosting your subscriber count. Explore the powerful features we offer below.
                     </p>
                 </div>
@@ -40,7 +40,7 @@ export default function FeaturesPage() {
                         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                             {/* Left: Heading + List */}
                             <div>
-                                <h2 className="section-heading !mb-12">
+                                <h2 className="section-heading text-left !mb-8 lg:!mb-12">
                                     Ads Type We<br />Use
                                 </h2>
 
@@ -91,7 +91,7 @@ export default function FeaturesPage() {
             {/* All-in-One Growth Dashboard Section */}
             <section className="bg-[#EFF2F6] py-24 lg:py-32">
                 <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="section-heading text-center mb-20">
+                    <h2 className="section-heading text-left sm:text-center mb-16 lg:mb-20">
                         All-in-One Growth Dashboard
                     </h2>
 

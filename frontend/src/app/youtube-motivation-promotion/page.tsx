@@ -167,10 +167,10 @@ export default function YoutubeMotivationPromotion() {
             <section className="py-16">
                 <div className="max-w-6xl mx-auto px-4">
                     <Animated delay={100}>
-                        <h2 className="section-heading text-center !mb-6">
+                        <h2 className="section-heading text-left sm:text-center !mb-6">
                             Why Motivational Channels Grow Fast With Us
                         </h2>
-                        <p className="section-desc text-center max-w-2xl mx-auto mb-10">
+                        <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-2xl mb-10">
                             Motivational audiences watch more, save videos, follow channels, and return daily — our campaigns attract high-retention viewers.
                         </p>
                     </Animated>
@@ -246,7 +246,7 @@ export default function YoutubeMotivationPromotion() {
             {/* PACKAGES */}
             <section className="py-16">
                 <div className="max-w-7xl mx-auto px-4">
-                    <Animated delay={100}><h3 className="text-2xl font-bold text-center mb-6">Recommended Packages</h3></Animated>
+                    <Animated delay={100}><h3 className="section-heading text-left sm:text-center !mb-6">Recommended Packages</h3></Animated>
 
                     <div className="flex flex-col items-center gap-6">
                         {viewPlans.length >= 3 && (
@@ -320,7 +320,7 @@ export default function YoutubeMotivationPromotion() {
             {/* TESTIMONIALS */}
             <section className="py-16 bg-yellow-50">
                 <div className="max-w-6xl mx-auto px-4 text-center">
-                    <Animated delay={80}><h3 className="text-2xl font-bold mb-6">Creator Success Stories</h3></Animated>
+                    <Animated delay={80}><h3 className="section-heading text-left sm:text-center !mb-6">Creator Success Stories</h3></Animated>
 
                     <div className="grid md:grid-cols-3 gap-6">
                         {[

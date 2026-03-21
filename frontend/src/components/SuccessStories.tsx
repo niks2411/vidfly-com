@@ -55,11 +55,11 @@ const SuccessStoriesPage = () => {
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 animate-fade-in">
+          <div className="text-left sm:text-center mb-16">
+            <h1 className="section-heading text-left sm:text-center mb-6">
               Success <span className="text-red-600">Stories</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in">
+            <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-3xl">
               Real Results from 2024: See how Vidflyy helped YouTubers like you achieve their growth goals. 
               Our clients have seen significant increases in views, subscribers, and engagement.
             </p>

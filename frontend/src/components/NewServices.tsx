@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useTrackEvent } from "@/hooks/use-track-event";
 
 const NewServices = () => {
@@ -66,12 +67,26 @@ const NewServices = () => {
       </div>
 
       {/* Auto-scrolling Carousel Strip */}
-      <div className="relative group">
+      <div className="relative group overflow-hidden">
         {/* Gradient fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
-        <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+        <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-20 pointer-events-none"></div>
+        <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-20 pointer-events-none"></div>
 
-        <div className="services-carousel-track flex gap-4 sm:gap-10 py-4 group-hover:[animation-play-state:paused]">
+        <motion.div
+          className="flex gap-4 sm:gap-10 py-4 cursor-grab active:cursor-grabbing w-max"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{
+            duration: 35,
+            ease: "linear",
+            repeat: Infinity,
+            repeatType: "loop",
+          }}
+          drag="x"
+          dragConstraints={{ left: -1000, right: 0 }} // Constraints are managed by the loop logic
+          style={{ x: 0 }}
+          whileHover={{ animationPlayState: "paused" }}
+          whileTap={{ animationPlayState: "paused" }}
+        >
           {scrollItems.map((category, index) => (
             <div
               key={index}
@@ -94,28 +109,8 @@ const NewServices = () => {
               </p>
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
-
-      <style>{`
-        @keyframes scrollCarousel {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-
-        .services-carousel-track {
-          animation: scrollCarousel 25s linear infinite;
-          width: max-content;
-        }
-
-        .services-carousel-track:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
     </section>
   );
 };

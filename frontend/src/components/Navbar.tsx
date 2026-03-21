@@ -46,17 +46,42 @@ function CampaignHamburgerButton() {
 }
 
 const TopBanner = () => {
-  return (
-    <div className="hidden sm:flex w-full bg-gradient-to-r from-[#E52D27] via-[#D42621] to-[#7b2ff7] py-2 px-4 flex-col sm:flex-row items-center justify-center gap-3 text-white overflow-hidden text-center">
-      <p className="text-[13px] md:text-[14px] font-bold tracking-tight">
-        WELCOME OFFER! Get 30% Extra Views On Your First Campaign with VidFlyy. Use Promo Code - <span>FIRST50</span>
+  const content = (
+    <div className="flex items-center whitespace-nowrap pr-24">
+      <p className="text-[13px] md:text-[14px] font-bold tracking-tight text-white uppercase flex items-center gap-6">
+        <span>WELCOME OFFER! Get 30% Extra Views On Your First Campaign with VidFlyy. Use Promo Code - <span className="text-yellow-300">FIRST50</span></span>
+        <Link
+          href="/get-started"
+          className="bg-[#FF8C00] hover:bg-[#e67e00] text-white px-4 py-1 rounded text-[12px] md:text-[14px] font-extrabold transition-all duration-300 shadow-lg"
+        >
+          Get Started
+        </Link>
       </p>
-      <Link
-        href="/get-started"
-        className="bg-[#FF8C00] hover:bg-[#e67e00] text-white px-4 py-1 rounded text-[13px] md:text-[14px] font-extrabold transition-all duration-300 shadow-lg whitespace-nowrap"
-      >
-        Get Started
-      </Link>
+    </div>
+  );
+
+  return (
+    <div className="w-full bg-gradient-to-r from-[#E52D27] via-[#D42621] to-[#7b2ff7] py-2 overflow-hidden border-b border-white/10">
+      {/* Mobile Marquee */}
+      <div className="flex sm:hidden overflow-hidden relative">
+        <div className="animate-marquee flex items-center">
+          {content}
+          {content}
+        </div>
+      </div>
+
+      {/* Desktop Static Display */}
+      <div className="hidden sm:flex w-full items-center justify-center gap-6 text-white text-center">
+        <p className="text-[14px] font-bold tracking-tight uppercase">
+          WELCOME OFFER! Get 30% Extra Views On Your First Campaign with VidFlyy. Use Promo Code - <span className="text-yellow-300">FIRST50</span>
+        </p>
+        <Link
+          href="/get-started"
+          className="bg-[#FF8C00] hover:bg-[#e67e00] text-white px-4 py-1 rounded text-[14px] font-extrabold transition-all duration-300 shadow-lg whitespace-nowrap"
+        >
+          Get Started
+        </Link>
+      </div>
     </div>
   );
 };

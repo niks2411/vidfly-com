@@ -158,7 +158,7 @@ export default function YoutubeTravelPromotion() {
             <section className="py-20 bg-white font-founders">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Animated delay={60}>
-                        <h2 className="section-heading text-center !mb-14">
+                        <h2 className="section-heading text-left sm:text-center !mb-14">
                             How <span className="text-[#E52D27]">YouTube Travel</span> Promotion Works?
                         </h2>
                     </Animated>
@@ -244,7 +244,7 @@ export default function YoutubeTravelPromotion() {
             <section className="py-24 bg-white font-founders overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Animated delay={60}>
-                        <h2 className="section-heading text-center !mb-16">
+                        <h2 className="section-heading text-left sm:text-center !mb-16">
                             Why Choose <span className="text-[#E75069]">Vidflyy</span> Travel Video Promotion
                         </h2>
                     </Animated>

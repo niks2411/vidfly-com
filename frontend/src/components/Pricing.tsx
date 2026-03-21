@@ -234,11 +234,11 @@ const PricingPage = () => {
           <div className="absolute bottom-1/4 left-1/4 w-22 h-22 bg-red-150 rounded-full opacity-15 animate-rotate-slow"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h1 className="section-heading text-center !mb-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left sm:text-center relative z-10">
+          <h1 className="section-heading text-left sm:text-center !mb-4">
             Pricing <span className="text-red-600 bg-gradient-to-r from-red-500 to-red-700 bg-clip-text  ">Plans</span>
           </h1>
-          <p className="section-desc text-center max-w-3xl mx-auto">
+          <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-3xl">
             Choose the perfect plan to grow your YouTube channel and maximize your reach.
           </p>
         </div>
@@ -250,24 +250,24 @@ const PricingPage = () => {
       {/* Subscription and Monetization Plans */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="section-heading text-center !mb-4">
+          <div className="text-left sm:text-center mb-16">
+            <h2 className="section-heading text-left sm:text-center !mb-4">
               Choose Your <span className="text-red-600">Plan</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-3xl">
               Flexible pricing plans designed to fit every creator's needs and budget.
             </p>
           </div>
 
           <div className="mb-16">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Subscribers Plan</h3>
-            <p className="text-center text-gray-600 mb-8 max-w-4xl mx-auto">We Advertise Your YouTube Video in Form Of True View Discovery Ad until The Channel Achieves Commited Target of Subscribers.</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 text-left sm:text-center">Subscribers Plan</h3>
+            <p className="text-left sm:text-center text-gray-600 mb-8 max-w-4xl !mx-0 sm:!mx-auto">We Advertise Your YouTube Video in Form Of True View Discovery Ad until The Channel Achieves Commited Target of Subscribers.</p>
             <PlanGrid plans={subscriptionPlans} title="" />
           </div>
 
           <div className="mb-16">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Monetization Plan</h3>
-            <p className="text-center text-gray-600 mb-8 max-w-4xl mx-auto">We Achieve YouTube Watch Hour Criteria With The Help Of Ads Platform, We Reward People To Watch Your Video On Different Games & Websites</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 text-left sm:text-center">Monetization Plan</h3>
+            <p className="text-left sm:text-center text-gray-600 mb-8 max-w-4xl !mx-0 sm:!mx-auto">We Achieve YouTube Watch Hour Criteria With The Help Of Ads Platform, We Reward People To Watch Your Video On Different Games & Websites</p>
             <PlanGrid plans={monetizationPlans} title="" />
           </div>
         </div>

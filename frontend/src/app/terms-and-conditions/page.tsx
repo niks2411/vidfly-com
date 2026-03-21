@@ -11,11 +11,11 @@ export default function TermsAndConditionsPage() {
                     <AlertCircle className="absolute bottom-20 left-32 h-24 w-24 text-red-100 opacity-30" />
                     <Shield className="absolute bottom-10 right-10 h-32 w-32 text-red-100 opacity-20" />
                 </div>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                    <h1 className="section-heading text-center !mb-6">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left sm:text-center relative z-10">
+                    <h1 className="section-heading text-left sm:text-center !mb-6">
                         Terms & Conditions
                     </h1>
-                    <p className="section-desc text-center max-w-3xl mx-auto">
+                    <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto max-w-3xl">
                         Last Updated: 11 Oct, 2025
                     </p>
                 </div>
