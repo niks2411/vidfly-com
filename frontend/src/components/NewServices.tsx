@@ -55,11 +55,11 @@ const NewServices = () => {
     <section className="py-16 lg:py-20 bg-white font-montserrat overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="section-heading text-center">
+        <div className="text-left sm:text-center mb-12">
+          <h2 className="section-heading text-left sm:text-center">
             YouTube <span className="text-red-600">Channel Promotion</span>
           </h2>
-          <p className="section-desc text-center">
+          <p className="section-desc text-left sm:text-center !mx-0 sm:!mx-auto">
             Vidflyy's YouTube promotion services are suitable for channels across multiple domains. Irrespective of your YouTube channel size, our advanced targeting options using Google Ads can promote your YouTube videos to a relevant audience, thus increasing the odds of gaining higher engagement rates.
           </p>
         </div>
@@ -71,15 +71,15 @@ const NewServices = () => {
         <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
         <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
-        <div className="services-carousel-track flex gap-10 py-4 group-hover:[animation-play-state:paused]">
+        <div className="services-carousel-track flex gap-4 sm:gap-10 py-4 group-hover:[animation-play-state:paused]">
           {scrollItems.map((category, index) => (
             <div
               key={index}
               onClick={() => handleCategoryClick(category.link, category.title)}
-              className="flex-shrink-0 w-[280px] cursor-pointer group/card"
+              className="flex-shrink-0 w-[160px] sm:w-[280px] cursor-pointer group/card"
             >
               {/* Image */}
-              <div className="relative h-[340px] rounded-xl overflow-hidden transition-all duration-500 group-hover/card:scale-[1.03]">
+              <div className="relative h-[200px] sm:h-[340px] rounded-xl overflow-hidden transition-all duration-500 group-hover/card:scale-[1.03]">
                 <Image
                   src={category.image}
                   alt={category.title}
@@ -89,7 +89,7 @@ const NewServices = () => {
                 />
               </div>
               {/* Title */}
-              <p className="text-center mt-4 font-semibold text-gray-800 text-lg group-hover/card:text-red-600 transition-colors duration-300">
+              <p className="text-center mt-4 font-semibold text-gray-800 text-sm sm:text-lg group-hover/card:text-red-600 transition-colors duration-300">
                 {category.title}
               </p>
             </div>

@@ -37,37 +37,39 @@ const ComparisonTable = () => {
     <section className="ct-section">
       <div className="ct-container">
 
-        {/* ── Header row: heading left | logo cards right ── */}
+        {/* ── Header row: heading top | logos bottom on mobile ── */}
         <div className="ct-header-row">
 
           {/* Left: heading + description */}
           <div className="ct-header-left">
-            <h2 className="section-heading">
+            <h2 className="section-heading text-left">
               The smarter way to{" "}
               <span className="text-red-600">grow on YouTube</span>
             </h2>
-            <p className="section-desc">
+            <p className="section-desc text-left !mx-0">
               Most creators waste weeks and thousands of rupees trying to figure out Google Ads.
               Vidflyy does it all for you — real targeting, real views, real growth.
               Setup takes 3 minutes. Results start in hours.
             </p>
           </div>
 
-          {/* Right: two logo cards */}
-          <div className="ct-logo-card ct-vidflyy-card">
-            <img
-              src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png"
-              alt="Vidflyy"
-              className="ct-logo-img"
-            />
-          </div>
-          <div className="ct-logo-card ct-google-card">
-            <img
-              src="/google ads.webp"
-              alt="Google Ads"
-              className="ct-gads-icon"
-            />
-            <span className="ct-gads-text">Google Ads</span>
+          {/* Logos row - stacks below text on mobile, stays right on desktop */}
+          <div className="ct-logo-row">
+            <div className="ct-logo-card ct-vidflyy-card">
+              <img
+                src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png"
+                alt="Vidflyy"
+                className="ct-logo-img"
+              />
+            </div>
+            <div className="ct-logo-card ct-google-card">
+              <img
+                src="/google ads.webp"
+                alt="Google Ads"
+                className="ct-gads-icon"
+              />
+              <span className="ct-gads-text">Google Ads</span>
+            </div>
           </div>
         </div>
 
@@ -91,43 +93,44 @@ const ComparisonTable = () => {
       <style>{`
         .ct-section {
           background: #fff;
-          padding: clamp(2.5rem, 6vw, 5rem) clamp(0.5rem, 2vw, 1rem) clamp(3rem, 7vw, 6rem);
+          padding: clamp(2.5rem, 6vw, 5rem) clamp(1rem, 2vw, 2rem);
           font-family: 'Founders Grotesk', sans-serif;
         }
 
         .ct-container {
-          max-width: min(1200px, 98vw);
+          max-width: 1200px;
           margin: 0 auto;
         }
 
         /* ── Header row ── */
         .ct-header-row {
-          display: grid;
-          grid-template-columns: 1fr ${COL_ICON} ${COL_ICON};
+          display: flex;
+          flex-direction: row;
           align-items: flex-end;
-          column-gap: 12px;
-          margin-bottom: 1rem;
+          gap: 2rem;
+          margin-bottom: 2rem;
         }
 
         .ct-header-left {
-          padding-right: clamp(1rem, 3vw, 2.5rem);
-          padding-bottom: 0;
-          margin-top: 1rem;
+          flex: 1;
         }
 
-        /* Logo cards sizing */
-        .ct-logo-cards {
-          display: none; /* Just a safety, children are now direct grid members */
+        .ct-logo-row {
+          display: flex;
+          gap: 12px;
+          align-items: center;
+          margin-bottom: 6px;
         }
 
         .ct-logo-card {
           display: flex;
           align-items: center;
           justify-content: center;
+          width: clamp(100px, 12vw, 140px);
           height: clamp(60px, 7vw, 80px);
           border-radius: 0.625rem;
           background: #fff;
-          margin-bottom: 40px;
+          flex-shrink: 0;
         }
 
         .ct-vidflyy-card {
@@ -141,7 +144,7 @@ const ComparisonTable = () => {
         }
 
         .ct-logo-img {
-          height: clamp(20px, 2.5vw, 30px);
+          height: 30%;
           width: auto;
           object-fit: contain;
         }
@@ -150,63 +153,28 @@ const ComparisonTable = () => {
           width: clamp(20px, 2.5vw, 28px);
           height: clamp(20px, 2.5vw, 28px);
           object-fit: contain;
-          flex-shrink: 0;
         }
 
         .ct-gads-text {
-          font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+          font-size: 0.75rem;
           font-weight: 700;
           color: #333;
-          letter-spacing: 0.01em;
           white-space: nowrap;
-        }
-
-        @media (max-width: 480px) {
-          .ct-section {
-            --ct-col: 80px;
-          }
-          .ct-logo-card {
-            height: 60px;
-            width: 80px;
-            border-radius: 0.5rem;
-            padding: 4px;
-            flex-shrink: 0;
-            min-width: 0;
-          }
-          .ct-logo-img {
-            height: 22px;
-            width: auto;
-            max-width: 90%;
-          }
-          .ct-gads-icon {
-            width: 18px;
-            height: 18px;
-          }
-          .ct-gads-text {
-            font-size: 0.6rem;
-            letter-spacing: 0;
-          }
-          .ct-header-left {
-            padding-right: 4px;
-            min-width: 0;
-          }
         }
 
         /* ── Feature table ── */
         .ct-table {
           border: 1px solid #e5e7eb;
-          border-radius: 10px;
+          border-radius: 12px;
           overflow: hidden;
         }
 
         .ct-row {
           display: grid;
-          grid-template-columns: 1fr ${COL_ICON} ${COL_ICON};
-          column-gap: 12px;
+          grid-template-columns: 1fr 100px 100px;
           align-items: center;
           border-bottom: 1px solid #e5e7eb;
           background: #fff;
-          transition: background 0.12s;
         }
 
         .ct-row:last-child {
@@ -217,72 +185,80 @@ const ComparisonTable = () => {
           background: #f9fafb;
         }
 
-        .ct-row:hover {
-          background: #f3f4f6;
-        }
-
         .ct-feat {
-          padding: clamp(0.7rem, 1.2vw, 0.9rem) clamp(0.75rem, 1.5vw, 1.25rem);
-          font-size: clamp(0.72rem, 1.1vw, 0.88rem);
+          padding: 1.25rem 1.5rem;
+          font-size: 1rem;
           font-weight: 600;
-          color: #222;
-          line-height: 1.45;
+          color: #111;
+          line-height: 1.4;
         }
 
         .ct-cell {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: clamp(0.7rem, 1.2vw, 0.9rem) 0.625rem;
+          padding: 1rem;
         }
 
-        /* ── Icons ── */
         .ct-icon {
-          width: clamp(24px, 2.5vw, 30px);
-          height: clamp(24px, 2.5vw, 30px);
-          border-radius: 0.375rem;
+          width: 32px;
+          height: 32px;
+          border-radius: 6px;
           display: flex;
           align-items: center;
           justify-content: center;
-          flex-shrink: 0;
         }
 
         .ct-check { background: #2563eb; }
         .ct-cross { background: #ef4444; }
 
-        /* ── Responsive ── */
-        @media (max-width: 760px) {
+        /* ── Tablet/Mobile Responsiveness ── */
+        @media (max-width: 1024px) {
           .ct-header-row {
-            grid-template-columns: 1fr;
-            gap: 20px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
           }
 
-          .ct-logo-cards {
-            display: flex;
+          .ct-logo-row {
+            width: 100%;
+            justify-content: flex-end;
+            margin-bottom: 0;
           }
 
           .ct-logo-card {
-            flex: 1;
-          }
-
-          .ct-vidflyy-card {
-            margin-right: 0;
-          }
-
-          .ct-header-left {
-            padding-right: 0;
-            padding-bottom: 0;
-          }
-
-          .ct-row,
-          .ct-header-row {
-            grid-template-columns: 1fr 90px 90px;
+            width: 120px;
+            height: 70px;
           }
         }
 
         @media (max-width: 480px) {
-          .ct-section { padding: 48px 16px 64px; }
-          .ct-feat { font-size: 0.75rem; padding: 12px; }
+          .ct-section { padding: 40px 16px; }
+          .ct-header-left { margin-top: 0; }
+          .ct-logo-card { width: 100px; height: 60px; }
+          
+          .ct-row {
+            grid-template-columns: 1fr 50px 50px;
+          }
+
+          .ct-feat {
+            padding: 1rem 0.75rem;
+            font-size: 0.85rem;
+          }
+
+          .ct-cell {
+            padding: 0.5rem;
+          }
+
+          .ct-icon {
+            width: 24px;
+            height: 24px;
+          }
+
+          .ct-icon svg {
+            width: 14px;
+            height: 14px;
+          }
         }
       `}</style>
     </section>

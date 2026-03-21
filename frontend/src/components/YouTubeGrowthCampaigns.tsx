@@ -8,19 +8,19 @@ const YouTubeGrowthCampaigns = () => {
             <div className="relative z-10">
                 <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 lg:pt-24 pb-12 lg:pb-16">
                     {/* Badge */}
-                    <div className="flex justify-center mb-6">
+                    <div className="flex justify-start sm:justify-center mb-6">
                         <span className="bg-[#1E293B] text-white text-[12px] font-semibold px-5 py-2 tracking-wide">
                             YouTube Growth Campaigns
                         </span>
                     </div>
 
                     {/* Heading */}
-                    <h2 className="section-heading text-center">
+                    <h2 className="section-heading text-left sm:text-center">
                         Get your video in front of <span className="text-[#E52D27]">real viewers</span> across YouTube.
                     </h2>
 
                     {/* Description with arrows */}
-                    <div className="relative max-w-2xl mx-auto text-center mb-12">
+                    <div className="relative max-w-2xl mx-auto sm:text-center mb-12">
                         {/* Left curved arrow */}
                         <svg className="absolute -left-16 top-0 w-12 h-16 text-gray-400 hidden lg:block" viewBox="0 0 50 70" fill="none" stroke="currentColor" strokeWidth="1.5">
                             <path d="M40 5 C30 5, 10 15, 15 40 C18 55, 25 60, 25 65" strokeLinecap="round" />
@@ -33,7 +33,7 @@ const YouTubeGrowthCampaigns = () => {
                             <path d="M20 60 L25 68 L30 60" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
 
-                        <p className="section-desc text-center">
+                        <p className="section-desc text-left sm:text-center !mx-0 sm:!mx-auto">
                             Your campaigns are distributed across high-impact placements —
                             <br className="hidden sm:block" />
                             including feed, search, and recommended sections to maximize reach and

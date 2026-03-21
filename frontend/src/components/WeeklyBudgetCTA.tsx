@@ -31,7 +31,7 @@ const WeeklyBudgetCTA = () => {
                     <div className="absolute top-0 right-0 w-64 h-64 bg-red-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-50 pointer-events-none"></div>
                     <div className="absolute bottom-0 left-0 w-64 h-64 bg-red-50 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 opacity-50 pointer-events-none"></div>
 
-                    <h2 className="section-heading text-center relative z-10">
+                    <h2 className="section-heading text-left sm:text-center relative z-10">
                         Weekly budgets begin at{" "}
                         <span className="text-red-600">₹999 per week</span>
                     </h2>

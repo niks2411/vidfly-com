@@ -47,7 +47,7 @@ function CampaignHamburgerButton() {
 
 const TopBanner = () => {
   return (
-    <div className="w-full bg-gradient-to-r from-[#E52D27] via-[#D42621] to-[#7b2ff7] py-2 px-4 flex flex-col sm:flex-row items-center justify-center gap-3 text-white overflow-hidden text-center">
+    <div className="hidden sm:flex w-full bg-gradient-to-r from-[#E52D27] via-[#D42621] to-[#7b2ff7] py-2 px-4 flex-col sm:flex-row items-center justify-center gap-3 text-white overflow-hidden text-center">
       <p className="text-[13px] md:text-[14px] font-bold tracking-tight">
         WELCOME OFFER! Get 30% Extra Views On Your First Campaign with VidFlyy. Use Promo Code - <span>FIRST50</span>
       </p>
