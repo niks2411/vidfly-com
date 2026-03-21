@@ -30,7 +30,7 @@ const Hero = ({ showStats }: HeroProps) => {
             <div className="grid lg:grid-cols-[1.15fr_1fr] gap-8 items-center">
               {/* Left Column: Content */}
               <div className="animate-fade-in space-y-7">
-                <h1 className="section-heading !mb-7 !leading-[1.15]">
+                <h1 className="section-heading !leading-[1.15]">
                   Launch YouTube Growth
                   <br />
                   Campaigns in Seconds

@@ -92,7 +92,7 @@ const ComparisonTable = () => {
         .ct-section {
           background: #fff;
           padding: clamp(2.5rem, 6vw, 5rem) clamp(0.5rem, 2vw, 1rem) clamp(3rem, 7vw, 6rem);
-          font-family: 'Montserrat', sans-serif;
+          font-family: 'Founders Grotesk', sans-serif;
         }
 
         .ct-container {
@@ -113,25 +113,6 @@ const ComparisonTable = () => {
           padding-right: clamp(1rem, 3vw, 2.5rem);
           padding-bottom: 0;
           margin-top: 1rem;
-        }
-
-        .ct-heading {
-          font-size: clamp(1.4rem, 3vw, 2.2rem);
-          font-weight: 900;
-          line-height: 1.22;
-          color: #111;
-          margin: 0 0 0.75rem;
-        }
-
-        .ct-highlight {
-          color: #e52020;
-        }
-
-        .ct-sub {
-          font-size: clamp(0.78rem, 1.2vw, 0.92rem);
-          color: #555;
-          line-height: 1.75;
-          margin: 0;
         }
 
         /* Logo cards sizing */
@@ -208,12 +189,6 @@ const ComparisonTable = () => {
           .ct-header-left {
             padding-right: 4px;
             min-width: 0;
-          }
-          .ct-heading {
-            font-size: 1.15rem;
-          }
-          .ct-sub {
-            display: none;
           }
         }
 
@@ -298,8 +273,6 @@ const ComparisonTable = () => {
             padding-right: 0;
             padding-bottom: 0;
           }
-
-          .ct-heading { font-size: 1.55rem; }
 
           .ct-row,
           .ct-header-row {

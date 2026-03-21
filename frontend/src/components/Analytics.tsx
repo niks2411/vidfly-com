@@ -49,3 +49,26 @@ export const MetaPixel = () => {
         />
     );
 };
+
+export const GoogleAdsTag = () => {
+    return (
+        <>
+            <Script
+                strategy="afterInteractive"
+                src="https://www.googletagmanager.com/gtag/js?id=AW-18031232942"
+            />
+            <Script
+                id="gtag-ads-init"
+                strategy="afterInteractive"
+                dangerouslySetInnerHTML={{
+                    __html: `
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', 'AW-18031232942');
+                    `,
+                }}
+            />
+        </>
+    );
+};

@@ -15,7 +15,7 @@ import { constructMetadata } from "@/lib/seo";
 
 export const metadata = constructMetadata();
 
-import { GoogleAnalytics, MetaPixel } from "@/components/Analytics";
+import { GoogleAnalytics, MetaPixel, GoogleAdsTag } from "@/components/Analytics";
 import { OrganizationSchema, ServiceSchema } from "@/components/Schema";
 
 export default function RootLayout({
@@ -27,6 +27,7 @@ export default function RootLayout({
         <html lang="en">
             <body className="antialiased font-founders text-[rgb(41,40,40)]">
                 <GoogleAnalytics />
+                <GoogleAdsTag />
                 <MetaPixel />
                 <OrganizationSchema />
                 <ServiceSchema />
