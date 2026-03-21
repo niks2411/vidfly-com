@@ -133,8 +133,8 @@ const Hero = ({ showStats }: HeroProps) => {
                 </div>
               </div>
 
-              <div className="relative lg:block hidden animate-fade-in">
-                <div className="relative w-full">
+              <div className="relative block animate-fade-in mt-10 lg:mt-0">
+                <div className="relative w-full max-w-lg mx-auto lg:max-w-none">
                   <Image
                     src="/right image.png"
                     alt="Vidflyy Hero - How your videos will be seen"

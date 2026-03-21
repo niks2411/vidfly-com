@@ -19,7 +19,7 @@ const PromotionBanner = ({
     const thumbnails = [
         { src: "/lovable-uploads/1.jpg", alt: "YouTube video" },
         { src: "/lovable-uploads/2.jpg", alt: "YouTube video" },
-        { src: "/lovable-uploads/3.jpg", alt: "YouTube video" },
+        { src: "/lovable-uploads/13.jpg", alt: "YouTube video" },
         { src: "/lovable-uploads/4.jpg", alt: "YouTube video" },
         { src: "/lovable-uploads/5.jpg", alt: "YouTube video" },
         { src: "/lovable-uploads/6.jpg", alt: "YouTube video" },
@@ -29,10 +29,10 @@ const PromotionBanner = ({
         { src: "/lovable-uploads/10.jpg", alt: "YouTube video" },
         { src: "/lovable-uploads/11.jpg", alt: "YouTube video" },
         { src: "/lovable-uploads/12.jpg", alt: "YouTube video" },
-        { src: "/lovable-uploads/music-thumbnail.png", alt: "YouTube video" },
-        { src: "/lovable-uploads/music.png", alt: "YouTube video" },
-        { src: "/lovable-uploads/optmize.png", alt: "YouTube video" },
-        { src: "/lovable-uploads/how-videos-seen.png", alt: "YouTube video" },
+        { src: "/lovable-uploads/1.jpg", alt: "YouTube video" },
+        { src: "/lovable-uploads/2.jpg", alt: "YouTube video" },
+        { src: "/lovable-uploads/13.jpg", alt: "YouTube video" },
+        { src: "/lovable-uploads/4.jpg", alt: "YouTube video" },
     ];
 
     const marqueeRows = [

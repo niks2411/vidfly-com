@@ -9,7 +9,7 @@ import Image from "next/image";
 const images = [
   "/lovable-uploads/1.jpg",
   "/lovable-uploads/2.jpg",
-  "/lovable-uploads/3.jpg",
+  "/lovable-uploads/13.jpg",
   "/lovable-uploads/4.jpg",
   "/lovable-uploads/5.jpg",
   "/lovable-uploads/6.jpg",
