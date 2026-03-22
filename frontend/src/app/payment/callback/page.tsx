@@ -22,6 +22,8 @@ function PaymentCallbackContent() {
     const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("verifying");
     const [error, setError] = useState<string | null>(null);
     const [retryCount, setRetryCount] = useState(0);
+    const [amount, setAmount] = useState<number>(0);
+    const [eventFired, setEventFired] = useState(false);
     const MAX_RETRIES = 5;
 
     useEffect(() => {
@@ -60,6 +62,8 @@ function PaymentCallbackContent() {
 
             const data = await response.json();
             if (response.ok && data.order?.status === "paid") {
+                const orderPrice = data.order?.plan?.price || data.order?.packageInfo?.price || 0;
+                setAmount(orderPrice);
                 setPaymentStatus("success");
             } else {
                 // If not verified yet, retry
@@ -71,6 +75,18 @@ function PaymentCallbackContent() {
             setTimeout(verifyPayment, 3000);
         }
     };
+
+    useEffect(() => {
+        if (paymentStatus === "success" && amount > 0 && !eventFired && typeof window !== "undefined" && (window as any).gtag) {
+            (window as any).gtag('event', 'conversion', {
+                'send_to': 'AW-18031232942/sSGsCPmKvo0cEK6P-5VD',
+                'value': amount,
+                'currency': 'INR',
+                'transaction_id': orderId
+            });
+            setEventFired(true);
+        }
+    }, [paymentStatus, amount, eventFired, orderId]);
 
     return (
         <CampaignCard>
@@ -87,6 +103,7 @@ function PaymentCallbackContent() {
 
                 {paymentStatus === "success" && (
                     <>
+                        {/* Google Ads Tag - Initialized on the page to ensure gtag is available */}
                         <Script
                             id="gtag-base"
                             strategy="afterInteractive"
@@ -101,13 +118,6 @@ function PaymentCallbackContent() {
                                     function gtag(){dataLayer.push(arguments);}
                                     gtag('js', new Date());
                                     gtag('config', 'AW-18031232942');
-                                    
-                                    gtag('event', 'conversion', {
-                                        'send_to': 'AW-18031232942/sSGsCPmKvo0cEK6P-5VD',
-                                        'value': 1.0,
-                                        'currency': 'USD',
-                                        'transaction_id': '${orderId || ""}'
-                                    });
                                 `,
                             }}
                         />
