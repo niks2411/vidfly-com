@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
+import Script from "next/script";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import CampaignCard from "@/components/CampaignCard";
@@ -86,6 +87,30 @@ function PaymentCallbackContent() {
 
                 {paymentStatus === "success" && (
                     <>
+                        <Script
+                            id="gtag-base"
+                            strategy="afterInteractive"
+                            src="https://www.googletagmanager.com/gtag/js?id=AW-18031232942"
+                        />
+                        <Script
+                            id="gtag-init"
+                            strategy="afterInteractive"
+                            dangerouslySetInnerHTML={{
+                                __html: `
+                                    window.dataLayer = window.dataLayer || [];
+                                    function gtag(){dataLayer.push(arguments);}
+                                    gtag('js', new Date());
+                                    gtag('config', 'AW-18031232942');
+                                    
+                                    gtag('event', 'conversion', {
+                                        'send_to': 'AW-18031232942/sSGsCPmKvo0cEK6P-5VD',
+                                        'value': 1.0,
+                                        'currency': 'USD',
+                                        'transaction_id': '${orderId || ""}'
+                                    });
+                                `,
+                            }}
+                        />
                         <div className="h-20 w-20 rounded-full bg-green-100 flex items-center justify-center">
                             <CheckCircle className="h-12 w-12 text-green-600" />
                         </div>
