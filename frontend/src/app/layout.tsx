@@ -10,12 +10,12 @@ import Providers from "./providers";
 import { AuthProvider } from "@/context/AuthContext";
 import { CampaignSidebarProvider } from "./campaign-sidebar-provider";
 import ScrollToTop from "@/components/ScrollToTop";
+import Script from "next/script";
 import SmoothScroll from "@/components/SmoothScroll";
 import { constructMetadata } from "@/lib/seo";
 
 export const metadata = constructMetadata();
 
-import { GoogleAnalytics, MetaPixel, GoogleAdsTag } from "@/components/Analytics";
 import { OrganizationSchema, ServiceSchema } from "@/components/Schema";
 
 export default function RootLayout({
@@ -25,10 +25,30 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
+            <head>
+                <Script 
+                    id="gtm"
+                    strategy="afterInteractive"
+                    dangerouslySetInnerHTML={{
+                        __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                        })(window,document,'script','dataLayer','GTM-NZTH9F5L');`
+                    }}
+                />
+            </head>
             <body className="antialiased font-founders text-[rgb(41,40,40)]">
-                <GoogleAnalytics />
-                <GoogleAdsTag />
-                <MetaPixel />
+                {/* Google Tag Manager (noscript) */}
+                <noscript>
+                    <iframe 
+                        src="https://www.googletagmanager.com/ns.html?id=GTM-NZTH9F5L"
+                        height="0" 
+                        width="0" 
+                        style={{ display: 'none', visibility: 'hidden' }}
+                    />
+                </noscript>
+                {/* End Google Tag Manager (noscript) */}
                 <OrganizationSchema />
                 <ServiceSchema />
                 <CampaignSidebarProvider>

@@ -103,7 +103,7 @@ const CampaignLayout = ({
         {/* Left Side: Logo & Mobile Menu Toggle & Channel Selector */}
         <div className="flex items-center gap-3 md:gap-6 text-slate-600">
           <Link href="/" className="flex-shrink-0">
-            <img src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png" alt="Vidflyy" className="h-8 lg:h-6 w-auto cursor-pointer object-contain" />
+            <img src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png" alt="Vidflyy" className="h-11 w-auto cursor-pointer object-contain" />
           </Link>
           {showChannelSelector && (
             <div className="flex items-center ml-2 sm:ml-12 lg:ml-24">

@@ -4,7 +4,6 @@ import { useState } from "react";
 import PricingInfo from "@/components/PricingInfo";
 import FAQ from "@/components/FAQ";
 import PromotionBanner from "@/components/PromotionBanner";
-import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -13,18 +12,19 @@ export default function PricingPage() {
     const router = useRouter();
     const [budget, setBudget] = useState(499);
 
-    // Dynamic views/subs estimates (based on ₹0.21 per view)
+    // Standard view rates (₹0.21 - ₹0.18 per view)
     const minViews = Math.floor(budget / 0.21);
     const maxViews = Math.floor(budget / 0.18);
 
-    const minSubs = Math.floor(minViews * 0.012);
-    const maxSubs = Math.floor(maxViews * 0.018);
+    // Subscribers conversion rate (1% to 1.2% of views) - Matching Campaign Budget page fallback
+    const minSubs = Math.floor(minViews * 0.01);
+    const maxSubs = Math.floor(maxViews * 0.012);
 
     const formatNumber = (num: number) => {
         if (num >= 1000) {
             return (num / 1000).toFixed(2) + "k";
         }
-        return num.toString();
+        return num.toLocaleString();
     };
 
     const handleBudgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +53,6 @@ export default function PricingPage() {
             {/* Hero Section */}
             <section className="bg-white pt-8 px-4 sm:px-6 lg:px-12 w-full">
                 <div className="max-w-[1400px] mx-auto">
-                    {/* Top Banner Image - Using featuresbg.png as requested */}
                     <div className="relative rounded-b-[7px] overflow-hidden shadow-xl h-[160px] sm:h-[220px] md:h-[260px] lg:h-[300px] animate-fade-in mb-12 max-w-6xl mx-auto">
                         <Image
                             src="/featuresbg.png"
@@ -87,9 +86,7 @@ export default function PricingPage() {
                 </div>
 
                 <div className="flex flex-col lg:flex-row justify-between items-start gap-16 lg:gap-10 mb-20">
-                    {/* Left Column: Slider and Input */}
                     <div className="flex flex-col w-full lg:w-[55%] pt-2">
-                        {/* Slider */}
                         <div className="mb-14 relative w-full">
                             <input
                                 type="range"
@@ -102,12 +99,11 @@ export default function PricingPage() {
                             />
                             <div className="flex justify-between text-[15px] font-bold text-gray-900 mt-5 relative z-0 tracking-tight">
                                 <span>₹499</span>
-                                <span className="absolute left-1/2 -translate-x-1/2">₹49,999</span>
+                                <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap">₹49,999</span>
                                 <span>₹1,00,000</span>
                             </div>
                         </div>
 
-                        {/* Input Box Row */}
                         <div className="flex flex-wrap items-center gap-6 mt-4">
                             <div className="flex items-center gap-6">
                                 <span className="text-[32px] md:text-[40px] font-bold text-gray-900 whitespace-nowrap leading-none tracking-tight">
@@ -127,7 +123,6 @@ export default function PricingPage() {
                         </div>
                     </div>
 
-                    {/* Right Column: Output Box */}
                     <div className="w-full lg:w-[42%] bg-[#E8EAEE] rounded-[4px] p-8 lg:p-10 shadow-sm">
                         <div className="flex justify-between items-center">
                             <div className="flex flex-col w-1/2 pr-2 text-center">
@@ -140,7 +135,7 @@ export default function PricingPage() {
                             <div className="flex flex-col w-1/2 pl-2 text-center">
                                 <span className="font-bold text-gray-900 text-lg md:text-[20px] mb-5 tracking-tight">Subscribers*</span>
                                 <span className="text-[#2563EB] font-bold text-xl md:text-[22px] whitespace-nowrap tracking-tight">
-                                    {formatNumber(minViews)} – {formatNumber(maxViews)}
+                                    {formatNumber(minSubs)} – {formatNumber(maxSubs)}
                                 </span>
                             </div>
                         </div>
@@ -179,7 +174,6 @@ export default function PricingPage() {
                         </p>
                     </div>
 
-                    {/* Row 1: Basic Plans */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-6xl mx-auto justify-items-center">
                         {[
                             { name: "Starter", price: "999", views: "5,000+", ai: false, gradient: "from-purple-400 to-emerald-400" },
@@ -192,7 +186,6 @@ export default function PricingPage() {
                         ))}
                     </div>
 
-                    {/* Row 2: AI Plans */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12 justify-items-center">
                         {[
                             { name: "Premium AI", price: "5,499", views: "37,000+", ai: true, popular: true, discount: "5%", bonus: "2,000", gradient: "from-purple-500 to-emerald-400" },
@@ -204,7 +197,6 @@ export default function PricingPage() {
                         ))}
                     </div>
 
-                    {/* Row 3: Ultra Plan */}
                     <div className="max-w-[380px] mx-auto">
                         <OfferCard pkg={{
                             name: "Ultra Viral AI",
@@ -222,7 +214,6 @@ export default function PricingPage() {
 
             <PricingInfo />
             <PromotionBanner />
-
 
             <style jsx global>{`
                 .custom-slider::-webkit-slider-thumb {
@@ -272,7 +263,7 @@ function OfferCard({ pkg, onAction }: { pkg: any, onAction: () => void }) {
 
             <div className={`rounded-[4px] px-4 py-2 flex items-center justify-between mb-8 border ${pkg.ai ? 'bg-white border-cyan-100' : 'bg-[#F4F5F7] border-gray-200'}`}>
                 <span className="text-[15px] font-bold text-gray-600">AI Targeting:</span>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5" >
                     {pkg.ai ? (
                         <>
                             <span className="text-[#10B981] text-lg font-bold">✓</span>
@@ -292,7 +283,7 @@ function OfferCard({ pkg, onAction }: { pkg: any, onAction: () => void }) {
                     <span className="text-[#10B981] text-lg font-bold mt-[-2px]">✓</span>
                     <span className="text-[14px] text-gray-600 font-bold leading-tight">Multi-format promotion (TrueView, In-Feed & Shorts)</span>
                 </li>
-                <li className="flex items-start gap-3">
+                <li className="flex items-start gap-3" >
                     <span className="text-[#10B981] text-lg font-bold mt-[-2px]">✓</span>
                     <span className="text-[14px] text-gray-600 font-bold leading-tight">Safe, Google Ads–compliant delivery</span>
                 </li>
