@@ -15,7 +15,7 @@ const FAQ = () => {
 
   const faqs = [
     {
-      question: "How does VIDFLYY promote my videos?",
+      question: "How does Vidflyy promote my videos?",
       answer: "We use targeted advertising campaigns across various platforms to promote your videos to audiences who are genuinely interested in your content. Our promotion methods are 100% compliant with YouTube's terms of service."
     },
     {

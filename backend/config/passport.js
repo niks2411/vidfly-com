@@ -41,6 +41,15 @@ passport.use(
             avatar: profile.photos?.[0]?.value || '',
             emailVerified: true,
           });
+
+          // Send welcome email to new Google user
+          try {
+            const { sendWelcomeEmail } = require('../utils/emailService');
+            await sendWelcomeEmail(email);
+            console.log(`Welcome email sent to new Google user: ${email}`);
+          } catch (emailError) {
+            console.error('Failed to send welcome email to Google user:', emailError);
+          }
         }
 
         return done(null, user);

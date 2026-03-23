@@ -367,7 +367,24 @@ export default function CampaignBudget() {
             } else {
                 const stored = sessionStorage.getItem(BUDGET_STATE_KEY);
                 if (stored) {
-                    setState(JSON.parse(stored));
+                    const parsed = JSON.parse(stored);
+                    
+                    // Fallback for missing avatarUrl (common in bulk views flow)
+                    if (parsed.videoInfo && !parsed.videoInfo.avatarUrl) {
+                        const channelInfoCache = sessionStorage.getItem("vidfly_channel_info");
+                        const targetChannelId = parsed.videoInfo.channelId;
+                        if (channelInfoCache && targetChannelId) {
+                            try {
+                                const list = JSON.parse(channelInfoCache);
+                                const match = list.find((c: any) => c.channelId === targetChannelId);
+                                if (match) {
+                                    parsed.videoInfo.avatarUrl = match.avatar || match.channelAvatar;
+                                }
+                            } catch (e) {}
+                        }
+                    }
+                    
+                    setState(parsed);
                 } else {
                     router.replace("/campaign");
                 }
@@ -385,7 +402,7 @@ export default function CampaignBudget() {
         else if (state?.videoInfo) setSelectedVideos([state.videoInfo]);
     }, [state]);
 
-    const isBulkViews = (state?.campaignType === "bulk-views" && state?.bulkViewsPackage) || false;
+    const isBulkViews = ((state?.campaignType === "bulk-views" || state?.campaignType === "packages") && state?.bulkViewsPackage) || false;
     const bulkViewsPackage = state?.bulkViewsPackage || null;
     const bulkViewsPrice = bulkViewsPackage
         ? parseFloat(bulkViewsPackage.price.replace(/[^0-9.]/g, ""))
@@ -625,7 +642,7 @@ export default function CampaignBudget() {
                         price: budget,
                         currency: "INR",
                         quantity: effectiveTotalViews,
-                        type: "bulk-views",
+                        type: state?.campaignType === "packages" ? "package" : "bulk-views",
                         description: `${bulkViewsPackage.label} - ${bulkViewsPackage.price}`,
                     }
                     : {
@@ -717,7 +734,7 @@ export default function CampaignBudget() {
     };
 
     return (
-        <CampaignLayout activeSidebar="budget" hideSidebar={true} showChannelSelector={!isBulkViews}>
+        <CampaignLayout activeSidebar="budget" hideSidebar={true} showChannelSelector={true}>
             <Script
                 src="https://sdk.cashfree.com/js/v3/cashfree.js"
                 onLoad={() => setSdkLoaded(true)}

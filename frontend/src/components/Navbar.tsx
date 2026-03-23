@@ -49,7 +49,7 @@ const TopBanner = () => {
   const content = (
     <div className="flex items-center whitespace-nowrap pr-24">
       <p className="text-[13px] md:text-[14px] font-bold tracking-tight text-white uppercase flex items-center gap-6">
-        <span>WELCOME OFFER! Get 30% Extra Views On Your First Campaign with VidFlyy. Use Promo Code - <span className="text-yellow-300">FIRST50</span></span>
+        <span>WELCOME OFFER! Get 30% Extra Views On Your First Campaign with Vidflyy. Use Promo Code - <span className="text-yellow-300">FIRST50</span></span>
         <Link
           href="/get-started"
           className="bg-[#FF8C00] hover:bg-[#e67e00] text-white px-4 py-1 rounded text-[12px] md:text-[14px] font-extrabold transition-all duration-300 shadow-lg"
@@ -73,7 +73,7 @@ const TopBanner = () => {
       {/* Desktop Static Display */}
       <div className="hidden sm:flex w-full items-center justify-center gap-6 text-white text-center">
         <p className="text-[14px] font-bold tracking-tight uppercase">
-          WELCOME OFFER! Get 30% Extra Views On Your First Campaign with VidFlyy. Use Promo Code - <span className="text-yellow-300">FIRST50</span>
+          WELCOME OFFER! Get 30% Extra Views On Your First Campaign with Vidflyy. Use Promo Code - <span className="text-yellow-300">FIRST50</span>
         </p>
         <Link
           href="/get-started"

@@ -156,7 +156,7 @@ export default function PricingPage() {
                         <p>1. Individual results may vary based on factors like video quality, targeting precision, and other variables - these insights are offered as general guidance derived from aggregated historical data.</p>
                         <p>2. To gain subscribers, you must link your YouTube channel. We do not guarantee subscriber growth without proper channel integration.</p>
                         <Link href="/faq" className="inline-block mt-1 text-gray-900 underline underline-offset-4 decoration-1 hover:text-[#DC2626] transition-colors">
-                            How to Link Your Channel to VidFlyy's Google Ads Account?
+                            How to Link Your Channel to Vidflyy's Google Ads Account?
                         </Link>
                     </div>
                 </div>

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import CampaignHeader from "@/components/CampaignHeader";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
 import { getVerifiedEmail, getSelectedChannelKey } from "@/lib/verifiedEmail";
 import CampaignLayout from "@/components/CampaignLayout";
 import CampaignCard from "@/components/CampaignCard";
@@ -20,19 +20,21 @@ type StoredVideo = {
     thumbnail: string;
     link: string;
     channelId?: string | null;
+    avatarUrl?: string | null;
 };
 
-type BulkPackage = {
+type PackageInfo = {
     id: string;
     label: string;
     price: string;
-    views: number;
+    views: number | string;
+    ai?: boolean;
 };
 
-export default function CampaignBulkViewsSelect() {
+export default function CampaignPackageSelect() {
     const router = useRouter();
     const [verifiedEmail, setVerifiedEmail] = useState("");
-    const [bulkViewsPackage, setBulkViewsPackage] = useState<BulkPackage | null>(null);
+    const [selectedPkg, setSelectedPkg] = useState<PackageInfo | null>(null);
 
     useEffect(() => {
         const email = getVerifiedEmail();
@@ -42,12 +44,12 @@ export default function CampaignBulkViewsSelect() {
         }
         setVerifiedEmail(email);
 
-        const storedPkg = sessionStorage.getItem("vidfly_bulk_package");
+        const storedPkg = sessionStorage.getItem("vidfly_selected_package");
         if (!storedPkg) {
-            router.replace("/campaign/bulk-views");
+            router.replace("/campaign/packages");
             return;
         }
-        setBulkViewsPackage(JSON.parse(storedPkg));
+        setSelectedPkg(JSON.parse(storedPkg));
     }, [router]);
 
     const [videos, setVideos] = useState<StoredVideo[]>([]);
@@ -139,8 +141,8 @@ export default function CampaignBulkViewsSelect() {
     }, [search, searchResults, tab, channelVideos, videos]);
 
     const handleNext = () => {
-        if (!selectedIds.length || !bulkViewsPackage) return;
-        const allVideos = [...channelVideos, ...videos];
+        if (!selectedIds.length || !selectedPkg) return;
+        const allVideos = [...channelVideos, ...videos, ...searchResults];
         const selected = allVideos.find(v => v.videoId === selectedIds[0]);
         if (!selected) return;
 
@@ -160,29 +162,50 @@ export default function CampaignBulkViewsSelect() {
             }
         }
 
+        const priceStr = String(selectedPkg.price);
+        const priceNum = parseFloat(priceStr.replace(/[₹,]/g, ''));
+
+        // Parse views to a clean number for the backend
+        const viewsRaw = selectedPkg.views;
+        const viewsCount = typeof viewsRaw === "string" 
+            ? parseInt(viewsRaw.replace(/[^0-9]/g, "")) 
+            : viewsRaw;
+
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify([videoWithAvatar]));
         sessionStorage.setItem("vidfly_budget_state", JSON.stringify({
             email: verifiedEmail,
             youtubeLink: videoWithAvatar.link,
             videoInfo: videoWithAvatar,
             videos: [videoWithAvatar],
-            bulkViewsPackage,
-            campaignType: "bulk-views",
+            bulkViewsPackage: {
+                id: selectedPkg.id,
+                label: selectedPkg.label,
+                price: selectedPkg.price,
+                views: viewsCount,
+            },
+            campaignType: "packages",
+            autoTargeting: selectedPkg.ai || false,
         }));
 
         router.push("/campaign/budget");
     };
 
-    if (!bulkViewsPackage) return null;
+    if (!selectedPkg) return null;
 
     return (
-        <CampaignLayout activeSidebar="bulk" showChannelSelector={true}>
+        <CampaignLayout activeSidebar="packages" showChannelSelector={true}>
             <CampaignCard>
+                <div className="md:hidden flex gap-2 mb-6 px-1">
+                    <div className="flex-1 h-1.5 rounded-full bg-cyan-400"></div>
+                    <div className="flex-1 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
+                    <div className="flex-1 h-1.5 rounded-full bg-slate-100"></div>
+                </div>
+
                 <CampaignHeader showChannelSelector={false}>
                     <div className="flex items-center gap-4 flex-1 max-w-xl">
                         {[
-                            { label: "Enter Link", active: true, color: "bg-gradient-to-r from-blue-400 to-emerald-300" },
-                            { label: "Select Videos", active: true, color: "bg-gradient-to-r from-blue-400 to-emerald-300" },
+                            { label: "Select Package", active: true, color: "bg-gradient-to-r from-blue-400 to-emerald-300" },
+                            { label: "Select Video", active: true, color: "bg-gradient-to-r from-blue-400 to-emerald-300" },
                             { label: "Budget & Targeting", active: false, color: "bg-slate-200" }
                         ].map((step, index) => (
                             <div key={index} className="flex-1 flex flex-col items-start gap-2.5">
@@ -194,14 +217,22 @@ export default function CampaignBulkViewsSelect() {
                 </CampaignHeader>
 
                 <div className="mt-4 mb-6 p-4 bg-purple-50 rounded-2xl border border-purple-100 flex items-center justify-between">
-                    <span className="font-bold text-slate-800">{bulkViewsPackage.label}</span>
-                    <span className="font-bold text-purple-600">{bulkViewsPackage.price}</span>
+                    <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-purple-600 flex items-center justify-center text-white font-bold animate-pulse">
+                            ★
+                        </div>
+                        <div>
+                            <p className="text-[10px] font-black text-purple-400 uppercase tracking-widest">Selected Package</p>
+                            <span className="font-bold text-slate-800">{selectedPkg.label}</span>
+                        </div>
+                    </div>
+                    <span className="font-black text-purple-600 text-lg">{selectedPkg.price}</span>
                 </div>
 
                 <div className="space-y-6">
                     <div>
                         <h1 className="text-2xl font-bold text-slate-900 mb-2">Select Video</h1>
-                        <p className="text-slate-600 text-sm">Select the video you want to promote with this bulk package.</p>
+                        <p className="text-slate-600 text-sm">Which video should we promote with this package?</p>
                     </div>
 
                     <div className="flex items-center gap-2 bg-slate-50 rounded-xl px-4 py-2 border border-slate-200">
@@ -215,28 +246,40 @@ export default function CampaignBulkViewsSelect() {
                     </div>
 
                     <div className="space-y-3">
-                        {loadingChannel && <div className="text-sm text-slate-500">Loading videos...</div>}
-                        {filteredVideos.map((v) => (
-                            <div
-                                key={v.videoId}
-                                onClick={() => setSelectedIds([v.videoId])}
-                                className={`flex items-center gap-4 p-3 rounded-2xl border cursor-pointer transition-all ${selectedIds.includes(v.videoId) ? "bg-purple-50 border-purple-200 shadow-sm" : "bg-white border-slate-200 hover:border-purple-100"}`}
-                            >
-                                <img src={v.thumbnail} alt="" className="w-24 h-16 rounded-lg object-cover" />
-                                <div className="flex-1">
-                                    <p className="text-sm font-bold text-slate-900 line-clamp-1">{v.title}</p>
-                                    <p className="text-xs text-slate-500">{v.author}</p>
-                                </div>
-                                <div className={`w-6 h-6 rounded-full border flex items-center justify-center ${selectedIds.includes(v.videoId) ? "bg-purple-600 border-purple-600 shadow-sm shadow-purple-200" : "border-slate-300"}`}>
-                                    {selectedIds.includes(v.videoId) && <span className="text-white text-xs">✓</span>}
-                                </div>
+                        {loadingChannel ? (
+                            <div className="flex items-center justify-center py-12">
+                                <Loader2 className="h-8 w-8 text-purple-500 animate-spin" />
                             </div>
-                        ))}
+                        ) : (
+                            filteredVideos.map((v) => (
+                                <div
+                                    key={v.videoId}
+                                    onClick={() => setSelectedIds([v.videoId])}
+                                    className={`flex items-center gap-4 p-3 rounded-2xl border cursor-pointer transition-all ${selectedIds.includes(v.videoId) ? "bg-purple-50 border-purple-200 shadow-sm" : "bg-white border-slate-200 hover:border-purple-100"}`}
+                                >
+                                    <div className="w-24 h-16 rounded-lg overflow-hidden shrink-0 shadow-sm">
+                                        <img src={v.thumbnail} alt="" className="w-full h-full object-cover" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-bold text-slate-900 line-clamp-1">{v.title}</p>
+                                        <p className="text-[11px] text-slate-500 font-medium uppercase tracking-wider">{v.author}</p>
+                                    </div>
+                                    <div className={`w-6 h-6 rounded-full border flex items-center justify-center ${selectedIds.includes(v.videoId) ? "bg-purple-600 border-purple-600 shadow-sm shadow-purple-200" : "border-slate-300"}`}>
+                                        {selectedIds.includes(v.videoId) && <span className="text-white text-xs">✓</span>}
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                        {!loadingChannel && filteredVideos.length === 0 && (
+                            <div className="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                                <p className="text-slate-400 text-sm">No videos found. Try a different search.</p>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex gap-4 justify-end pt-6 border-t border-slate-100">
                         <Button variant="outline" className="rounded-xl h-12 px-8 text-slate-600 font-bold" onClick={() => router.back()}>BACK</Button>
-                        <Button className="rounded-xl bg-slate-900 hover:bg-slate-800 h-12 px-8 font-bold" disabled={!selectedIds.length} onClick={handleNext}>
+                        <Button className="rounded-xl bg-slate-900 hover:bg-slate-800 h-12 px-8 font-bold text-white shadow-lg disabled:opacity-50" disabled={!selectedIds.length} onClick={handleNext}>
                             CONTINUE TO BUDGET
                         </Button>
                     </div>

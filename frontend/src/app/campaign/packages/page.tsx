@@ -73,92 +73,17 @@ export default function CampaignPackages() {
             return;
         }
 
-        if (!selectedChannelId) {
-            // If we know they have channels but none is "selected", send them to detail page to pick
-            router.push(`/campaign/packages/${pkg.id}`);
-            return;
-        }
+        // 1. Store the selected package in sessionStorage for the video selection page
+        sessionStorage.setItem("vidfly_selected_package", JSON.stringify({
+            id: pkg.id,
+            label: `${pkg.name} Package`,
+            price: `₹${pkg.price.toLocaleString()}`,
+            views: pkg.views,
+            ai: pkg.ai || false,
+        }));
 
-        try {
-            setProcessingPkg(pkg.id);
-            setError(null);
-            setChannelError("");
-
-            // 1. Get channel info from cache
-            let channelInfo = null;
-            const cached = sessionStorage.getItem("vidfly_channel_info");
-            if (cached) {
-                const parsed = JSON.parse(cached);
-                channelInfo = parsed.find((i: any) => i.channelId === selectedChannelId);
-            }
-
-            // 2. If not in cache, we need to fetch it to be safe (or at least have a name)
-            if (!channelInfo) {
-                try {
-                    const res = await fetch(`${API_BASE_URL}/api/youtube/channel-info?channelId=${encodeURIComponent(selectedChannelId)}`, { credentials: "include" });
-                    if (res.ok) channelInfo = await res.json();
-                } catch (e) { }
-            }
-
-            const activeChannel = channelInfo || { channelId: selectedChannelId, name: "YouTube Channel" };
-
-            // 3. Create the order
-            const price = parseFloat(pkg.price.replace(/[₹,]/g, ''));
-            const viewsMatch = pkg.views.match(/(\d+(?:,\d+)*)/);
-            const quantity = viewsMatch ? parseInt(viewsMatch[1].replace(/,/g, '')) : 0;
-
-            const payload = {
-                email: verifiedEmail,
-                channel: {
-                    name: activeChannel.name,
-                    channelId: activeChannel.channelId,
-                    link: `https://www.youtube.com/channel/${activeChannel.channelId}`,
-                    avatar: activeChannel.avatar || activeChannel.channelAvatar || null,
-                },
-                videos: [{
-                    videoId: `channel_${activeChannel.channelId}_${Date.now()}`,
-                    title: `${activeChannel.name} - Channel Promotion`,
-                    link: `https://www.youtube.com/channel/${activeChannel.channelId}`,
-                    thumbnail: activeChannel.avatar || activeChannel.channelAvatar || null,
-                    viewsRequested: quantity,
-                }],
-                package: {
-                    id: pkg.id,
-                    name: pkg.name,
-                    price: price,
-                    currency: "INR",
-                    quantity: quantity,
-                    type: "package",
-                    description: pkg.description || `${pkg.views} Views Boost`,
-                },
-                targeting: {
-                    autoTargeting: pkg.ai,
-                },
-                budget: price,
-                source: "packages",
-            };
-
-            const response = await fetch(`${API_BASE_URL}/api/orders/campaign`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-                credentials: "include",
-            });
-
-            const data = await response.json();
-            if (!response.ok) throw new Error(data?.message || "Failed to create order");
-
-            if (data.paymentCheckoutUrl) {
-                window.location.href = data.paymentCheckoutUrl;
-                return;
-            }
-
-            router.push(`/campaign/my-campaigns`);
-        } catch (err) {
-            console.error(err);
-            setError(err instanceof Error ? err.message : "Failed to proceed to payment");
-            setProcessingPkg(null);
-        }
+        // 2. Redirect to video selection page
+        router.push("/campaign/packages/select");
     };
 
     if (loadingInitial) {

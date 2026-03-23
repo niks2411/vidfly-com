@@ -177,7 +177,7 @@ export default function FeaturesPage() {
                                 Backed by Real Results.
                             </h2>
                             <p className="section-desc !text-left !mx-0 max-w-lg mb-12">
-                                VIDFLLY is designed to give creators full clarity and control over their growth.
+                                Vidflyy is designed to give creators full clarity and control over their growth.
                             </p>
 
                             {/* Features List */}

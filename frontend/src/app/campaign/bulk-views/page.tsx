@@ -86,7 +86,7 @@ export default function CampaignBulkViews() {
     };
 
     return (
-        <CampaignLayout activeSidebar="bulk" showChannelSelector={false}>
+        <CampaignLayout activeSidebar="bulk" showChannelSelector={true}>
             <CampaignCard>
                 <CampaignHeader showChannelSelector={false}>
                     <div>

@@ -28,7 +28,7 @@ export default function TermsAndConditionsPage() {
                     {/* Introduction */}
                     <div className="mb-12 animate-fade-in">
                         <p className="text-gray-600 leading-relaxed text-lg">
-                            Welcome to Vidflyy.com ("we," "our," "us"). By accessing or using our website and services, you agree to comply with and be bound by these Terms & Conditions. Please read them carefully before proceeding.
+                            Welcome to Vidflyy ("we," "our," "us"). By accessing or using our website and services, you agree to comply with and be bound by these Terms & Conditions. Please read them carefully before proceeding.
                         </p>
                     </div>
 
@@ -110,7 +110,7 @@ export default function TermsAndConditionsPage() {
                             </h2>
                         </div>
                         <p className="text-gray-600 leading-relaxed ml-5">
-                            All materials, designs, and content on Vidflyy.com are the intellectual property of Vidflyy and cannot be copied, distributed, or used without permission.
+                            All materials, designs, and content on Vidflyy are the intellectual property of Vidflyy and cannot be copied, distributed, or used without permission.
                         </p>
                     </div>
 

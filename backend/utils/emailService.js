@@ -26,7 +26,7 @@ function getEmailTemplate(title, content, buttonText, buttonUrl) {
         <table role="presentation" style="width:600px;margin:0 auto;background-color:#ffffff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
           <tr>
             <td style="padding:30px 40px;background:linear-gradient(135deg,#dc2626 0%,#ec4899 100%);border-radius:8px 8px 0 0;text-align:center;">
-              <h1 style="margin:0;color:#ffffff;font-size:28px;font-weight:bold;">VIDFLYY</h1>
+              <h1 style="margin:0;color:#ffffff;font-size:28px;font-weight:bold;">Vidflyy</h1>
             </td>
           </tr>
           <tr>
@@ -275,7 +275,7 @@ function getStatusUpdateEmailTemplate(order, oldStatus, newStatus) {
 // --- send wrapper ---
 async function sendEmail(to, subject, html, text) {
   const resendClient = createResendClient();
-  const fromEmail = process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM || 'no-reply@vidflyy.com';
+  const fromEmail = process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM || 'no-reply@vidflyy.in';
 
   // If Resend is configured, use it
   if (resendClient) {
