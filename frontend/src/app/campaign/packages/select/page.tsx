@@ -89,12 +89,9 @@ export default function CampaignPackageSelect() {
                 if (response.ok) {
                     const data = await response.json();
                     setChannelVideos((data.videos || []).map((v: any) => ({
-                        title: v.title,
-                        author: v.author,
-                        videoId: v.videoId,
-                        thumbnail: v.thumbnail,
-                        link: `https://www.youtube.com/watch?v=${v.videoId}`,
-                        channelId,
+                        ...v,
+                        avatarUrl: v.channelAvatar || v.avatarUrl || null,
+                        link: v.link || `https://www.youtube.com/watch?v=${v.videoId}`,
                     })));
                 }
             } catch (err) {
@@ -118,12 +115,9 @@ export default function CampaignPackageSelect() {
                 if (response.ok) {
                     const data = await response.json();
                     setSearchResults((data.videos || []).map((v: any) => ({
-                        title: v.title,
-                        author: v.author,
-                        videoId: v.videoId,
-                        thumbnail: v.thumbnail,
-                        link: `https://www.youtube.com/watch?v=${v.videoId}`,
-                        channelId,
+                        ...v,
+                        avatarUrl: v.channelAvatar || v.avatarUrl || null,
+                        link: v.link || `https://www.youtube.com/watch?v=${v.videoId}`,
                     })));
                 }
             } catch (err) {
@@ -161,6 +155,11 @@ export default function CampaignPackageSelect() {
                 } catch (e) {}
             }
         }
+        
+        // Final fallback: if still no avatar, check if the video object itself had it under another key
+        if (!videoWithAvatar.avatarUrl && (selected as any).channelAvatar) {
+            videoWithAvatar.avatarUrl = (selected as any).channelAvatar;
+        }
 
         const priceStr = String(selectedPkg.price);
         const priceNum = parseFloat(priceStr.replace(/[₹,]/g, ''));
@@ -170,6 +169,10 @@ export default function CampaignPackageSelect() {
         const viewsCount = typeof viewsRaw === "string" 
             ? parseInt(viewsRaw.replace(/[^0-9]/g, "")) 
             : viewsRaw;
+
+        // Clear any stale regular campaign states to prevent hijacking in the budget page
+        sessionStorage.removeItem("vidfly_current_campaign_video");
+        sessionStorage.removeItem("vidfly_current_campaign_videos");
 
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify([videoWithAvatar]));
         sessionStorage.setItem("vidfly_budget_state", JSON.stringify({

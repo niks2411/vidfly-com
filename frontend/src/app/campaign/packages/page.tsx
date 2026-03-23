@@ -37,7 +37,7 @@ export default function CampaignPackages() {
         setVerifiedEmail(email);
 
         if (!email) {
-            router.replace("/get-started");
+            router.replace("/get-started?flow=package");
             return;
         }
 

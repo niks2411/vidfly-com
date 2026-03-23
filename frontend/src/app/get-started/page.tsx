@@ -62,12 +62,18 @@ function GetStartedContent() {
 
     useEffect(() => {
         const storedEmail = getVerifiedEmail();
+        const flow = searchParams.get("flow");
         if (storedEmail) {
-            router.replace("/campaign");
+            const selectedPkg = sessionStorage.getItem("vidfly_selected_package");
+            if (selectedPkg && flow === "package") {
+                router.replace("/campaign/packages/select");
+            } else {
+                router.replace("/campaign");
+            }
         } else {
             setCheckingVerification(false);
         }
-    }, [router]);
+    }, [router, searchParams]);
 
     const sendOtp = async () => {
         const normalizedEmail = normalizeEmail(email);
@@ -142,7 +148,15 @@ function GetStartedContent() {
             }
 
             setMessage("Redirecting...");
-            setTimeout(() => router.push("/campaign"), 500);
+            setTimeout(() => {
+                const selectedPkg = sessionStorage.getItem("vidfly_selected_package");
+                const flow = searchParams.get("flow");
+                if (selectedPkg && flow === "package") {
+                    router.push("/campaign/packages/select");
+                } else {
+                    router.push("/campaign");
+                }
+            }, 500);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Verification failed.");
         } finally {

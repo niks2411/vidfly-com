@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useTrackEvent } from "@/hooks/use-track-event";
 
+import { getVerifiedEmail } from "@/lib/verifiedEmail";
+
 interface HeroProps {
   showStats?: boolean;
 }
@@ -16,7 +18,12 @@ const Hero = ({ showStats }: HeroProps) => {
 
   const handlePromoteNow = () => {
     trackEvent("click_hero_promote_now");
-    router.push("/get-started");
+    const email = getVerifiedEmail();
+    if (email) {
+      router.push("/campaign");
+    } else {
+      router.push("/get-started");
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 

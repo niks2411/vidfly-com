@@ -7,6 +7,7 @@ import PromotionBanner from "@/components/PromotionBanner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { getVerifiedEmail } from "@/lib/verifiedEmail";
 
 export default function PricingPage() {
     const router = useRouter();
@@ -39,6 +40,26 @@ export default function PricingPage() {
     const handleBudgetBlur = () => {
         if (budget < 499) setBudget(499);
         if (budget > 1000000) setBudget(100000);
+    };
+
+    const handleBuyNow = (pkg: any) => {
+        // 1. Store the selected package in sessionStorage for the video selection page
+        sessionStorage.setItem("vidfly_selected_package", JSON.stringify({
+            id: pkg.id,
+            label: `${pkg.name} Package`,
+            price: pkg.price.toString().startsWith("₹") ? pkg.price : `₹${pkg.price}`,
+            views: pkg.views,
+            ai: pkg.ai || false,
+        }));
+
+        // 2. Check auth status and redirect
+        const email = getVerifiedEmail();
+        if (email) {
+            router.push("/campaign/packages/select");
+        } else {
+            router.push("/get-started?flow=package");
+        }
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     const handleGetStarted = () => {
@@ -176,29 +197,30 @@ export default function PricingPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-6xl mx-auto justify-items-center">
                         {[
-                            { name: "Starter", price: "999", views: "5,000+", ai: false, gradient: "from-purple-400 to-emerald-400" },
-                            { name: "Boost", price: "1,999", views: "10,000+", ai: false, gradient: "from-blue-400 to-emerald-400" },
-                            { name: "Growth", price: "3,499", views: "20,000+", ai: false, gradient: "from-indigo-400 to-purple-400" }
+                            { id: "starter", name: "Starter", price: "999", views: "5,000+", ai: false, gradient: "from-purple-400 to-emerald-400" },
+                            { id: "boost", name: "Boost", price: "1,999", views: "10,000+", ai: false, gradient: "from-blue-400 to-emerald-400" },
+                            { id: "growth", name: "Growth", price: "3,499", views: "20,000+", ai: false, gradient: "from-indigo-400 to-purple-400" }
                         ].map((pkg) => (
                             <div key={pkg.name} className="w-full max-w-[380px]">
-                                <OfferCard pkg={pkg} onAction={handleGetStarted} />
+                                <OfferCard pkg={pkg} onAction={() => handleBuyNow(pkg)} />
                             </div>
                         ))}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12 justify-items-center">
                         {[
-                            { name: "Premium AI", price: "5,499", views: "37,000+", ai: true, popular: true, discount: "5%", bonus: "2,000", gradient: "from-purple-500 to-emerald-400" },
-                            { name: "Viral AI", price: "8,999", views: "59,000+", ai: true, discount: "8%", bonus: "4,000", gradient: "from-blue-500 to-emerald-400" }
+                            { id: "premium-ai", name: "Premium AI", price: "5,499", views: "37,000+", ai: true, popular: true, discount: "5%", bonus: "2,000", gradient: "from-purple-500 to-emerald-400" },
+                            { id: "viral-ai", name: "Viral AI", price: "8,999", views: "59,000+", ai: true, discount: "8%", bonus: "4,000", gradient: "from-blue-500 to-emerald-400" }
                         ].map((pkg) => (
                             <div key={pkg.name} className="w-full max-w-[380px]">
-                                <OfferCard pkg={pkg} onAction={handleGetStarted} />
+                                <OfferCard pkg={pkg} onAction={() => handleBuyNow(pkg)} />
                             </div>
                         ))}
                     </div>
 
                     <div className="max-w-[380px] mx-auto">
                         <OfferCard pkg={{
+                            id: "ultra-viral-ai",
                             name: "Ultra Viral AI",
                             price: "12,999",
                             views: "86,500+",
@@ -207,7 +229,13 @@ export default function PricingPage() {
                             bonus: "6,500",
                             gradient: "from-red-500 to-purple-500",
                             btnGradient: "from-red-500 to-purple-500"
-                        }} onAction={handleGetStarted} />
+                        }} onAction={() => handleBuyNow({
+                            id: "ultra-viral-ai",
+                            name: "Ultra Viral AI",
+                            price: "12,999",
+                            views: "86,500+",
+                            ai: true,
+                        })} />
                     </div>
                 </div>
             </section>
