@@ -23,7 +23,6 @@ function PaymentCallbackContent() {
     const [error, setError] = useState<string | null>(null);
     const [retryCount, setRetryCount] = useState(0);
     const [amount, setAmount] = useState<number>(0);
-    const [eventFired, setEventFired] = useState(false);
     const MAX_RETRIES = 5;
 
     useEffect(() => {
@@ -76,17 +75,6 @@ function PaymentCallbackContent() {
         }
     };
 
-    useEffect(() => {
-        if (paymentStatus === "success" && amount > 0 && !eventFired && typeof window !== "undefined" && (window as any).gtag) {
-            (window as any).gtag('event', 'conversion', {
-                'send_to': 'AW-18031232942/sSGsCPmKvo0cEK6P-5VD',
-                'value': amount,
-                'currency': 'INR',
-                'transaction_id': orderId
-            });
-            setEventFired(true);
-        }
-    }, [paymentStatus, amount, eventFired, orderId]);
 
     return (
         <CampaignCard>
@@ -103,24 +91,6 @@ function PaymentCallbackContent() {
 
                 {paymentStatus === "success" && (
                     <>
-                        {/* Google Ads Tag - Initialized on the page to ensure gtag is available */}
-                        <Script
-                            id="gtag-base"
-                            strategy="afterInteractive"
-                            src="https://www.googletagmanager.com/gtag/js?id=AW-18031232942"
-                        />
-                        <Script
-                            id="gtag-init"
-                            strategy="afterInteractive"
-                            dangerouslySetInnerHTML={{
-                                __html: `
-                                    window.dataLayer = window.dataLayer || [];
-                                    function gtag(){dataLayer.push(arguments);}
-                                    gtag('js', new Date());
-                                    gtag('config', 'AW-18031232942');
-                                `,
-                            }}
-                        />
                         <div className="h-20 w-20 rounded-full bg-green-100 flex items-center justify-center">
                             <CheckCircle className="h-12 w-12 text-green-600" />
                         </div>

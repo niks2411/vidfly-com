@@ -63,6 +63,7 @@ export default function AdminPanel() {
     const [verificationCode, setVerificationCode] = useState("");
     const [showVerification, setShowVerification] = useState(false);
     const [pendingStatus, setPendingStatus] = useState("");
+    const [stats, setStats] = useState<{ totalUsers: number; totalOrders: number; pendingOrders: number; successOrders: number } | null>(null);
 
     useEffect(() => {
         const savedToken = localStorage.getItem("adminToken");
@@ -70,8 +71,26 @@ export default function AdminPanel() {
     }, []);
 
     useEffect(() => {
-        if (token) fetchOrders();
+        if (token) {
+            fetchOrders();
+            fetchStats();
+        }
     }, [token]);
+
+    const fetchStats = async () => {
+        if (!token) return;
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/admin/dashboard/stats`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setStats(data);
+            }
+        } catch (err) {
+            console.error("Failed to fetch stats", err);
+        }
+    };
 
     const fetchOrders = async () => {
         if (!token) return;
@@ -150,6 +169,7 @@ export default function AdminPanel() {
             setShowVerification(false);
             setVerificationCode("");
             fetchOrders();
+            fetchStats();
             setSelectedOrder(null);
         } catch (err) {
             setError("Failed to update status");
@@ -206,6 +226,14 @@ export default function AdminPanel() {
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
+                        {stats && (
+                            <div className="flex items-center gap-6 mr-6 border-r pr-6 border-slate-100">
+                                <div className="text-center">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase leading-none mb-1">Users</p>
+                                    <p className="text-lg font-black text-slate-900 leading-none">{stats.totalUsers}</p>
+                                </div>
+                            </div>
+                        )}
                         <Button variant="ghost" size="sm" onClick={() => router.push("/admin/completed")} className="text-green-700 font-bold hover:bg-green-50">COMPLETED</Button>
                         <Button variant="ghost" size="sm" onClick={handleLogout} className="text-red-600 font-bold hover:bg-red-50">LOGOUT</Button>
                     </div>

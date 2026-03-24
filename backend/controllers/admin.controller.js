@@ -3,6 +3,17 @@ const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const AdminUser = require('../models/AdminUser');
 const Order = require('../models/Order');
+const User = require('../models/User');
+
+exports.getDashboardStats = async (req, res, next) => {
+  try {
+    const totalUsers = await User.countDocuments();
+
+    return res.json({
+      totalUsers,
+    });
+  } catch (err) { return next(err); }
+};
 
 exports.login = async (req, res, next) => {
   try {
