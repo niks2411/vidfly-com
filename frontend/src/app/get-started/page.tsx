@@ -170,7 +170,7 @@ function GetStartedContent() {
         <div className="h-screen flex flex-col lg:flex-row font-montserrat tracking-tight overflow-hidden bg-white">
             {/* ── Left Side: Red/Pink Panel ──────────────────────────────────── */}
             <div 
-                className="lg:w-[45%] bg-gradient-to-br from-[#E52D27] to-[#EC4899] bg-cover bg-center p-10 lg:p-24 relative flex flex-col justify-center overflow-hidden min-h-[450px] lg:min-h-screen"
+                className="hidden lg:flex lg:w-[45%] bg-gradient-to-br from-[#E52D27] to-[#EC4899] bg-cover bg-center p-10 lg:p-24 relative flex-col justify-center overflow-hidden lg:min-h-screen"
                 style={{ backgroundImage: 'url("/pink_abstract_bg.png")' }}
             >
                 {/* Dark overlay to ensure text readability */}
