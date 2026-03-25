@@ -104,15 +104,18 @@ export default function AdminCompleted() {
                             {filteredOrders.length === 0 ? (
                                 <div className="py-20 text-center text-slate-400 font-medium">No completed orders found</div>
                             ) : (
-                                filteredOrders.map(o => (
+                                filteredOrders.map((o, index) => (
                                     <div 
                                         key={o._id} 
                                         onClick={() => setSelectedOrder(o)} 
                                         className="flex items-center px-8 py-4 cursor-pointer hover:bg-green-50/30 transition-all border-l-4 border-transparent hover:border-green-600"
                                     >
-                                        <div className="w-1/4">
-                                            <p className="font-bold text-slate-900 truncate pr-4">{o.userId?.name || "Anonymous"}</p>
-                                            <span className="block text-[10px] font-normal text-slate-500">{o.userId?.email}</span>
+                                        <div className="w-1/4 flex items-center gap-3">
+                                            <span className="text-[10px] font-black text-slate-300 w-4">{index + 1}</span>
+                                            <div className="min-w-0 flex-1">
+                                                <p className="font-bold text-slate-900 truncate pr-4">{o.userId?.name || "Anonymous"}</p>
+                                                <span className="block text-[10px] font-normal text-slate-500">{o.userId?.email}</span>
+                                            </div>
                                         </div>
                                         <div className="flex-1 min-w-0 pr-4">
                                             <div className="text-sm truncate text-slate-500">
@@ -125,7 +128,10 @@ export default function AdminCompleted() {
                                         </div>
                                         <div className="flex items-center gap-4">
                                             <div className="text-[10px] font-black uppercase px-2 py-1 rounded-full bg-green-100 text-green-800">Completed</div>
-                                            <div className="w-24 text-right text-xs text-slate-400 font-medium">{new Date(o.createdAt).toLocaleDateString()}</div>
+                                            <div className="w-36 text-right text-[10px] text-slate-400 font-bold leading-tight">
+                                                {new Date(o.createdAt).toLocaleDateString()}<br/>
+                                                {new Date(o.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </div>
                                         </div>
                                     </div>
                                 ))

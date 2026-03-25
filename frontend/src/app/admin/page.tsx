@@ -245,18 +245,21 @@ export default function AdminPanel() {
                             {filteredOrders.length === 0 ? (
                                 <div className="py-20 text-center text-slate-400 font-medium">No orders found</div>
                             ) : (
-                                filteredOrders.map(o => (
+                                filteredOrders.map((o, index) => (
                                     <div 
                                         key={o._id} 
                                         onClick={() => handleSelectOrder(o)} 
                                         className={`flex items-center px-8 py-4 cursor-pointer transition-all border-l-4 ${o.isRead ? 'bg-white border-transparent' : 'bg-slate-50/80 border-red-600'} hover:bg-slate-50 hover:border-red-600`}
                                     >
-                                        <div className="w-1/4">
-                                            <div className="flex items-center gap-2">
-                                                {!o.isRead && <span className="w-2 h-2 bg-red-600 rounded-full animate-pulse flex-shrink-0" />}
-                                                <p className={`font-bold ${o.isRead ? 'text-slate-600' : 'text-slate-900'} truncate`}>{o.userId?.name || "Anonymous"}</p>
+                                        <div className="w-1/4 flex items-center gap-3">
+                                            <span className="text-[10px] font-black text-slate-300 w-4">{index + 1}</span>
+                                            <div className="min-w-0 flex-1">
+                                                <div className="flex items-center gap-2">
+                                                    {!o.isRead && <span className="w-2 h-2 bg-red-600 rounded-full animate-pulse flex-shrink-0" />}
+                                                    <p className={`font-bold ${o.isRead ? 'text-slate-600' : 'text-slate-900'} truncate`}>{o.userId?.name || "Anonymous"}</p>
+                                                </div>
+                                                <span className="block text-[10px] font-normal text-slate-500">{o.userId?.email}</span>
                                             </div>
-                                            <span className="block text-[10px] font-normal text-slate-500">{o.userId?.email}</span>
                                         </div>
                                         <div className="flex-1 min-w-0 pr-4">
                                             <div className={`text-sm truncate ${o.isRead ? 'text-slate-500' : 'text-slate-900 font-bold'}`}>
@@ -269,7 +272,10 @@ export default function AdminPanel() {
                                         </div>
                                         <div className="flex items-center gap-4">
                                             <div className={`text-[10px] font-black uppercase px-2 py-1 rounded-full ${statusColors[o.status]}`}>{o.status}</div>
-                                            <div className="w-24 text-right text-xs text-slate-400 font-medium">{new Date(o.createdAt).toLocaleDateString()}</div>
+                                            <div className="w-36 text-right text-[10px] text-slate-400 font-bold leading-tight">
+                                                {new Date(o.createdAt).toLocaleDateString()}<br/>
+                                                {new Date(o.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </div>
                                         </div>
                                     </div>
                                 ))
