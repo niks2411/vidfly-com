@@ -399,6 +399,32 @@ exports.updateStatus = async (req, res, next) => {
   }
 };
 
+exports.updateStats = async (req, res, next) => {
+  try {
+    const schema = Joi.object({
+      viewsGenerated: Joi.number().min(0).default(0),
+      subscribersGained: Joi.number().min(0).default(0),
+    });
+    const { error, value } = schema.validate(req.body);
+    if (error) return res.status(400).json({ message: error.message });
+
+    const { orderId } = req.params;
+    const order = await Order.findOneAndUpdate(
+      { orderId },
+      { 
+        viewsGenerated: value.viewsGenerated,
+        subscribersGained: value.subscribersGained
+      },
+      { new: true }
+    );
+
+    if (!order) return res.status(404).json({ message: 'Order not found' });
+    return res.json(order);
+  } catch (err) {
+    return next(err);
+  }
+};
+
 exports.deleteOrder = async (req, res, next) => {
   try {
     const { orderId } = req.params;

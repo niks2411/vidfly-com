@@ -50,6 +50,8 @@ type Order = {
         duration?: string;
     };
     freeViewsRedeemed?: number;
+    viewsGenerated?: number;
+    subscribersGained?: number;
 };
 
 const statusConfig: Record<string, { label: string; color: string; bg: string; dot: string }> = {
@@ -162,15 +164,12 @@ export default function MyCampaigns() {
 
     // Compute stats
     const totalVideosPromoted = orders.reduce((sum, o) => sum + (o.videos?.length || 0), 0);
-    const totalViews = orders
+    const totalViewsGenerated = orders
         .filter(o => o.status === "completed" || o.status === "in_progress")
-        .reduce((sum, o) => sum + (o.plan?.quantity || 0), 0);
-    const totalSubscribers = orders
-        .filter(o => o.status === "completed")
-        .reduce((sum, o) => {
-            if (o.targeting?.goal === "subscribers") return sum + (o.plan?.quantity || 0) * 0.1;
-            return sum;
-        }, 0);
+        .reduce((sum, o) => sum + (o.viewsGenerated || 0), 0);
+    const totalSubscribersGained = orders
+        .filter(o => o.status === "completed" || o.status === "in_progress")
+        .reduce((sum, o) => sum + (o.subscribersGained || 0), 0);
 
     // Get unique channels for the channel filter
     const uniqueChannels = Array.from(
@@ -217,12 +216,12 @@ export default function MyCampaigns() {
                     />
                     <StatCard
                         label="Views Generated"
-                        value={totalViews}
+                        value={totalViewsGenerated}
                         icon={<Eye className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400" />}
                     />
                     <StatCard
                         label="Subscribers Gained"
-                        value={Math.round(totalSubscribers)}
+                        value={totalSubscribersGained}
                         icon={<Users className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400" />}
                     />
                 </div>
@@ -475,10 +474,16 @@ function CampaignRow({ order, onDelete, deleting }: { order: Order; onDelete: ()
                             <span className="text-indigo-500 font-bold">{videoCount} videos</span>
                         </>
                     )}
-                    {order.status === "completed" && (
+                    {(order.status === "completed" || order.status === "in_progress") && order.viewsGenerated !== undefined && (
                         <>
                             <span className="text-slate-300">|</span>
-                            <span className="text-emerald-600 font-bold">Subscribers Gained {Math.round((order.plan?.quantity || 0) * 0.1)}</span>
+                            <span className="text-blue-600 font-bold">Views Generated {order.viewsGenerated}</span>
+                        </>
+                    )}
+                    {(order.status === "completed" || order.status === "in_progress") && order.subscribersGained !== undefined && (
+                        <>
+                            <span className="text-slate-300">|</span>
+                            <span className="text-emerald-600 font-bold">Subscribers Gained {order.subscribersGained}</span>
                         </>
                     )}
                 </div>
@@ -486,7 +491,43 @@ function CampaignRow({ order, onDelete, deleting }: { order: Order; onDelete: ()
                 {/* Pay Now button for pending */}
                 {isPending && (
                     <button
-                        onClick={() => router.push(`/campaign/budget`)}
+                        onClick={async () => {
+                            // Build base video data from the order
+                            const videos = order.videos?.map(v => ({
+                                title: v.title || "Untitled",
+                                videoId: v.videoId || "",
+                                thumbnail: v.thumbnail || "",
+                                link: v.link || (v.videoId ? `https://www.youtube.com/watch?v=${v.videoId}` : ""),
+                                author: order.channel?.name || "",
+                                channelId: order.channel?.channelId || null,
+                                avatarUrl: order.channel?.avatar || null,
+                                viewsRequested: v.viewsRequested || null,
+                            })) || [];
+
+                            // Fetch fresh stats from YouTube API for each video
+                            for (let i = 0; i < videos.length; i++) {
+                                try {
+                                    const res = await fetch(`${API_BASE_URL}/api/youtube/info`, {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({ url: videos[i].link }),
+                                    });
+                                    if (res.ok) {
+                                        const info = await res.json();
+                                        videos[i] = { ...videos[i], ...info };
+                                    }
+                                } catch (e) {
+                                    console.warn("Failed to fetch video info", e);
+                                }
+                            }
+
+                            if (videos.length > 0) {
+                                sessionStorage.setItem("vidfly_current_campaign_video", JSON.stringify(videos[0]));
+                                sessionStorage.setItem("vidfly_current_campaign_videos", JSON.stringify(videos));
+                            }
+                            sessionStorage.removeItem("vidfly_budget_state");
+                            router.push("/campaign/budget");
+                        }}
                         className="mt-2.5 inline-flex items-center gap-1.5 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-1.5 rounded-lg text-[12px] font-bold shadow-sm shadow-red-100 transition-all"
                     >
                         Pay Now <Zap className="w-3.5 h-3.5" />

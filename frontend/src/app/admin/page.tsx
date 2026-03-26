@@ -37,6 +37,8 @@ type Order = {
     paymentId?: { status?: string };
     targeting?: { country?: string; goal?: string; duration?: string; autoTargeting?: boolean; gender?: string; ages?: string[]; interests?: string[]; keywords?: string[]; };
     isRead?: boolean;
+    viewsGenerated?: number;
+    subscribersGained?: number;
 };
 
 const statusColors: Record<string, string> = {
@@ -63,6 +65,8 @@ export default function AdminPanel() {
     const [verificationCode, setVerificationCode] = useState("");
     const [showVerification, setShowVerification] = useState(false);
     const [pendingStatus, setPendingStatus] = useState("");
+    const [viewsGenerated, setViewsGenerated] = useState<string>("0");
+    const [subscribersGained, setSubscribersGained] = useState<string>("0");
     const [stats, setStats] = useState<{ totalUsers: number; totalOrders: number; pendingOrders: number; successOrders: number } | null>(null);
 
     useEffect(() => {
@@ -176,8 +180,34 @@ export default function AdminPanel() {
         }
     };
 
+    const handleStatsUpdate = async () => {
+        if (!token || !selectedOrder) return;
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/admin/orders/${selectedOrder.orderId}/stats`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    viewsGenerated: parseInt(viewsGenerated) || 0,
+                    subscribersGained: parseInt(subscribersGained) || 0
+                })
+            });
+            if (!response.ok) throw new Error("Update failed");
+            const updatedOrder = await response.json();
+            setOrders(prev => prev.map(o => o.orderId === selectedOrder.orderId ? { ...o, ...updatedOrder } : o));
+            setSelectedOrder({ ...selectedOrder, ...updatedOrder });
+            alert("Stats updated successfully");
+        } catch (err) {
+            setError("Failed to update stats");
+        }
+    };
+
     const handleSelectOrder = async (order: Order) => {
         setSelectedOrder(order);
+        setViewsGenerated(String(order.viewsGenerated || 0));
+        setSubscribersGained(String(order.subscribersGained || 0));
         if (!order.isRead && token) {
             try {
                 await fetch(`${API_BASE_URL}/api/admin/orders/${order.orderId}/read`, {
@@ -249,7 +279,7 @@ export default function AdminPanel() {
                                     <div 
                                         key={o._id} 
                                         onClick={() => handleSelectOrder(o)} 
-                                        className={`flex items-center px-8 py-4 cursor-pointer transition-all border-l-4 ${o.isRead ? 'bg-white border-transparent' : 'bg-slate-50/80 border-red-600'} hover:bg-slate-50 hover:border-red-600`}
+                                        className={`flex items-center px-8 py-4 cursor-pointer transition-all ${o.isRead ? 'bg-white' : 'bg-slate-50'} hover:bg-slate-100`}
                                     >
                                         <div className="w-1/4 flex items-center gap-3">
                                             <span className="text-[10px] font-black text-slate-300 w-4">{index + 1}</span>
@@ -411,6 +441,35 @@ export default function AdminPanel() {
                                 <div className="lg:col-span-4 space-y-4">
                                     <div className="bg-slate-900 text-white rounded-2xl p-6 space-y-5 shadow-xl h-fit">
                                         <h3 className="font-black italic text-red-500">ADMIN ACTIONS</h3>
+                                        
+                                        <div className="space-y-4 border-b border-slate-700 pb-5">
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <div className="space-y-1.5">
+                                                    <p className="text-[10px] font-bold text-slate-400 uppercase">Views Generated</p>
+                                                    <Input 
+                                                        type="text" 
+                                                        value={viewsGenerated} 
+                                                        onChange={(e) => setViewsGenerated(e.target.value.replace(/[^0-9]/g, ''))}
+                                                        onFocus={(e) => { if (e.target.value === "0") setViewsGenerated(""); }}
+                                                        onBlur={(e) => { if (e.target.value === "") setViewsGenerated("0"); }}
+                                                        className="bg-slate-800 border-0 text-white h-10 rounded-lg font-bold"
+                                                    />
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <p className="text-[10px] font-bold text-slate-400 uppercase">Subs Gained</p>
+                                                    <Input 
+                                                        type="text" 
+                                                        value={subscribersGained} 
+                                                        onChange={(e) => setSubscribersGained(e.target.value.replace(/[^0-9]/g, ''))}
+                                                        onFocus={(e) => { if (e.target.value === "0") setSubscribersGained(""); }}
+                                                        onBlur={(e) => { if (e.target.value === "") setSubscribersGained("0"); }}
+                                                        className="bg-slate-800 border-0 text-white h-10 rounded-lg font-bold"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 font-bold" onClick={handleStatsUpdate}>UPDATE STATS</Button>
+                                        </div>
+
                                         <div className="space-y-2">
                                             <p className="text-[10px] font-bold text-slate-400 uppercase">Change Status</p>
                                             <select

@@ -90,6 +90,8 @@ const OrderSchema = new mongoose.Schema(
     reminderCount: { type: Number, default: 0 }, // 0 = none, 1 = first (24h), 2 = second (72h)
     lastReminderAt: { type: Date },
     isRead: { type: Boolean, default: false },
+    viewsGenerated: { type: Number, default: 0 },
+    subscribersGained: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
