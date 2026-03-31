@@ -2,7 +2,23 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-const FAQ = () => {
+
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface FAQProps {
+  items?: FAQItem[];
+  title?: string;
+  description?: string;
+}
+
+const FAQ = ({ 
+  items, 
+  title = "Frequently Asked Questions", 
+  description = "Got questions? We've got answers to help you get started." 
+}: FAQProps) => {
   const [openItems, setOpenItems] = useState<number[]>([]);
 
   const toggleItem = (index: number) => {
@@ -13,7 +29,7 @@ const FAQ = () => {
     );
   };
 
-  const faqs = [
+  const defaultFaqs = [
     {
       question: "How does Vidflyy promote my videos?",
       answer: "We use targeted advertising campaigns across various platforms to promote your videos to audiences who are genuinely interested in your content. Our promotion methods are 100% compliant with YouTube's terms of service."
@@ -36,15 +52,21 @@ const FAQ = () => {
     }
   ];
 
+  const faqs = items || defaultFaqs;
+
   return (
     <section className="py-20 bg-gray-50 font-founders">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-left sm:text-center mb-16">
           <h2 className="section-heading text-left sm:text-center !mb-4">
-            Frequently Asked <span className="text-red-600">Questions</span>
+            {title.includes("Frequently Asked") ? (
+              <>
+                Frequently Asked <span className="text-red-600">Questions</span>
+              </>
+            ) : title}
           </h2>
           <p className="section-desc !text-left sm:!text-center !mx-0 sm:!mx-auto">
-            Got questions? We've got answers to help you get started.
+            {description}
           </p>
         </div>
 
