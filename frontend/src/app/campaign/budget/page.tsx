@@ -555,7 +555,13 @@ export default function CampaignBudget() {
 
     useEffect(() => {
         if (!isBulkViews) {
-            const timeout = setTimeout(() => calculatePricing(budget), 300);
+            const timeout = setTimeout(() => {
+                if (budget >= 499) {
+                    calculatePricing(budget);
+                } else {
+                    setPricingData(null);
+                }
+            }, 300);
             return () => clearTimeout(timeout);
         }
     }, [budget, isBulkViews]);
@@ -570,17 +576,36 @@ export default function CampaignBudget() {
             });
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                console.error("Backend Error Response:", errorData);
                 throw new Error(errorData.message || "Unable to calculate views");
             }
             const data = await response.json();
             setPricingData(data);
         } catch (err: any) {
-            console.error("Pricing estimation error:", err.message);
+            console.warn("Pricing estimation issue:", err.message);
         } finally {
             setLoadingPricing(false);
         }
     };
+
+    // Fallback calculation for when API is loading or fails
+    const localPricing = Object.assign({
+        totalViews: {
+            min: Math.floor((budget / 0.2) * 1.25),
+            max: Math.floor((budget / 0.2) * 1.35),
+        },
+        baseViews: {
+            min: Math.floor((budget / 0.2) * 0.95),
+            max: Math.floor((budget / 0.2) * 1.05),
+        },
+        bonusViews: {
+            min: Math.floor((budget / 0.2) * 0.28),
+            max: Math.floor((budget / 0.2) * 0.32),
+        },
+        totalSubscribers: {
+            min: Math.floor((budget / 0.2) * 0.01),
+            max: Math.floor((budget / 0.2) * 0.012),
+        }
+    }, pricingData || {});
 
     if (!state || !selectedVideos.length) {
         return (
@@ -897,13 +922,13 @@ export default function CampaignBudget() {
                                     <div className="absolute inset-x-0 h-1.5 bg-slate-100 rounded-full top-1/2 -translate-y-1/2" />
                                     <div
                                         className="absolute left-0 h-1.5 bg-[#7c3aed] rounded-full top-1/2 -translate-y-1/2"
-                                        style={{ width: `${((budget - 499) / (sliderMax - 499)) * 100}%` }}
+                                        style={{ width: `${Math.max(0, Math.min(100, ((budget - 499) / (sliderMax - 499)) * 100))}%` }}
                                     />
                                     <input
                                         type="range"
                                         min={499}
                                         max={sliderMax}
-                                        value={Math.min(budget, sliderMax)}
+                                        value={Math.min(Math.max(499, budget), sliderMax)}
                                         onChange={(e) => {
                                             const val = Number(e.target.value);
                                             setBudget(val);
@@ -918,7 +943,7 @@ export default function CampaignBudget() {
                                     {/* Thumb Icon */}
                                     <div
                                         className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white border-[3px] border-[#7c3aed] rounded-full shadow-lg z-40 pointer-events-none flex items-center justify-center"
-                                        style={{ left: `calc(${((budget - 499) / (sliderMax - 499)) * 100}% - 12px)` }}
+                                        style={{ left: `calc(${Math.max(0, Math.min(100, ((budget - 499) / (sliderMax - 499)) * 100))}% - 12px)` }}
                                     >
                                         <div className="w-2 h-2 bg-[#7c3aed] rounded-full" />
                                     </div>
@@ -1473,9 +1498,11 @@ export default function CampaignBudget() {
 
                                 <div className="flex items-center justify-between font-extrabold text-[12px]">
                                     <span className="text-blue-600">
-                                        {loadingPricing ? "..." : pricingData ? `${(pricingData.totalViews.min).toLocaleString()} - ${(pricingData.totalViews.max).toLocaleString()}` : "909 - 1.1K"}
+                                        {loadingPricing ? "..." : `${(localPricing.baseViews.min).toLocaleString()} - ${(localPricing.baseViews.max).toLocaleString()}`}
                                     </span>
-                                    <span className="text-blue-500 font-bold">273 - 324</span>
+                                    <span className="text-blue-500 font-bold">
+                                        {loadingPricing ? "..." : `${(localPricing.bonusViews.min).toLocaleString()} - ${(localPricing.bonusViews.max).toLocaleString()}`}
+                                    </span>
                                 </div>
                             </div>
 
@@ -1486,7 +1513,7 @@ export default function CampaignBudget() {
                                         <div className="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center text-[10px]"><Info className="w-3 h-3" /></div>
                                     </div>
                                     <span className="text-[18px] font-black text-blue-600">
-                                        {pricingData ? `${(pricingData.totalViews.min + 300).toLocaleString()} - ${(pricingData.totalViews.max + 400).toLocaleString()}` : "1.2K - 1.4K"}
+                                        {loadingPricing ? "..." : `${(localPricing.totalViews.min).toLocaleString()} - ${(localPricing.totalViews.max).toLocaleString()}`}
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between">
@@ -1494,8 +1521,8 @@ export default function CampaignBudget() {
                                         <span className="text-[14px] font-extrabold text-slate-600">New Subscribers</span>
                                         <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-slate-400 mb-0.5"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z" /></svg>
                                     </div>
-                                    <span className="text-[18px] font-black text-blue-500">
-                                        {loadingPricing ? "..." : pricingData?.totalSubscribers ? `${pricingData.totalSubscribers.min} - ${pricingData.totalSubscribers.max}` : pricingData ? `${Math.floor(pricingData.totalViews.min * 0.01)} - ${Math.floor(pricingData.totalViews.max * 0.012)}` : "36-45"}
+                                    <span className="text-blue-500 font-black">
+                                        {loadingPricing ? "..." : `${localPricing.totalSubscribers.min} - ${localPricing.totalSubscribers.max}`}
                                     </span>
                                 </div>
                             </div>
@@ -1588,7 +1615,7 @@ export default function CampaignBudget() {
                                      Views <Info className="w-3 h-3" />
                                  </div>
                                  <div className="text-[15px] font-black text-slate-900 tracking-tight">
-                                    {loadingPricing ? "..." : pricingData ? `${(pricingData.totalViews.min).toLocaleString()} - ${(pricingData.totalViews.max).toLocaleString()}` : "3,600 - 4,400"}
+                                    {loadingPricing ? "..." : `${(localPricing.totalViews.min).toLocaleString()} - ${(localPricing.totalViews.max).toLocaleString()}`}
                                  </div>
                              </div>
                              <div className="flex flex-col items-end">
@@ -1596,7 +1623,7 @@ export default function CampaignBudget() {
                                      Subscribers <ShieldCheck className="w-3 h-3" />
                                  </div>
                                  <div className="text-[15px] font-black text-slate-900 tracking-tight">
-                                     {loadingPricing ? "..." : pricingData?.totalSubscribers ? `${pricingData.totalSubscribers.min} - ${pricingData.totalSubscribers.max}` : pricingData ? `${Math.floor(pricingData.totalViews.min * 0.01)} - ${Math.floor(pricingData.totalViews.max * 0.012)}` : "36 - 45"}
+                                     {loadingPricing ? "..." : `${localPricing.totalSubscribers.min} - ${localPricing.totalSubscribers.max}`}
                                  </div>
                              </div>
                         </div>
