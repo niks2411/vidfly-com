@@ -39,6 +39,9 @@ export function constructMetadata({
         },
         icons,
         metadataBase: new URL('https://www.vidflyy.in'),
+        verification: {
+            google: "wVyMQnvLmH70xKPCsA8Dx9BvNascr3XadYQenrvtOuQ",
+        },
         ...(noIndex && {
             robots: {
                 index: false,
