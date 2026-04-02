@@ -8,28 +8,42 @@ import { useRouter } from "next/navigation";
 import { Youtube, CheckCircle, ChevronDown } from "lucide-react";
 import { Animated } from "@/components/Animated";
 import GoogleAdsSection from "@/components/GoogleAdsSection";
+import FAQ from "@/components/FAQ";
 
-function FAQItem({ question, answer }: { question: string, answer: string }) {
-    const [isOpen, setIsOpen] = useState(false);
-    return (
-        <div className="border border-gray-200 rounded-lg overflow-hidden transition-all duration-300 shadow-sm" style={{ borderLeft: '4px solid #E52D27' }}>
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors"
-            >
-                <span className="text-[18px] font-bold text-[#0E172B]">{question}</span>
-                <div className={`w-8 h-8 rounded-full bg-[#EBEEF3] flex items-center justify-center transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
-                    <ChevronDown className="w-5 h-5 text-[#4A5568]" />
-                </div>
-            </button>
-            <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96 opacity-100 border-t border-gray-100' : 'max-h-0 opacity-0'}`}>
-                <div className="p-6 text-[#475569] font-medium leading-relaxed bg-[#F9FAFB]">
-                    {answer}
-                </div>
-            </div>
-        </div>
-    );
-}
+const gamingFaqs = [
+    {
+        question: "What is YouTube gaming channel promotion, and how does Vidflyy help me grow faster?",
+        answer: "YouTube gaming channel promotion uses targeted ad campaigns to get your videos in front of real gamers. Vidflyy, as an Official Premier Google Partner, runs Google Ads campaigns for gameplay videos, streams, and highlights, covering popular games like PUBG, Valorant, Free Fire, and more to deliver real views, watch time, and subscribers."
+    },
+    {
+        question: "How much does YouTube gaming video promotion cost on Vidflyy?",
+        answer: "Plans start at just ₹499, making Vidflyy one of the most affordable YouTube gaming promotion services in India. You can pick a fixed plan or set a custom budget. First-time users also get 30% extra views using promo code FIRST50."
+    },
+    {
+        question: "Is Vidflyy's YouTube gaming promotion service safe for my channel?",
+        answer: "Yes. Vidflyy promotes exclusively through Google Ads, which is fully compliant with YouTube's terms of service. We never use bots, fake views, or automated traffic. Every view comes from a real user genuinely interested in gaming content zero risk to your channel."
+    },
+    {
+        question: "Which types of gaming channels and videos can I promote with Vidflyy?",
+        answer: "Vidflyy supports all gaming content types — gameplay, mobile gaming, PC/console, esports, Let's Play, speedruns, game reviews, and tutorials. We promote videos for titles like PUBG, Free Fire, GTA V, Minecraft, Fortnite, and Call of Duty, as long as your video complies with YouTube and Google Ads policies."
+    },
+    {
+        question: "How long does it take to see results from YouTube gaming channel promotion?",
+        answer: "Campaign setup takes 24–48 hours. Once your campaign is live and approved, you'll start seeing real views and engagement from gaming audiences right away."
+    },
+    {
+        question: "Will promoting my gaming videos help me get more YouTube subscribers?",
+        answer: "Yes. Vidflyy targets real gamers who already enjoy content like yours, making them far more likely to subscribe after watching. It's targeted exposure not just views, but an audience that actually converts."
+    },
+    {
+        question: "Why should new gaming YouTubers invest in a YouTube gaming promotion service?",
+        answer: "YouTube's algorithm rewards early watch time and engagement. Without an initial boost, great content often goes unnoticed. Vidflyy helps new gaming creators break through that plateau, trigger YouTube's recommendation engine, and build a loyal audience faster."
+    },
+    {
+        question: "How is Vidflyy different from other YouTube gaming promotion companies in India?",
+        answer: "Vidflyy is an Official Premier Google Partner, a distinction very few agencies hold globally. All promotion runs through real Google Ads with advanced gaming audience targeting. With 8.9B+ real views delivered and 58,000+ promoted channels, it's one of India's most trusted and transparent gaming promotion platforms."
+    }
+];
 
 export default function YoutubeGamingPromotion() {
     const router = useRouter();
@@ -532,37 +546,11 @@ export default function YoutubeGamingPromotion() {
                 </div>
             </section>
 
-            {/* FAQ SECTION */}
-            <section className="pb-24 bg-white font-founders">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="section-heading !text-left mb-12">
-                        Frequently Asked Questions
-                    </h2>
-
-                    <div className="space-y-4">
-                        {[
-                            {
-                                q: "How long does YouTube gaming promotion take?",
-                                a: "On average, campaign setup and approval take 24–48 hours. Once approved, you'll start seeing real engagement from gamers immediately."
-                            },
-                            {
-                                q: "Can I promote any gaming video?",
-                                a: "Yes, as long as it complies with YouTube and Google Ads policies. We promote gameplays, reviews, walkthroughs, streams, and more."
-                            },
-                            {
-                                q: "Will promotion help me gain subscribers?",
-                                a: "Yes. By showing your content to a targeted gaming audience, you increase the likelihood of attracting viewers who will subscribe to your channel for more."
-                            },
-                            {
-                                q: "What happens if my video gets disapproved?",
-                                a: "If Google Ads disapproves a video (due to policy reasons like copyright or content), our team will help you fix the issue or you can choose a different video for promotion."
-                            }
-                        ].map((faq, idx) => (
-                            <FAQItem key={idx} question={faq.q} answer={faq.a} />
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <FAQ 
+                items={gamingFaqs} 
+                title="Frequently Asked Question - Youtube Gaming Promotion"
+                description="Everything you need to know about promoting your gaming channel on YouTube with Vidflyy."
+            />
 
             <style jsx global>{`
         .gaming-hero-desc { color: rgba(255,255,255,0.9) !important; }
