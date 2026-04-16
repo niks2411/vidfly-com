@@ -73,7 +73,14 @@ function PaymentCheckoutContent() {
 
             if (data.paymentSessionId) {
                 const cashfree = (window as any).Cashfree({ mode: CASHFREE_MODE });
-                cashfree.checkout({ paymentSessionId: data.paymentSessionId, redirectTarget: "_self" });
+                cashfree.checkout({
+                    paymentSessionId: data.paymentSessionId,
+                    redirectTarget: "_self",
+                    onFailure: (failureData: any) => {
+                        console.log("Payment failed:", failureData);
+                        router.replace(`/payment/failed?orderId=${orderId}`);
+                    },
+                });
             } else if (data.paymentUrl) {
                 window.location.href = data.paymentUrl;
             } else {
