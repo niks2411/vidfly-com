@@ -150,7 +150,7 @@ export default function CampaignFreeViews() {
 
                     <div className="bg-emerald-50 rounded-xl border border-emerald-200 p-6">
                         <h3 className="text-lg font-bold text-emerald-700 mb-2">Share Your Referral Link</h3>
-                        <p className="text-emerald-900 mb-4">Get <span className="font-bold">500 free views</span> for each friend who signs up using your link!</p>
+                        <p className="text-emerald-900 mb-4">Get <span className="font-bold">500 free views</span> for each friend who signs up and completes their first Order using your link!</p>
                         <div className="flex flex-col sm:flex-row gap-2">
                             <div className="flex-1 flex items-center gap-2 bg-white rounded-xl px-4 py-3 border border-emerald-200">
                                 <input value={referralLink} readOnly className="flex-1 border-0 bg-transparent text-sm focus:ring-0 outline-none" />

@@ -272,6 +272,114 @@ function getStatusUpdateEmailTemplate(order, oldStatus, newStatus) {
   };
 }
 
+function getAdminNewOrderNotificationTemplate(order, payment) {
+  const currency = order.plan?.currency || 'INR';
+  const symbol = currency === 'USD' ? '$' : '₹';
+  const amount = payment.amount || order.plan?.price || 0;
+  const orderId = order.orderId;
+  const packageName = order.packageInfo?.name || order.plan?.name || 'Campaign Package';
+  const views = order.plan?.quantity || 0;
+  const customerName = order.userId?.name || 'N/A';
+  const customerEmail = order.userId?.email || 'N/A';
+  const campaignType = order.campaignType || 'N/A';
+  const notes = order.notes || 'None';
+  const targetingNotes = order.targeting?.notes || 'None';
+  
+  // Targeting Details
+  const country = order.targeting?.country || 'Any';
+  const goal = order.targeting?.goal || 'Not specified';
+  const duration = order.targeting?.duration || 'Default';
+  const strategy = (order.targeting?.autoTargeting !== false) ? 'AI Assistant' : 'Manual';
+  const gender = order.targeting?.gender || 'All';
+  const ages = (order.targeting?.ages || ['All Ages']).join(', ');
+  const interests = (order.targeting?.interests || ['All Interests']).join(', ');
+  const keywords = (order.targeting?.keywords && order.targeting.keywords.length > 0) ? order.targeting.keywords.join(', ') : 'None';
+
+  // Content Source
+  const channelName = order.channel?.name || 'N/A';
+  const channelLink = order.channel?.link || 'N/A';
+
+  // Video List HTML
+  let videoListHtml = '';
+  if (order.videos && order.videos.length > 0) {
+    videoListHtml = order.videos.map((v, i) => `
+      <div style="padding:12px;background-color:#ffffff;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:8px;">
+        <p style="margin:0 0 4px;font-weight:bold;color:#111827;font-size:14px;">Video ${i + 1}: ${v.title || 'Untitled'}</p>
+        <p style="margin:0 0 4px;font-size:12px;"><a href="${v.link || '#'}" style="color:#3b82f6;text-decoration:none;">${v.link || 'No link'}</a></p>
+        ${v.viewsRequested ? `<p style="margin:0;font-size:11px;color:#6b7280;font-weight:bold;">Requested: ${v.viewsRequested.toLocaleString()} Views</p>` : ''}
+      </div>
+    `).join('');
+  } else if (order.youtubeLink) {
+    videoListHtml = `
+      <div style="padding:12px;background-color:#ffffff;border:1px solid #e5e7eb;border-radius:8px;">
+        <p style="margin:0 0 4px;font-weight:bold;color:#111827;font-size:14px;">Legacy YouTube Link</p>
+        <p style="margin:0;font-size:12px;"><a href="${order.youtubeLink}" style="color:#3b82f6;text-decoration:none;">${order.youtubeLink}</a></p>
+      </div>
+    `;
+  } else {
+    videoListHtml = '<p style="margin:0;font-size:13px;color:#9ca3af;font-style:italic;">No videos specified</p>';
+  }
+
+  const content = `
+    <h2 style="margin:0 0 20px;color:#111827;font-size:24px;font-weight:bold;">🚀 New Successful Order!</h2>
+    <p style="margin:0 0 20px;color:#374151;font-size:16px;line-height:1.6;">
+      Great news! A new order has been paid and verified.
+    </p>
+
+    <div style="background-color:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin-bottom:24px;">
+      <h3 style="margin:0 0-16px;color:#111827;font-size:16px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">General Info</h3>
+      <table style="width:100%;border-collapse:collapse;margin-top:12px;">
+        <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Order ID:</td><td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;text-align:right;">${orderId}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Customer:</td><td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;text-align:right;">${customerName} (${customerEmail})</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Campaign Type:</td><td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;text-align:right;">${campaignType.replace(/_/g, ' ').toUpperCase()}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Package:</td><td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;text-align:right;">${packageName}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Budget:</td><td style="padding:6px 0;color:#dc2626;font-size:15px;font-weight:bold;text-align:right;">${symbol}${amount.toLocaleString()}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Order Notes:</td><td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;text-align:right;">${notes}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Targeting Notes:</td><td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;text-align:right;">${targetingNotes}</td></tr>
+      </table>
+    </div>
+
+    <div style="background-color:#ffffff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin-bottom:24px;">
+      <h3 style="margin:0 0 16px;color:#111827;font-size:16px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">Targeting & Preferences</h3>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Country:</td><td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;text-align:right;">${country}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Goal:</td><td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;text-align:right;">${goal}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Duration:</td><td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;text-align:right;">${duration}</td></tr>
+        <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Strategy:</td><td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;text-align:right;">${strategy}</td></tr>
+        ${strategy === 'Manual' ? `
+          <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Gender:</td><td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;text-align:right;">${gender}</td></tr>
+          <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Ages:</td><td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;text-align:right;">${ages}</td></tr>
+          <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Interests:</td><td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;text-align:right;">${interests}</td></tr>
+          <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Keywords:</td><td style="padding:6px 0;color:#111827;font-size:13px;font-weight:600;text-align:right;">${keywords}</td></tr>
+        ` : ''}
+      </table>
+    </div>
+
+    <div style="background-color:#ffffff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin-bottom:24px;">
+      <h3 style="margin:0 0 16px;color:#111827;font-size:16px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">Videos & Content</h3>
+      ${videoListHtml}
+      <div style="margin-top:16px;padding-top:12px;border-top:1px solid #f3f4f6;">
+        <p style="margin:0;color:#6b7280;font-size:12px;">Channel: <strong style="color:#111827;">${channelName}</strong></p>
+        <p style="margin:4px 0 0;font-size:12px;"><a href="${channelLink}" style="color:#3b82f6;text-decoration:none;">Go to Channel Link</a></p>
+      </div>
+    </div>
+
+    <div style="background-color:#fef2f2;border:1px solid #fee2e2;border-radius:12px;padding:16px;margin-bottom:24px;">
+      <p style="margin:0;color:#991b1b;font-size:12px;font-weight:bold;">PAYMENT INFO</p>
+      <p style="margin:4px 0 0;color:#b91c1c;font-size:13px;">Gateway: <strong style="text-transform:uppercase;">${payment.gateway}</strong></p>
+      <p style="margin:2px 0 0;color:#b91c1c;font-size:13px;">Ref ID: <strong>${payment.paymentId || 'N/A'}</strong></p>
+    </div>
+  `;
+
+  const adminUrl = (process.env.FRONTEND_URL || 'http://localhost:5173') + '/admin';
+
+  return {
+    subject: `🚀 SUCCESSFUL ORDER: ${orderId} - ${symbol}${amount.toLocaleString()}`,
+    html: getEmailTemplate('New Order Notification', content, 'Go to Admin Dashboard', adminUrl),
+    text: `New Successful Order Details:\n\nOrder ID: ${orderId}\nCustomer: ${customerName} (${customerEmail})\nAmount: ${symbol}${amount}\n\nTargeting: ${country}, ${goal}, ${duration}\nStrategy: ${strategy}\n\nVideos:\n${(order.videos || []).map(v => `- ${v.title}: ${v.link}`).join('\n')}\n\nManage at: ${adminUrl}`,
+  };
+}
+
 // --- send wrapper ---
 async function sendEmail(to, subject, html, text) {
   const resendClient = createResendClient();
@@ -366,5 +474,11 @@ exports.sendPaymentReminderEmail = async (email, order) => {
 exports.sendStatusUpdateEmail = async (email, order, oldStatus, newStatus) => {
   const tpl = getStatusUpdateEmailTemplate(order, oldStatus, newStatus);
   return sendEmail(email, tpl.subject, tpl.html, tpl.text);
+};
+
+exports.sendAdminNewOrderNotification = async (order, payment) => {
+  const adminEmails = ['Shlok455@gmail.com', 'nikhilmendiratta2003@gmail.com'];
+  const tpl = getAdminNewOrderNotificationTemplate(order, payment);
+  return sendEmail(adminEmails, tpl.subject, tpl.html, tpl.text);
 };
 

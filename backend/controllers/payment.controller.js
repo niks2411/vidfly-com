@@ -3,7 +3,7 @@ const Order = require('../models/Order');
 const Payment = require('../models/Payment');
 const axios = require('axios');
 const crypto = require('crypto');
-const { sendPaymentSummaryEmail } = require('../utils/emailService');
+const { sendPaymentSummaryEmail, sendAdminNewOrderNotification } = require('../utils/emailService');
 const { awardReferralRewardOnFirstCampaign } = require('./freeViews.controller');
 
 // Cashfree Payment Gateway Configuration
@@ -469,6 +469,10 @@ const verifyCashfreePayment = async (req, res, next, order, paymentId) => {
         if (populatedOrder?.userId?.email) {
           await sendPaymentSummaryEmail(populatedOrder.userId.email, populatedOrder, payment);
           console.log(`Payment summary email sent to ${populatedOrder.userId.email}`);
+          
+          // Send admin notification
+          await sendAdminNewOrderNotification(populatedOrder, payment);
+          console.log(`Admin notification email sent for order ${populatedOrder.orderId}`);
         }
       } catch (emailError) {
         console.error('Failed to send payment summary email:', emailError);
@@ -604,6 +608,10 @@ exports.cashfreeWebhook = async (req, res, next) => {
         if (populatedOrder?.userId?.email) {
           await sendPaymentSummaryEmail(populatedOrder.userId.email, populatedOrder, payment);
           console.log(`Payment summary email sent to ${populatedOrder.userId.email} via webhook`);
+
+          // Send admin notification
+          await sendAdminNewOrderNotification(populatedOrder, payment);
+          console.log(`Admin notification email sent for order ${populatedOrder.orderId} via webhook`);
         }
       } catch (emailError) {
         console.error('Failed to send payment summary email via webhook:', emailError);
