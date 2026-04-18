@@ -38,6 +38,7 @@ function GetStartedContent() {
     const [checkingVerification, setCheckingVerification] = useState(true);
     const [referralCode, setReferralCode] = useState<string | null>(null);
     const [resendCooldown, setResendCooldown] = useState(0);
+    const [attempts, setAttempts] = useState(0);
 
     useEffect(() => {
         if (resendCooldown > 0) {
@@ -102,8 +103,19 @@ function GetStartedContent() {
             setOtpSent(true);
             setMessage("OTP sent to your email.");
             setResendCooldown(30);
+            
+            const data = await response.json().catch(() => ({}));
+            if (data?.resendCount) {
+                setAttempts(data.resendCount);
+            } else {
+                setAttempts(prev => prev + 1);
+            }
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Error sending OTP.");
+            const errorMsg = err instanceof Error ? err.message : "Error sending OTP.";
+            setError(errorMsg);
+            if (errorMsg.toLowerCase().includes("limit reached")) {
+                setAttempts(3);
+            }
         } finally {
             setSendingOtp(false);
         }
@@ -306,10 +318,12 @@ function GetStartedContent() {
                                 </button>
                                 <button 
                                     onClick={sendOtp} 
-                                    disabled={resendCooldown > 0} 
+                                    disabled={resendCooldown > 0 || attempts >= 3} 
                                     className="text-[#D32F2F] disabled:text-gray-300 transition-colors"
                                 >
-                                    {resendCooldown > 0 ? `Resend code in ${resendCooldown}s` : "Resend code"}
+                                    {attempts >= 3 
+                                        ? "Limit reached" 
+                                        : (resendCooldown > 0 ? `Resend code in ${resendCooldown}s` : "Resend code")}
                                 </button>
                             </div>
                         </div>

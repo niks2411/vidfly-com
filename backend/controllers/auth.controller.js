@@ -27,18 +27,37 @@ exports.sendOtp = async (req, res, next) => {
     }
 
     const email = value.email.toLowerCase();
+    
+    // Check if OTP was recently sent and limit resends
+    const existingToken = await OtpToken.findOne({ email });
+    let resendCount = 1;
+
+    if (existingToken) {
+      if (existingToken.count >= 3) {
+        console.log(`OTP resend limit reached for ${email}`);
+        return res.status(429).json({ 
+          message: 'OTP resend limit reached. Please try again after 10 minutes.' 
+        });
+      }
+      resendCount = existingToken.count + 1;
+      await OtpToken.deleteMany({ email });
+    }
+
     const otp = (Math.floor(100000 + Math.random() * 900000)).toString();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    console.log('Generated OTP for', email, ':', otp);
+    console.log(`Generated OTP for ${email} (Attempt ${resendCount}): ${otp}`);
 
-    await OtpToken.deleteMany({ email });
-    await OtpToken.create({ email, otp, expiresAt });
+    await OtpToken.create({ email, otp, expiresAt, count: resendCount });
 
     const result = await sendOtpEmail(email, otp);
 
     console.log('OTP email sent successfully:', result.messageId);
-    return res.json({ message: 'OTP sent', id: result.messageId || undefined });
+    return res.json({ 
+      message: 'OTP sent', 
+      id: result.messageId || undefined,
+      resendCount
+    });
   } catch (err) {
     console.error('Send OTP error:', err);
     return next(err);
