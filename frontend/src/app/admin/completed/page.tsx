@@ -29,6 +29,9 @@ type Order = {
     youtubeLink?: string;
     userId?: { name?: string; email?: string };
     targeting?: { country?: string; goal?: string; duration?: string; autoTargeting?: boolean; gender?: string; ages?: string[]; interests?: string[]; keywords?: string[]; };
+    viewsGenerated?: number;
+    subscribersGained?: number;
+    audienceReached?: number;
 };
 
 export default function AdminCompleted() {

@@ -404,6 +404,7 @@ exports.updateStats = async (req, res, next) => {
     const schema = Joi.object({
       viewsGenerated: Joi.number().min(0).default(0),
       subscribersGained: Joi.number().min(0).default(0),
+      audienceReached: Joi.number().min(0).default(0),
     });
     const { error, value } = schema.validate(req.body);
     if (error) return res.status(400).json({ message: error.message });
@@ -413,7 +414,8 @@ exports.updateStats = async (req, res, next) => {
       { orderId },
       { 
         viewsGenerated: value.viewsGenerated,
-        subscribersGained: value.subscribersGained
+        subscribersGained: value.subscribersGained,
+        audienceReached: value.audienceReached
       },
       { new: true }
     );

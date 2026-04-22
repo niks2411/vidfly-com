@@ -235,7 +235,7 @@ const Testimonials = () => {
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-red-600">100M+</div>
-              <div className="text-sm text-gray-600">Views Generated</div>
+              <div className="text-sm text-gray-600">Audience Reached</div>
             </div>
           </div>
         </div>

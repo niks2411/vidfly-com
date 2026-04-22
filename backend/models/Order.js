@@ -92,6 +92,7 @@ const OrderSchema = new mongoose.Schema(
     isRead: { type: Boolean, default: false },
     viewsGenerated: { type: Number, default: 0 },
     subscribersGained: { type: Number, default: 0 },
+    audienceReached: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

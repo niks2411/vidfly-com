@@ -39,6 +39,7 @@ type Order = {
     isRead?: boolean;
     viewsGenerated?: number;
     subscribersGained?: number;
+    audienceReached?: number;
 };
 
 const statusColors: Record<string, string> = {
@@ -67,6 +68,7 @@ export default function AdminPanel() {
     const [pendingStatus, setPendingStatus] = useState("");
     const [viewsGenerated, setViewsGenerated] = useState<string>("0");
     const [subscribersGained, setSubscribersGained] = useState<string>("0");
+    const [audienceReached, setAudienceReached] = useState<string>("0");
     const [stats, setStats] = useState<{ totalUsers: number; totalOrders: number; pendingOrders: number; successOrders: number } | null>(null);
 
     useEffect(() => {
@@ -191,7 +193,8 @@ export default function AdminPanel() {
                 },
                 body: JSON.stringify({
                     viewsGenerated: parseInt(viewsGenerated) || 0,
-                    subscribersGained: parseInt(subscribersGained) || 0
+                    subscribersGained: parseInt(subscribersGained) || 0,
+                    audienceReached: parseInt(audienceReached) || 0
                 })
             });
             if (!response.ok) throw new Error("Update failed");
@@ -208,6 +211,7 @@ export default function AdminPanel() {
         setSelectedOrder(order);
         setViewsGenerated(String(order.viewsGenerated || 0));
         setSubscribersGained(String(order.subscribersGained || 0));
+        setAudienceReached(String(order.audienceReached || 0));
         if (!order.isRead && token) {
             try {
                 await fetch(`${API_BASE_URL}/api/admin/orders/${order.orderId}/read`, {
@@ -443,29 +447,16 @@ export default function AdminPanel() {
                                         <h3 className="font-black italic text-red-500">ADMIN ACTIONS</h3>
                                         
                                         <div className="space-y-4 border-b border-slate-700 pb-5">
-                                            <div className="grid grid-cols-2 gap-3">
-                                                <div className="space-y-1.5">
-                                                    <p className="text-[10px] font-bold text-slate-400 uppercase">Views Generated</p>
-                                                    <Input 
-                                                        type="text" 
-                                                        value={viewsGenerated} 
-                                                        onChange={(e) => setViewsGenerated(e.target.value.replace(/[^0-9]/g, ''))}
-                                                        onFocus={(e) => { if (e.target.value === "0") setViewsGenerated(""); }}
-                                                        onBlur={(e) => { if (e.target.value === "") setViewsGenerated("0"); }}
-                                                        className="bg-slate-800 border-0 text-white h-10 rounded-lg font-bold"
-                                                    />
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <p className="text-[10px] font-bold text-slate-400 uppercase">Subs Gained</p>
-                                                    <Input 
-                                                        type="text" 
-                                                        value={subscribersGained} 
-                                                        onChange={(e) => setSubscribersGained(e.target.value.replace(/[^0-9]/g, ''))}
-                                                        onFocus={(e) => { if (e.target.value === "0") setSubscribersGained(""); }}
-                                                        onBlur={(e) => { if (e.target.value === "") setSubscribersGained("0"); }}
-                                                        className="bg-slate-800 border-0 text-white h-10 rounded-lg font-bold"
-                                                    />
-                                                </div>
+                                            <div className="space-y-1.5">
+                                                <p className="text-[10px] font-bold text-slate-400 uppercase">Audience Reached</p>
+                                                <Input 
+                                                    type="text" 
+                                                    value={audienceReached} 
+                                                    onChange={(e) => setAudienceReached(e.target.value.replace(/[^0-9]/g, ''))}
+                                                    onFocus={(e) => { if (e.target.value === "0") setAudienceReached(""); }}
+                                                    onBlur={(e) => { if (e.target.value === "") setAudienceReached("0"); }}
+                                                    className="bg-slate-800 border-0 text-white h-10 rounded-lg font-bold"
+                                                />
                                             </div>
                                             <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 font-bold" onClick={handleStatsUpdate}>UPDATE STATS</Button>
                                         </div>

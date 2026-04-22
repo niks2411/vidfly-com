@@ -50,8 +50,7 @@ type Order = {
         duration?: string;
     };
     freeViewsRedeemed?: number;
-    viewsGenerated?: number;
-    subscribersGained?: number;
+    audienceReached?: number;
 };
 
 const statusConfig: Record<string, { label: string; color: string; bg: string; dot: string }> = {
@@ -164,12 +163,9 @@ export default function MyCampaigns() {
 
     // Compute stats
     const totalVideosPromoted = orders.reduce((sum, o) => sum + (o.videos?.length || 0), 0);
-    const totalViewsGenerated = orders
+    const totalAudienceReached = orders
         .filter(o => o.status === "completed" || o.status === "in_progress")
-        .reduce((sum, o) => sum + (o.viewsGenerated || 0), 0);
-    const totalSubscribersGained = orders
-        .filter(o => o.status === "completed" || o.status === "in_progress")
-        .reduce((sum, o) => sum + (o.subscribersGained || 0), 0);
+        .reduce((sum, o) => sum + (o.audienceReached || 0), 0);
 
     // Get unique channels for the channel filter
     const uniqueChannels = Array.from(
@@ -208,20 +204,15 @@ export default function MyCampaigns() {
                 <h1 className="section-heading !text-[28px] !mb-6">Campaigns</h1>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-8">
+                <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-6 sm:mb-8">
                     <StatCard
                         label="Videos Promoted"
                         value={totalVideosPromoted}
                         icon={<Monitor className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400" />}
                     />
                     <StatCard
-                        label="Views Generated"
-                        value={totalViewsGenerated}
-                        icon={<Eye className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400" />}
-                    />
-                    <StatCard
-                        label="Subscribers Gained"
-                        value={totalSubscribersGained}
+                        label="Audience Reached"
+                        value={totalAudienceReached}
                         icon={<Users className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400" />}
                     />
                 </div>
@@ -474,16 +465,10 @@ function CampaignRow({ order, onDelete, deleting }: { order: Order; onDelete: ()
                             <span className="text-indigo-500 font-bold">{videoCount} videos</span>
                         </>
                     )}
-                    {(order.status === "completed" || order.status === "in_progress") && order.viewsGenerated !== undefined && (
+                    {(order.status === "completed" || order.status === "in_progress") && order.audienceReached !== undefined && (
                         <>
                             <span className="text-slate-300">|</span>
-                            <span className="text-blue-600 font-bold">Views Generated {order.viewsGenerated}</span>
-                        </>
-                    )}
-                    {(order.status === "completed" || order.status === "in_progress") && order.subscribersGained !== undefined && (
-                        <>
-                            <span className="text-slate-300">|</span>
-                            <span className="text-emerald-600 font-bold">Subscribers Gained {order.subscribersGained}</span>
+                            <span className="text-blue-600 font-bold">Audience Reached {order.audienceReached}</span>
                         </>
                     )}
                 </div>
