@@ -42,6 +42,14 @@ export default function RootLayout({
                     gtag('js', new Date());
                     gtag('config', 'G-7T7YS01LWV');`}
                 </Script>
+                {/* Google tag (gtag.js) - Google Ads */}
+                <Script src="https://www.googletagmanager.com/gtag/js?id=AW-17928293635" strategy="afterInteractive" />
+                <Script id="gads-init" strategy="afterInteractive">
+                    {`window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', 'AW-17928293635');`}
+                </Script>
             </head>
             <body className="antialiased font-founders text-[rgb(41,40,40)]">
                 {/* Google Tag Manager (noscript) */}
