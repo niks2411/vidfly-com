@@ -77,10 +77,10 @@ const Footer = () => {
             <h4 className="text-[15px] font-bold text-[#111] mb-5">Youtube Promotion</h4>
             <ul className="flex flex-col gap-3 font-medium">
               {[
-                { text: "Buy Youtube Views", path: "/get-started" },
-                { text: "Buy Youtube Subscribers", path: "/get-started" },
-                { text: "Buy Youtube Likes", path: "/get-started" },
-                { text: "Free Youtube Views", path: "/campaign/free-views" }
+                { text: "Buy Youtube Views", path: "/buy-youtube-views" },
+                { text: "Buy Youtube Subscribers", path: "/buy-youtube-subscribers" },
+                { text: "Buy Youtube Likes", path: "/buy-youtube-likes" },
+                { text: "Free Youtube Views", path: "/free-youtube-views" }
               ].map((item) => (
                 <li key={item.text}>
                   <Link href={item.path} onClick={scrollToTop} className="text-[14px] text-[rgb(41,40,40)] hover:text-[#E52D27] transition-colors">
@@ -189,7 +189,7 @@ const Footer = () => {
             </div>
             <div className="flex items-center gap-2">
               <img
-                src="https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/1200px-Flag_of_India.svg.png"
+                src="https://flagcdn.com/w40/in.png"
                 alt="India"
                 className="h-3 w-auto rounded-[1px] shadow-sm"
               />
