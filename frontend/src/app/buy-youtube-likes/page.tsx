@@ -137,7 +137,7 @@ export default function BuyYoutubeLikes() {
 
                     <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
                         <Animated delay={100}>
-                            <div className="bg-gray-50 rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                            <div className="bg-gray-50 rounded-[2rem] p-8 flex flex-col sm:flex-row items-center gap-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-center sm:text-left">
                                 <div className="relative w-32 h-32 flex-shrink-0">
                                     <Image src="/likes-why-1.png" alt="Reliable Service Provider" fill className="object-contain" />
                                 </div>
@@ -150,7 +150,7 @@ export default function BuyYoutubeLikes() {
                             </div>
                         </Animated>
                         <Animated delay={150}>
-                            <div className="bg-gray-50 rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                            <div className="bg-gray-50 rounded-[2rem] p-8 flex flex-col sm:flex-row items-center gap-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-center sm:text-left">
                                 <div className="relative w-32 h-32 flex-shrink-0">
                                     <Image src="/likes-why-2.png" alt="No Drop in Engagement" fill className="object-contain" />
                                 </div>
@@ -163,7 +163,7 @@ export default function BuyYoutubeLikes() {
                             </div>
                         </Animated>
                         <Animated delay={200}>
-                            <div className="bg-gray-50 rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                            <div className="bg-gray-50 rounded-[2rem] p-8 flex flex-col sm:flex-row items-center gap-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-center sm:text-left">
                                 <div className="relative w-32 h-32 flex-shrink-0">
                                     <Image src="/likes-why-3.png" alt="Transparent Pricing" fill className="object-contain" />
                                 </div>
@@ -176,7 +176,7 @@ export default function BuyYoutubeLikes() {
                             </div>
                         </Animated>
                         <Animated delay={250}>
-                            <div className="bg-gray-50 rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                            <div className="bg-gray-50 rounded-[2rem] p-8 flex flex-col sm:flex-row items-center gap-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-center sm:text-left">
                                 <div className="relative w-32 h-32 flex-shrink-0">
                                     <Image src="/likes-why-4.png" alt="Guaranteed Results" fill className="object-contain" />
                                 </div>
@@ -347,8 +347,8 @@ export default function BuyYoutubeLikes() {
                     <div className="grid md:grid-cols-2 gap-6">
                         {bulkPackages.map((pkg, index) => (
                             <Animated key={index} delay={100 + index * 50}>
-                                <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-between">
-                                    <div className="flex items-center gap-5">
+                                <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-0">
+                                    <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-5 text-center sm:text-left">
                                         <div className={`w-20 h-14 rounded-[14px] flex items-center justify-center shadow-sm ${pkg.bgIcon}`}>
                                             <Play className="w-6 h-6 text-white fill-current" />
                                         </div>
@@ -362,19 +362,19 @@ export default function BuyYoutubeLikes() {
                                         </div>
                                     </div>
                                     
-                                    <div className="flex items-center gap-6">
-                                        <div className="text-right">
+                                    <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full sm:w-auto">
+                                        <div className="text-center sm:text-right w-full sm:w-auto">
                                             <div className="text-[22px] font-semibold text-gray-900 leading-none mb-1">
                                                 ₹{pkg.price.toLocaleString('en-IN')}
                                             </div>
-                                            <div className="flex items-center gap-1.5 justify-end text-sm">
+                                            <div className="flex items-center gap-1.5 justify-center sm:justify-end text-sm">
                                                 <span className="text-gray-400 line-through">₹{pkg.originalPrice.toLocaleString('en-IN')}</span>
                                                 <span className="text-red-600 font-bold text-xs">{pkg.discount}</span>
                                             </div>
                                         </div>
                                         <Button 
                                             onClick={handleGetStarted}
-                                            className="bg-[#E42E2C] hover:bg-red-700 text-white rounded-none px-6 py-6 font-bold tracking-wide uppercase text-sm"
+                                            className="bg-[#E42E2C] hover:bg-red-700 text-white rounded-none px-6 py-6 font-bold tracking-wide uppercase text-sm w-full sm:w-auto"
                                         >
                                             Buy Now
                                         </Button>

@@ -104,7 +104,7 @@ export default function FreeYoutubeViews() {
                                     { step: "03", title: "Verify Email", desc: "Confirm your email address to activate your free views campaign." },
                                     { step: "04", title: "Watch It Grow", desc: "Sit back and watch as real, targeted views are delivered to your video." }
                                 ].map((item, i) => (
-                                    <div key={i} className="flex gap-6">
+                                    <div key={i} className="flex flex-col sm:flex-row gap-6 items-center sm:items-start text-center sm:text-left">
                                         <div className="flex-shrink-0 w-14 h-14 bg-red-50 text-red-600 font-bold text-xl flex items-center justify-center rounded-2xl">
                                             {item.step}
                                         </div>
@@ -293,7 +293,7 @@ export default function FreeYoutubeViews() {
                             { title: "Leverage YouTube Shorts", desc: "Cut your long-form videos into 30-second Shorts to tap into the massive mobile audience and redirect them to your main content." }
                         ].map((tip, i) => (
                             <Animated key={i} delay={100 + i * 50}>
-                                <div className="bg-gray-800 p-6 rounded-2xl flex gap-6">
+                                <div className="bg-gray-800 p-6 rounded-2xl flex flex-col sm:flex-row gap-6 items-center sm:items-start text-center sm:text-left">
                                     <div className="text-red-500 font-black text-3xl opacity-50">
                                         {i + 1}
                                     </div>

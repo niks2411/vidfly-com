@@ -138,8 +138,8 @@ export default function BuyYoutubeViews() {
                     <div className="grid md:grid-cols-2 gap-6">
                         {bulkPackages.map((pkg, index) => (
                             <Animated key={index} delay={100 + index * 50}>
-                                <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-between">
-                                    <div className="flex items-center gap-5">
+                                <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-0">
+                                    <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-5 text-center sm:text-left">
                                         <div className={`w-20 h-14 rounded-[14px] flex items-center justify-center shadow-sm ${pkg.bgIcon}`}>
                                             <Play className="w-6 h-6 text-white fill-current" />
                                         </div>
@@ -153,19 +153,19 @@ export default function BuyYoutubeViews() {
                                         </div>
                                     </div>
                                     
-                                    <div className="flex items-center gap-6">
-                                        <div className="text-right">
+                                    <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full sm:w-auto">
+                                        <div className="text-center sm:text-right w-full sm:w-auto">
                                             <div className="text-[22px] font-semibold text-gray-900 leading-none mb-1">
                                                 ₹{pkg.price.toLocaleString('en-IN')}
                                             </div>
-                                            <div className="flex items-center gap-1.5 justify-end text-sm">
+                                            <div className="flex items-center gap-1.5 justify-center sm:justify-end text-sm">
                                                 <span className="text-gray-400 line-through">₹{pkg.originalPrice.toLocaleString('en-IN')}</span>
                                                 <span className="text-red-600 font-bold text-xs">{pkg.discount}</span>
                                             </div>
                                         </div>
                                         <Button 
                                             onClick={handleGetStarted}
-                                            className="bg-[#E42E2C] hover:bg-red-700 text-white rounded-none px-6 py-6 font-bold tracking-wide uppercase text-sm"
+                                            className="bg-[#E42E2C] hover:bg-red-700 text-white rounded-none px-6 py-6 font-bold tracking-wide uppercase text-sm w-full sm:w-auto"
                                         >
                                             Buy Now
                                         </Button>
@@ -331,7 +331,7 @@ export default function BuyYoutubeViews() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="bg-red-50 rounded-[2rem] p-8 md:p-12 shadow-sm border border-red-100">
                         <div className="grid lg:grid-cols-12 gap-12 items-start">
-                            <div className="lg:col-span-5 sticky top-32 h-fit">
+                            <div className="lg:col-span-5 relative lg:sticky lg:top-32 h-fit">
                                 <Animated delay={100}>
                                     <div className="relative h-[400px] w-full flex items-center justify-center bg-white rounded-2xl shadow-sm p-8">
                                         <Image 
