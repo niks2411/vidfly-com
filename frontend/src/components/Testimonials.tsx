@@ -146,8 +146,7 @@ const Testimonials = () => {
               {getVisible().map((t, idx) => (
                 <div
                   key={`${t.name}-${idx}`}
-                  className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 relative overflow-hidden group"
-                  style={{ animation: "tcFadeIn 0.4s ease both" }}
+                  className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 relative overflow-hidden group animate-tc-fade-in"
                 >
                   {/* Background decoration */}
                   <div className="absolute top-0 right-0 w-16 h-16 bg-red-50 rounded-full -mr-8 -mt-8 group-hover:bg-red-100 transition-colors duration-500" />
@@ -241,20 +240,9 @@ const Testimonials = () => {
         </div>
       </div>
 
-      <style>{`
-        @keyframes tcFadeIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @media (max-width: 900px) {
-          .testimonials-grid { grid-template-columns: repeat(2, 1fr) !important; }
-        }
-        @media (max-width: 560px) {
-          .testimonials-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </section>
   );
 };
 
 export default Testimonials;
+

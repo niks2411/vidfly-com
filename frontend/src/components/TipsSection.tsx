@@ -135,28 +135,9 @@ const TipsSection = () => {
                 <div className="w-full h-1 bg-gradient-to-r from-red-600 to-red-400 mt-10 rounded-full"></div>
             </div>
 
-            <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        @keyframes fadeUp {
-          from {
-            opacity: 0;
-            transform: translateY(15px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
-        .animate-fade-up { opacity: 0; animation: fadeUp 0.6s ease-out forwards; }
-      `}</style>
         </section>
     );
 };
 
 export default TipsSection;
+

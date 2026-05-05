@@ -176,6 +176,9 @@ const VideoPromotionCalculator = () => {
                   value={views}
                   onChange={(e) => handleViewsChange(parseInt(e.target.value))}
                   className="w-full h-3 rounded-full appearance-none cursor-pointer slider"
+                  style={{
+                    background: `linear-gradient(to right, #ef4444 ${((views - 1000) / (100000 - 1000)) * 100}%, #fee2e2 ${((views - 1000) / (100000 - 1000)) * 100}%)`
+                  }}
                 />
               </div>
 
@@ -208,53 +211,6 @@ const VideoPromotionCalculator = () => {
           </div>
         </div>
 
-        <style>{`
-          .slider {
-            -webkit-appearance: none;
-            appearance: none;
-            background: linear-gradient(to right, 
-              #ef4444 ${((views - 1000) / (100000 - 1000)) * 100}%, 
-              #fee2e2 ${((views - 1000) / (100000 - 1000)) * 100}%);
-            outline: none;
-          }
-
-          .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 28px;
-            height: 28px;
-            background: linear-gradient(135deg, #dc2626, #ef4444);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
-            transition: all 0.3s ease;
-          }
-
-          .slider::-webkit-slider-thumb:hover {
-            transform: scale(1.15);
-            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.6);
-          }
-
-          .slider::-moz-range-thumb {
-            width: 28px;
-            height: 28px;
-            background: linear-gradient(135deg, #dc2626, #ef4444);
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
-            transition: all 0.3s ease;
-          }
-
-          .slider::-moz-range-thumb:hover {
-            transform: scale(1.15);
-            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.6);
-          }
-
-          .slider::-moz-range-track {
-            background: transparent;
-          }
-        `}</style>
       </div>
     </section>
   );

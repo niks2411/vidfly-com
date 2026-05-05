@@ -454,6 +454,17 @@ button {
   animation: marquee 20s linear infinite;
 }
 
+@keyframes marquee-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-marquee-reverse {
+  display: flex;
+  width: max-content;
+  animation: marquee-reverse 20s linear infinite;
+}
+
 /* ─── Page-specific animations (moved from style jsx global) ─────────── */
 .animation-delay-2500 { animation-delay: 2.5s; }
 
@@ -514,6 +525,253 @@ button {
   }
 }
 
+/* ─── VideoShowcase component ────────────────────────────────────────── */
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-gradient {
+  animation: gradient 4s ease infinite;
+}
+
+/* ─── VideoPromotionCalculator component ───────────────────────────────── */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+  transition: all 0.3s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.6);
+}
+
+.slider::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+  transition: all 0.3s ease;
+}
+
+.slider::-moz-range-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.6);
+}
+
+.slider::-moz-range-track {
+  background: transparent;
+}
+
+/* ─── ComparisonTable component ───────────────────────────────────────── */
+.ct-section {
+  background: #fff;
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1rem, 2vw, 2rem);
+  font-family: 'Founders Grotesk', sans-serif;
+}
+
+.ct-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ct-header-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.ct-header-left {
+  flex: 1;
+}
+
+.ct-logo-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.ct-logo-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(100px, 12vw, 140px);
+  height: clamp(60px, 7vw, 80px);
+  border-radius: 0.625rem;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.ct-vidflyy-card {
+  border: 2.5px solid #2563eb;
+}
+
+.ct-google-card {
+  border: 1.5px solid #d1d5db;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ct-logo-img {
+  height: 30%;
+  width: auto;
+  object-fit: contain;
+}
+
+.ct-gads-icon {
+  width: clamp(20px, 2.5vw, 28px);
+  height: clamp(20px, 2.5vw, 28px);
+  object-fit: contain;
+}
+
+.ct-gads-text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #333;
+  white-space: nowrap;
+}
+
+.ct-table {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ct-row {
+  display: grid;
+  grid-template-columns: 1fr 100px 100px;
+  align-items: center;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.ct-row:last-child {
+  border-bottom: none;
+}
+
+.ct-row-alt {
+  background: #f9fafb;
+}
+
+.ct-feat {
+  padding: 1.25rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111;
+  line-height: 1.4;
+}
+
+.ct-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.ct-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ct-check { background: #2563eb; }
+.ct-cross { background: #ef4444; }
+
+@media (max-width: 1024px) {
+  .ct-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .ct-logo-row {
+    width: 100%;
+    justify-content: flex-end;
+    margin-bottom: 0;
+  }
+
+  .ct-logo-card {
+    width: 120px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ct-section { padding: 40px 16px; }
+  .ct-header-left { margin-top: 0; }
+  .ct-logo-card { width: 100px; height: 60px; }
+  
+  .ct-row {
+    grid-template-columns: 1fr 50px 50px;
+  }
+
+  .ct-feat {
+    padding: 1rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .ct-cell {
+    padding: 0.5rem;
+  }
+
+  .ct-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .ct-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* ─── TipsSection component ──────────────────────────────────────────── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up { opacity: 0; animation: fadeUp 0.6s ease-out forwards; }
+
+/* ─── Testimonials component ─────────────────────────────────────────── */
+@keyframes tcFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-tc-fade-in {
+  animation: tcFadeIn 0.4s ease both;
+}
+
+/* ─── Global Overrides ────────────────────────────────────────────────── */
 /* Reduce motion for accessibility and battery saving */
 @media (prefers-reduced-motion: reduce) {
 
@@ -530,7 +788,7 @@ button {
 /* Dark mode optimizations */
 @media (prefers-color-scheme: dark) {
   body {
-    color-scheme: white;
+    color-scheme: light;
   }
 }
 
