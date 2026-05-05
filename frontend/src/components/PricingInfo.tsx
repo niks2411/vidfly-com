@@ -82,13 +82,6 @@ const PricingInfo = () => {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes draw-circle {
-          to {
-            stroke-dashoffset: 0;
-          }
-        }
-      `}</style>
     </section>
   );
 };

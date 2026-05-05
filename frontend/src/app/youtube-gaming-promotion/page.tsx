@@ -552,20 +552,7 @@ export default function YoutubeGamingPromotion() {
                 description="Everything you need to know about promoting your gaming channel on YouTube with Vidflyy."
             />
 
-            <style jsx global>{`
-        .gaming-hero-desc { color: rgba(255,255,255,0.9) !important; }
-        .gaming-white-heading { color: #ffffff !important; }
-        @keyframes scroll-tags {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-scroll-tags { animation: scroll-tags 25s linear infinite; }
-        @keyframes scroll-games {
-          0% { transform: translateX(-50%); }
-          100% { transform: translateX(0); }
-        }
-        .animate-scroll-games { animation: scroll-games 20s linear infinite; }
-      `}</style>
+
         </div>
     );
 }

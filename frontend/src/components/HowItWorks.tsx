@@ -39,14 +39,14 @@ const HowItWorks = () => {
                 {/* Header Section from Image 2 */}
                 <div className="mb-10 lg:mb-12">
                     <div className="inline-block bg-[#E52D27] text-white text-[13px] font-bold px-4 py-2 rounded-sm mb-8">
-                        How VIDFLLY Works
+                        How VIDFLYY Works
                     </div>
                     <h2 className="section-heading mb-6 max-w-2xl">
                         Get your video in front of real viewers — instantly.
                     </h2>
                     <p className="section-desc !mx-0 !text-left max-w-3xl">
                         Just add your video, choose your growth goal, and launch your campaign in
-                        seconds. <span className="font-bold">VIDFLLY's</span> system delivers real views, subscribers, and
+                        seconds. <span className="font-bold">VIDFLYY's</span> system delivers real views, subscribers, and
                         engagement with full transparency and control.
                     </p>
                 </div>

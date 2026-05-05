@@ -454,6 +454,66 @@ button {
   animation: marquee 20s linear infinite;
 }
 
+/* ─── Page-specific animations (moved from style jsx global) ─────────── */
+.animation-delay-2500 { animation-delay: 2.5s; }
+
+/* Scroll tags animation (travel, health-beauty, gaming pages) */
+@keyframes scroll-tags {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-scroll-tags { animation: scroll-tags 25s linear infinite; }
+
+/* Scroll games animation (gaming page) */
+@keyframes scroll-games {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+.animate-scroll-games { animation: scroll-games 20s linear infinite; }
+
+/* Spin slow animation (music page) */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow { animation: spin-slow 15s linear infinite; }
+
+/* Hero description overrides for dark hero sections */
+.travel-hero-desc { color: #ffffff !important; opacity: 0.9; }
+.health-hero-desc { color: #ffffff !important; opacity: 0.9; }
+.music-hero-desc { color: rgba(255,255,255,0.9) !important; }
+.music-white-heading { color: #ffffff !important; }
+.gaming-hero-desc { color: rgba(255,255,255,0.9) !important; }
+.gaming-white-heading { color: #ffffff !important; }
+
+/* Custom slider thumb (pricing page) */
+.custom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  background: #111827;
+  border: 7px solid #2563EB;
+  cursor: pointer;
+  box-shadow: 0 0 0 4px #F9FAFB;
+}
+.custom-slider::-moz-range-thumb {
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  background: #111827;
+  border: 7px solid #2563EB;
+  cursor: pointer;
+  box-shadow: 0 0 0 4px #F9FAFB;
+}
+
+/* Draw circle animation (PricingInfo component) */
+@keyframes draw-circle {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* Reduce motion for accessibility and battery saving */
 @media (prefers-reduced-motion: reduce) {
 

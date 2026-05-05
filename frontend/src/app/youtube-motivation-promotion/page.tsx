@@ -19,6 +19,18 @@ import {
 import { promotionPackages } from "@/lib/constants";
 import { Animated } from "@/components/Animated";
 import { Counter } from "@/components/Counter";
+import FAQ from "@/components/FAQ";
+
+const motivationFaqs = [
+    { question: "What is YouTube motivation promotion and how does it work?", answer: "YouTube motivation promotion is a strategy to increase views, watch time, and subscribers for motivational videos using targeted advertising. Vidflyy promotes your content through Google Ads to users who regularly watch motivational speeches, success stories, and self-improvement content, ensuring highly relevant audience reach." },
+    { question: "How can I promote motivational videos on YouTube effectively?", answer: "The most effective way to promote motivational videos on YouTube is through targeted ad campaigns. With Vidflyy, you can launch campaigns that reach audiences interested in motivation, productivity, and personal growth, helping you gain real views and engagement." },
+    { question: "Can YouTube motivation promotion help grow my channel faster?", answer: "Yes, motivational content performs exceptionally well on YouTube due to high watch time and repeat viewership. By promoting your videos to the right audience, you can increase engagement, improve retention, and accelerate your channel growth." },
+    { question: "Are the views from YouTube motivation promotion real or fake?", answer: "All views generated through Vidflyy are 100% real. Your videos are promoted using Google Ads to genuine users, ensuring no bots, fake views, or spam traffic, making it safe for long-term channel growth." },
+    { question: "What type of motivational content can I promote?", answer: "You can promote a wide range of motivational content including speeches, success stories, life lessons, productivity tips, mindset videos, and inspirational shorts, as long as they comply with YouTube and advertising policies." },
+    { question: "How quickly can I see results from motivational video promotion?", answer: "Most campaigns are launched within 24-48 hours after setup. Once live, you can start seeing real views, engagement, and audience interaction from users interested in motivational content almost immediately." },
+    { question: "Will YouTube motivation promotion help me gain subscribers?", answer: "Yes, when your videos are shown to people interested in motivation and self-improvement, they are more likely to subscribe to your channel, leading to consistent and long-term growth." },
+    { question: "Why should I use YouTube motivation promotion instead of organic growth?", answer: "Organic growth can take time and consistent effort. YouTube motivation promotion gives your videos an initial boost in visibility and engagement, helping them perform better in YouTube’s algorithm and increasing your chances of ranking in search and recommendations." }
+];
 
 export default function YoutubeMotivationPromotion() {
     const router = useRouter();
@@ -341,26 +353,7 @@ export default function YoutubeMotivationPromotion() {
             </section>
 
             {/* FAQ */}
-            <section className="py-16">
-                <div className="max-w-4xl mx-auto px-4">
-                    <Animated delay={80}><h3 className="text-2xl font-semibold mb-6">Frequently Asked Questions</h3></Animated>
-
-                    <div className="space-y-4">
-                        {[
-                            { q: "Do motivational shorts perform well?", a: "Yes — they have the highest retention and reach on YouTube." },
-                            { q: "Are viewers real?", a: "All promotions run through Google Ads targeting real users." },
-                            { q: "Can you promote long speeches?", a: "Yes — we optimize for long retention and engagement." },
-                        ].map((f, i) => (
-                            <Animated key={f.q} delay={120 + i * 70}>
-                                <details className="p-4 border rounded-lg">
-                                    <summary className="font-semibold cursor-pointer">{f.q}</summary>
-                                    <p className="mt-2 text-sm">{f.a}</p>
-                                </details>
-                            </Animated>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <FAQ items={motivationFaqs} />
 
             {/* FINAL CTA */}
             <section className="py-16 bg-gradient-to-br from-red-600 to-red-700 text-white">
@@ -381,23 +374,7 @@ export default function YoutubeMotivationPromotion() {
                 </div>
             </section>
 
-            <style jsx global>{`
-        @keyframes blob {
-          0%,100% { transform: translate(0,0) scale(1); }
-          33% { transform: translate(35px,-45px) scale(1.05); }
-          66% { transform: translate(-30px,20px) scale(0.95); }
-        }
-        .animate-blob { animation: blob 8s infinite; }
-        .animation-delay-2500 { animation-delay: 2.5s; }
-        .animate-pulse {
-          animation: pulse 1.6s ease-in-out infinite;
-        }
-        @keyframes pulse {
-          0% { transform: scale(1); opacity: 0.95; }
-          50% { transform: scale(1.06); opacity: 1; }
-          100% { transform: scale(1); opacity: 0.95; }
-        }
-      `}</style>
+
         </div>
     );
 }

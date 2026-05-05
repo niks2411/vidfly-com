@@ -203,7 +203,7 @@ export default function YoutubeMusicPromotion() {
                                         Trusted by Growing Creators Worldwide
                                     </h3>
                                     <p className="text-[#475569] text-[16px] lg:text-[18px] leading-relaxed font-medium">
-                                        Thousands of creators use VIDFLLY to promote their content and reach new audiences through real YouTube campaigns.
+                                        Thousands of creators use VIDFLYY to promote their content and reach new audiences through real YouTube campaigns.
                                     </p>
                                 </div>
                                 <div className="md:w-[40%] relative min-h-[250px] md:min-h-full overflow-hidden">
@@ -365,28 +365,13 @@ export default function YoutubeMusicPromotion() {
             />
 
 
-            <FAQ 
-                items={musicFaqs} 
+            <FAQ
+                items={musicFaqs}
                 title="Frequently Asked Question - Youtube Music Promotion"
                 description="Everything you need to know about promoting your music on YouTube with Vidflyy."
             />
 
-            <style jsx global>{`
-        @keyframes blob {
-          0%,100% { transform: translate(0,0) scale(1); }
-          33% { transform: translate(30px,-40px) scale(1.05); }
-          66% { transform: translate(-20px,20px) scale(0.95); }
-        }
-        .animate-blob { animation: blob 8s infinite; }
-        .animation-delay-2000 { animation-delay: 2s; }
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .animate-spin-slow { animation: spin-slow 15s linear infinite; }
-        .music-hero-desc { color: rgba(255,255,255,0.9) !important; }
-        .music-white-heading { color: #ffffff !important; }
-      `}</style>
+
         </div>
     );
 }

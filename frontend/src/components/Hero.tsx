@@ -76,7 +76,7 @@ const Hero = ({ showStats }: HeroProps) => {
                   {[
                     "Full control from your dashboard",
                     "100% Real Viewers. Zero Bots.",
-                    "Try Risk-Free with VIDFLLY",
+                    "Try Risk-Free with VIDFLYY",
                   ].map((text, i) => (
                     <li key={i} className="flex items-center gap-3 text-[#0E172B] font-semibold text-sm">
                       <div className="flex-shrink-0">

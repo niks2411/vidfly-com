@@ -243,27 +243,7 @@ export default function PricingPage() {
             <PricingInfo />
             <PromotionBanner />
 
-            <style jsx global>{`
-                .custom-slider::-webkit-slider-thumb {
-                    -webkit-appearance: none;
-                    height: 28px;
-                    width: 28px;
-                    border-radius: 50%;
-                    background: #111827;
-                    border: 7px solid #2563EB;
-                    cursor: pointer;
-                    box-shadow: 0 0 0 4px #F9FAFB;
-                }
-                .custom-slider::-moz-range-thumb {
-                    height: 28px;
-                    width: 28px;
-                    border-radius: 50%;
-                    background: #111827;
-                    border: 7px solid #2563EB;
-                    cursor: pointer;
-                    box-shadow: 0 0 0 4px #F9FAFB;
-                }
-            `}</style>
+
         </div>
     );
 }

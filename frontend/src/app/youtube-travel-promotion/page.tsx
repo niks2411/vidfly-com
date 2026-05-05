@@ -542,14 +542,7 @@ export default function YoutubeTravelPromotion() {
                 </div>
             </section>
 
-            <style jsx global>{`
-        .travel-hero-desc { color: #ffffff !important; opacity: 0.9; }
-        @keyframes scroll-tags {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-scroll-tags { animation: scroll-tags 25s linear infinite; }
-      `}</style>
+
         </div >
     );
 }
