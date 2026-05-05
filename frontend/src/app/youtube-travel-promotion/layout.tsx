@@ -1,8 +1,8 @@
 import { constructMetadata } from "@/lib/seo";
 
 export const metadata = constructMetadata({
-    title: "YouTube Travel Channel Promotion - Vidflyy",
-    description: "Share your adventures. Promote your travel vlogs and reach travel enthusiasts worldwide.",
+    title: "Vidflyy - YouTube Travel Promotion (Get Real Travel Audience)",
+    description: "Promote your travel videos to real viewers worldwide. Boost views, engagement & subscribers with safe and fast YouTube campaigns.",
     canonical: "https://www.vidflyy.in/youtube-travel-promotion",
 });
 

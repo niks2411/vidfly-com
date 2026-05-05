@@ -20,6 +20,7 @@ import { promotionPackages } from "@/lib/constants";
 import { Animated } from "@/components/Animated";
 import { Counter } from "@/components/Counter";
 import FAQ from "@/components/FAQ";
+import { FAQSchema } from "@/components/Schema";
 
 const motivationFaqs = [
     { question: "What is YouTube motivation promotion and how does it work?", answer: "YouTube motivation promotion is a strategy to increase views, watch time, and subscribers for motivational videos using targeted advertising. Vidflyy promotes your content through Google Ads to users who regularly watch motivational speeches, success stories, and self-improvement content, ensuring highly relevant audience reach." },
@@ -80,6 +81,7 @@ export default function YoutubeMotivationPromotion() {
 
     return (
         <div className="min-h-screen bg-white font-founders">
+            <FAQSchema items={motivationFaqs} />
             {/* HERO */}
             <header className="relative overflow-hidden bg-gradient-to-br from-yellow-50 to-white py-24 lg:py-32">
                 <div className="absolute -left-32 -top-24 w-80 h-80 bg-yellow-200 rounded-full opacity-30 blur-xl animate-blob"></div>

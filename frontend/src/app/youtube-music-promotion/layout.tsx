@@ -1,8 +1,8 @@
 import { constructMetadata } from "@/lib/seo";
 
 export const metadata = constructMetadata({
-    title: "YouTube Music Video Promotion - Vidflyy",
-    description: "Get your music heard. Promote your music videos to the right audience and increase your views and fan base.",
+    title: "Vidflyy - YouTube Music Promotion (Get Real Views & Fans Fast)",
+    description: "Promote your music on YouTube and reach real listeners instantly. Boost views, engagement & subscribers with safe, targeted campaigns.",
     canonical: "https://www.vidflyy.in/youtube-music-promotion",
 });
 

@@ -1,8 +1,8 @@
 import { constructMetadata } from "@/lib/seo";
 
 export const metadata = constructMetadata({
-    title: "YouTube Health & Beauty Channel Promotion - Vidflyy",
-    description: "Reach beauty and wellness lovers. Promote your tutorials and reviews to a high-engagement audience.",
+    title: "Vidflyy - YouTube Beauty Promotion (Get Real Views & Subscribers)",
+    description: "Promote skincare, makeup & wellness videos to the right audience. Get real engagement, views & subscribers—no bots, just results.",
     canonical: "https://www.vidflyy.in/youtube-health-beauty-promotion",
 });
 

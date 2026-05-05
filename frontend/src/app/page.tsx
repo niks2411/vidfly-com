@@ -8,6 +8,13 @@ import VideoShowcaseNew from "@/components/VideoShowcaseNew";
 import WeeklyBudgetCTA from "@/components/WeeklyBudgetCTA";
 import ComparisonTable from "@/components/ComparisonTable";
 import FAQ from "@/components/FAQ";
+import { constructMetadata } from "@/lib/seo";
+import { FAQSchema } from "@/components/Schema";
+
+export const metadata = constructMetadata({
+  title: "Vidflyy - YouTube Video Promotion Made Easy (Real Views & Subscribers Fast)",
+  description: "Launch YouTube growth campaigns in seconds. Get real views, subscribers & engagement with zero bots. Full control. Try risk-free today!",
+});
 
 const homeFaqs = [
   {
@@ -47,6 +54,7 @@ const homeFaqs = [
 export default function Home() {
     return (
         <div className="min-h-screen bg-white font-founders home-page-container">
+            <FAQSchema items={homeFaqs} />
             <Hero showStats={true} />
             <GoogleAdsSection />
             <HowItWorks />

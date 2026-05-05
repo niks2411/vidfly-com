@@ -28,8 +28,6 @@ const CrossIcon = () => (
   </div>
 );
 
-const COL_ICON = "var(--ct-col, clamp(72px, 12vw, 140px))";
-
 const ComparisonTable = () => {
   const router = useRouter();
 

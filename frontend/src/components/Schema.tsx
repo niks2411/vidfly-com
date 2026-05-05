@@ -46,3 +46,26 @@ export const ServiceSchema = () => {
         />
     );
 };
+
+export const FAQSchema = ({ items }: { items: { question: string; answer: string }[] }) => {
+    const schema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": items.map((item) => ({
+            "@type": "Question",
+            "name": item.question,
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": item.answer,
+            },
+        })),
+    };
+
+    return (
+        <Script
+            id={`faq-schema-${Math.random().toString(36).substr(2, 9)}`}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+    );
+};

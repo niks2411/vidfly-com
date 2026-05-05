@@ -1,8 +1,8 @@
 import { constructMetadata } from "@/lib/seo";
 
 export const metadata = constructMetadata({
-    title: "YouTube Motivational Channel Promotion - Vidflyy",
-    description: "Inspire more people. Grow your motivational and educational channel with targeted growth campaigns.",
+    title: "Vidflyy - YouTube Motivation Promotion (Boost Views & Growth)",
+    description: "Grow your motivational channel with real viewers. Get more watch time, subscribers & engagement with targeted YouTube campaigns.",
     canonical: "https://www.vidflyy.in/youtube-motivation-promotion",
 });
 

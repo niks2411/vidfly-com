@@ -16,14 +16,17 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
             infinite: false,
         });
 
+        let isActive = true;
         function raf(time: number) {
+            if (!isActive) return;
             lenis.raf(time);
             requestAnimationFrame(raf);
         }
-
+        
         requestAnimationFrame(raf);
 
         return () => {
+            isActive = false;
             lenis.destroy();
         };
     }, []);

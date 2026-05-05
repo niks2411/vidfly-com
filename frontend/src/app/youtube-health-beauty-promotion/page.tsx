@@ -8,6 +8,43 @@ import { useRouter } from "next/navigation";
 import { CheckCircle, ChevronDown, Heart, Sparkles, Camera, Droplets } from "lucide-react";
 import { Animated } from "@/components/Animated";
 import GoogleAdsSection from "@/components/GoogleAdsSection";
+import FAQ from "@/components/FAQ";
+import { FAQSchema } from "@/components/Schema";
+
+const beautyFaqs = [
+    {
+        question: "What is YouTube health and beauty promotion and how does it work?",
+        answer: "YouTube health and beauty promotion is a strategy to increase views, watch time, and subscribers for beauty and wellness videos using targeted advertising. Vidflyy promotes your content through Google Ads to users interested in skincare, makeup, fitness, and wellness content, ensuring relevant audience reach."
+    },
+    {
+        question: "How can I promote my beauty videos on YouTube effectively?",
+        answer: "The most effective way to promote beauty videos on YouTube is through targeted ad campaigns. With Vidflyy, you can launch campaigns that show your makeup tutorials, skincare routines, and product reviews to users actively watching similar content."
+    },
+    {
+        question: "Can YouTube beauty promotion help grow my skincare or makeup channel?",
+        answer: "Yes, YouTube beauty promotion helps creators gain real views, improve watch time, and attract subscribers. Since your videos are shown to beauty enthusiasts, it increases engagement and helps grow your channel faster."
+    },
+    {
+        question: "Are the views from YouTube health and beauty promotion real?",
+        answer: "Yes, all views generated through Vidflyy are 100% real. The platform uses Google Ads to promote your content to genuine users, ensuring no bots, fake views, or spam traffic."
+    },
+    {
+        question: "What type of health and beauty videos can I promote?",
+        answer: "You can promote a wide range of content including skincare routines, makeup tutorials, product reviews, fitness videos, wellness guides, and lifestyle beauty content, as long as they comply with YouTube and advertising policies."
+    },
+    {
+        question: "How long does it take to see results from beauty video promotion?",
+        answer: "Most campaigns are launched within 24 to 48 hours after setup. Once live, you can start seeing real views, engagement, and audience interaction from beauty and wellness viewers quickly."
+    },
+    {
+        question: "Will YouTube beauty promotion help me gain subscribers?",
+        answer: "Yes, when your content is shown to the right audience, viewers who are interested in beauty and wellness are more likely to subscribe, increasing your channel’s growth and long-term engagement."
+    },
+    {
+        question: "Why should I use a YouTube health and beauty promotion service instead of organic growth?",
+        answer: "Organic growth takes time and consistency, while YouTube promotion accelerates your results by giving your videos initial visibility, engagement, and traction, helping you perform better in YouTube search and recommendations."
+    }
+];
 
 function FAQItem({ question, answer }: { question: string, answer: string }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -79,6 +116,7 @@ export default function YoutubeHealthBeautyPromotion() {
 
     return (
         <div className="min-h-screen bg-white font-founders">
+            <FAQSchema items={beautyFaqs} />
             {/* HERO */}
             <div className="px-2 lg:px-4">
                 <header className="relative w-full min-h-[600px] flex items-center bg-[#0f172a] overflow-hidden">
@@ -412,37 +450,11 @@ export default function YoutubeHealthBeautyPromotion() {
                 </div>
             </section>
 
-            {/* FAQ SECTION */}
-            <section className="pb-24 bg-white font-founders">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="section-heading !text-left mb-12">
-                        Frequently Asked Questions
-                    </h2>
-
-                    <div className="space-y-4">
-                        {[
-                            {
-                                q: "How long does YouTube health & beauty promotion take?",
-                                a: "On average, campaign setup and approval take 24–48 hours. Once approved, you'll start seeing real engagement from beauty enthusiasts immediately."
-                            },
-                            {
-                                q: "Can I promote any beauty or wellness video?",
-                                a: "Yes, as long as it complies with YouTube and Google Ads policies. We promote tutorials, skincare routines, makeup reviews, product hauls, and more."
-                            },
-                            {
-                                q: "Will promotion help me gain subscribers?",
-                                a: "Yes. By showing your content to a targeted beauty-loving audience, you increase the likelihood of attracting subscribers who genuinely love your content."
-                            },
-                            {
-                                q: "What happens if my video gets disapproved?",
-                                a: "If Google Ads disapproves a video (due to policy reasons like health claims or content), our team will help you fix the issue or you can choose a different video for promotion."
-                            }
-                        ].map((faq, idx) => (
-                            <FAQItem key={idx} question={faq.q} answer={faq.a} />
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <FAQ 
+                items={beautyFaqs} 
+                title="Frequently Asked Questions - Youtube Beauty Promotion"
+                description="Everything you need to know about promoting your beauty channel on YouTube with Vidflyy."
+            />
 
 
         </div>

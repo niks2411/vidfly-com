@@ -5,12 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Check, Info, ShieldCheck, Zap, TrendingUp, Users, Youtube, Star } from "lucide-react";
 import { Animated } from "@/components/Animated";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import FAQ from "@/components/FAQ";
 
 const faqs = [
     {
@@ -308,38 +303,11 @@ export default function FreeYoutubeViews() {
                 </div>
             </section>
 
-            {/* FAQ SECTION */}
-            <section className="py-16 md:py-24">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <Animated delay={60}>
-                        <div className="text-center mb-12">
-                            <h2 className="section-heading !mb-4">
-                                Frequently Asked Questions
-                            </h2>
-                            <p className="section-desc">
-                                Got questions about the free trial? We've got answers.
-                            </p>
-                        </div>
-                    </Animated>
-
-                    <Animated delay={150}>
-                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
-                            <Accordion type="single" collapsible className="w-full">
-                                {faqs.map((faq, index) => (
-                                    <AccordionItem key={index} value={`item-${index}`} className="border-b border-gray-100 last:border-0">
-                                        <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 hover:text-red-600 py-6 transition-colors">
-                                            {faq.question}
-                                        </AccordionTrigger>
-                                        <AccordionContent className="section-desc !text-left pb-6">
-                                            {faq.answer}
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                ))}
-                            </Accordion>
-                        </div>
-                    </Animated>
-                </div>
-            </section>
+            <FAQ 
+                items={faqs} 
+                title="Frequently Asked Questions - Free YouTube Views"
+                description="Everything you need to know about our 1000 free views trial."
+            />
         </div>
     );
 }

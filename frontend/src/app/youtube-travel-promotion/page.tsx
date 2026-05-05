@@ -8,6 +8,43 @@ import { useRouter } from "next/navigation";
 import { Youtube, CheckCircle, ChevronDown, MapPin, Globe, Compass, Plane, Mountain, Tent, Camera } from "lucide-react";
 import { Animated } from "@/components/Animated";
 import GoogleAdsSection from "@/components/GoogleAdsSection";
+import FAQ from "@/components/FAQ";
+import { FAQSchema } from "@/components/Schema";
+
+const travelFaqs = [
+    {
+        question: "What is YouTube travel promotion and how does it work?",
+        answer: "YouTube travel promotion is a strategy to increase views, watch time, and subscribers for travel videos using targeted advertising. With Vidflyy, your travel content is promoted through Google Ads to users who actively watch travel vlogs, destination guides, and adventure videos, ensuring highly relevant reach."
+    },
+    {
+        question: "How can I promote my travel videos on YouTube effectively?",
+        answer: "The most effective way to promote travel videos on YouTube is through targeted ad campaigns. Vidflyy allows you to simply add your video, set your budget, and launch a campaign that reaches real travel enthusiasts based on their interests and viewing behavior."
+    },
+    {
+        question: "Can YouTube travel promotion help me grow my travel vlog channel?",
+        answer: "Yes, YouTube travel promotion helps travel vloggers gain real views, improve watch time, and attract subscribers. Since your videos are shown to people already interested in travel content, the chances of engagement and channel growth increase significantly."
+    },
+    {
+        question: "Are the views from YouTube travel promotion real or fake?",
+        answer: "All views generated through Vidflyy are 100% real. Your travel videos are promoted using Google Ads to genuine users, ensuring no bots, fake views, or spam traffic, making it safe for long-term channel growth."
+    },
+    {
+        question: "What types of travel videos can I promote?",
+        answer: "You can promote all types of travel content including travel vlogs, destination guides, hotel reviews, drone cinematics, adventure videos, and cultural experiences, as long as they comply with YouTube and advertising policies."
+    },
+    {
+        question: "How long does it take to see results from travel video promotion?",
+        answer: "Most campaigns are launched within 24 to 48 hours after setup. Once live, you can start seeing views, engagement, and audience interaction from real travel viewers almost immediately."
+    },
+    {
+        question: "Will YouTube travel promotion help me get international subscribers?",
+        answer: "Yes, Vidflyy allows you to target global audiences. By promoting your travel videos to viewers across different countries, you can attract international subscribers and grow a worldwide audience base."
+    },
+    {
+        question: "Why should I choose a YouTube travel promotion service instead of organic growth?",
+        answer: "Organic growth on YouTube can be slow and unpredictable. YouTube travel promotion accelerates your growth by giving your videos an initial boost in views and engagement, which helps improve performance in YouTube’s algorithm and increases your chances of ranking in search and recommendations."
+    }
+];
 
 function FAQItem({ question, answer }: { question: string, answer: string }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -79,6 +116,7 @@ export default function YoutubeTravelPromotion() {
 
     return (
         <div className="min-h-screen bg-white font-founders">
+            <FAQSchema items={travelFaqs} />
             {/* HERO */}
             <div className="px-2 lg:px-4">
                 <header className="relative w-full min-h-[600px] flex items-center bg-[#0f172a] overflow-hidden">
@@ -514,33 +552,11 @@ export default function YoutubeTravelPromotion() {
                 </div>
             </section>
 
-            {/* FAQ SECTION */}
-            <section className="pb-24 bg-white font-founders">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="section-heading !text-left mb-12">
-                        Frequently Asked Questions
-                    </h2>
-
-                    <div className="space-y-4">
-                        {[
-                            {
-                                q: "How long does YouTube travel promotion take?",
-                                a: "On average, campaign setup and approval take 24–48 hours. Once approved, you'll start seeing real engagement from travel lovers immediately."
-                            },
-                            {
-                                q: "Can I promote any travel video?",
-                                a: "Yes, as long as it complies with YouTube and Google Ads policies. We promote vlogs, guides, drone cinematic, and more."
-                            },
-                            {
-                                q: "Will promotion help me gain global subscribers?",
-                                a: "Yes. By showing your content to a targeted international audience, you increase the likelihood of attracting subscribers from all over the world."
-                            }
-                        ].map((faq, idx) => (
-                            <FAQItem key={idx} question={faq.q} answer={faq.a} />
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <FAQ 
+                items={travelFaqs} 
+                title="Frequently Asked Questions - Youtube Travel Promotion"
+                description="Everything you need to know about promoting your travel channel on YouTube with Vidflyy."
+            />
 
 
         </div >

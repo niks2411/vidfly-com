@@ -8,6 +8,43 @@ import { Camera, Play, Users, MapPin, Star, Check, Video, Clock4 } from "lucide-
 import { promotionPackages } from "@/lib/constants";
 import { Animated } from "@/components/Animated";
 import { Counter } from "@/components/Counter";
+import FAQ from "@/components/FAQ";
+import { FAQSchema } from "@/components/Schema";
+
+const vloggingFaqs = [
+    {
+        question: "What is YouTube vlogging promotion and how does it work?",
+        answer: "YouTube vlogging promotion is a strategy to increase views, watch time, and subscribers for vlogs using targeted advertising. Vidflyy promotes your vlogs through Google Ads to users who enjoy watching lifestyle vlogs, daily routines, and storytelling content, ensuring relevant audience engagement."
+    },
+    {
+        question: "How can I promote my vlogs on YouTube effectively?",
+        answer: "The most effective way to promote vlogs on YouTube is through targeted ad campaigns. With Vidflyy, you can launch campaigns that show your vlogs to users who are likely to connect with your personality and content style."
+    },
+    {
+        question: "Can YouTube vlogging promotion help grow my lifestyle channel?",
+        answer: "Yes, YouTube vlogging promotion helps lifestyle creators gain real views, improve watch time, and attract subscribers. By reaching the right audience, you can grow your community and increase your channel’s influence."
+    },
+    {
+        question: "Are the views from YouTube vlogging promotion real or fake?",
+        answer: "All views generated through Vidflyy are 100% real. The platform uses Google Ads to promote your content to genuine users, ensuring no bots, fake views, or spam traffic."
+    },
+    {
+        question: "What type of vlogging content can I promote?",
+        answer: "You can promote all types of vlogs including daily vlogs, travel vlogs, family vlogs, lifestyle content, behind-the-scenes videos, and storytelling shorts, as long as they comply with YouTube and advertising policies."
+    },
+    {
+        question: "How long does it take to see results from vlogging video promotion?",
+        answer: "Most campaigns are launched within 24 to 48 hours after setup. Once live, you can start seeing real views, engagement, and audience interaction from vlogging fans almost immediately."
+    },
+    {
+        question: "Will YouTube vlogging promotion help me gain subscribers?",
+        answer: "Yes, when your vlogs are shown to people who enjoy lifestyle and personal content, they are more likely to subscribe to your channel, leading to long-term growth and a loyal fanbase."
+    },
+    {
+        question: "Why should I use a YouTube vlogging promotion service instead of organic growth?",
+        answer: "Organic growth can be slow for vlogs due to high competition. YouTube vlogging promotion gives your content an initial boost in visibility and engagement, helping you reach more people quickly and improving your chances of ranking in search and recommendations."
+    }
+];
 
 export default function YoutubeVloggingPromotion() {
     const router = useRouter();
@@ -57,6 +94,7 @@ export default function YoutubeVloggingPromotion() {
 
     return (
         <div className="min-h-screen bg-white font-founders">
+            <FAQSchema items={vloggingFaqs} />
             {/* HERO */}
             <header className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-white py-24 lg:py-32">
                 <div className="absolute -left-32 -top-24 w-80 h-80 bg-red-100 rounded-full opacity-25 animate-blob pointer-events-none"></div>
@@ -323,27 +361,11 @@ export default function YoutubeVloggingPromotion() {
                 </div>
             </section>
 
-            {/* FAQ */}
-            <section className="py-16">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <Animated delay={80}><h3 className="text-2xl font-semibold mb-6">Frequently Asked Questions</h3></Animated>
-
-                    <div className="space-y-4 text-gray-700">
-                        {[
-                            { q: "Will these be real viewers?", a: "Yes — campaigns use Google Ads to reach genuine YouTube users." },
-                            { q: "Do you promote across Shorts and long-form?", a: "Yes — we use a mix based on content and audience." },
-                            { q: "How soon will I see results?", a: "Initial signals appear within 48-72 hours; optimization continues over weeks." },
-                        ].map((f, i) => (
-                            <Animated key={f.q} delay={120 + i * 70}>
-                                <details className="p-4 border rounded-lg">
-                                    <summary className="font-semibold cursor-pointer">{f.q}</summary>
-                                    <p className="mt-2 text-sm">{f.a}</p>
-                                </details>
-                            </Animated>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <FAQ 
+                items={vloggingFaqs} 
+                title="Frequently Asked Questions - Youtube Vlogging Promotion"
+                description="Everything you need to know about promoting your vlogging channel on YouTube with Vidflyy."
+            />
 
             {/* FINAL CTA */}
             <section className="py-16 bg-gradient-to-br from-red-600 to-red-700 text-white">
