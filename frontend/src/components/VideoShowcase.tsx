@@ -441,6 +441,7 @@ const VideoShowcase = () => {
 
 
         </motion.div>
+      </div>
     </section>
   );
 };
