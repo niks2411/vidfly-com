@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://www.vidflyy.in/sitemap.xml
+Sitemap: https://www.vidflyy.com/sitemap.xml

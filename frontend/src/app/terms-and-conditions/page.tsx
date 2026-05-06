@@ -134,10 +134,10 @@ export default function TermsAndConditionsPage() {
                             If you have any questions regarding these Terms & Conditions, please contact us at:
                         </p>
                         <a
-                            href="mailto:support@vidflyy.in"
+                            href="mailto:support@vidflyy.com"
                             className="text-red-600 hover:text-red-700 font-semibold transition-colors"
                         >
-                            support@vidflyy.in
+                            support@vidflyy.com
                         </a>
                     </div>
 

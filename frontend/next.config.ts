@@ -8,10 +8,10 @@ const nextConfig: NextConfig = {
                 has: [
                     {
                         type: 'host',
-                        value: 'vidflyy.in',
+                        value: 'vidflyy.com',
                     },
                 ],
-                destination: 'https://www.vidflyy.in/:path*',
+                destination: 'https://www.vidflyy.com/:path*',
                 permanent: true,
             },
         ];

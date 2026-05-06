@@ -118,7 +118,7 @@ export default function RefundPolicyPage() {
                                         1
                                     </div>
                                     <p className="text-gray-600 leading-relaxed mt-1">
-                                        Contact us at <a href="mailto:support@vidflyy.in" className="text-red-600 hover:text-red-700 font-semibold">support@vidflyy.in</a> with your Order ID.
+                                        Contact us at <a href="mailto:support@vidflyy.com" className="text-red-600 hover:text-red-700 font-semibold">support@vidflyy.com</a> with your Order ID.
                                     </p>
                                 </div>
                                 <div className="flex items-start gap-4">
@@ -148,10 +148,10 @@ export default function RefundPolicyPage() {
                             If you have any questions regarding our Refund Policy, please contact us at:
                         </p>
                         <a
-                            href="mailto:support@vidflyy.in"
+                            href="mailto:support@vidflyy.com"
                             className="text-red-600 hover:text-red-700 font-semibold transition-colors"
                         >
-                            support@vidflyy.in
+                            support@vidflyy.com
                         </a>
                     </div>
 

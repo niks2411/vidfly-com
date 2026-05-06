@@ -383,7 +383,7 @@ function getAdminNewOrderNotificationTemplate(order, payment) {
 // --- send wrapper ---
 async function sendEmail(to, subject, html, text) {
   const resendClient = createResendClient();
-  const fromEmail = process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM || 'no-reply@vidflyy.in';
+  const fromEmail = process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM || 'no-reply@vidflyy.com';
 
   // If Resend is configured, use it
   if (resendClient) {

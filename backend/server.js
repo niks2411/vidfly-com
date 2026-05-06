@@ -26,8 +26,8 @@ const LOCAL_ORIGINS = [
   'http://127.0.0.1:8080',
 ];
 const ALLOWED_ORIGIN_REGEX = [
-  /^https:\/\/vidflyy\.in$/,
-  /^https:\/\/www\.vidflyy\.in$/,
+  /^https:\/\/vidflyy\.com$/,
+  /^https:\/\/www\.vidflyy\.com$/,
   /^http:\/\/localhost:\d+$/,
   /^http:\/\/127\.0\.0\.1:\d+$/
 ];

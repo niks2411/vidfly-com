@@ -6,7 +6,7 @@ export function constructMetadata({
     image = "/og-image.png",
     icons = "/favicon.png",
     noIndex = false,
-    canonical = "https://www.vidflyy.in",
+    canonical = "https://www.vidflyy.com",
 }: {
     title?: string;
     description?: string;
@@ -38,7 +38,7 @@ export function constructMetadata({
             creator: "@vidflyy",
         },
         icons,
-        metadataBase: new URL('https://www.vidflyy.in'),
+        metadataBase: new URL('https://www.vidflyy.com'),
         verification: {
             google: "wVyMQnvLmH70xKPCsA8Dx9BvNascr3XadYQenrvtOuQ",
         },

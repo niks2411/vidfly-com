@@ -34,10 +34,10 @@ const LiveChatSupport = () => {
                   If you have questions, please, contact us via Live Chat or email at
                 </p>
                 <a
-                  href="mailto:support@vidflyy.in"
+                  href="mailto:support@vidflyy.com"
                   className="text-red-600 font-medium text-base hover:underline mb-8 inline-block"
                 >
-                  support@vidflyy.in
+                  support@vidflyy.com
                 </a>
 
                 {/* Open Live Chat Button */}

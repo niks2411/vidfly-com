@@ -3,7 +3,7 @@ import { constructMetadata } from "@/lib/seo";
 export const metadata = constructMetadata({
     title: "Get Started - Vidflyy",
     description: "Launch your YouTube growth campaign today. Enter your video URL and start reaching real viewers.",
-    canonical: "https://www.vidflyy.in/get-started",
+    canonical: "https://www.vidflyy.com/get-started",
 });
 
 export default function GetStartedLayout({

@@ -8,8 +8,8 @@ export const OrganizationSchema = () => {
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "Vidflyy",
-        "url": "https://vidflyy.in",
-        "logo": "https://vidflyy.in/logo.png",
+        "url": "https://vidflyy.com",
+        "logo": "https://vidflyy.com/logo.png",
         "contactPoint": {
             "@type": "ContactPoint",
             "telephone": "+91-7355518761",

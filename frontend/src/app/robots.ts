@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
                 disallow: ['/admin', '/campaign/'],
             },
         ],
-        sitemap: 'https://www.vidflyy.in/sitemap.xml',
+        sitemap: 'https://www.vidflyy.com/sitemap.xml',
     };
 }
