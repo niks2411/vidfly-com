@@ -46,14 +46,12 @@ function CampaignHamburgerButton() {
 }
 
 const TopBanner = () => {
-  const { user } = useAuth();
-  
   const content = (
     <div className="flex items-center whitespace-nowrap pr-24">
       <p className="text-[13px] md:text-[14px] font-bold tracking-tight text-white uppercase flex items-center gap-6">
         <span>WELCOME OFFER! Get 30% Extra Views On Your First Campaign with Vidflyy. Use Promo Code - <span className="text-yellow-300">FIRST50</span></span>
         <Link
-          href={user ? "/campaign" : "/get-started"}
+          href="/get-started"
           className="bg-[#FF8C00] hover:bg-[#e67e00] text-white px-4 py-1 rounded text-[12px] md:text-[14px] font-extrabold transition-all duration-300 shadow-lg"
         >
           Get Started
@@ -78,7 +76,7 @@ const TopBanner = () => {
           WELCOME OFFER! Get 30% Extra Views On Your First Campaign with Vidflyy. Use Promo Code - <span className="text-yellow-300">FIRST50</span>
         </p>
         <Link
-          href={user ? "/campaign" : "/get-started"}
+          href="/get-started"
           className="bg-[#FF8C00] hover:bg-[#e67e00] text-white px-4 py-1 rounded text-[14px] font-extrabold transition-all duration-300 shadow-lg whitespace-nowrap"
         >
           Get Started
@@ -90,6 +88,7 @@ const TopBanner = () => {
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const isCampaignPage = pathname?.startsWith('/campaign') || false;
@@ -97,6 +96,7 @@ const Navbar = () => {
   const [avatar, setAvatar] = useState<string>("boy");
 
   useEffect(() => {
+    setMounted(true);
     const savedAvatar = localStorage.getItem("vidfly_avatar");
     if (savedAvatar) {
       setAvatar(savedAvatar);
@@ -178,7 +178,7 @@ const Navbar = () => {
 
             {/* Right side: Login + CTA pushed to the far right */}
             <div className="hidden lg:flex items-center gap-6 ml-auto shrink-0">
-              {user ? (
+              {mounted && user ? (
                 <div className="flex items-center gap-4">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -285,7 +285,7 @@ const Navbar = () => {
                   </button>
                 ))}
                 <div className="pt-6 space-y-4 px-3">
-                  {user ? (
+                  {mounted && user ? (
                     <div className="space-y-4">
                       <div className="flex items-center gap-3 p-4 bg-white border border-gray-100 rounded-2xl mb-4 shadow-sm">
                         <Avatar className="h-12 w-12 border border-slate-100">

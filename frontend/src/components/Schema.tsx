@@ -1,6 +1,7 @@
 "use client";
 
 import Script from "next/script";
+import { useId } from "react";
 
 export const OrganizationSchema = () => {
     const schema = {
@@ -48,6 +49,7 @@ export const ServiceSchema = () => {
 };
 
 export const FAQSchema = ({ items }: { items: { question: string; answer: string }[] }) => {
+    const reactId = useId();
     const schema = {
         "@context": "https://schema.org",
         "@type": "FAQPage",
@@ -63,7 +65,7 @@ export const FAQSchema = ({ items }: { items: { question: string; answer: string
 
     return (
         <Script
-            id={`faq-schema-${Math.random().toString(36).substr(2, 9)}`}
+            id={`faq-schema${reactId.replace(/:/g, "-")}`}
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />

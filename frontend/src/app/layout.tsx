@@ -24,7 +24,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <head>
                 {/* Google Tag Manager */}
                 <Script id="gtm-head" strategy="afterInteractive">
@@ -59,7 +59,7 @@ export default function RootLayout({
                     })(window, document, "clarity", "script", "wmcpvkuyhc");`}
                 </Script>
             </head>
-            <body className="antialiased font-founders text-[rgb(41,40,40)]">
+            <body className="antialiased font-founders text-[rgb(41,40,40)]" suppressHydrationWarning>
                 {/* Google Tag Manager (noscript) */}
                 <noscript>
                     <iframe
