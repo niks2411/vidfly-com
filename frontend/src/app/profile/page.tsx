@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import CampaignLayout from "@/components/CampaignLayout";
+import { getVerifiedEmail } from "@/lib/verifiedEmail";
 
 export default function ProfilePage() {
     const { user, loading, logout } = useAuth();
@@ -16,8 +17,8 @@ export default function ProfilePage() {
     const [avatar, setAvatar] = useState<string>("boy");
 
     useEffect(() => {
-        if (!loading && !user) {
-            router.push("/get-started");
+        if (!loading && !user && !getVerifiedEmail()) {
+            router.replace("/get-started");
         }
         const savedAvatar = localStorage.getItem("vidfly_avatar");
         if (savedAvatar) {

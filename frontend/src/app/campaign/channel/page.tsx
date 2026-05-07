@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import CampaignLayout from "@/components/CampaignLayout";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,8 @@ import {
     Loader2, Sparkles, Play, Youtube, Users
 } from "lucide-react";
 import { getVerifiedEmail, getSelectedChannelKey } from "@/lib/verifiedEmail";
+import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
-import { motion } from "framer-motion";
 
 type StoredVideo = {
     title: string;
@@ -32,6 +32,7 @@ type StoredVideo = {
 const STORAGE_KEY = "vidfly_channel_videos";
 const CHANNEL_INFO_STORAGE_KEY = "vidfly_channel_info";
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
+const DEBUG_PREFIX = "[CampaignChannel]";
 
 const formatNumber = (num: string | number | null | undefined) => {
     if (!num) return "0";
@@ -77,13 +78,40 @@ const formatDate = (dateStr: string | null | undefined) => {
 
 export default function CampaignChannel() {
     const router = useRouter();
-    const verifiedEmail = getVerifiedEmail();
+    const { user, loading: authLoading } = useAuth();
+    const [mounted, setMounted] = useState(false);
+    const [verifiedEmail, setVerifiedEmail] = useState<string | undefined>(undefined);
 
     useEffect(() => {
-        if (!verifiedEmail) {
-            router.replace("/get-started");
+        debug("Component mounted");
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (!mounted || authLoading) return;
+
+        debug("Auth check", {
+            hasUser: !!user?.email,
+            userEmail: user?.email,
+            storageEmail: getVerifiedEmail(),
+            mounted,
+            authLoading,
+        });
+
+        if (user?.email) {
+            debug("Using AuthContext email", user.email);
+            setVerifiedEmail(user.email);
+        } else {
+            const email = getVerifiedEmail();
+            if (email) {
+                debug("Using storage email", email);
+                setVerifiedEmail(email);
+            } else {
+                debug("No auth markers. Redirecting to /get-started");
+                router.replace("/get-started");
+            }
         }
-    }, [verifiedEmail, router]);
+    }, [mounted, authLoading, user, router]);
 
     const [videos, setVideos] = useState<StoredVideo[]>([]);
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -98,11 +126,15 @@ export default function CampaignChannel() {
     const [loadingChannel, setLoadingChannel] = useState(false);
     const [loadingInitialChannel, setLoadingInitialChannel] = useState(true);
     const [isScanning, setIsScanning] = useState(true);
-    const [cache, setCache] = useState<Record<string, { videos: StoredVideo[], info?: any }>>({});
+    const cacheRef = useRef<Record<string, { videos: StoredVideo[], info?: any }>>({});
+    const debug = (...args: any[]) => {
+        console.log(DEBUG_PREFIX, ...args);
+    };
 
     // Artificial scanning delay
     useEffect(() => {
         const timer = setTimeout(() => {
+            debug("Artificial scan complete");
             setIsScanning(false);
         }, 1200);
         return () => clearTimeout(timer);
@@ -111,10 +143,12 @@ export default function CampaignChannel() {
     // Debounce search query
     useEffect(() => {
         if (!searchQuery.trim()) {
+            debug("Search query empty; clearing debounce value");
             setDebouncedSearchQuery("");
             return;
         }
         const timer = setTimeout(() => {
+            debug("Search query debounced", searchQuery);
             setDebouncedSearchQuery(searchQuery);
         }, 500); // 500ms delay
         return () => clearTimeout(timer);
@@ -125,10 +159,12 @@ export default function CampaignChannel() {
         const fetchChannelHeader = async () => {
             if (!channelId) return;
             const cacheKey = `info-${channelId}`;
-            const cachedData = cache[cacheKey]?.info;
+            const cachedData = cacheRef.current[cacheKey]?.info;
+            debug("fetchChannelHeader start", { channelId, cacheKey, hasCachedInfo: !!cachedData });
             
             // If fully cached (has subscriberCount), just use it
             if (cachedData && cachedData.subscriberCount) {
+                debug("fetchChannelHeader using cached info", cachedData);
                 if (cachedData.name) setChannelName(cachedData.name);
                 if (cachedData.avatar) setChannelAvatar(cachedData.avatar);
                 setSubscriberCount(cachedData.subscriberCount);
@@ -138,37 +174,52 @@ export default function CampaignChannel() {
             // If we have name/avatar from backend but need subscriberCount from YouTube
             try {
                 const response = await fetch(`${API_BASE_URL}/api/youtube/channel-info?channelId=${encodeURIComponent(channelId)}`);
+                debug("fetchChannelHeader response", { status: response.status, ok: response.ok });
                 if (response.ok) {
                     const data = await response.json();
+                    debug("fetchChannelHeader payload", data);
                     // Only update name/avatar if they weren't already set from backend
                     if (!channelName && data.name) setChannelName(data.name);
                     if (!channelAvatar && data.avatar) setChannelAvatar(data.avatar);
                     setSubscriberCount(data.subscriberCount || "0");
-                    setCache(prev => ({ ...prev, [cacheKey]: { ...(prev[cacheKey] || {videos: []}), info: { ...cachedData, ...data } } }));
+                    
+                    // Update cache ref
+                    cacheRef.current[cacheKey] = { 
+                        ...(cacheRef.current[cacheKey] || {videos: []}), 
+                        info: { ...cachedData, ...data } 
+                    };
                 }
-            } catch (err) { console.error(err); }
+            } catch (err) {
+                console.error(DEBUG_PREFIX, "fetchChannelHeader error", err);
+            }
         };
         fetchChannelHeader();
-    }, [channelId, cache]);
+    }, [channelId]);
 
     const loadSavedChannels = useCallback(async () => {
         if (typeof window === "undefined" || !verifiedEmail) {
+            debug("loadSavedChannels skipped", { hasWindow: typeof window !== "undefined", verifiedEmail });
             setLoadingInitialChannel(false);
             return;
         }
 
         try {
+            debug("loadSavedChannels start", { verifiedEmail });
             const cachedChannelInfo = sessionStorage.getItem(CHANNEL_INFO_STORAGE_KEY);
             if (cachedChannelInfo) {
                 try {
                     const parsedInfo = JSON.parse(cachedChannelInfo);
+                    debug("loadSavedChannels cached channel info count", parsedInfo?.length || 0);
                     if (parsedInfo && parsedInfo.length > 0) {
                         const channelKey = getSelectedChannelKey();
                         const savedChannelId = localStorage.getItem(channelKey);
+                        debug("loadSavedChannels storage keys", { channelKey, savedChannelId });
                         if (!savedChannelId && parsedInfo[0]?.channelId) {
                             setChannelId(parsedInfo[0].channelId);
+                            debug("Using first cached channelId", parsedInfo[0].channelId);
                         } else if (savedChannelId) {
                             setChannelId(savedChannelId);
+                            debug("Using saved channelId from localStorage", savedChannelId);
                             // Use cached info for instant avatar display
                             const cachedCh = parsedInfo.find((c: any) => c.channelId === savedChannelId);
                             if (cachedCh) {
@@ -177,21 +228,26 @@ export default function CampaignChannel() {
                             }
                         }
                     }
-                } catch (err) { console.error(err); }
+                } catch (err) {
+                    console.error(DEBUG_PREFIX, "loadSavedChannels cache parse error", err);
+                }
             }
 
             const response = await fetch(
                 `${API_BASE_URL}/api/user-preferences/channels?email=${encodeURIComponent(verifiedEmail)}`,
                 { credentials: "include" }
             );
+            debug("loadSavedChannels backend response", { status: response.status, ok: response.ok });
 
             if (response.ok) {
                 const data = await response.json();
+                debug("loadSavedChannels backend channels count", data?.channels?.length || 0);
                 if (data.channels && data.channels.length > 0) {
                     const channelKey = getSelectedChannelKey();
                     let targetChannelId = data.selectedChannelId || localStorage.getItem(channelKey) || data.channels[0].channelId;
                     
                     setChannelId(targetChannelId);
+                    debug("Resolved target channelId", { targetChannelId, selectedChannelId: data.selectedChannelId });
 
                     // Instantly set channel name & avatar from backend data (no extra YouTube API call needed)
                     const matchedChannel = data.channels.find((ch: any) => ch.channelId === targetChannelId);
@@ -201,22 +257,20 @@ export default function CampaignChannel() {
                         
                         // Pre-populate cache so the fetchChannelHeader useEffect skips the API call
                         const infoCacheKey = `info-${targetChannelId}`;
-                        setCache(prev => ({
-                            ...prev,
-                            [infoCacheKey]: {
-                                ...(prev[infoCacheKey] || { videos: [] }),
-                                info: {
-                                    name: matchedChannel.channelName,
-                                    avatar: matchedChannel.channelAvatar,
-                                }
+                        cacheRef.current[infoCacheKey] = {
+                            ...(cacheRef.current[infoCacheKey] || { videos: [] }),
+                            info: {
+                                name: matchedChannel.channelName,
+                                avatar: matchedChannel.channelAvatar,
                             }
-                        }));
+                        };
                     }
                 }
             }
         } catch (err) {
-            console.warn("Failed to load channels:", err);
+            console.warn(DEBUG_PREFIX, "Failed to load channels:", err);
         } finally {
+            debug("loadSavedChannels complete");
             setLoadingInitialChannel(false);
         }
     }, [verifiedEmail]);
@@ -227,13 +281,17 @@ export default function CampaignChannel() {
         if (typeof window === "undefined") return;
         try {
             const parsed: StoredVideo[] = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "[]");
+            debug("Loaded session videos", { count: parsed.length, storageKey: STORAGE_KEY });
             setVideos(parsed);
-        } catch (err) { console.error(err); }
+        } catch (err) {
+            console.error(DEBUG_PREFIX, "Failed to parse session videos", err);
+        }
     }, []);
 
     // Reset selection when channel changes to prevent "ghost" selections from previous channels
     useEffect(() => {
         if (channelId) {
+            debug("Channel changed, resetting selected video IDs", { channelId });
             setSelectedIds([]);
         }
     }, [channelId]);
@@ -244,9 +302,11 @@ export default function CampaignChannel() {
             
             const normalizedQuery = tab === 'all' ? debouncedSearchQuery.trim().toLowerCase() : "";
             const cacheKey = `videos-${channelId}-${tab}-${normalizedQuery}`;
+            debug("fetchVideos start", { channelId, tab, normalizedQuery, cacheKey });
 
-            if (cache[cacheKey]) {
-                setChannelVideos(cache[cacheKey].videos);
+            if (cacheRef.current[cacheKey]) {
+                debug("fetchVideos cache hit", { cacheKey, count: cacheRef.current[cacheKey].videos.length });
+                setChannelVideos(cacheRef.current[cacheKey].videos);
                 return;
             }
 
@@ -263,6 +323,7 @@ export default function CampaignChannel() {
                 }
 
                 const videosResponse = await fetch(`${API_BASE_URL}/api/youtube/channel-videos?${params.toString()}`);
+                debug("fetchVideos response", { status: videosResponse.status, ok: videosResponse.ok });
                 if (videosResponse.ok) {
                     const data = await videosResponse.json();
                     const mapped = (data.videos || []).map((v: any) => ({
@@ -276,23 +337,39 @@ export default function CampaignChannel() {
                         likeCount: v.likeCount,
                         commentCount: v.commentCount
                     }));
+                    debug("fetchVideos mapped count", mapped.length);
                     setChannelVideos(mapped);
-                    setCache(prev => ({ ...prev, [cacheKey]: { videos: mapped } }));
-                    
-                    if (selectedIds.length === 0 && mapped.length > 0) {
-                        setSelectedIds(mapped.slice(0, 5).map((v: any) => v.videoId));
-                    }
+                    cacheRef.current[cacheKey] = { videos: mapped };
                 }
-            } catch (err) { console.error(err); } finally { setLoadingChannel(false); }
+            } catch (err) {
+                console.error(DEBUG_PREFIX, "fetchVideos error", err);
+            } finally {
+                setLoadingChannel(false);
+                debug("fetchVideos complete");
+            }
         };
         fetchVideos();
-    }, [channelId, tab, debouncedSearchQuery, cache, selectedIds.length]);
+    }, [channelId, tab, debouncedSearchQuery]);
+
+    // Auto-select first 5 videos when videos are loaded and nothing is selected
+    useEffect(() => {
+        if (selectedIds.length === 0 && channelVideos.length > 0) {
+            debug("Auto-selecting first 5 videos", { available: channelVideos.length });
+            setSelectedIds(channelVideos.slice(0, 5).map(v => v.videoId));
+        }
+    }, [channelVideos]);
 
     const toggleVideo = (videoId: string) => {
+        debug("toggleVideo click", {
+            videoId,
+            selectedCount: selectedIds.length,
+            alreadySelected: selectedIds.includes(videoId),
+        });
         setSelectedIds(prev => prev.includes(videoId) ? prev.filter(id => id !== videoId) : prev.length >= 5 ? prev : [...prev, videoId]);
     };
 
     const handleNext = () => {
+        debug("Next clicked", { selectedCount: selectedIds.length, channelId });
         if (!selectedIds.length) return;
         const videoMap = new Map(channelVideos.map(v => [v.videoId, v]));
         const selectedVideos = selectedIds.map(id => {
@@ -302,9 +379,11 @@ export default function CampaignChannel() {
             }
             return null;
         }).filter(Boolean);
+        debug("Prepared selected videos", { count: selectedVideos.length });
         
         sessionStorage.setItem("vidfly_current_campaign_video", JSON.stringify(selectedVideos[0]));
         sessionStorage.setItem("vidfly_current_campaign_videos", JSON.stringify(selectedVideos));
+        debug("Stored selected videos in session; navigating to /campaign/budget");
         router.push("/campaign/budget");
     };
 
@@ -491,15 +570,12 @@ export default function CampaignChannel() {
                                 {isScanning ? (
                                     <div className="flex flex-col items-center animate-in fade-in zoom-in-95 duration-500">
                                          <div className="relative w-24 h-24 mb-6">
-                                            <motion.div 
-                                                animate={{ rotate: 360 }}
-                                                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                                                className="absolute inset-0 border-[3px] border-dashed border-red-500/20 rounded-full"
+                                            <div 
+                                                className="absolute inset-0 border-[3px] border-dashed border-red-500/20 rounded-full animate-spin [animation-duration:3s]"
                                             />
-                                            <motion.div 
-                                                animate={{ top: ["15%", "85%", "15%"] }}
-                                                transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
-                                                className="absolute left-[15%] right-[15%] h-[1.5px] bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)] z-10"
+                                            <div 
+                                                className="absolute left-[15%] right-[15%] h-[1.5px] bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)] z-10 animate-bounce [animation-duration:1s]"
+                                                style={{ top: "50%" }}
                                             />
                                             <div className="absolute inset-3 bg-white rounded-full flex items-center justify-center shadow-lg border border-slate-50 overflow-hidden">
                                                 <Search className="w-7 h-7 text-red-600 relative z-20" />
@@ -515,15 +591,11 @@ export default function CampaignChannel() {
                                     </div>
                                 ) : (
                                     <div className="flex flex-col items-center animate-in zoom-in-95 duration-500 w-full">
-                                        <motion.div 
-                                            initial={{ scale: 0.8, opacity: 0 }}
-                                            animate={{ scale: 1, opacity: 1 }}
-                                            className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mb-6"
-                                        >
+                                        <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mb-6">
                                             <div className="w-14 h-14 rounded-full border-[2.5px] border-red-600 flex items-center justify-center">
                                                 <Check className="w-6 h-6 text-red-600 stroke-[3px]" />
                                             </div>
-                                        </motion.div>
+                                        </div>
 
                                         <h4 className="text-[16px] font-bold text-slate-400 tracking-tight mb-6">
                                             Ready to boost your channel!

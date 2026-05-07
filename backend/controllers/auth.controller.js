@@ -13,6 +13,40 @@ const { sendWelcomeEmail, sendOtpEmail } = require('../utils/emailService');
 const AUTH_COOKIE_NAME = 'vidfly_token';
 const AUTH_COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days
 
+const parseBooleanEnv = (value, fallback) => {
+  if (value === undefined) return fallback;
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  return fallback;
+};
+
+const buildCookieOptions = (maxAge) => {
+  const secure = parseBooleanEnv(
+    process.env.AUTH_COOKIE_SECURE,
+    process.env.NODE_ENV === 'production'
+  );
+  const sameSiteRaw = (process.env.AUTH_COOKIE_SAME_SITE || (secure ? 'none' : 'lax')).toLowerCase();
+  const sameSite = ['lax', 'strict', 'none'].includes(sameSiteRaw) ? sameSiteRaw : 'lax';
+  const configuredDomain = process.env.AUTH_COOKIE_DOMAIN;
+  const domain = configuredDomain && configuredDomain.trim() ? configuredDomain.trim() : undefined;
+
+  const options = {
+    httpOnly: true,
+    sameSite,
+    secure,
+    maxAge,
+    path: '/',
+  };
+
+  if (domain) {
+    options.domain = domain;
+  } else if (process.env.NODE_ENV === 'production') {
+    options.domain = '.vidflyy.com';
+  }
+
+  return options;
+};
+
 const emailSchema = Joi.object({
   email: Joi.string().email().required(),
 });
@@ -81,13 +115,7 @@ exports.verifyOtp = async (req, res, next) => {
     await record.save();
 
     const cookieValue = buildEmailCookieValue(email);
-    res.cookie(EMAIL_COOKIE_NAME, cookieValue, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: EMAIL_COOKIE_MAX_AGE,
-      path: '/',
-    });
+    res.cookie(EMAIL_COOKIE_NAME, cookieValue, buildCookieOptions(EMAIL_COOKIE_MAX_AGE));
 
     // Check if user already exists in database
     const existingUser = await User.findOne({ email: normalizedEmail });
@@ -130,13 +158,7 @@ exports.verifyOtp = async (req, res, next) => {
     const jwtPayload = { email: normalizedEmail, userId: existingUser ? existingUser._id : undefined };
     const token = jwt.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    res.cookie(AUTH_COOKIE_NAME, token, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: AUTH_COOKIE_MAX_AGE,
-      path: '/',
-    });
+    res.cookie(AUTH_COOKIE_NAME, token, buildCookieOptions(AUTH_COOKIE_MAX_AGE));
 
     return res.json({ message: 'OTP verified', email: normalizedEmail });
   } catch (err) {
@@ -162,12 +184,8 @@ exports.getMe = async (req, res) => {
 
 // POST /api/auth/logout — Clear the auth cookie
 exports.logout = (req, res) => {
-  res.clearCookie(AUTH_COOKIE_NAME, {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-  });
+  const { maxAge, ...clearOptions } = buildCookieOptions(AUTH_COOKIE_MAX_AGE);
+  res.clearCookie(AUTH_COOKIE_NAME, clearOptions);
   return res.json({ message: 'Logged out' });
 };
 
@@ -187,13 +205,7 @@ exports.googleCallback = async (req, res) => {
     );
 
     // Set HTTPOnly cookie (same as OTP flow)
-    res.cookie(AUTH_COOKIE_NAME, token, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: AUTH_COOKIE_MAX_AGE,
-      path: '/',
-    });
+    res.cookie(AUTH_COOKIE_NAME, token, buildCookieOptions(AUTH_COOKIE_MAX_AGE));
 
     // Redirect to frontend
     const frontendUrl = process.env.FRONTEND_URL || process.env.FRONTEND_ORIGIN || 'http://localhost:3000';

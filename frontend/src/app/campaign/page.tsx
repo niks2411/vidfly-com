@@ -23,7 +23,7 @@ const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/,
 
 export default function CampaignDashboard() {
     const router = useRouter();
-    const { user } = useAuth();
+    const { user, loading: authLoading } = useAuth();
     const [youtubeLink, setYoutubeLink] = useState("");
     const [mounted, setMounted] = useState(false);
 
@@ -35,6 +35,18 @@ export default function CampaignDashboard() {
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    useEffect(() => {
+        if (!mounted || authLoading) return;
+
+        const storageEmail = localStorage.getItem("logged_user_email") || (typeof window !== 'undefined' ? sessionStorage.getItem("vidfly_verified_email") : null);
+        console.log("[CampaignDashboard] Auth check:", { hasUser: !!user?.email, storageEmail });
+
+        if (!user?.email && !storageEmail) {
+            console.log("[CampaignDashboard] No auth, redirecting to /get-started");
+            router.replace("/get-started");
+        }
+    }, [mounted, authLoading, user, router]);
 
     // Live fetching of YouTube details
     useEffect(() => {

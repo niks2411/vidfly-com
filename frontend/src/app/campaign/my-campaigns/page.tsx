@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CampaignLayout from "@/components/CampaignLayout";
 import { getVerifiedEmail } from "@/lib/verifiedEmail";
+import { useAuth } from "@/context/AuthContext";
 import {
     Play, Eye, Users, ChevronDown, Trash2, Zap, Monitor, ExternalLink, Loader2
 } from "lucide-react";
@@ -85,6 +86,7 @@ const parseISO8601Duration = (duration: string | null | undefined) => {
 };
 
 export default function MyCampaigns() {
+    const { user, loading: authLoading } = useAuth();
     const router = useRouter();
     const [verifiedEmail, setVerifiedEmail] = useState<string | undefined>(undefined);
     const [mounted, setMounted] = useState(false);
@@ -100,14 +102,24 @@ export default function MyCampaigns() {
 
     useEffect(() => {
         setMounted(true);
-        const email = getVerifiedEmail();
-        setVerifiedEmail(email);
-        if (!email) {
-            router.replace("/get-started");
-            return;
+    }, []);
+
+    useEffect(() => {
+        if (!mounted || authLoading) return;
+        
+        if (user?.email) {
+            setVerifiedEmail(user.email);
+            fetchCampaigns(user.email);
+        } else {
+            const email = getVerifiedEmail();
+            if (email) {
+                setVerifiedEmail(email);
+                fetchCampaigns(email);
+            } else {
+                router.replace("/get-started");
+            }
         }
-        fetchCampaigns(email);
-    }, [router]);
+    }, [mounted, authLoading, user, router]);
 
     // Close dropdowns on outside click
     useEffect(() => {

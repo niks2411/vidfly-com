@@ -337,16 +337,31 @@ const COUNTRIES = [
 
 export default function CampaignBudget() {
     const router = useRouter();
-    const { user } = useAuth();
+    const { user, loading: authLoading } = useAuth();
     const [state, setState] = useState<CampaignState | null>(null);
     const [verifiedEmail, setVerifiedEmail] = useState("");
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        const email = getVerifiedEmail();
-        if (!email) {
-            router.replace("/get-started");
-            return;
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (!mounted || authLoading) return;
+
+        let email = "";
+        if (user?.email) {
+            email = user.email;
+        } else {
+            const storedEmail = getVerifiedEmail();
+            if (storedEmail) {
+                email = storedEmail;
+            } else {
+                router.replace("/get-started");
+                return;
+            }
         }
+
         setVerifiedEmail(email);
 
         try {
@@ -393,7 +408,7 @@ export default function CampaignBudget() {
             console.error("Failed to restore campaign state", err);
             router.replace("/campaign");
         }
-    }, [router]);
+    }, [mounted, authLoading, user, router]);
 
     const [selectedVideos, setSelectedVideos] = useState<SelectedVideo[]>([]);
     const [showAllVideos, setShowAllVideos] = useState(false);

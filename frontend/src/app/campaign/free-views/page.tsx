@@ -8,12 +8,15 @@ import CampaignCard from "@/components/CampaignCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getVerifiedEmail } from "@/lib/verifiedEmail";
+import { useAuth } from "@/context/AuthContext";
 import { Copy, Check, Users, Gift, Share2 } from "lucide-react";
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
 
 export default function CampaignFreeViews() {
     const router = useRouter();
+    const { user, loading: authLoading } = useAuth();
+    const [mounted, setMounted] = useState(false);
     const [verifiedEmail, setVerifiedEmail] = useState("");
     const [freeViewsBalance, setFreeViewsBalance] = useState(0);
     const [referralCode, setReferralCode] = useState("");
@@ -29,11 +32,25 @@ export default function CampaignFreeViews() {
     const [success, setSuccess] = useState("");
 
     useEffect(() => {
-        const email = getVerifiedEmail();
-        if (!email) {
-            router.replace("/get-started");
-            return;
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (!mounted || authLoading) return;
+
+        let email = "";
+        if (user?.email) {
+            email = user.email;
+        } else {
+            const storedEmail = getVerifiedEmail();
+            if (storedEmail) {
+                email = storedEmail;
+            } else {
+                router.replace("/get-started");
+                return;
+            }
         }
+
         setVerifiedEmail(email);
 
         // Generate referral code from email
@@ -51,7 +68,7 @@ export default function CampaignFreeViews() {
         }
 
         loadFreeViewsData(email);
-    }, [router]);
+    }, [mounted, authLoading, user, router]);
 
     const loadFreeViewsData = async (email: string) => {
         try {

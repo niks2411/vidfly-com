@@ -29,6 +29,7 @@ export const clearVerifiedEmail = () => {
   if (typeof window === "undefined") return;
   try {
     sessionStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem("logged_user_email");
   } catch (err) {
     console.warn("Unable to clear verified email", err);
   }

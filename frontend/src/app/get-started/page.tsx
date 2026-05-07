@@ -25,7 +25,7 @@ const REFERRAL_STORAGE_KEY = "vidfly_referral_code";
 function GetStartedContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { refreshUser } = useAuth();
+    const { user, loading, refreshUser } = useAuth();
     
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
@@ -62,19 +62,28 @@ function GetStartedContent() {
     }, [searchParams]);
 
     useEffect(() => {
+        if (loading) return;
+
         const storedEmail = getVerifiedEmail();
         const flow = searchParams.get("flow");
-        if (storedEmail) {
+        
+        console.log("[GetStarted] Redirect check:", { hasUser: !!user?.email, storedEmail, flow });
+
+        // Redirect only when server-backed auth has resolved to a user.
+        // Relying on storage alone can create redirect loops during transient 401/cookie propagation.
+        if (user) {
             const selectedPkg = sessionStorage.getItem("vidfly_selected_package");
+            console.log("[GetStarted] Redirecting to campaign", { selectedPkg });
             if (selectedPkg && flow === "package") {
                 router.replace("/campaign/packages/select");
             } else {
                 router.replace("/campaign");
             }
         } else {
+            console.log("[GetStarted] Staying on login page", { hasStoredEmail: !!storedEmail });
             setCheckingVerification(false);
         }
-    }, [router, searchParams]);
+    }, [user, loading, router, searchParams]);
 
     const sendOtp = async () => {
         const normalizedEmail = normalizeEmail(email);

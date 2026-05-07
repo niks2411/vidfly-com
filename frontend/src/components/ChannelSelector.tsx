@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { ChevronDown, Plus, Settings, Check, ExternalLink, Youtube } from "lucide-react";
 import { useRouter } from "next/navigation";
 import AddChannelModal from "./AddChannelModal";
@@ -53,15 +53,22 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showManageModal, setShowManageModal] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const lastLoadedEmailRef = useRef<string | null>(null);
 
   // Load all channels from backend (PRIMARY SOURCE - cross-device sync)
-  const loadAllChannels = useCallback(async () => {
+  const loadAllChannels = useCallback(async (force = false) => {
     if (typeof window === "undefined") return;
 
     try {
       // Get email from localStorage (stored after login)
       const userEmail = localStorage.getItem("logged_user_email") || getVerifiedEmail();
       if (!userEmail) return;
+
+      // Prevent redundant loads for the same email unless forced
+      if (!force && lastLoadedEmailRef.current === userEmail) {
+        return;
+      }
+      lastLoadedEmailRef.current = userEmail;
 
       // Step 1: Load selected channel from localStorage (fast, instant UI)
       const channelKey = `channel_${userEmail}`;
@@ -205,7 +212,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
             return newMap;
           });
         }
-        loadAllChannels();
+        loadAllChannels(true); // Force reload when channel explicitly changed
       }
     };
 
@@ -496,9 +503,9 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
                 </div>
 
                 {isSelected && (
-                    <div className="hidden sm:flex w-6 h-6 rounded-full bg-red-100 items-center justify-center">
-                        <Check className="w-3.5 h-3.5 text-red-600" />
-                    </div>
+                  <div className="hidden sm:flex w-6 h-6 rounded-full bg-red-100 items-center justify-center">
+                    <Check className="w-3.5 h-3.5 text-red-600" />
+                  </div>
                 )}
               </div>
             </button>
@@ -572,7 +579,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
                       </div>
                     )}
                     <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-red-600 border border-white flex items-center justify-center">
-                        <div className="w-1 h-1 bg-white rounded-full animate-pulse" />
+                      <div className="w-1 h-1 bg-white rounded-full animate-pulse" />
                     </div>
                   </div>
                   <span className="text-[13px] font-bold text-slate-800 truncate mr-1">
@@ -594,7 +601,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
             <DrawerHeader className="pb-2">
               <div className="flex items-center justify-center mb-1">
                 <div className="w-10 h-10 rounded-2xl bg-red-50 flex items-center justify-center">
-                    <Youtube className="w-6 h-6 text-red-600" />
+                  <Youtube className="w-6 h-6 text-red-600" />
                 </div>
               </div>
               <DrawerTitle className="text-xl font-bold font-founders text-slate-900 text-center tracking-tight">
@@ -603,7 +610,7 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
               <p className="text-xs text-slate-500 text-center -mt-0.5">Manage your active YouTube accounts</p>
             </DrawerHeader>
             <div className="overflow-y-auto pb-8">
-                <ChannelList />
+              <ChannelList />
             </div>
           </DrawerContent>
         </Drawer>
@@ -619,8 +626,8 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
               }
             }}
             className={cn(
-                "group flex items-center gap-2.5 px-3.5 py-2 bg-white/70 backdrop-blur-md border border-slate-200 rounded-2xl hover:border-red-200 hover:bg-white transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-0.5 min-w-0",
-                showDropdown && "ring-2 ring-red-100 border-red-300 shadow-xl -translate-y-0.5"
+              "group flex items-center gap-2.5 px-3.5 py-2 bg-white/70 backdrop-blur-md border border-slate-200 rounded-2xl hover:border-red-200 hover:bg-white transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-0.5 min-w-0",
+              showDropdown && "ring-2 ring-red-100 border-red-300 shadow-xl -translate-y-0.5"
             )}
           >
             {selectedChannel ? (
@@ -638,14 +645,14 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
                     </div>
                   )}
                   <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-red-600 border-2 border-white flex items-center justify-center shadow-md">
-                      <div className="w-1 h-1 bg-white rounded-full animate-pulse" />
+                    <div className="w-1 h-1 bg-white rounded-full animate-pulse" />
                   </div>
                 </div>
                 <div className="flex flex-col items-start leading-tight pr-1">
-                    <span className="text-[13px] font-bold text-slate-900 truncate max-w-[120px]">
+                  <span className="text-[13px] font-bold text-slate-900 truncate max-w-[120px]">
                     {selectedChannel.name}
-                    </span>
-                    <span className="text-[10px] text-slate-500 font-medium">Verified Channel</span>
+                  </span>
+                  <span className="text-[10px] text-slate-500 font-medium">Verified Channel</span>
                 </div>
                 <ChevronDown className={cn("w-4 h-4 text-slate-400 transition-transform duration-300", showDropdown ? 'rotate-180' : 'group-hover:translate-y-0.5')} />
               </>
@@ -670,14 +677,14 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
                 className="absolute z-50 right-0 mt-3 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-[28px] shadow-[0_20px_50px_rgba(0,0,0,0.12)] max-h-[500px] overflow-hidden w-[400px]"
               >
                 <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-white">
-                    <h3 className="font-founders text-lg font-bold text-slate-900 tracking-tight">Switch Account</h3>
-                    <div className="flex items-center gap-1">
-                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                        <span className="text-[10px] uppercase tracking-widest font-black text-slate-400">Sync Active</span>
-                    </div>
+                  <h3 className="font-founders text-lg font-bold text-slate-900 tracking-tight">Switch Account</h3>
+                  <div className="flex items-center gap-1">
+                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-[10px] uppercase tracking-widest font-black text-slate-400">Sync Active</span>
+                  </div>
                 </div>
                 <div className="overflow-y-auto max-h-[380px] custom-scrollbar">
-                    <ChannelList />
+                  <ChannelList />
                 </div>
               </motion.div>
             )}
@@ -733,5 +740,3 @@ const ChannelSelector = ({ onChannelSelect }: ChannelSelectorProps) => {
 };
 
 export default ChannelSelector;
-
-
