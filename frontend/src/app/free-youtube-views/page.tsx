@@ -50,7 +50,7 @@ export default function FreeYoutubeViews() {
                             Bonus YouTube Views: 1000 Free Views for Your Channel
                         </h1>
                         <p className="section-desc !mb-10 max-w-2xl mx-auto">
-                            Vidfly offers you 1000 free YouTube views to jumpstart your channel's growth. Experience the quality of our premium engagement services completely risk-free. No credit card required.
+                            Vidflyy offers you 1000 free YouTube views to jumpstart your channel's growth. Experience the quality of our premium engagement services completely risk-free. No credit card required.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                             <Button 
@@ -85,7 +85,7 @@ export default function FreeYoutubeViews() {
                                 How to get Free YouTube Views?
                             </h2>
                             <p className="section-desc">
-                                Claiming your free YouTube views from Vidfly is a quick and straightforward process. Just follow these steps to see your view count rise.
+                                Claiming your free YouTube views from Vidflyy is a quick and straightforward process. Just follow these steps to see your view count rise.
                             </p>
                         </div>
                     </Animated>
@@ -94,7 +94,7 @@ export default function FreeYoutubeViews() {
                         <Animated delay={100}>
                             <div className="space-y-8">
                                 {[
-                                    { step: "01", title: "Create Your Account", desc: "Sign up for a free Vidfly account using your email address." },
+                                    { step: "01", title: "Create Your Account", desc: "Sign up for a free Vidflyy account using your email address." },
                                     { step: "02", title: "Submit Video URL", desc: "Go to the Free Trial section and paste the link of the video you want to promote." },
                                     { step: "03", title: "Verify Email", desc: "Confirm your email address to activate your free views campaign." },
                                     { step: "04", title: "Watch It Grow", desc: "Sit back and watch as real, targeted views are delivered to your video." }
@@ -170,7 +170,7 @@ export default function FreeYoutubeViews() {
                             Free YouTube Views Powered By Google Ads
                         </h2>
                         <p className="section-desc max-w-2xl mx-auto">
-                            Unlike competitors who use bots or click farms for their free trials, Vidfly uses official Google Ads campaigns to deliver your free views. We absorb the advertising cost so you can experience authentic growth.
+                            Unlike competitors who use bots or click farms for their free trials, Vidflyy uses official Google Ads campaigns to deliver your free views. We absorb the advertising cost so you can experience authentic growth.
                         </p>
                     </Animated>
                 </div>
@@ -186,7 +186,7 @@ export default function FreeYoutubeViews() {
                                     <thead>
                                         <tr className="bg-gray-50 border-b border-gray-100">
                                             <th className="p-6 font-bold text-gray-900">Features</th>
-                                            <th className="p-6 font-bold text-red-600 bg-red-50">Vidfly Free Views</th>
+                                            <th className="p-6 font-bold text-red-600 bg-red-50">Vidflyy Free Views</th>
                                             <th className="p-6 font-bold text-gray-900">Other "Free" Sites</th>
                                         </tr>
                                     </thead>

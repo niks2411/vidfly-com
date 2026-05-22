@@ -303,7 +303,7 @@ const AddChannelModal = ({ isOpen, onClose, onChannelAdded }: AddChannelModalPro
                     )}
                   </div>
                 </div>
-                <p className="text-[10px] text-slate-400 pl-4">Example: @MrBeast or youtube.com/c/vidfly</p>
+                <p className="text-[10px] text-slate-400 pl-4">Example: @MrBeast or youtube.com/c/vidflyy</p>
             </div>
 
             {error && (

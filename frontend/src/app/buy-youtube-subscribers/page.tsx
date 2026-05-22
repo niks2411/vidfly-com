@@ -61,7 +61,7 @@ const bulkPackages = [
 const faqs = [
     {
         question: "Are the subscribers real and safe?",
-        answer: "Yes, all subscribers provided by Vidfly are 100% real and delivered through legitimate marketing campaigns. This method is completely safe and fully adheres to YouTube's terms of service and guidelines."
+        answer: "Yes, all subscribers provided by Vidflyy are 100% real and delivered through legitimate marketing campaigns. This method is completely safe and fully adheres to YouTube's terms of service and guidelines."
     },
     {
         question: "Will my account get banned for buying subscribers?",
@@ -96,7 +96,7 @@ export default function BuyYoutubeSubscribers() {
                                     Buy YouTube Subscribers
                                 </h1>
                                 <p className="section-desc !text-left !mb-8 max-w-lg">
-                                    If you are looking forward to driving your channel growth quickly, Vidfly is the best platform to go ahead with. Through Vidfly, you can instantly boost your subscriber count, engagement, and authority.
+                                    If you are looking forward to driving your channel growth quickly, Vidflyy is the best platform to go ahead with. Through Vidflyy, you can instantly boost your subscriber count, engagement, and authority.
                                 </p>
                                 <Button 
                                     onClick={handleGetStarted}
@@ -199,7 +199,7 @@ export default function BuyYoutubeSubscribers() {
                                     </h2>
                                     <div className="space-y-6 section-desc">
                                         <p className="section-desc !text-left">
-                                            The need to boost YouTube subscribers can vary depending on your channel's goals, but the primary reason is to speed up authority and channel growth. If your channel has hit a plateau regarding views and subscribers, Vidfly can help you break through that stagnation and attract a loyal audience to your videos.
+                                            The need to boost YouTube subscribers can vary depending on your channel's goals, but the primary reason is to speed up authority and channel growth. If your channel has hit a plateau regarding views and subscribers, Vidflyy can help you break through that stagnation and attract a loyal audience to your videos.
                                         </p>
                                         <p className="section-desc !text-left">
                                             Purchasing real YouTube subscribers will give your content a competitive edge and increase its chances of being recommended by the YouTube algorithm. Only real subscribers have a strong command of authentic engagement. This exposure will lead to more organic visibility. It is a strategic way to gain momentum and build credibility, especially for growing creators.
@@ -220,14 +220,14 @@ export default function BuyYoutubeSubscribers() {
                             <Animated delay={100}>
                                 <div>
                                     <h2 className="section-heading !mb-6">
-                                        How To Buy YouTube Subscribers From Vidfly?
+                                        How To Buy YouTube Subscribers From Vidflyy?
                                     </h2>
                                     <p className="section-desc !mb-8">
-                                        Don't miss out on the chance to grow your YouTube channel using Vidfly. Our dashboard has a particular section dedicated to buying YouTube subscribers for your channel. Follow the steps below to buy subscribers from Vidfly.
+                                        Don't miss out on the chance to grow your YouTube channel using Vidflyy. Our dashboard has a particular section dedicated to buying YouTube subscribers for your channel. Follow the steps below to buy subscribers from Vidflyy.
                                     </p>
                                     <ul className="space-y-4">
                                         {[
-                                            "Sign Up/Sign In On Vidfly.",
+                                            "Sign Up/Sign In On Vidflyy.",
                                             "Copy and Paste the Channel URL on the Dashboard.",
                                             "Enter Demographic and Targeting details.",
                                             "Set the desired Budget.",
@@ -280,7 +280,7 @@ export default function BuyYoutubeSubscribers() {
                                     </h2>
                                     <div className="space-y-6 section-desc">
                                         <p className="section-desc !text-left">
-                                            Yes, you can buy real YouTube subscribers. At Vidfly, we use completely legitimate marketing strategies to promote your channel to actual users. This ensures that the subscribers you receive are real people, meaning they are completely safe and comply with YouTube's terms of service.
+                                            Yes, you can buy real YouTube subscribers. At Vidflyy, we use completely legitimate marketing strategies to promote your channel to actual users. This ensures that the subscribers you receive are real people, meaning they are completely safe and comply with YouTube's terms of service.
                                         </p>
                                         <p className="section-desc !text-left">
                                             Unlike fake bot subscribers that drop off quickly and risk your account's standing, real subscribers provide genuine engagement, higher watch retention on future videos, and long-term channel growth.

@@ -61,7 +61,7 @@ const bulkPackages = [
 const faqs = [
     {
         question: "Are the views real and safe?",
-        answer: "Yes, all views provided by Vidfly are 100% real and delivered through legitimate Google Ads campaigns. This method is completely safe and fully adheres to YouTube's terms of service and guidelines."
+        answer: "Yes, all views provided by Vidflyy are 100% real and delivered through legitimate Google Ads campaigns. This method is completely safe and fully adheres to YouTube's terms of service and guidelines."
     },
     {
         question: "Will my account get banned for buying views?",
@@ -96,7 +96,7 @@ export default function BuyYoutubeViews() {
                                     Buy YouTube Views
                                 </h1>
                                 <p className="section-desc !text-left !mb-8 max-w-lg">
-                                    If you are looking forward to driving your views quickly, Vidfly is the best platform to go ahead with. Through Vidfly, you can instantly boost video views, engagement, and impressions.
+                                    If you are looking forward to driving your views quickly, Vidflyy is the best platform to go ahead with. Through Vidflyy, you can instantly boost video views, engagement, and impressions.
                                 </p>
                                 <Button 
                                     onClick={handleGetStarted}
@@ -199,7 +199,7 @@ export default function BuyYoutubeViews() {
                                     </h2>
                                     <div className="space-y-6 section-desc">
                                         <p className="section-desc !text-left">
-                                            The need to boost YouTube views can vary depending on your channel's goals, but the primary reason is to speed up visibility and growth. If your channel has hit a plateau regarding views and subscribers, Vidfly can help you break through that stagnation and attract views to your videos.
+                                            The need to boost YouTube views can vary depending on your channel's goals, but the primary reason is to speed up visibility and growth. If your channel has hit a plateau regarding views and subscribers, Vidflyy can help you break through that stagnation and attract views to your videos.
                                         </p>
                                         <p className="section-desc !text-left">
                                             Purchasing real YouTube views will give your content a competitive edge and increase its chances of being recommended by the YouTube algorithm. Only real views have a strong command of authentic engagement. This exposure will lead to likes, shares, comments, and eventually more subscribers. It is a strategic way to gain momentum and build credibility, especially for growing creators.
@@ -220,14 +220,14 @@ export default function BuyYoutubeViews() {
                             <Animated delay={100}>
                                 <div>
                                     <h2 className="section-heading !mb-6">
-                                        How To Buy YouTube Views From Vidfly?
+                                        How To Buy YouTube Views From Vidflyy?
                                     </h2>
                                     <p className="section-desc !mb-8">
-                                        Don't miss out on the chance to grow your YouTube channel using Vidfly. Our dashboard has a particular section dedicated to buying YouTube views for specific videos. Follow the steps below to buy views from YouTube to promote your videos.
+                                        Don't miss out on the chance to grow your YouTube channel using Vidflyy. Our dashboard has a particular section dedicated to buying YouTube views for specific videos. Follow the steps below to buy views from YouTube to promote your videos.
                                     </p>
                                     <ul className="space-y-4">
                                         {[
-                                            "Sign Up/Sign In On Vidfly.",
+                                            "Sign Up/Sign In On Vidflyy.",
                                             "Copy and Paste the Video URL on the Dashboard.",
                                             "Enter Demographic and Targeting details.",
                                             "Set the desired Budget.",
@@ -280,7 +280,7 @@ export default function BuyYoutubeViews() {
                                     </h2>
                                     <div className="space-y-6 section-desc">
                                         <p className="section-desc !text-left">
-                                            Yes, you can buy real YouTube views. At Vidfly, we use completely legitimate marketing strategies like Google Ads to promote your videos to actual users. This ensures that the views you receive are from real people, meaning they are completely safe and comply with YouTube's terms of service.
+                                            Yes, you can buy real YouTube views. At Vidflyy, we use completely legitimate marketing strategies like Google Ads to promote your videos to actual users. This ensures that the views you receive are from real people, meaning they are completely safe and comply with YouTube's terms of service.
                                         </p>
                                         <p className="section-desc !text-left">
                                             Unlike fake bot views that drop off quickly and risk your account's standing, real views provide genuine engagement, higher watch retention, and long-term channel growth.

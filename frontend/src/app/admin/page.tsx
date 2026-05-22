@@ -229,7 +229,7 @@ export default function AdminPanel() {
         return (
             <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">
                 <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 space-y-6">
-                    <h1 className="text-3xl font-black text-center text-slate-900 italic tracking-tighter">VIDFLY ADMIN</h1>
+                    <h1 className="text-3xl font-black text-center text-slate-900 italic tracking-tighter">VIDFLYY ADMIN</h1>
                     <form onSubmit={handleLogin} className="space-y-4">
                         <Input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required className="h-12 rounded-xl" />
                         <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required className="h-12 rounded-xl" />

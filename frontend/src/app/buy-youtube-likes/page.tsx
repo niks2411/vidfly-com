@@ -61,7 +61,7 @@ const bulkPackages = [
 const faqs = [
     {
         question: "Are the likes real and safe?",
-        answer: "Yes, all likes provided by Vidfly are 100% real and delivered through legitimate marketing campaigns. This method is completely safe and fully adheres to YouTube's terms of service and guidelines."
+        answer: "Yes, all likes provided by Vidflyy are 100% real and delivered through legitimate marketing campaigns. This method is completely safe and fully adheres to YouTube's terms of service and guidelines."
     },
     {
         question: "Will my account get banned for buying likes?",
@@ -96,7 +96,7 @@ export default function BuyYoutubeLikes() {
                                     Buy YouTube Likes
                                 </h1>
                                 <p className="section-desc !text-left !mb-8 max-w-lg">
-                                    If you are looking forward to driving your engagement quickly, Vidfly is the best platform to go ahead with. Through Vidfly, you can instantly boost video likes, engagement, and visibility to grow your audience.
+                                    If you are looking forward to driving your engagement quickly, Vidflyy is the best platform to go ahead with. Through Vidflyy, you can instantly boost video likes, engagement, and visibility to grow your audience.
                                 </p>
                                 <Button 
                                     onClick={handleGetStarted}
@@ -127,10 +127,10 @@ export default function BuyYoutubeLikes() {
                     <Animated delay={60}>
                         <div className="text-center max-w-4xl mx-auto mb-16">
                             <h2 className="section-heading !mb-6">
-                                Why Buy YouTube Likes From Vidfly?
+                                Why Buy YouTube Likes From Vidflyy?
                             </h2>
                             <p className="section-desc">
-                                Get to know why Vidfly is the most trusted and reliable partner for thousands of creators to grow their YouTube engagement and channel authority.
+                                Get to know why Vidflyy is the most trusted and reliable partner for thousands of creators to grow their YouTube engagement and channel authority.
                             </p>
                         </div>
                     </Animated>
@@ -144,7 +144,7 @@ export default function BuyYoutubeLikes() {
                                 <div>
                                     <h3 className="text-xl font-bold text-gray-900 mb-2">Reliable Service Provider</h3>
                                     <p className="text-gray-600 text-sm leading-relaxed">
-                                        Vidfly ensures that you receive high-quality likes from real users. Our reliable service has helped thousands of creators achieve their engagement goals securely.
+                                        Vidflyy ensures that you receive high-quality likes from real users. Our reliable service has helped thousands of creators achieve their engagement goals securely.
                                     </p>
                                 </div>
                             </div>
@@ -198,7 +198,7 @@ export default function BuyYoutubeLikes() {
                     <Animated delay={60}>
                         <div className="text-center max-w-4xl mx-auto mb-16">
                             <h2 className="section-heading !mb-6">
-                                How To Buy YouTube Likes From Vidfly?
+                                How To Buy YouTube Likes From Vidflyy?
                             </h2>
                             <p className="section-desc">
                                 Getting started is incredibly easy. Follow these simple steps to boost your video engagement instantly with our advanced dashboard.
@@ -208,7 +208,7 @@ export default function BuyYoutubeLikes() {
                     
                     <div className="grid md:grid-cols-4 gap-8">
                         {[
-                            { step: "1", title: "Sign Up", desc: "Create an account on Vidfly in seconds." },
+                            { step: "1", title: "Sign Up", desc: "Create an account on Vidflyy in seconds." },
                             { step: "2", title: "Add Video URL", desc: "Paste your YouTube video link in the dashboard." },
                             { step: "3", title: "Set Targeting", desc: "Choose your audience demographics and interests." },
                             { step: "4", title: "Checkout", desc: "Complete payment and watch your likes grow!" }
@@ -282,7 +282,7 @@ export default function BuyYoutubeLikes() {
                                 Boost Your Channel with YouTube Likes
                             </h2>
                             <p className="text-red-100 mb-10 max-w-2xl mx-auto text-lg">
-                                Stop waiting for engagement. Let Vidfly's legitimate promotional campaigns drive real likes to your videos today.
+                                Stop waiting for engagement. Let Vidflyy's legitimate promotional campaigns drive real likes to your videos today.
                             </p>
                             <Button 
                                 onClick={handleGetStarted}
@@ -317,7 +317,7 @@ export default function BuyYoutubeLikes() {
                                     </h2>
                                     <div className="space-y-6 section-desc">
                                         <p className="section-desc !text-left">
-                                            Yes, you absolutely can and should buy real YouTube likes if you want to accelerate your growth. At Vidfly, we use completely legitimate marketing strategies via Google Ads to promote your channel to actual users. This ensures that the likes you receive are from real people, meaning they are completely safe and comply with YouTube's terms of service.
+                                            Yes, you absolutely can and should buy real YouTube likes if you want to accelerate your growth. At Vidflyy, we use completely legitimate marketing strategies via Google Ads to promote your channel to actual users. This ensures that the likes you receive are from real people, meaning they are completely safe and comply with YouTube's terms of service.
                                         </p>
                                         <p className="section-desc !text-left">
                                             Unlike fake bot likes that drop off quickly and risk your account's standing, real likes provide genuine engagement, higher watch retention on future videos, and long-term channel growth.

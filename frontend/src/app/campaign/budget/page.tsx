@@ -1238,7 +1238,7 @@ export default function CampaignBudget() {
                                         </div>
                                         <div className="flex-1 bg-white p-3 rounded-2xl rounded-tl-none border border-slate-100 shadow-sm relative">
                                             <div className="absolute -left-[7px] top-0 w-2 h-3 bg-white border-l border-slate-100" style={{ clipPath: 'polygon(100% 0, 0 0, 100% 100%)' }} />
-                                            <p className="text-[13px] font-bold text-slate-700 leading-tight">Sit back and relax! Vidfly finds the best audience for your videos.</p>
+                                            <p className="text-[13px] font-bold text-slate-700 leading-tight">Sit back and relax! Vidflyy finds the best audience for your videos.</p>
                                             <p className="text-[11px] text-slate-400 font-medium mt-1">(Tailored based on your selections and channel profile.)</p>
                                         </div>
                                     </div>

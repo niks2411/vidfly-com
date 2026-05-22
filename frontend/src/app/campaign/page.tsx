@@ -213,7 +213,7 @@ export default function CampaignDashboard() {
                     {/* Main Headline */}
                     <h1 className="section-heading !text-[#1e293b] !mb-10 md:!mb-6 pt-2 lg:pt-0">
                         Join <span className="font-bold">50,000+</span> <span className="italic font-serif">Creators</span> who scaled <br className="hidden md:block" />
-                        faster with <span className="font-bold">Vidfly!</span>
+                        faster with <span className="font-bold">Vidflyy!</span>
                     </h1>
 
                     {/* Stacked Creator Images */}
