@@ -40,7 +40,7 @@ export function constructMetadata({
         icons,
         metadataBase: new URL('https://www.vidflyy.com'),
         verification: {
-            google: "wVyMQnvLmH70xKPCsA8Dx9BvNascr3XadYQenrvtOuQ",
+            google: "7nUkENHHmYFGVinwhLxS-fONUoMZnJ7CewTe_QV-wSI",
         },
         ...(noIndex && {
             robots: {
