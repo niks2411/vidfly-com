@@ -23,7 +23,7 @@ const parseBooleanEnv = (value, fallback) => {
 const buildCookieOptions = (maxAge) => {
   const secure = parseBooleanEnv(
     process.env.AUTH_COOKIE_SECURE,
-    process.env.NODE_ENV === 'production'
+    process.env.NODE_ENV === 'production' || (process.env.BACKEND_ORIGIN && process.env.BACKEND_ORIGIN.startsWith('https://'))
   );
   const sameSiteRaw = (process.env.AUTH_COOKIE_SAME_SITE || (secure ? 'none' : 'lax')).toLowerCase();
   const sameSite = ['lax', 'strict', 'none'].includes(sameSiteRaw) ? sameSiteRaw : 'lax';
@@ -40,7 +40,7 @@ const buildCookieOptions = (maxAge) => {
 
   if (domain) {
     options.domain = domain;
-  } else if (process.env.NODE_ENV === 'production') {
+  } else if (process.env.NODE_ENV === 'production' || (process.env.BACKEND_ORIGIN && process.env.BACKEND_ORIGIN.includes('vidflyy.com'))) {
     options.domain = '.vidflyy.com';
   }
 

@@ -9,7 +9,9 @@ import CampaignLayout from "@/components/CampaignLayout";
 import { Loader2, CreditCard, AlertCircle } from "lucide-react";
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
-const CASHFREE_MODE = process.env.NEXT_PUBLIC_CASHFREE_MODE || "sandbox";
+const CASHFREE_MODE = (typeof window !== "undefined" && (window.location.hostname.includes("vidflyy.com") || window.location.hostname.includes("vidfly.com")))
+    ? "production"
+    : (process.env.NEXT_PUBLIC_CASHFREE_MODE || "sandbox");
 
 type Order = {
     _id: string;

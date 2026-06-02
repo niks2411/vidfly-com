@@ -15,12 +15,11 @@ let CASHFREE_ENVIRONMENT = (process.env.CASHFREE_ENVIRONMENT || 'TEST').toUpperC
 // Safety check: If using test credentials, force TEST environment
 // Test credentials typically start with specific patterns or are shorter
 if (CASHFREE_ENVIRONMENT === 'PRODUCTION') {
-  const clientIdLength = CASHFREE_CLIENT_ID?.length || 0;
-  const clientSecretLength = CASHFREE_CLIENT_SECRET?.length || 0;
+  // Test credentials typically start with TEST or contain test patterns
+  const isTestClientId = CASHFREE_CLIENT_ID?.toUpperCase().startsWith('TEST');
+  const isTestClientSecret = CASHFREE_CLIENT_SECRET?.toUpperCase().startsWith('TEST') || CASHFREE_CLIENT_SECRET?.includes('_test_');
 
-  // Test credentials are usually shorter or have specific patterns
-  // If credentials look like test credentials, warn and use TEST
-  if (clientIdLength < 20 || clientSecretLength < 30) {
+  if (isTestClientId || isTestClientSecret) {
     console.warn('⚠️ WARNING: CASHFREE_ENVIRONMENT is set to PRODUCTION but credentials look like TEST credentials.');
     console.warn('⚠️ Switching to TEST environment. Set CASHFREE_ENVIRONMENT=TEST in .env file.');
     CASHFREE_ENVIRONMENT = 'TEST';

@@ -14,7 +14,9 @@ import ChannelSelector from "@/components/ChannelSelector";
 import { useAuth } from "@/context/AuthContext";
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
-const CASHFREE_MODE = process.env.NEXT_PUBLIC_CASHFREE_MODE || "sandbox";
+const CASHFREE_MODE = (typeof window !== "undefined" && (window.location.hostname.includes("vidflyy.com") || window.location.hostname.includes("vidfly.com")))
+    ? "production"
+    : (process.env.NEXT_PUBLIC_CASHFREE_MODE || "sandbox");
 
 type PricingBreakdown = {
     baseViews: { min: number; max: number; exact: number };
