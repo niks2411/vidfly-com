@@ -253,7 +253,7 @@ export default function YoutubeGamingPromotion() {
                     <div className="relative overflow-hidden mb-16">
                         <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-[#F7F6F6] to-transparent z-10 pointer-events-none"></div>
                         <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-[#F7F6F6] to-transparent z-10 pointer-events-none"></div>
-                        <div className="flex gap-4 animate-scroll-tags">
+                        <div className="flex gap-4 animate-scroll-tags w-max">
                             {[
                                 "Gameplay channels",
                                 "Mobile gaming creators",
@@ -290,7 +290,7 @@ export default function YoutubeGamingPromotion() {
                         <div className="relative overflow-hidden">
                             <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-[#F7F6F6] to-transparent z-10 pointer-events-none"></div>
                             <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-[#F7F6F6] to-transparent z-10 pointer-events-none"></div>
-                            <div className="flex items-center gap-10 animate-scroll-games">
+                            <div className="flex items-center gap-10 animate-scroll-games w-max">
                                 {[
                                     { src: "/g1.png", alt: "PUBG" },
                                     { src: "/g2.png", alt: "Free Fire" },
@@ -367,7 +367,7 @@ export default function YoutubeGamingPromotion() {
                         {/* Right Image */}
                         <div className="flex-1 flex justify-center lg:justify-end">
                             <Animated delay={200}>
-                                <div className="relative w-[350px] h-[350px] lg:w-[550px] lg:h-[450px]">
+                                <div className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] lg:w-[550px] lg:h-[450px]">
                                     <Image
                                         src="/megaphone.png"
                                         alt="Promote Your Gaming Channel"
@@ -388,7 +388,7 @@ export default function YoutubeGamingPromotion() {
                         {/* Left Image */}
                         <div className="flex-1 flex justify-center lg:justify-start lg:pl-12">
                             <Animated delay={100}>
-                                <div className="relative w-[300px] h-[350px] lg:w-[380px] lg:h-[400px]">
+                                <div className="relative w-[280px] h-[280px] sm:w-[300px] sm:h-[350px] lg:w-[380px] lg:h-[400px]">
                                     <Image
                                         src="/leftgaming.png"
                                         alt="YouTube Gaming Promotion Safe"
@@ -467,7 +467,7 @@ export default function YoutubeGamingPromotion() {
                         {/* Right Image */}
                         <div className="flex-1 flex justify-center lg:justify-end">
                             <Animated delay={200}>
-                                <div className="relative w-[300px] h-[350px] lg:w-[400px] lg:h-[400px]">
+                                <div className="relative w-[280px] h-[280px] sm:w-[300px] sm:h-[350px] lg:w-[400px] lg:h-[400px]">
                                     <Image
                                         src="/rightgaming.png"
                                         alt="Who Should Use Gaming Video Promotion"
@@ -484,9 +484,9 @@ export default function YoutubeGamingPromotion() {
 
             {/* PROMOTE TODAY CTA */}
             <section className="py-24 bg-white font-founders">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-left md:text-center">
                     {/* Google Partner Badge */}
-                    <div className="flex justify-center mb-10">
+                    <div className="flex justify-start md:justify-center mb-10">
                         <div className="bg-[#EBEEF3] px-6 py-2 flex items-center gap-2 rounded-[4px] border border-[#DEE2E6]">
                             <svg viewBox="0 0 24 24" className="h-5 w-5">
                                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -500,7 +500,7 @@ export default function YoutubeGamingPromotion() {
                         </div>
                     </div>
 
-                    <h2 className="text-[42px] md:text-[54px] font-bold text-[#0E172B] leading-tight mb-4">
+                    <h2 className="text-[32px] md:text-[54px] font-bold text-[#0E172B] leading-tight mb-4">
                         <span style={{
                             background: "linear-gradient(90deg, #FB7185 0%, #A855F7 100%)",
                             WebkitBackgroundClip: "text",
@@ -517,8 +517,8 @@ export default function YoutubeGamingPromotion() {
                         }}>₹499</span>.
                     </h2>
 
-                    <p className="text-[#475569] text-[18px] max-w-2xl mx-auto mb-12">
-                        We help you get more Engagement on your YouTube video by promoting it<br />to Relevant Audiences using Google Ads.
+                    <p className="text-[#475569] text-[18px] max-w-2xl mx-0 md:mx-auto mb-12">
+                        We help you get more Engagement on your YouTube video by promoting it<br className="hidden md:block" />to Relevant Audiences using Google Ads.
                     </p>
 
                     {/* Input Bar */}
