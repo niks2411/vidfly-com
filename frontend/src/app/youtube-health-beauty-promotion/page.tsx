@@ -9,7 +9,7 @@ import { CheckCircle, ChevronDown, Heart, Sparkles, Camera, Droplets } from "luc
 import { Animated } from "@/components/Animated";
 import GoogleAdsSection from "@/components/GoogleAdsSection";
 import FAQ from "@/components/FAQ";
-import { FAQSchema } from "@/components/Schema";
+import { FAQSchema, YoutubeHealthBeautyPromotionSchema } from "@/components/Schema";
 
 const beautyFaqs = [
     {
@@ -116,6 +116,7 @@ export default function YoutubeHealthBeautyPromotion() {
 
     return (
         <div className="min-h-screen bg-white font-founders">
+            <YoutubeHealthBeautyPromotionSchema />
             <FAQSchema items={beautyFaqs} />
             {/* HERO */}
             <div className="px-2 lg:px-4">

@@ -9,7 +9,7 @@ import { Youtube, CheckCircle, ChevronDown, MapPin, Globe, Compass, Plane, Mount
 import { Animated } from "@/components/Animated";
 import GoogleAdsSection from "@/components/GoogleAdsSection";
 import FAQ from "@/components/FAQ";
-import { FAQSchema } from "@/components/Schema";
+import { FAQSchema, YoutubeTravelPromotionSchema } from "@/components/Schema";
 
 const travelFaqs = [
     {
@@ -116,6 +116,7 @@ export default function YoutubeTravelPromotion() {
 
     return (
         <div className="min-h-screen bg-white font-founders">
+            <YoutubeTravelPromotionSchema />
             <FAQSchema items={travelFaqs} />
             {/* HERO */}
             <div className="px-2 lg:px-4">

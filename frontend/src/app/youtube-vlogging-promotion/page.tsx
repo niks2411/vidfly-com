@@ -11,7 +11,7 @@ import GoogleAdsSection from "@/components/GoogleAdsSection";
 import YouTubeGrowthCampaigns from "@/components/YouTubeGrowthCampaigns";
 import PromotionBanner from "@/components/PromotionBanner";
 import FAQ from "@/components/FAQ";
-import { FAQSchema } from "@/components/Schema";
+import { FAQSchema, YoutubeVloggingPromotionSchema } from "@/components/Schema";
 
 export default function YoutubeVloggingPromotion() {
     const router = useRouter();
@@ -77,6 +77,7 @@ export default function YoutubeVloggingPromotion() {
 
     return (
         <div className="min-h-screen bg-white font-founders">
+            <YoutubeVloggingPromotionSchema />
             <FAQSchema items={vloggingFaqs} />
             {/* HERO */}
             <div className="px-2 lg:px-4">

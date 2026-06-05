@@ -13,7 +13,7 @@ import PromotionBanner from "@/components/PromotionBanner";
 
 
 import FAQ from "@/components/FAQ";
-import { FAQSchema } from "@/components/Schema";
+import { FAQSchema, YoutubeMusicPromotionSchema } from "@/components/Schema";
 
 export default function YoutubeMusicPromotion() {
     const router = useRouter();
@@ -79,6 +79,7 @@ export default function YoutubeMusicPromotion() {
 
     return (
         <div className="min-h-screen bg-white font-founders">
+            <YoutubeMusicPromotionSchema />
             <FAQSchema items={musicFaqs} />
             {/* HERO */}
             <div className="px-2 lg:px-4">

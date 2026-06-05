@@ -9,7 +9,7 @@ import WeeklyBudgetCTA from "@/components/WeeklyBudgetCTA";
 import ComparisonTable from "@/components/ComparisonTable";
 import FAQ from "@/components/FAQ";
 import { constructMetadata } from "@/lib/seo";
-import { FAQSchema } from "@/components/Schema";
+import { FAQSchema, HomeSoftwareApplicationSchema } from "@/components/Schema";
 
 export const metadata = constructMetadata({
   title: "Vidflyy - YouTube Video Promotion Made Easy (Real Views & Subscribers Fast)",
@@ -54,6 +54,7 @@ const homeFaqs = [
 export default function Home() {
     return (
         <div className="min-h-screen bg-white font-founders home-page-container">
+            <HomeSoftwareApplicationSchema />
             <FAQSchema items={homeFaqs} />
             <Hero showStats={true} />
             <GoogleAdsSection />

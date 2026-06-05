@@ -58,6 +58,7 @@ export default function RootLayout({
                         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
                     })(window, document, "clarity", "script", "wmcpvkuyhc");`}
                 </Script>
+                <OrganizationSchema />
             </head>
             <body className="antialiased font-founders text-[rgb(41,40,40)]" suppressHydrationWarning>
                 {/* Google Tag Manager (noscript) */}
@@ -69,7 +70,6 @@ export default function RootLayout({
                         style={{ display: 'none', visibility: 'hidden' }}
                     />
                 </noscript>
-                <OrganizationSchema />
                 <ServiceSchema />
                 <CampaignSidebarProvider>
                     <AuthProvider>
