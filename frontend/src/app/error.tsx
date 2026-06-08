@@ -22,6 +22,8 @@ export default function RootError({
       /Loading chunk [\d]+ failed/i.test(errorMessage) ||
       /CSS chunk loading failed/i.test(errorMessage) ||
       /Failed to fetch dynamically imported module/i.test(errorMessage) ||
+      /Importing a module script failed/i.test(errorMessage) ||
+      /error loading dynamic import/i.test(errorMessage) ||
       errorMessage.includes("ChunkLoadError") ||
       errorStack.includes("ChunkLoadError");
 

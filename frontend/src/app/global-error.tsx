@@ -11,9 +11,36 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     console.error("[GlobalError]", error);
+
+    // Detect chunk loading errors and reload the page automatically
+    const errorMessage = error?.message || "";
+    const errorStack = error?.stack || "";
+    
+    const isChunkLoadFailed =
+      /Loading chunk [\d]+ failed/i.test(errorMessage) ||
+      /CSS chunk loading failed/i.test(errorMessage) ||
+      /Failed to fetch dynamically imported module/i.test(errorMessage) ||
+      /Importing a module script failed/i.test(errorMessage) ||
+      /error loading dynamic import/i.test(errorMessage) ||
+      errorMessage.includes("ChunkLoadError") ||
+      errorStack.includes("ChunkLoadError");
+
+    if (isChunkLoadFailed) {
+      const lastReload = sessionStorage.getItem("last-chunk-reload");
+      const now = Date.now();
+
+      // Only reload if we haven't reloaded in the last 10 seconds (prevents loops)
+      if (!lastReload || now - parseInt(lastReload, 10) > 10000) {
+        sessionStorage.setItem("last-chunk-reload", now.toString());
+        console.warn("Chunk loading failed. Reloading the application...");
+        window.location.reload();
+      }
+    }
   }, [error]);
 
   const handleRefresh = () => {
+    // Clear the reload timestamp to force a refresh
+    sessionStorage.removeItem("last-chunk-reload");
     window.location.reload();
   };
 
