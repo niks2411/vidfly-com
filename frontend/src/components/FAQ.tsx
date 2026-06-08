@@ -85,11 +85,15 @@ const FAQ = ({
                   <ChevronDown className="h-5 w-5 text-red-600 flex-shrink-0" />
                 )}
               </button>
-              {openItems.includes(index) && (
+              <div
+                className={`overflow-hidden transition-all duration-300 ${
+                  openItems.includes(index) ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                }`}
+              >
                 <div className="px-6 pb-4">
                   <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
                 </div>
-              )}
+              </div>
             </div>
           ))}
         </div>

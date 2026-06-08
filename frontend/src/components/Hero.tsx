@@ -34,13 +34,13 @@ const Hero = ({ showStats }: HeroProps) => {
         {/* Gray bg stretches full width minus the thin white margins */}
         <div className="bg-[#F0F3F7] min-h-[calc(100vh-84px)] flex items-center">
           <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 lg:pt-12 pb-16 lg:pb-20">
-            <div className="grid lg:grid-cols-[1.15fr_1fr] gap-8 items-center">
+            <div className="grid lg:grid-cols-[1.3fr_1fr] gap-8 items-center">
               {/* Left Column: Content */}
               <div className="animate-fade-in space-y-7">
-                <h1 className="section-heading !leading-[1.15]">
-                  Launch YouTube Growth
+                <h1 className="section-heading !leading-[1.15] lg:!text-[32px] xl:!text-[36px] 2xl:!text-[42px]">
+                  YouTube Video Promotion That
                   <br />
-                  Campaigns in Seconds
+                  Delivers Real Views & Subscribers
                 </h1>
 
                 <p className="section-desc !mx-0 !text-left max-w-md">
@@ -141,7 +141,7 @@ const Hero = ({ showStats }: HeroProps) => {
               </div>
 
               <div className="relative block animate-fade-in mt-10 lg:mt-0">
-                <div className="relative w-full max-w-lg mx-auto lg:max-w-none">
+                <div className="relative w-full max-w-lg mx-auto lg:max-w-none lg:-translate-x-10">
                   <Image
                     src="/right image.png"
                     alt="Vidflyy Hero - How your videos will be seen"

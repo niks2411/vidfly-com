@@ -1,3 +1,5 @@
+"use client";
+
 import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
 
@@ -7,7 +9,7 @@ const testimonials = [
     role: "Gaming Channel · 34K subs",
     content: "Honestly was sceptical at first — tried boosting on my own through Google Ads and burned through ₹8,000 with barely 200 views. Vidflyy got me 11,000 views in 10 days on the same budget. The audience targeting is genuinely different.",
     rating: 5,
-    avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop&crop=face",
+    avatar: "/avatars/rahul.png",
     metrics: "11K views · ₹8K budget",
     verified: true,
   },
@@ -16,7 +18,7 @@ const testimonials = [
     role: "Skincare & Beauty · Mumbai",
     content: "My skincare channel was stuck at 2,200 subscribers for almost 6 months. After my first Vidflyy campaign, I crossed 9K in about 5 weeks. What I liked most was that comments actually came from people interested in skincare, not bots.",
     rating: 5,
-    avatar: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&h=100&fit=crop&crop=face",
+    avatar: "/avatars/sneha.png",
     metrics: "2.2K → 9K Subscribers",
     verified: true,
   },
@@ -25,7 +27,7 @@ const testimonials = [
     role: "Finance & Investing",
     content: "Running a finance channel in Hindi is competitive. Vidflyy helped me narrowly target people already watching personal finance content. My watch time per viewer went up significantly — not just click numbers. Worth every rupee.",
     rating: 5,
-    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face",
+    avatar: "/avatars/deepak.png",
     metrics: "Watch time up 3.2×",
     verified: true,
   },
@@ -34,7 +36,7 @@ const testimonials = [
     role: "Yoga & Wellness · Bengaluru",
     content: "The support team walked me through setting up my first campaign step by step. I had zero experience with ads. Got 6,400 views on my meditation video in the first week — more than my last 3 months combined. Would recommend, especially for beginners.",
     rating: 5,
-    avatar: "https://images.unsplash.com/photo-1593104547489-5cfb3839a3b5?w=100&h=100&fit=crop&crop=face",
+    avatar: "/avatars/priya.png",
     metrics: "6.4K views in first week",
     verified: true,
   },
@@ -43,7 +45,7 @@ const testimonials = [
     role: "Tech Unboxing · Delhi NCR",
     content: "Good experience overall. The views were real and engagement was decent. My only feedback is that the reporting dashboard could show a bit more breakdown by device. That said, my channel grew from 5K to 18K in about 2 months, so results speak for themselves.",
     rating: 4,
-    avatar: "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=100&h=100&fit=crop&crop=face",
+    avatar: "/avatars/aakash.png",
     metrics: "5K → 18K Subscribers",
     verified: true,
   },
@@ -52,11 +54,12 @@ const testimonials = [
     role: "Cooking Channel · Jaipur",
     content: "I make traditional Rajasthani recipes and was worried my niche was too narrow. Vidflyy proved me wrong — they found exactly the right audience. My dal baati video crossed 80,000 views organically after the initial campaign boost. Still getting new subscribers daily.",
     rating: 5,
-    avatar: "https://images.unsplash.com/photo-1548142813-c348350df52b?w=100&h=100&fit=crop&crop=face",
+    avatar: "/avatars/kavita.png",
     metrics: "80K+ organic views after boost",
     verified: true,
   },
 ];
+
 
 
 const useVisible = () => {

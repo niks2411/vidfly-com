@@ -1,7 +1,10 @@
 import { MetadataRoute } from 'next';
+import { ARTICLES } from '@/lib/blogData';
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = 'https://www.vidflyy.com';
+
+    const blogRoutes = ARTICLES.map((article) => `/blog/${article.slug}`);
 
     const routes = [
         '',
@@ -9,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/features',
         '/contact',
         '/blog',
+        ...blogRoutes,
         '/success-stories',
         '/how-it-works',
         '/faq',
@@ -33,3 +37,4 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     return routes;
 }
+
