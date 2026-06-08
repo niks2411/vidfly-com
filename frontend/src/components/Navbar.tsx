@@ -89,6 +89,7 @@ const TopBanner = () => {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isMobileChannelOpen, setIsMobileChannelOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const isCampaignPage = pathname?.startsWith('/campaign') || false;
@@ -161,15 +162,40 @@ const Navbar = () => {
               <button onClick={() => handleNavClick("/how-it-works")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap">
                 How Vidflyy Works
               </button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap flex items-center gap-1 hover:cursor-pointer outline-none">
+                    Channel Promotion <ChevronDown className="h-4 w-4 shrink-0" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-72 mt-2 p-2 rounded-2xl shadow-2xl border border-gray-100 bg-white z-[1001] opacity-100">
+                  <DropdownMenuLabel className="font-founders text-xs text-gray-400 px-3 py-2">
+                    SELECT CHANNEL TYPE
+                  </DropdownMenuLabel>
+                  {[
+                    { label: "Youtube Music Promotion", path: "/youtube-music-promotion" },
+                    { label: "Youtube Gaming Channel Promotion", path: "/youtube-gaming-promotion" },
+                    { label: "Youtube Travel Promotion", path: "/youtube-travel-promotion" },
+                    { label: "Youtube Health & Beauty Promotion", path: "/youtube-health-beauty-promotion" },
+                    { label: "Youtube Motivation Promotion", path: "/youtube-motivation-promotion" },
+                    { label: "Youtube Vlogging Promotion", path: "/youtube-vlogging-promotion" },
+                  ].map((item) => (
+                    <DropdownMenuItem
+                      key={item.path}
+                      onClick={() => handleNavClick(item.path)}
+                      className="flex items-center px-3 py-2.5 rounded-lg cursor-pointer hover:bg-gray-50 focus:bg-gray-50 transition-colors"
+                    >
+                      <span className="font-semibold text-[14px] text-gray-800 hover:text-red-600 transition-colors">
+                        {item.label}
+                      </span>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               <button onClick={() => handleNavClick("/pricing")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap">
                 Pricing
-              </button>
-              <button onClick={() => handleNavClick("/features")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap">
-                Features
-              </button>
-
-              <button onClick={() => handleNavClick("/faq")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap">
-                FAQ
               </button>
               <button onClick={() => handleNavClick("/contact")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold transition-colors duration-300 whitespace-nowrap">
                 Contact Us
@@ -268,22 +294,62 @@ const Navbar = () => {
           {isOpen && (
             <div className="lg:hidden animate-fade-in pb-6">
               <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
-                {[
-                  { label: "How Vidflyy Works", path: "/how-it-works" },
-                  { label: "Pricing", path: "/pricing" },
-                  { label: "Features", path: "/features" },
+                {/* How Vidflyy Works */}
+                <button
+                  onClick={() => handleNavClick("/how-it-works")}
+                  className="text-[#0E172B] hover:text-red-600 block px-3 py-4 text-lg font-bold w-full text-left transition-colors duration-300 border-b border-gray-50"
+                >
+                  How Vidflyy Works
+                </button>
 
-                  { label: "FAQ", path: "/faq" },
-                  { label: "Contact Us", path: "/contact" },
-                ].map((link) => (
+                {/* Collapsible Channel Promotion */}
+                <div className="border-b border-gray-50">
                   <button
-                    key={link.path}
-                    onClick={() => handleNavClick(link.path)}
-                    className="text-[#0E172B] hover:text-red-600 block px-3 py-4 text-lg font-bold w-full text-left transition-colors duration-300 border-b border-gray-50"
+                    onClick={() => setIsMobileChannelOpen(!isMobileChannelOpen)}
+                    className="text-[#0E172B] hover:text-red-600 flex justify-between items-center px-3 py-4 text-lg font-bold w-full text-left transition-colors duration-300"
                   >
-                    {link.label}
+                    <span>Channel Promotion</span>
+                    <ChevronDown className={`h-5 w-5 text-gray-500 transition-transform duration-300 ${isMobileChannelOpen ? "rotate-180 text-red-600" : ""}`} />
                   </button>
-                ))}
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ${
+                      isMobileChannelOpen ? "max-h-[400px] pb-4 opacity-100" : "max-h-0 opacity-0 pointer-events-none"
+                    }`}
+                  >
+                    {[
+                      { label: "Youtube Music Promotion", path: "/youtube-music-promotion" },
+                      { label: "Youtube Gaming Channel Promotion", path: "/youtube-gaming-promotion" },
+                      { label: "Youtube Travel Promotion", path: "/youtube-travel-promotion" },
+                      { label: "Youtube Health & Beauty Promotion", path: "/youtube-health-beauty-promotion" },
+                      { label: "Youtube Motivation Promotion", path: "/youtube-motivation-promotion" },
+                      { label: "Youtube Vlogging Promotion", path: "/youtube-vlogging-promotion" },
+                    ].map((item) => (
+                      <button
+                        key={item.path}
+                        onClick={() => handleNavClick(item.path)}
+                        className="text-gray-600 hover:text-red-600 block pl-8 pr-3 py-3 text-[16px] font-semibold w-full text-left transition-colors duration-300"
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Pricing */}
+                <button
+                  onClick={() => handleNavClick("/pricing")}
+                  className="text-[#0E172B] hover:text-red-600 block px-3 py-4 text-lg font-bold w-full text-left transition-colors duration-300 border-b border-gray-50"
+                >
+                  Pricing
+                </button>
+
+                {/* Contact Us */}
+                <button
+                  onClick={() => handleNavClick("/contact")}
+                  className="text-[#0E172B] hover:text-red-600 block px-3 py-4 text-lg font-bold w-full text-left transition-colors duration-300 border-b border-gray-50"
+                >
+                  Contact Us
+                </button>
                 <div className="pt-6 space-y-4 px-3">
                   {mounted && user ? (
                     <div className="space-y-4">

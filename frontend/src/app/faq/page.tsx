@@ -1,13 +1,5 @@
-"use client";
-
-import FAQ from "@/components/FAQ";
+import { redirect } from "next/navigation";
 
 export default function FAQPage() {
-    return (
-        <div className="min-h-screen bg-white">
-            <main className="pt-20">
-                <FAQ />
-            </main>
-        </div>
-    );
+    redirect("/how-it-works");
 }
