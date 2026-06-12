@@ -2,6 +2,7 @@
 
 import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { usePathname } from "next/navigation";
 
 const testimonials = [
   {
@@ -77,20 +78,29 @@ const useVisible = () => {
 };
 
 const Testimonials = () => {
+  const pathname = usePathname();
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const total = testimonials.length;
   const visible = useVisible();
 
+  const isExcluded =
+    pathname === "/profile" ||
+    pathname?.startsWith('/campaign') ||
+    pathname?.startsWith('/payment') ||
+    pathname?.startsWith('/admin');
+
   const prev = useCallback(() => setCurrent((c) => (c - 1 + total) % total), [total]);
   const next = useCallback(() => setCurrent((c) => (c + 1) % total), [total]);
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || isExcluded) return;
     timerRef.current = setInterval(next, 3500);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [paused, next]);
+  }, [paused, next, isExcluded]);
+
+  if (isExcluded) return null;
 
   // Build ordered list starting from `current`
   const getVisible = () =>

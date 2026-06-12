@@ -13,6 +13,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import Script from "next/script";
 import SmoothScroll from "@/components/SmoothScroll";
 import { constructMetadata } from "@/lib/seo";
+import Testimonials from "@/components/Testimonials";
 
 export const metadata = constructMetadata();
 
@@ -79,6 +80,7 @@ export default function RootLayout({
                                     <ScrollToTop />
                                     <Navbar />
                                     <main>{children}</main>
+                                    <Testimonials />
                                     <Footer />
                                     <WhatsAppFloat />
                                     <Toaster />

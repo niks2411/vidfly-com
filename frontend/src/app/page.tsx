@@ -8,7 +8,6 @@ import VideoShowcaseNew from "@/components/VideoShowcaseNew";
 import WeeklyBudgetCTA from "@/components/WeeklyBudgetCTA";
 import ComparisonTable from "@/components/ComparisonTable";
 import FAQ from "@/components/FAQ";
-import Testimonials from "@/components/Testimonials";
 import { constructMetadata } from "@/lib/seo";
 import { FAQSchema, HomeSoftwareApplicationSchema } from "@/components/Schema";
 
@@ -65,7 +64,6 @@ export default function Home() {
             <VideoShowcaseNew />
             <NewServices />
             <ComparisonTable />
-            <Testimonials />
             <WeeklyBudgetCTA />
             <FAQ items={homeFaqs} />
         </div>

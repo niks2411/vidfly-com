@@ -1,4 +1,4 @@
-import { CheckCircle, Play, TrendingUp, Star } from "lucide-react";
+import { CheckCircle, Play, TrendingUp } from "lucide-react";
 import Image from "next/image";
 
 export default function SuccessStoriesPage() {
@@ -110,58 +110,7 @@ export default function SuccessStoriesPage() {
                         ))}
                     </div>
 
-                    {/* Testimonials Section */}
-                    <div className="mt-20">
-                        <div className="text-left sm:text-center mb-12">
-                            <h2 className="section-heading text-left sm:text-center !mb-4">
-                                What Our <span className="text-red-600">Clients Say</span>
-                            </h2>
-                            <div className="flex items-center justify-center gap-2 mb-4">
-                                <div className="flex text-yellow-400">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star key={i} className="h-6 w-6 fill-current" />
-                                    ))}
-                                </div>
-                                <span className="text-gray-600 ml-2">5.0 Google Rating</span>
-                            </div>
-                        </div>
 
-                        <div className="grid md:grid-cols-3 gap-8">
-                            {[
-                                {
-                                    name: "Sarah Johnson",
-                                    role: "Beauty YouTuber",
-                                    content: "Vidflyy helped me grow from 500 to 50,000 subscribers in just 6 months. The targeting was incredibly precise!",
-                                    rating: 5
-                                },
-                                {
-                                    name: "Mike Chen",
-                                    role: "Tech Reviewer",
-                                    content: "The best investment I made for my channel. Professional service and amazing results that exceeded expectations.",
-                                    rating: 5
-                                },
-                                {
-                                    name: "Emma Wilson",
-                                    role: "Lifestyle Vlogger",
-                                    content: "Outstanding service! My engagement rates doubled and subscriber quality improved significantly.",
-                                    rating: 5
-                                }
-                            ].map((testimonial, index) => (
-                                <div key={index} className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in">
-                                    <div className="flex text-yellow-400 mb-4">
-                                        {[...Array(testimonial.rating)].map((_, i) => (
-                                            <Star key={i} className="h-5 w-5 fill-current" />
-                                        ))}
-                                    </div>
-                                    <p className="text-gray-700 mb-6 italic">"{testimonial.content}"</p>
-                                    <div>
-                                        <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
-                                        <p className="text-gray-600 text-sm">{testimonial.role}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
 
                     <div className="text-center mt-16">
                         <div className="bg-red-50 rounded-2xl p-8 inline-block">
