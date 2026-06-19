@@ -43,11 +43,11 @@ const Hero = ({ showStats }: HeroProps) => {
                 </h1>
 
                 <p className="section-desc !mx-0 !text-left max-w-md">
-                  Get real views, subscribers & engagement on demand
+                  Get discovered by viewers who matter. Our smart
                   <br className="hidden sm:block" />
-                  with full control, transparent tracking,
+                  YouTube promotion helps creators attract engaged
                   <br className="hidden sm:block" />
-                  and zero fake traffic.
+                  audiences and turn attention into loyal subscribers.
                 </p>
 
                 <div className="text-[16px] font-bold text-[#0E172B]">
