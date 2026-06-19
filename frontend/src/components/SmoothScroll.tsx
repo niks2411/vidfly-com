@@ -1,10 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
+    const lenisRef = useRef<Lenis | null>(null);
+    const rafIdRef = useRef<number | null>(null);
+    const pathname = usePathname();
+
     useEffect(() => {
+        console.log("[SmoothScroll] Initializing Lenis for route:", pathname);
+
+        // Create a fresh Lenis instance
         const lenis = new Lenis({
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -16,20 +24,26 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
             infinite: false,
         });
 
-        let isActive = true;
-        function raf(time: number) {
-            if (!isActive) return;
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        
-        requestAnimationFrame(raf);
+        lenisRef.current = lenis;
 
+        function raf(time: number) {
+            lenis.raf(time);
+            rafIdRef.current = requestAnimationFrame(raf);
+        }
+
+        rafIdRef.current = requestAnimationFrame(raf);
+
+        // Cleanup: cancel rAF and destroy Lenis on route change or unmount
         return () => {
-            isActive = false;
+            console.log("[SmoothScroll] Destroying Lenis for route:", pathname);
+            if (rafIdRef.current !== null) {
+                cancelAnimationFrame(rafIdRef.current);
+                rafIdRef.current = null;
+            }
             lenis.destroy();
+            lenisRef.current = null;
         };
-    }, []);
+    }, [pathname]); // Re-initialize Lenis on every route change
 
     return <>{children}</>;
 }

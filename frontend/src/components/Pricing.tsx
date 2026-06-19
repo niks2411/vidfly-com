@@ -134,7 +134,6 @@ const PricingPage = () => {
   const handleGetStartedClick = (planName?: string) => {
     trackEvent("click_pricing_get_started", { plan: planName || "unknown" });
     router.push("/get-started");
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const PlanGrid = ({ plans, title }: { plans: any[]; title: string }) => (

@@ -9,7 +9,6 @@ const Services = () => {
 
   const handleGetStartedClick = () => {
     router.push("/get-started");
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const serviceCards = [

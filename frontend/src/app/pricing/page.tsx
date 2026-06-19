@@ -59,12 +59,10 @@ export default function PricingPage() {
         } else {
             router.push("/get-started?flow=package");
         }
-        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     const handleGetStarted = () => {
         router.push("/get-started");
-        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     const percent = Math.max(0, Math.min(100, ((budget - 499) / (100000 - 499)) * 100));

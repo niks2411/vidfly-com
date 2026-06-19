@@ -123,18 +123,18 @@ export default function YoutubeMusicPromotion() {
                                         backgroundClip: "text",
                                     }}
                                 >
-                                    Grow Your Music Channel with<br />Real Listeners & Subscribers
+                                    YouTube Music Promotion That Grows Real Listeners, Subscribers & Streams
                                 </h1>
 
                                 <p className="section-desc music-hero-desc !mx-0 !text-left max-w-3xl mb-10">
-                                    Reach thousands of real music lovers and potential subscribers with Vidflyy&apos;s advanced YouTube ad targeting. Boost your music videos, live performances, and covers with smart promotion.
+                                    Reach real listeners with targeted YouTube music promotion for independent artists. Vidflyy helps musicians grow organic views, subscribers, and streams by putting tracks and music videos in front of audiences who love discovering new music.
                                 </p>
 
                                 <ul className="space-y-4 mb-10">
                                     {[
-                                        "Real Views from Music Audience",
-                                        "Increase Watch Time & Engagement",
-                                        "Safe & YouTube-Compliant Promotion"
+                                        "Real Fans from Music Lovers Worldwide",
+                                        "Boost Streams, Comments & Share Rate",
+                                        "100% Safe, YouTube-Compliant Promotion"
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-center gap-3">
                                             <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 stroke-[3px]" />

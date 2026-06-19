@@ -160,18 +160,18 @@ export default function YoutubeHealthBeautyPromotion() {
                                         backgroundClip: "text",
                                     }}
                                 >
-                                    Grow Your Health & Beauty Channel with<br />Real Viewers & Subscribers
+                                    YouTube Health & Beauty Promotion: Engage With People Who Care About Your Recommendations
                                 </h1>
 
                                 <p className="section-desc health-hero-desc !mx-0 !text-left max-w-2xl mb-10">
-                                    Reach thousands of real beauty enthusiasts and wellness seekers with Vidflyy&apos;s advanced YouTube ad targeting. Boost your tutorials, skincare routines, and product reviews with smart promotion.
+                                    Target the exact audience looking for your expertise. Vidflyy delivers premium YouTube beauty channel promotion by placing your makeup tutorials, skincare reviews, and wellness routines directly in front of high-intent beauty enthusiasts. Stop losing potential subscribers to the algorithm. Use our advanced YouTube video marketing to get your trusted recommendations seen, shared, and backed by an active lifestyle community.
                                 </p>
 
                                 <ul className="space-y-4 mb-10">
                                     {[
-                                        "Real Views from Beauty Audience",
-                                        "Increase Watch Time & Engagement",
-                                        "Safe & YouTube-Compliant Promotion"
+                                        "Lifestyle-Specific Reach: Beauty & wellness enthusiasts only",
+                                        "High-Trust Engagement: Active views from advice seekers",
+                                        "Safe Brand Building: Compliant traffic, reputation protected"
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-center gap-3">
                                             <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 stroke-[3px]" />

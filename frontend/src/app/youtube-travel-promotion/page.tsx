@@ -160,18 +160,18 @@ export default function YoutubeTravelPromotion() {
                                         backgroundClip: "text",
                                     }}
                                 >
-                                    Grow Your Travel Channel with<br />Real Explorers & Subscribers
+                                    YouTube Travel Promotion: Find People Who Want to Explore Through Your Eyes
                                 </h1>
 
                                 <p className="section-desc travel-hero-desc !mx-0 !text-left max-w-2xl mb-10">
-                                    Reach thousands of real travel enthusiasts and potential subscribers with Vidflyy&apos;s advanced YouTube ad targeting. Boost your vlogs, documentaries, and adventure stories with smart promotion.
+                                    Reach passionate travelers with targeted YouTube travel channel promotion. Our YouTube promotion service for travel vloggers helps creators gain real views, watch time, and subscriber growth by connecting travel videos with audiences seeking their next adventure.
                                 </p>
 
                                 <ul className="space-y-4 mb-10">
                                     {[
-                                        "Real Views from Travel Audience",
-                                        "Increase Watch Time & Engagement",
-                                        "Safe & YouTube-Compliant Promotion"
+                                        "Targeted Destination Audiences: Viewers who love exploring",
+                                        "Maximized Vlog Retention: High watch time, start to finish",
+                                        "Risk-Free Marketing: Natural promotion for creators"
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-center gap-3">
                                             <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 stroke-[3px]" />

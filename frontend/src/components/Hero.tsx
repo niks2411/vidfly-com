@@ -24,7 +24,6 @@ const Hero = ({ showStats }: HeroProps) => {
     } else {
       router.push("/get-started");
     }
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (

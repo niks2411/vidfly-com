@@ -14,7 +14,6 @@ const WeeklyBudgetCTA = () => {
     const handleStart = () => {
         sessionStorage.setItem("channelInput", inputVal);
         router.push("/get-started");
-        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     return (

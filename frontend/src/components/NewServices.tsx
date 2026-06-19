@@ -49,7 +49,6 @@ const NewServices = () => {
   const handleCategoryClick = (link: string, title: string) => {
     trackEvent("click_service_category", { category: title });
     router.push(link);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (

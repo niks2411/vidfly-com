@@ -7,7 +7,6 @@ const PromotionCTA = () => {
 
     const handleStartPromotion = () => {
         router.push("/get-started");
-        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     return (

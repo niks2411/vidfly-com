@@ -119,18 +119,18 @@ export default function YoutubeGamingPromotion() {
                                         backgroundClip: "text",
                                     }}
                                 >
-                                    Grow Your Gaming Channel with<br />Real Viewers & Subscribers
+                                    YouTube Gaming Promotion: Turn Casual Watchers Into Dedicated Gaming Fans
                                 </h1>
 
                                 <p className="section-desc gaming-hero-desc !mx-0 !text-left max-w-3xl mb-10">
-                                    Reach thousands of real gaming viewers and potential subscribers with Vidflyy&apos;s advanced YouTube ad targeting. Boost your gameplay videos, streams, and highlights with smart promotion.
+                                    Casual viewers don't hit the notification bell fans do. Vidflyy delivers targeted YouTube gaming channel promotion to high-intent gamers who love competitive esports, Let's Plays, walkthroughs, and game reviews. Our organic YouTube promotion for gaming channels drives real views, watch time, and subscribers, turning casual viewers into an active community that returns for every stream and upload.
                                 </p>
 
                                 <ul className="space-y-4 mb-10">
                                     {[
-                                        "Real Views from Gaming Audience",
-                                        "Higher Watch Time & Engagement",
-                                        "Safe & YouTube-Compliant Promotion"
+                                        "Active Gamer Views: Real players, your niche",
+                                        "Supercharged Watch Time: High retention on gameplay",
+                                        "TOS-Friendly Growth: Secure marketing, channel protected"
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-center gap-3">
                                             <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 stroke-[3px]" />

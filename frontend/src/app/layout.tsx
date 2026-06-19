@@ -9,7 +9,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Providers from "./providers";
 import { AuthProvider } from "@/context/AuthContext";
 import { CampaignSidebarProvider } from "./campaign-sidebar-provider";
-import ScrollToTop from "@/components/ScrollToTop";
 import Script from "next/script";
 import SmoothScroll from "@/components/SmoothScroll";
 import { constructMetadata } from "@/lib/seo";
@@ -77,7 +76,6 @@ export default function RootLayout({
                         <Providers>
                             <TooltipProvider>
                                 <SmoothScroll>
-                                    <ScrollToTop />
                                     <Navbar />
                                     <main>{children}</main>
                                     <Testimonials />

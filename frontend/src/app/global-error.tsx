@@ -11,11 +11,28 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     console.error("[GlobalError]", error);
+    console.error("[GlobalError] Name:", error?.name);
+    console.error("[GlobalError] Message:", error?.message);
+    console.error("[GlobalError] Stack:", error?.stack);
+    console.error("[GlobalError] Current URL:", window.location.href);
 
-    // Detect chunk loading errors and reload the page automatically
     const errorMessage = error?.message || "";
     const errorStack = error?.stack || "";
-    
+
+    // Detect DOM manipulation errors (insertBefore / removeChild conflicts)
+    const isDomError =
+      errorMessage.includes("insertBefore") ||
+      errorMessage.includes("removeChild") ||
+      errorMessage.includes("not a child of this node") ||
+      errorMessage.includes("NotFoundError");
+
+    if (isDomError) {
+      console.error("[GlobalError] DOM manipulation error detected.");
+      console.error("[GlobalError] This typically means a third-party library (e.g. Lenis, GTM, Clarity) modified the DOM outside React's control.");
+      console.error("[GlobalError] Timestamp:", new Date().toISOString());
+    }
+
+    // Detect chunk loading errors and reload the page automatically
     const isChunkLoadFailed =
       /Loading chunk [\d]+ failed/i.test(errorMessage) ||
       /CSS chunk loading failed/i.test(errorMessage) ||

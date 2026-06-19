@@ -12,7 +12,6 @@ const VideoShowcase = () => {
 
   const handleGetStarted = () => {
     router.push("/get-started");
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const containerRef = useRef(null);

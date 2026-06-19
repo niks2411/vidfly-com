@@ -113,18 +113,18 @@ export default function YoutubeMotivationPromotion() {
                                         backgroundClip: "text",
                                     }}
                                 >
-                                    Grow Your Motivation Channel with<br />Real Viewers & Subscribers
+                                    YouTube Motivation Promotion: Inspire People Who Trust Your Life Advice
                                 </h1>
 
                                 <p className="section-desc gaming-hero-desc !mx-0 !text-left max-w-3xl mb-10">
-                                    Reach thousands of real motivation and self-improvement lovers with Vidflyy&apos;s advanced YouTube ad targeting. Boost your motivational speeches, success stories, and mindset videos with smart promotion.
+                                    Amplify your message and scale your influence. Vidflyy specializes in targeted YouTube motivation channel promotion designed to bypass casual scrollers and pinpoint high-intent listeners. Whether you produce mindset videos or discipline guides, our organic YouTube promotion services put your voice on the screens of people searching for inspiration, ensuring rapid, authentic channel growth.
                                 </p>
 
                                 <ul className="space-y-4 mb-10">
                                     {[
-                                        "Real Views from Motivation Audience",
-                                        "Higher Watch Time & Engagement",
-                                        "Safe & YouTube-Compliant Promotion"
+                                        "High-Intent Listeners: Minds searching for discipline",
+                                        "Deeper Session Durations: Extended watch time from followers",
+                                        "Secure Community Growth: Safe campaigns, real influence"
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-center gap-3">
                                             <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 stroke-[3px]" />

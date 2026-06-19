@@ -11,13 +11,30 @@ export default function RootError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error
+    // Log the error with full details
     console.error("[RootError]", error);
+    console.error("[RootError] Name:", error?.name);
+    console.error("[RootError] Message:", error?.message);
+    console.error("[RootError] Stack:", error?.stack);
+    console.error("[RootError] Current URL:", window.location.href);
 
-    // Detect chunk loading errors and reload the page automatically
     const errorMessage = error?.message || "";
     const errorStack = error?.stack || "";
-    
+
+    // Detect DOM manipulation errors (insertBefore / removeChild conflicts)
+    const isDomError =
+      errorMessage.includes("insertBefore") ||
+      errorMessage.includes("removeChild") ||
+      errorMessage.includes("not a child of this node") ||
+      errorMessage.includes("NotFoundError");
+
+    if (isDomError) {
+      console.error("[RootError] DOM manipulation error detected.");
+      console.error("[RootError] This typically means a third-party library (e.g. Lenis, GTM, Clarity) modified the DOM outside React's control.");
+      console.error("[RootError] Timestamp:", new Date().toISOString());
+    }
+
+    // Detect chunk loading errors and reload the page automatically
     const isChunkLoadFailed =
       /Loading chunk [\d]+ failed/i.test(errorMessage) ||
       /CSS chunk loading failed/i.test(errorMessage) ||

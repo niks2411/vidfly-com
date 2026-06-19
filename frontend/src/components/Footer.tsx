@@ -7,9 +7,6 @@ import { usePathname } from "next/navigation";
 const Footer = () => {
   const pathname = usePathname();
   if (pathname === "/get-started" || pathname === "/profile" || pathname?.startsWith('/campaign') || pathname?.startsWith('/payment') || pathname?.startsWith('/admin')) return null;
-
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
-
   return (
     <footer className="footer-section bg-white font-montserrat pt-12 pb-8">
       <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -19,7 +16,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {/* Column 1: Logo, Desc, Social, Badge */}
           <div className="flex flex-col gap-6">
-            <Link href="/" onClick={scrollToTop}>
+            <Link href="/">
               <img
                 src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png"
                 alt="Vidflyy"
@@ -83,7 +80,7 @@ const Footer = () => {
                 { text: "Free Youtube Views", path: "/free-youtube-views" }
               ].map((item) => (
                 <li key={item.text}>
-                  <Link href={item.path} onClick={scrollToTop} className="text-[14px] text-[rgb(41,40,40)] hover:text-[#E52D27] transition-colors">
+                  <Link href={item.path} className="text-[14px] text-[rgb(41,40,40)] hover:text-[#E52D27] transition-colors">
                     {item.text}
                   </Link>
                 </li>
@@ -104,7 +101,7 @@ const Footer = () => {
                 { text: "Youtube Vlogging Promotion", path: "/youtube-vlogging-promotion" }
               ].map((link) => (
                 <li key={link.text}>
-                  <Link href={link.path} onClick={scrollToTop} className="text-[14px] text-[rgb(41,40,40)] hover:text-[#E52D27] transition-colors">
+                  <Link href={link.path} className="text-[14px] text-[rgb(41,40,40)] hover:text-[#E52D27] transition-colors">
                     {link.text}
                   </Link>
                 </li>
@@ -114,7 +111,7 @@ const Footer = () => {
 
           {/* Column 4: Contact & Action */}
           <div className="flex flex-col items-start gap-6">
-            <Link href="/get-started" onClick={scrollToTop}>
+            <Link href="/get-started">
               <button className="bg-[#E52D27] hover:bg-[#CC2420] text-white font-extrabold text-[14px] px-8 py-3 rounded-[4px] transition-all transform hover:scale-[1.02]">
                 Get started now
               </button>

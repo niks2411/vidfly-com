@@ -81,7 +81,6 @@ p,
 }
 
 html {
-  scroll-behavior: smooth;
   font-size: clamp(14px, calc(0.48vw + 11.1px), 18px);
   margin: 0;
   padding: 0;

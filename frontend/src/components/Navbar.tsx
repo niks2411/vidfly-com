@@ -116,13 +116,8 @@ const Navbar = () => {
 
   if (pathname === "/get-started" || pathname === "/profile" || pathname?.startsWith('/campaign') || pathname?.startsWith('/payment') || pathname?.startsWith('/admin')) return null;
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   const handleNavClick = (path: string) => {
     router.push(path);
-    scrollToTop();
     setIsOpen(false);
   };
 
@@ -146,7 +141,7 @@ const Navbar = () => {
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center h-16 lg:h-[72px]">
             {/* Logo */}
-            <Link href="/" className="flex items-center shrink-0 mr-8 lg:mr-12 lg:ml-4" onClick={scrollToTop}>
+            <Link href="/" className="flex items-center shrink-0 mr-8 lg:mr-12 lg:ml-4">
               <Image
                 src="/lovable-uploads/0b27d722-c6a7-47e3-ae7d-aeb8461db170.png"
                 alt="Vidflyy"
