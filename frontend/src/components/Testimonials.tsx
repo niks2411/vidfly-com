@@ -100,8 +100,6 @@ const Testimonials = () => {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [paused, next, isExcluded]);
 
-  if (isExcluded) return null;
-
   // Build ordered list starting from `current`
   const getVisible = () =>
     Array.from({ length: visible }, (_, i) => testimonials[(current + i) % total]);
@@ -111,6 +109,7 @@ const Testimonials = () => {
       className="py-16 lg:py-20 bg-white font-montserrat"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      style={isExcluded ? { display: "none" } : undefined}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}

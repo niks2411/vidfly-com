@@ -6,9 +6,9 @@ import { usePathname } from "next/navigation";
 
 const Footer = () => {
   const pathname = usePathname();
-  if (pathname === "/get-started" || pathname === "/profile" || pathname?.startsWith('/campaign') || pathname?.startsWith('/payment') || pathname?.startsWith('/admin')) return null;
+  const isExcluded = pathname === "/get-started" || pathname === "/profile" || pathname?.startsWith('/campaign') || pathname?.startsWith('/payment') || pathname?.startsWith('/admin');
   return (
-    <footer className="footer-section bg-white font-montserrat pt-12 pb-8">
+    <footer className="footer-section bg-white font-montserrat pt-12 pb-8" style={isExcluded ? { display: "none" } : undefined}>
       <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top thin red border */}
         <div className="w-full h-[1px] bg-[#E52D27] mb-12 opacity-80"></div>

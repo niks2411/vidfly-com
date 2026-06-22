@@ -114,7 +114,7 @@ const Navbar = () => {
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
-  if (pathname === "/get-started" || pathname === "/profile" || pathname?.startsWith('/campaign') || pathname?.startsWith('/payment') || pathname?.startsWith('/admin')) return null;
+  const isExcluded = pathname === "/get-started" || pathname === "/profile" || pathname?.startsWith('/campaign') || pathname?.startsWith('/payment') || pathname?.startsWith('/admin');
 
   const handleNavClick = (path: string) => {
     router.push(path);
@@ -135,7 +135,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="sticky top-0 z-50 w-full flex flex-col">
+    <div className="sticky top-0 z-50 w-full flex flex-col" style={isExcluded ? { display: "none" } : undefined}>
       <TopBanner />
       <nav className="bg-white footer-shadow font-montserrat w-full">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
