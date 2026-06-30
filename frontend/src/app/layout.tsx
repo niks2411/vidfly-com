@@ -26,6 +26,10 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <head>
+                {/* DOM resilience patch — must load before any third-party scripts */}
+                <Script id="dom-patch" strategy="beforeInteractive">
+                    {`(function(){if(typeof Node==='undefined')return;var ct=0;var oRC=Node.prototype.removeChild;Node.prototype.removeChild=function(c){if(c.parentNode!==this){ct++;console.warn('[DOM-Patch] removeChild blocked #'+ct,{parent:this.tagName||'#text',child:c.tagName||'#text',childId:c.id||'',url:location.pathname});return c}return oRC.call(this,c)};var oIB=Node.prototype.insertBefore;Node.prototype.insertBefore=function(n,r){if(r&&r.parentNode!==this){ct++;console.warn('[DOM-Patch] insertBefore blocked #'+ct,{parent:this.tagName||'#text',newNode:n.tagName||'#text',ref:r.tagName||'#text',refId:r.id||'',url:location.pathname});return oIB.call(this,n,null)}return oIB.call(this,n,r)}})();`}
+                </Script>
                 {/* Google Tag Manager */}
                 <Script id="gtm-head" strategy="afterInteractive">
                     {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

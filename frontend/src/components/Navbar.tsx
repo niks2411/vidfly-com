@@ -198,77 +198,75 @@ const Navbar = () => {
             </div>
 
             {/* Right side: Login + CTA pushed to the far right */}
+            {/* Both logged-in and logged-out views are always in the DOM, toggled via CSS to prevent React DOM reconciliation crashes from third-party script injections */}
             <div className="hidden lg:flex items-center gap-6 ml-auto shrink-0">
-              {mounted && user ? (
-                <div className="flex items-center gap-4">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button className="flex items-center gap-2 outline-none group">
-                        <Avatar className="h-9 w-9 border-2 border-transparent group-hover:border-red-500 transition-all duration-300">
-                          <AvatarImage src={user.avatar || `/avatars/${avatar}.png`} alt={user.name || user.email} referrerPolicy="no-referrer" />
-                          <AvatarFallback className="bg-slate-100 text-slate-600">
-                            <User className="h-5 w-5" />
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex flex-col items-start">
-                          <span className="text-[14px] font-bold text-[#0E172B] leading-none">
-                            {user.email ? user.email.split('@')[0] : (user.name || "My Account")}
-                          </span>
-                          <span className="text-[11px] text-gray-500 flex items-center gap-1 mt-0.5">
-                            Account <ChevronDown className="h-3 w-3" />
-                          </span>
-                        </div>
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-60 mt-2 p-2 rounded-2xl shadow-2xl border-gray-200 bg-white opacity-100 z-[1001]">
-                      <DropdownMenuLabel className="font-founders text-xs text-gray-400 px-3 py-2">
-                        MY ACCOUNT
-                      </DropdownMenuLabel>
-                      <DropdownMenuItem
-                        onClick={() => handleNavClick("/campaign")}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer hover:bg-gray-50 focus:bg-gray-50 transition-colors"
-                      >
-                        <LayoutDashboard className="h-4 w-4 text-gray-500" />
-                        <span className="font-semibold text-[14px]">Dashboard</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => handleNavClick("/profile")}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer hover:bg-gray-50 focus:bg-gray-50 transition-colors"
-                      >
-                        <Settings className="h-4 w-4 text-gray-500" />
-                        <span className="font-semibold text-[14px]">Settings</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => handleNavClick("/campaign/free-views")}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer hover:bg-gray-50 focus:bg-gray-50 transition-colors"
-                      >
-                        <Gift className="h-4 w-4 text-gray-500" />
-                        <span className="font-semibold text-[14px]">Free Views</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator className="my-2 bg-gray-50" />
-                      <DropdownMenuItem
-                        onClick={handleLogout}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer hover:bg-red-50 focus:bg-red-50 text-red-600 transition-colors"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        <span className="font-semibold text-[14px]">Log out</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              ) : (
-                <>
-                  <button onClick={() => handleNavClick("/get-started")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold whitespace-nowrap">
-                    Login
-                  </button>
-                  <Button
-                    onClick={handleGetStartedClick}
-                    className="bg-[#E52D27] hover:bg-[#D42621] text-white px-9 py-2.5 h-11 rounded-lg text-[16px] font-bold transition-all duration-300 transform hover:scale-105 whitespace-nowrap normal-case"
-                  >
-                    Get started now
-                  </Button>
-                </>
-              )}
+              <div className="flex items-center gap-4" style={mounted && user ? undefined : { display: 'none' }}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-2 outline-none group">
+                      <Avatar className="h-9 w-9 border-2 border-transparent group-hover:border-red-500 transition-all duration-300">
+                        <AvatarImage src={(user?.avatar) || `/avatars/${avatar}.png`} alt={(user?.name) || (user?.email) || ''} referrerPolicy="no-referrer" />
+                        <AvatarFallback className="bg-slate-100 text-slate-600">
+                          <User className="h-5 w-5" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col items-start">
+                        <span className="text-[14px] font-bold text-[#0E172B] leading-none">
+                          {user?.email ? user.email.split('@')[0] : (user?.name || "My Account")}
+                        </span>
+                        <span className="text-[11px] text-gray-500 flex items-center gap-1 mt-0.5">
+                          Account <ChevronDown className="h-3 w-3" />
+                        </span>
+                      </div>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-60 mt-2 p-2 rounded-2xl shadow-2xl border-gray-200 bg-white opacity-100 z-[1001]">
+                    <DropdownMenuLabel className="font-founders text-xs text-gray-400 px-3 py-2">
+                      MY ACCOUNT
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem
+                      onClick={() => handleNavClick("/campaign")}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer hover:bg-gray-50 focus:bg-gray-50 transition-colors"
+                    >
+                      <LayoutDashboard className="h-4 w-4 text-gray-500" />
+                      <span className="font-semibold text-[14px]">Dashboard</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleNavClick("/profile")}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer hover:bg-gray-50 focus:bg-gray-50 transition-colors"
+                    >
+                      <Settings className="h-4 w-4 text-gray-500" />
+                      <span className="font-semibold text-[14px]">Settings</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleNavClick("/campaign/free-views")}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer hover:bg-gray-50 focus:bg-gray-50 transition-colors"
+                    >
+                      <Gift className="h-4 w-4 text-gray-500" />
+                      <span className="font-semibold text-[14px]">Free Views</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="my-2 bg-gray-50" />
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer hover:bg-red-50 focus:bg-red-50 text-red-600 transition-colors"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span className="font-semibold text-[14px]">Log out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="flex items-center gap-6" style={mounted && user ? { display: 'none' } : undefined}>
+                <button onClick={() => handleNavClick("/get-started")} className="text-[#0E172B] hover:text-red-600 text-[16px] font-semibold whitespace-nowrap">
+                  Login
+                </button>
+                <Button
+                  onClick={handleGetStartedClick}
+                  className="bg-[#E52D27] hover:bg-[#D42621] text-white px-9 py-2.5 h-11 rounded-lg text-[16px] font-bold transition-all duration-300 transform hover:scale-105 whitespace-nowrap normal-case"
+                >
+                  Get started now
+                </Button>
+              </div>
             </div>
 
             {/* Hamburger Menu Icon - Visible below 1024px */}
@@ -346,43 +344,41 @@ const Navbar = () => {
                   Contact Us
                 </button>
                 <div className="pt-6 space-y-4 px-3">
-                  {mounted && user ? (
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3 p-4 bg-white border border-gray-100 rounded-2xl mb-4 shadow-sm">
-                        <Avatar className="h-12 w-12 border border-slate-100">
-                          <AvatarImage src={user.avatar || `/avatars/${avatar}.png`} alt={user.name || user.email} referrerPolicy="no-referrer" />
-                          <AvatarFallback className="bg-slate-100 text-slate-600">
-                            <User className="h-6 w-6" />
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-bold text-[#0E172B]">{user.email ? user.email.split('@')[0] : (user.name || "My Account")}</p>
-                          <p className="text-sm text-gray-500">{user.email}</p>
-                        </div>
+                  {/* Both views always in DOM, toggled via CSS for DOM stability */}
+                  <div className="space-y-4" style={mounted && user ? undefined : { display: 'none' }}>
+                    <div className="flex items-center gap-3 p-4 bg-white border border-gray-100 rounded-2xl mb-4 shadow-sm">
+                      <Avatar className="h-12 w-12 border border-slate-100">
+                        <AvatarImage src={(user?.avatar) || `/avatars/${avatar}.png`} alt={(user?.name) || (user?.email) || ''} referrerPolicy="no-referrer" />
+                        <AvatarFallback className="bg-slate-100 text-slate-600">
+                          <User className="h-6 w-6" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-bold text-[#0E172B]">{user?.email ? user.email.split('@')[0] : (user?.name || "My Account")}</p>
+                        <p className="text-sm text-gray-500">{user?.email}</p>
                       </div>
-                      <button
-                        onClick={() => handleNavClick("/campaign")}
-                        className="text-[#0E172B] font-bold w-full text-left text-lg flex items-center gap-3 py-2"
-                      >
-                        <LayoutDashboard className="h-5 w-5" /> Dashboard
-                      </button>
-                      <button
-                        onClick={handleLogout}
-                        className="text-red-600 font-bold w-full text-left text-lg flex items-center gap-3 py-2"
-                      >
-                        <LogOut className="h-5 w-5" /> Log out
-                      </button>
                     </div>
-                  ) : (
-                    <>
-                      <button onClick={() => handleNavClick("/get-started")} className="text-[#0E172B] font-bold w-full text-left text-lg">
-                        Login
-                      </button>
-                      <Button onClick={handleGetStartedClick} className="bg-[#E52D27] hover:bg-[#D42621] text-white w-full py-7 text-lg font-bold rounded-xl shadow-lg normal-case">
-                        Get started now
-                      </Button>
-                    </>
-                  )}
+                    <button
+                      onClick={() => handleNavClick("/campaign")}
+                      className="text-[#0E172B] font-bold w-full text-left text-lg flex items-center gap-3 py-2"
+                    >
+                      <LayoutDashboard className="h-5 w-5" /> Dashboard
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="text-red-600 font-bold w-full text-left text-lg flex items-center gap-3 py-2"
+                    >
+                      <LogOut className="h-5 w-5" /> Log out
+                    </button>
+                  </div>
+                  <div style={mounted && user ? { display: 'none' } : undefined}>
+                    <button onClick={() => handleNavClick("/get-started")} className="text-[#0E172B] font-bold w-full text-left text-lg">
+                      Login
+                    </button>
+                    <Button onClick={handleGetStartedClick} className="bg-[#E52D27] hover:bg-[#D42621] text-white w-full py-7 text-lg font-bold rounded-xl shadow-lg normal-case mt-4">
+                      Get started now
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

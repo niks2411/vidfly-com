@@ -27,9 +27,24 @@ export default function GlobalError({
       errorMessage.includes("NotFoundError");
 
     if (isDomError) {
-      console.error("[GlobalError] DOM manipulation error detected.");
-      console.error("[GlobalError] This typically means a third-party library (e.g. Lenis, GTM, Clarity) modified the DOM outside React's control.");
-      console.error("[GlobalError] Timestamp:", new Date().toISOString());
+      console.warn("[GlobalError] DOM manipulation error detected — attempting auto-recovery...");
+      console.warn("[GlobalError] This typically means a third-party script (GTM, Clarity) modified the DOM outside React's control.");
+
+      // Auto-recover from DOM errors: attempt a soft reset before showing error page
+      const domRetryKey = "dom-error-retry";
+      const lastRetry = sessionStorage.getItem(domRetryKey);
+      const now = Date.now();
+
+      // Only auto-retry if we haven't retried in the last 3 seconds (prevents infinite loops)
+      if (!lastRetry || now - parseInt(lastRetry, 10) > 3000) {
+        sessionStorage.setItem(domRetryKey, now.toString());
+        console.warn("[GlobalError] Calling reset() to recover...");
+        // Small delay to allow React to settle before retrying
+        setTimeout(() => reset(), 100);
+        return;
+      } else {
+        console.error("[GlobalError] Auto-recovery already attempted recently. Showing error page.");
+      }
     }
 
     // Detect chunk loading errors and reload the page automatically
